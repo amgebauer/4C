@@ -1,0 +1,50 @@
+name: documentation
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+  push:
+    branches:
+      - 'main'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: 4c-dependencies
+  FOUR_C_DOCKER_DEPENDENCIES_HASH: 7a6ad12e
+
+permissions:
+  contents: read
+
+jobs:
+  doxygen:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/ppraegla/4c-dependencies:latest
+      options: --user root --env OMPI_ALLOW_RUN_AS_ROOT=1 --env OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup-4C
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/../build
+          cd $GITHUB_WORKSPACE
+          ./utilities/set_up_dev_env.sh
+          cd $GITHUB_WORKSPACE/../build
+          cmake $GITHUB_WORKSPACE --fresh --preset=${{ env.CMAKE_PRESET }}
+      - name: Build doxygen
+        run: |
+          cd $GITHUB_WORKSPACE/../build
+          time cmake --build . --target doxygen
+      - name: Upload doxygen
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen
+          paths: $GITHUB_WORKSPACE/../build/doc/doxygen/html
+          retention-days: 1
+
