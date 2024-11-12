@@ -11,7 +11,7 @@ DIM                             3
 NUMFLUIDDIS                     1
 NUMSTRUCDIS                     1
 --------------------------------------------------------PROBLEM TYP
-PROBLEMTYP                      Fluid_Structure_Interaction_XFEM
+PROBLEMTYP                      Fluid_Strucre_Interaction_XFEM
 RESTART                         0
 SHAPEFCT                        Polynomial
 -----------------------------------------------------------------IO
