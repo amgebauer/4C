@@ -41,10 +41,10 @@ jobs:
         with:
           cmake-preset: docker
           build-directory: ${{ github.workspace }}/build
-      - uses: ./.github/actions/build_4C
-        with:
-          build-targets: full
-          build-directory: ${{ github.workspace }}/build
+      #- uses: ./.github/actions/build_4C
+      #  with:
+      #    build-targets: full
+      #    build-directory: ${{ github.workspace }}/build
       - name: Package build directory
         run: tar -cvf $GITHUB_WORKSPACE/4C_build.tar $GITHUB_WORKSPACE/build
       - name: Upload build folder
@@ -91,11 +91,29 @@ jobs:
           time ctest -I $TEST_CHUNK -j `nproc` --output-on-failure --output-junit $GITHUB_WORKSPACE/junit_test_summary.xml
         env:
           TEST_CHUNK: ${{ matrix.test-chunk }}
-      - name: Upload test summary
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+      - name: Upload report
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
         with:
-          name: test-summary-${{ matrix.test-chunk }}
-          path: |
-            junit_test_summary-${{ matrix.test-chunk }}.xml
+          name: test_report_${{ matrix.test-chunk }}
+          if-no-files-found: ignore
+          path: ${{ github.workspace }}/junit_test_summary.xml
           retention-days: 1
+  report:
+    needs: gcc9_test
+    runs-on: ubuntu-latest
+    if: success() || failure()
+    steps:
+      - name: Download reports
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.workspace }}
+      - name: Info
+        run: |
+          ls -lh $GITHUB_WORKSPACE
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
+        with:
+          report_paths: ${{ github.workspace }}/**/junit_test_summary.xml
+
