@@ -32,6 +32,7 @@ jobs:
         shell: bash
     steps:
       - run: echo ${{ github.repository }}
+      - run: echo ${{ github.job }}-${{ env.CMAKE_PRESET }}
       # Due to a bug in runner action the variables $GITHUB_WORKSPACE and ${{ github.workspace }} are different inside a container. https://github.com/actions/runner/issues/2058
       # The repo gets cloned to `/__w/4C/4C` ($GITHUB_WORKSPACE) while ${{ github.workspace }} points to `/home/runner/work/4C/4C`.`
       # Use $GITHUB_WORKSPACE instead of ${{ github.workspace }}
