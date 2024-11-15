@@ -23,25 +23,29 @@ concurrency:
 jobs:
   doxygen:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ppraegla/4c-dependencies:latest
-      options: --user root --env OMPI_ALLOW_RUN_AS_ROOT=1 --env OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.github_token }}
+    #container:
+    #  image: ghcr.io/ppraegla/4c-dependencies:latest
+    #  options: --user root --env OMPI_ALLOW_RUN_AS_ROOT=1 --env OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+    #  credentials:
+    #    username: ${{ github.actor }}
+    #    password: ${{ secrets.github_token }}
     defaults:
       run:
         shell: bash
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/configure_4C
-        with:
-          cmake-preset: docker
-          build-directory: ${{ github.workspace }}/build
-      - uses: ./.github/actions/build_4C
-        with:
-          build-targets: doxygen
-          build-directory: ${{ github.workspace }}/build
+      #- uses: ./.github/actions/configure_4C
+      #  with:
+      #    cmake-preset: docker
+      #    build-directory: ${{ github.workspace }}/build
+      #- uses: ./.github/actions/build_4C
+      #  with:
+      #    build-targets: doxygen
+      #    build-directory: ${{ github.workspace }}/build
+      - name: Create dummy doxygen
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/build/doc/doxygen/html
+          echo "<html><body><h1>Doxygen</h1></body></html>" > $GITHUB_WORKSPACE/build/doc/doxygen/html/index.html
       - name: Upload doxygen
         uses: actions/upload-artifact@v4
         with:
@@ -50,30 +54,34 @@ jobs:
           retention-days: 1
   readthedocs:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ppraegla/4c-dependencies:latest
-      options: --user root --env OMPI_ALLOW_RUN_AS_ROOT=1 --env OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.github_token }}
+    #container:
+    #  image: ghcr.io/ppraegla/4c-dependencies:latest
+    #  options: --user root --env OMPI_ALLOW_RUN_AS_ROOT=1 --env OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+    #  credentials:
+    #    username: ${{ github.actor }}
+    #    password: ${{ secrets.github_token }}
     defaults:
       run:
         shell: bash
     steps:
       - uses: actions/checkout@v4
-      - name: Setup ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: ${{ github.job }}-${{ env.CMAKE_PRESET }}
-      - uses: ./.github/actions/configure_4C
-        with:
-          cmake-preset: docker
-          build-directory: ${{ github.workspace }}/build
-          additional-cmake-flags: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-      - uses: ./.github/actions/build_4C
-        with:
-          build-targets: readthedocs
-          build-directory: ${{ github.workspace }}/build
+      #- name: Setup ccache
+      #  uses: hendrikmuhs/ccache-action@v1.2
+      #  with:
+      #    key: ${{ github.job }}-${{ env.CMAKE_PRESET }}
+      #- uses: ./.github/actions/configure_4C
+      #  with:
+      #    cmake-preset: docker
+      #    build-directory: ${{ github.workspace }}/build
+      #    additional-cmake-flags: -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+      #- uses: ./.github/actions/build_4C
+      #  with:
+      #    build-targets: readthedocs
+      #    build-directory: ${{ github.workspace }}/build
+      - name: Create dummy readthedocs
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/build/doc/readthedocs/html
+          echo "<html><body><h1>Readthedocs</h1></body></html>" > $GITHUB_WORKSPACE/build/doc/readthedocs/html/index.html
       - name: Upload readthedocs
         uses: actions/upload-artifact@v4
         with:

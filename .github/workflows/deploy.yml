@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows: [documentation]
     types: [completed]
-    branches: [main]
+    #branches: [main]
 
 permissions:
   contents: read
@@ -22,18 +22,18 @@ jobs:
     steps:
       - uses: dawidd6/action-download-artifact@v6
         with:
-          workflow: documentation
+          workflow: documentation.yml
           name: doxygen
           path: ${{ github.workspace }}/doxygen
       - uses: dawidd6/action-download-artifact@v6
         with:
-          workflow: documentation
+          workflow: documentation.yml
           name: readthedocs
           path: ${{ github.workspace }}/readthedocs
-      - uses: actions/upload-pages-artifact@v3
-        id: deployment
-        with:
-          path: ${{ github.workspace }}
-          retention-days: 1
-      - uses: actions/deploy-pages@v4
+    # - uses: actions/upload-pages-artifact@v3
+    #   id: deployment
+    #   with:
+    #     path: ${{ github.workspace }}
+    #     retention-days: 1
+    # - uses: actions/deploy-pages@v4
 
