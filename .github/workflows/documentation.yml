@@ -24,9 +24,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check docker hash
-        uses: ./.github/actions/compute-and-check-dependencies-hash
+        uses: ./.github/actions/compute-dependencies-hash
         with:
-          docker_image_hash: $DEPENDENCIES_HASH
+          assert_running_in_correct_image: 'true'
       - uses: ./.github/actions/build_4C
         with:
           cmake-preset: docker
@@ -52,9 +52,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check docker hash
-        uses: ./.github/actions/compute-and-check-dependencies-hash
+        uses: ./.github/actions/compute-dependencies-hash
         with:
-          docker_image_hash: $DEPENDENCIES_HASH
+          assert_running_in_correct_image: 'true'
       - uses: ./.github/actions/build_4C
         with:
           cmake-preset: docker
