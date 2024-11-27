@@ -3,6 +3,9 @@ name: nightly_tests
 on:
   schedule:
     - cron: '0 22 * * *'
+  push:
+    branches:
+      - 'main'
 
 jobs:
   gcc13_assertions_build:
