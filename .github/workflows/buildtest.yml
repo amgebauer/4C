@@ -22,6 +22,8 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Print repo
+        run: echo ${{ github.repository }}
       - uses: actions/checkout@v4
       - name: Check docker hash
         uses: ./.github/actions/compute-and-check-dependencies-hash
@@ -184,12 +186,12 @@ jobs:
           ctest -L minimal -j `nproc` --output-on-failure
 
   ensure_all_tests_pass:
-    needs: [gcc13_test, gcc13_build, clang18_build, clang18_test_minimal]
+    needs: [gcc13_assertions_test, gcc13_assertions_build, clang18_build, clang18_test_minimal]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Check for successful builds and tests
         uses: re-actors/alls-green@release/v1
         with:
-          allowed-skips: gcc13_test
+          allowed-skips: gcc13_assertions_test
           jobs: ${{ toJSON(needs) }}
