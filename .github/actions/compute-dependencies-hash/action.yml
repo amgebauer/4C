@@ -1,4 +1,4 @@
-name: dependencies hash
+name: Compute dependencies hash
 description: Compute the docker dependencies hash and optionally assert if running in the correct image
 inputs:
   assert_running_in_correct_image:
@@ -16,11 +16,11 @@ runs:
       name: Compute the dependencies hash
       run: |
         cd $GITHUB_WORKSPACE
-        COMPUTED_DOCKER_DEPENDENCIES_HASH=`find dependencies docker -not -wholename '*/trilinos_develop/*' -not -name 'README.md' -type f -exec sha1sum {} \; | sort | sha1sum | cut -c -8`
+        COMPUTED_DOCKER_DEPENDENCIES_HASH=`./docker/compute_dependencies_hash.sh`
         echo "dependencies_hash=$COMPUTED_DOCKER_DEPENDENCIES_HASH" >> $GITHUB_OUTPUT
       shell: bash
     - id: check-if-dependencies-hash-matches
-      if: ${{ inputs.assert_image == 'true' }}
+      if: ${{ inputs.assert_running_in_correct_image == 'true' }}
       name: Check if the dependencies hash matches
       shell: bash
       # Note: The dependencies hash is stored in the environment variable DEPENDENCIES_HASH in the docker image
