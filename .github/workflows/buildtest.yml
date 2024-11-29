@@ -5,8 +5,6 @@ on:
     branches:
       - 'main'
   push:
-    branches:
-      - 'main'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -52,6 +50,9 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Install valgrind
+        run: |
+          sudo apt-get update && sudo apt-get install -y valgrind
       - uses: actions/checkout@v4
       - name: Check docker hash
         uses: ./.github/actions/compute-and-check-dependencies-hash
@@ -65,7 +66,7 @@ jobs:
       - name: Test
         run: |
           cd $GITHUB_WORKSPACE/build
-          ctest -I $TEST_CHUNK -j `nproc` --output-on-failure
+          ctest -V  -I $TEST_CHUNK -j `nproc` --output-on-failure
         env:
           TEST_CHUNK: ${{ matrix.test-chunk }}
 
@@ -102,6 +103,9 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Install valgrind
+        run: |
+          sudo apt-get update && sudo apt-get install -y valgrind
       - uses: actions/checkout@v4
       - name: Check docker hash
         uses: ./.github/actions/compute-and-check-dependencies-hash
@@ -115,7 +119,7 @@ jobs:
       - name: Test
         run: |
           cd $GITHUB_WORKSPACE/build
-          ctest -L minimal -j `nproc` --output-on-failure
+          ctest -V  -L minimal -j `nproc` --output-on-failure
 
   clang18_build:
     runs-on: ubuntu-latest
@@ -153,6 +157,9 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Install valgrind
+        run: |
+          sudo apt-get update && sudo apt-get install -y valgrind
       - uses: actions/checkout@v4
       - name: Check docker hash
         uses: ./.github/actions/compute-and-check-dependencies-hash
@@ -166,7 +173,7 @@ jobs:
       - name: Test
         run: |
           cd $GITHUB_WORKSPACE/build
-          ctest -L minimal -j `nproc` --output-on-failure
+          ctest -V -L minimal -j `nproc` --output-on-failure
 
   ensure_all_tests_pass:
     needs: [gcc9_build, gcc9_test_minimal, gcc13_assertions_test, gcc13_assertions_build, clang18_build,
