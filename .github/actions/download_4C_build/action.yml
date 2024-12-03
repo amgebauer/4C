@@ -14,4 +14,8 @@ runs:
     - name: Extract 4C build
       shell: bash
       run: |
-        tar -xf $GITHUB_WORKSPACE/4C_build.tar -C /
+        tar -xf $GITHUB_WORKSPACE/4C_build.tar.gz -C /
+    - name: Remove tar file
+      shell: bash
+      run: |
+        rm $GITHUB_WORKSPACE/4C_build.tar.gz

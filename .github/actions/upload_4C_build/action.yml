@@ -11,13 +11,16 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Install pigz
+      shell: bash
+      run: apt-get update && apt-get install -y pigz
     - name: Package build directory
       shell: bash
-      run: tar -cf $GITHUB_WORKSPACE/4C_build.tar $GITHUB_WORKSPACE/build
+      run: tar -c --use-compress-program=pigz -f $GITHUB_WORKSPACE/4C_build.tar.gz $GITHUB_WORKSPACE/build
     - name: Upload build folder
       uses: actions/upload-artifact@v4
       with:
         name: ${{ github.job }}-4C-build
         path: |
-          ${{ github.workspace }}/4C_build.tar
+          ${{ github.workspace }}/4C_build.tar.gz
         retention-days: ${{ inputs.retention-days }}
