@@ -3,6 +3,9 @@ name: coverage
 on:
   schedule:
     - cron: '0 1 * * *'
+  push:
+    branches:
+      - main
 
 jobs:
   gcc13_coverage_build:
