@@ -19,16 +19,17 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
       - name: GitHub Tag Name example
         run: |
           echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
           echo "Tag name from github.ref_name: ${{  github.ref_name }}"
-      - shell: bash
-        name: Echo tags
-        run: |
-          echo $TAGS
-        env:
-          TAGS: ${{ steps.meta.outputs.tags }}
+          VERSION=`echo ${{  github.ref_name }} | perl -lne 'print "$1" if /^v(\d+\.\d+(?:\.\d+)?(?:-[a-z]+(?:\.\d+)?)?)$/'`
+          echo $VERSION
     #   - id: compute-dependencies-hash
     #     uses: ./.github/actions/compute-and-check-dependencies-hash
     #     with:
