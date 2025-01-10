@@ -19,12 +19,17 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: GitHub Tag Name example
+      - name: Extract version from tag
         run: |
-          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+          echo "Github tag name: ${{  github.ref_name }}"
           VERSION=`echo ${{  github.ref_name }} | perl -lne 'print "$1" if /^v(\d+\.\d+(?:\.\d+)?(?:-[a-z]+(?:\.\d+)?)?)$/'`
-          echo $VERSION
+
+          echo "Extracted version: $VERSION"
+          if [[ -z "${VERSION// }" ]]
+          then
+            echo "Error: Could not extract version from tag name"
+            exit 1
+          fi
     #   - id: compute-dependencies-hash
     #     uses: ./.github/actions/compute-and-check-dependencies-hash
     #     with:
