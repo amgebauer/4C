@@ -1,0 +1,45 @@
+name: publish_release
+
+on:
+  release:
+    types: [released]
+
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
+env:
+  REGISTRY: ghcr.io
+  PROJECT_NAMESPACE: 4c-multiphysics
+
+jobs:
+  publish_release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: compute-dependencies-hash
+        uses: ./.github/actions/compute-and-check-dependencies-hash
+        with:
+          skip-check: 'true'
+      - name: Add tag to docker dependencies image
+        uses: ./.github/actions/tag_docker_image
+        with:
+          image-name: ${{ env.REGISTRY }}/${{ env.PROJECT_NAMESPACE }}/4c-dependencies-ubuntu24.04
+          source-tag: ${{ steps.compute-dependencies-hash.outputs.computed_dependencies_hash }}
+      - name: Extract short git hash
+        id: extract-git-hash
+        shell: bash
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Add tag to docker image
+        uses: ./.github/actions/tag_docker_image
+        with:
+          image-name: ${{ env.REGISTRY }}/${{ env.PROJECT_NAMESPACE }}/4c
+          source-tag: ${{ steps.extract-git-hash.outputs.sha_short }}
