@@ -1,8 +1,9 @@
 name: publish_release
 
 on:
-  release:
-    types: [published] # triggers for stable and pre-releases
+  #release:
+  #  types: [published] # triggers for stable and pre-releases
+  push:
 
 permissions:
   contents: read
@@ -21,8 +22,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Extract version from tag
         run: |
-          echo "Github tag name: ${{  github.ref_name }}"
-          VERSION=`echo ${{  github.ref_name }} | perl -lne 'print "$1" if /^v(\d+\.\d+(?:\.\d+)?(?:-[a-z]+(?:\.\d+)?)?)$/'`
+          echo "Github tag name: $TAG"
+          VERSION=`echo $TAG | perl -lne 'print "$1" if /^v(\d+\.\d+(?:\.\d+)?(?:-[a-z]+(?:\.\d+)?)?)$/'`
           echo "Extracted version: $VERSION"
           if [[ -z "${VERSION// }" ]]
           then
@@ -30,6 +31,8 @@ jobs:
             exit 1
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+        env:
+          TAG: 2025.1.1-pre.1 #${{  github.ref_name }}
       - id: compute-dependencies-hash
         uses: ./.github/actions/compute-and-check-dependencies-hash
         with:
