@@ -21,6 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Extract version from tag
+        id: extract-version
         run: |
           echo "Github tag name: $TAG"
           VERSION=`echo $TAG | perl -lne 'print "$1" if /^v(\d+\.\d+(?:\.\d+)?(?:-[a-z]+(?:\.\d+)?)?)$/'`
@@ -32,7 +33,7 @@ jobs:
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
         env:
-          TAG: 2025.1.1-pre.1 #${{  github.ref_name }}
+          TAG: v2025.1.1-pre.1 #${{  github.ref_name }}
       - id: compute-dependencies-hash
         uses: ./.github/actions/compute-and-check-dependencies-hash
         with:
@@ -50,4 +51,4 @@ jobs:
           source-tag: ${{ github.ref_name }}
           target-tags: |-
             latest
-            ${{ steps.compute-dependencies-hash.outputs.version }}
+            ${{ steps.extract-version.outputs.version }}

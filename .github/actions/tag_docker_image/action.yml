@@ -22,10 +22,13 @@ runs:
     - shell: bash
       name: Add tag
       run: |
-        echo $TARGET_TAGS
-        echo "$TARGET_TAGS" | jq -r '.[]' | while read -r TARGET_TAG; do echo docker image tag $IMAGE_NAME:$SOURCE_TAG $IMAGE_NAME:$TARGET_TAG; echo docker push $IMAGE_NAME:$TARGET_TAG; done
+        for TARGET_TAG in $TARGET_TAGS; do
+          echo "Adding $TARGET_TAG to $IMAGE_NAME:$SOURCE_TAG"
+          echo docker image tag $IMAGE_NAME:$SOURCE_TAG $IMAGE_NAME:$TARGET_TAG
+          echo docker push $IMAGE_NAME:$TARGET_TAG
+        done
       env:
         IMAGE_NAME: ${{ inputs.image-name }}
         SOURCE_TAG: ${{ inputs.source-tag }}
-        TARGET_TAGS: ${{ inputs.source-tag }}
+        TARGET_TAGS: ${{ inputs.target-tags }}
 
