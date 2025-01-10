@@ -1,0 +1,56 @@
+name: Add tags to docker image
+description: Automatically detect and add tags based on branch name, commit hash and version
+inputs:
+  image-name:
+    description: Name of the docker image
+    required: true
+  source-tag:
+    description: Source tag of the image (if not set, it will be determined based on the git sha)
+    required: false
+    default: ''
+  tag-types:
+    description: Type of tags to add based on the syntax of docker/metadata-action@v5
+    required: false
+    default: |
+      type=ref,event=branch
+      type=semver,pattern={{version}}
+      type=sha
+runs:
+  using: composite
+  steps:
+    # automatically detect tags
+    - name: Detect docker image
+      id: detect-sha
+      uses: docker/metadata-action@v5
+      with:
+        images:
+        tags: |
+          type=sha
+    - shell: bash
+      if: ${{ inputs.source-tag == '' }}
+      name: Pull docker image
+      run: docker pull $IMAGE_NAME:$SOURCE_TAG
+      env:
+        IMAGE_NAME: ${{ inputs.image-name }}
+        SOURCE_TAG: ${{ inputs.source-tag == '' && steps.detect-sha.outputs.tags || inputs.source-tag
+          }}
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ inputs.image-name }}
+        tags: ${{ inputs.tag-types }}
+    - shell: bash
+      name: Add tag
+      run: |
+        for TARGET_TAG in $TARGET_TAGS; do
+          echo "Adding $TARGET_TAG to $IMAGE_NAME:$SOURCE_TAG"
+          echo docker image tag $IMAGE_NAME:$SOURCE_TAG $IMAGE_NAME:$TARGET_TAG
+          echo docker push $IMAGE_NAME:$TARGET_TAG
+        done
+      env:
+        IMAGE_NAME: ${{ inputs.image-name }}
+        SOURCE_TAG: ${{ inputs.source-tag == '' && steps.detect-sha.outputs.tags || inputs.source-tag
+          }}
+        TARGET_TAGS: ${{ steps.meta.outputs.tags }}
+
