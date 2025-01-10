@@ -1,0 +1,31 @@
+name: Add tag to docker image
+description: Build a specified 4C target
+inputs:
+  image-name:
+    description: Name of the docker image
+    required: true
+  source-tag:
+    description: Tag of the source tag
+    required: true
+  target-tags:
+    description: List of tags to apply to the image
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      name: Pull docker image
+      run: echo docker pull $IMAGE_NAME:$SOURCE_TAG
+      env:
+        IMAGE_NAME: ${{ inputs.image-name }}
+        SOURCE_TAG: ${{ inputs.source-tag }}
+    - shell: bash
+      name: Add tag
+      run: |
+        echo $TARGET_TAGS
+        echo "$TARGET_TAGS" | jq -r '.[]' | while read -r TARGET_TAG; do echo docker image tag $IMAGE_NAME:$SOURCE_TAG $IMAGE_NAME:$TARGET_TAG; echo docker push $IMAGE_NAME:$TARGET_TAG; done
+      env:
+        IMAGE_NAME: ${{ inputs.image-name }}
+        SOURCE_TAG: ${{ inputs.source-tag }}
+        TARGET_TAGS: ${{ inputs.source-tag }}
+

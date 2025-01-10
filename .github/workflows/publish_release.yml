@@ -15,7 +15,7 @@ env:
   PROJECT_NAMESPACE: 4c-multiphysics
 
 jobs:
-  deploy:
+  publish_release:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -23,26 +23,28 @@ jobs:
         run: |
           echo "Github tag name: ${{  github.ref_name }}"
           VERSION=`echo ${{  github.ref_name }} | perl -lne 'print "$1" if /^v(\d+\.\d+(?:\.\d+)?(?:-[a-z]+(?:\.\d+)?)?)$/'`
-
           echo "Extracted version: $VERSION"
           if [[ -z "${VERSION// }" ]]
           then
             echo "Error: Could not extract version from tag name"
             exit 1
           fi
-    #   - id: compute-dependencies-hash
-    #     uses: ./.github/actions/compute-and-check-dependencies-hash
-    #     with:
-    #       skip-check: 'true'
-    #   - name: Log in to the Container registry
-    #     uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-    #     with:
-    #       registry: ${{ env.REGISTRY }}
-    #       username: ${{ github.actor }}
-    #       password: ${{ secrets.GITHUB_TOKEN }}
-    #   - name: Pull current Ubuntu 24.04 dependencies image and tag it with latest
-    #     run: |
-    #       IMAGE_NAME="${{ env.REGISTRY }}/${{ env.PROJECT_NAMESPACE }}/4c-dependencies-ubuntu24.04"
-    #       docker pull $IMAGE_NAME:${{ steps.compute-dependencies-hash.outputs.computed_dependencies_hash }}
-    #       docker image tag $IMAGE_NAME:${{ steps.compute-dependencies-hash.outputs.computed_dependencies_hash }} $IMAGE_NAME:latest
-    #       docker push $IMAGE_NAME:latest
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - id: compute-dependencies-hash
+        uses: ./.github/actions/compute-and-check-dependencies-hash
+        with:
+          skip-check: 'true'
+      # - name: Log in to the Container registry
+      #   uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+      #   with:
+      #     registry: ${{ env.REGISTRY }}
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Add tag to docker image
+        uses: ./.github/actions/tag_docker_image
+        with:
+          image-name: ${{ env.REGISTRY }}/${{ env.PROJECT_NAMESPACE }}/4c-dependencies-ubuntu24.04
+          source-tag: ${{ github.ref_name }}
+          target-tags: |-
+            latest
+            ${{ steps.compute-dependencies-hash.outputs.version }}
