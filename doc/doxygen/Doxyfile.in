@@ -58,8 +58,10 @@ QUIET                  = NO
 WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = NO
 WARN_IF_DOC_ERROR      = YES
+WARN_IF_INCOMPLETE_DOC = NO
+WARN_IF_UNDOC_ENUM_VAL = NO
 WARN_NO_PARAMDOC       = NO
-WARN_AS_ERROR          = NO
+WARN_AS_ERROR          = WARN_AS_ERROR
 WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           =
 
