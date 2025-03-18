@@ -18,7 +18,6 @@ template <Core::FE::CellType distype>
 Discret::Elements::MembraneScatra<distype>::MembraneScatra(int id, int owner)
     : Membrane<distype>(id, owner), impltype_(Inpar::ScaTra::impltype_undefined)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -29,7 +28,6 @@ Discret::Elements::MembraneScatra<distype>::MembraneScatra(
     const Discret::Elements::MembraneScatra<distype>& old)
     : Membrane<distype>(old), impltype_(old.impltype_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -60,8 +58,6 @@ void Discret::Elements::MembraneScatra<distype>::pack(Core::Communication::PackB
 
   // add base class Element
   Membrane<distype>::pack(data);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -78,10 +74,6 @@ void Discret::Elements::MembraneScatra<distype>::unpack(Core::Communication::Unp
 
   // extract base class Element
   Membrane<distype>::unpack(buffer);
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -92,8 +84,6 @@ void Discret::Elements::MembraneScatra<distype>::print(std::ostream& os) const
 {
   os << "MembraneScatra ";
   Membrane<distype>::print(os);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

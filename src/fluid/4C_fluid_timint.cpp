@@ -84,8 +84,6 @@ void FLD::TimInt::increment_time_and_step()
 {
   step_ += 1;
   time_ += dta_;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

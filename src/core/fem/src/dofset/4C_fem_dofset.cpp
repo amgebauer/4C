@@ -25,7 +25,6 @@ FOUR_C_NAMESPACE_OPEN
 Core::DOFSets::DofSet::DofSet()
     : Core::DOFSets::DofSetBase(), filled_(false), dspos_(0), pccdofhandling_(false)
 {
-  return;
 }
 
 

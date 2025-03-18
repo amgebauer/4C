@@ -51,9 +51,6 @@ void Coupling::VolMortar::Utils::DefaultMaterialStrategy::assign_material2_to1(
 
   // assign additional material to element A
   ele1->add_material(ele2->material());
-
-  // done
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -94,9 +91,6 @@ void Coupling::VolMortar::Utils::DefaultMaterialStrategy::assign_material1_to2(
 
   // assign additional material to element B
   ele2->add_material(ele1->material());
-
-  // done
-  return;
 };
 
 FOUR_C_NAMESPACE_CLOSE

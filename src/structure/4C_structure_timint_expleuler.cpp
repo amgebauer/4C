@@ -37,7 +37,6 @@ Solid::TimIntExplEuler::TimIntExplEuler(const Teuchos::ParameterList& timeparams
   // redistribution of elements. Only then call the setup to this class. This will call the setup to
   // all classes in the inheritance hierarchy. This way, this class may also override a method that
   // is called during setup() in a base class.
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -61,7 +60,6 @@ void Solid::TimIntExplEuler::init(const Teuchos::ParameterList& timeparams,
   }
 
   // let it rain
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -84,8 +82,6 @@ void Solid::TimIntExplEuler::setup()
   fviscn_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
   fcmtn_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
   frimpn_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -93,7 +89,6 @@ void Solid::TimIntExplEuler::setup()
 void Solid::TimIntExplEuler::resize_m_step()
 {
   // nothing to do, because ExplEuler is a 1-step method
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -260,9 +255,6 @@ void Solid::TimIntExplEuler::update_step_state()
 
   // update contact and meshtying
   update_step_contact_meshtying();
-
-  // bye
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -283,14 +275,13 @@ void Solid::TimIntExplEuler::update_step_element()
 
 /*----------------------------------------------------------------------*/
 /* read restart forces */
-void Solid::TimIntExplEuler::read_restart_force() { return; }
+void Solid::TimIntExplEuler::read_restart_force() {}
 
 /*----------------------------------------------------------------------*/
 /* write internal and external forces for restart */
 void Solid::TimIntExplEuler::write_restart_force(
     std::shared_ptr<Core::IO::DiscretizationWriter> output)
 {
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

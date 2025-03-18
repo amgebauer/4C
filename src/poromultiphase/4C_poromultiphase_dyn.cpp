@@ -102,8 +102,6 @@ void poromultiphase_dyn(int restart)
   algo->create_field_test();
   problem->test_all(comm);
 
-  return;
-
 }  // poromultiphase_dyn
 
 FOUR_C_NAMESPACE_CLOSE

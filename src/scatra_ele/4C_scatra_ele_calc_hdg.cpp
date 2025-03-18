@@ -496,7 +496,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::read_global_vectors(
     Core::FE::extract_my_values(*intphin, interiorPhin_, localDofs);
   }
 
-  return;
 }  // read_global_vectors
 
 
@@ -744,7 +743,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::LocalSolver::compute
     }
   }
 
-  return;
 }  // ComputeFaceMatrices
 
 /*----------------------------------------------------------------------*
@@ -862,7 +860,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype,
       }
     }
 
-  return;
 }  // compute_interior_matrices_tet
 
 /*----------------------------------------------------------------------*
@@ -876,8 +873,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::LocalSolver::compute
     compute_interior_matrices_tet(hdgele);
   else
     compute_interior_matrices_all(hdgele);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -959,7 +954,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype,
       }
     }
 
-  return;
 }  // compute_interior_matrices
 
 /*----------------------------------------------------------------------*
@@ -1104,8 +1098,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::LocalSolver::compute
       tempVec3);  // =  - (G x + E^T y ) +   dt(1-theta) (  G  U    + E^T Q  + H L  )
 
   Core::LinAlg::multiply(1.0, elevec, 1.0, hdgele->Kmat_, tracenp);
-
-  return;
 }  // ComputeResidual
 
 
@@ -1197,8 +1189,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::LocalSolver::condens
       1.0, hdgele->Kmat_, -1.0, hdgele->Gmat_, tempMat6);  // = K = H - G x - E^T y
 
   hdgele->Kmat_.scale(dt * theta);
-
-  return;
 }  // CondenseLocalPart
 
 /*----------------------------------------------------------------------*
@@ -1210,8 +1200,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::LocalSolver::add_dif
 {
   eleMat = hdgele->Kmat_;
   eleMat.scale(-1.0);
-
-  return;
 }  // AddDiffMat
 
 
@@ -1350,10 +1338,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::prepare_material_par
   Discret::Elements::ScaTraHDG* hdgele = dynamic_cast<Discret::Elements::ScaTraHDG*>(ele);
   for (unsigned int i = 0; i < (*difftensor).size(); ++i)
     local_solver_->prepare_material_parameter(hdgele, (*difftensor)[i]);
-
-
-
-  return;
 }  // ScaTraEleCalcHDG::get_material_params
 
 
@@ -1392,10 +1376,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::get_material_params(
 
   Discret::Elements::ScaTraHDG* hdgele = dynamic_cast<Discret::Elements::ScaTraHDG*>(ele);
   local_solver_->set_material_parameter(hdgele, ivecn, ivecnp, ivecnpderiv);
-
-
-
-  return;
 }  // ScaTraEleCalcHDG::get_material_params
 
 
@@ -1713,8 +1693,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::prepare_materials(
   for (unsigned int i = 0; i < nsd_; ++i) difftensortmp(i, i) = diffscalar;
 
   (*difftensor).push_back(difftensortmp);
-
-  return;
 }  // ScaTraEleCalcHDG::Materials
 
 
@@ -1791,8 +1769,6 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::element_init(
   hdgele->Imatnpderiv_.shape(hdgele->ndofs_, hdgele->ndofs_);
 
   hdgele->set_mat_init(true);
-
-  return;
 }  // ElementInit
 
 /*----------------------------------------------------------------------*

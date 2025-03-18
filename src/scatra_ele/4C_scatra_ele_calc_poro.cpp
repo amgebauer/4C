@@ -54,8 +54,6 @@ Discret::Elements::ScaTraEleCalcPoro<distype>::ScaTraEleCalcPoro(
 {
   // initialization of diffusion manager (override initialization in base class)
   my::diffmanager_ = std::make_shared<ScaTraEleDiffManagerPoro>(my::numscal_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -113,8 +111,6 @@ void Discret::Elements::ScaTraEleCalcPoro<distype>::read_element_coordinates(
 
   // copy initial node position
   xyze0_ = my::xyze_;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -128,8 +124,6 @@ void Discret::Elements::ScaTraEleCalcPoro<distype>::extract_element_and_node_val
   extract_element_and_node_values_poro(ele, params, discretization, la);
 
   my::extract_element_and_node_values(ele, params, discretization, la);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -189,8 +183,6 @@ void Discret::Elements::ScaTraEleCalcPoro<distype>::extract_element_and_node_val
   }
   else
     isnodalporosity_ = false;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -229,8 +221,6 @@ void Discret::Elements::ScaTraEleCalcPoro<distype>::get_material_params(
   }
   else
     my::materials(material, 0, densn[0], densnp[0], densam[0], visc, iquad);
-
-  return;
 }  // ScaTraEleCalcPoro::get_material_params
 
 /*----------------------------------------------------------------------*
@@ -273,7 +263,6 @@ void Discret::Elements::ScaTraEleCalcPoro<distype>::mat_scatra(
   //    set_densities(1.0,densn,densnp,densam);
   //  }
 
-  return;
 }  // ScaTraEleCalcPoro<distype>::MatScaTra
 
 /*----------------------------------------------------------------------*
@@ -284,8 +273,6 @@ inline void Discret::Elements::ScaTraEleCalcPoro<distype>::set_diffusivity(
     const std::shared_ptr<const Mat::ScatraMat>& material, const int k, const double scale)
 {
   my::diffmanager_->set_isotropic_diff(material->diffusivity() * scale, k);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -299,8 +286,6 @@ inline void Discret::Elements::ScaTraEleCalcPoro<distype>::set_densities(
   densn = porosity;
   densnp = porosity;
   densam = porosity;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -369,8 +354,6 @@ void Discret::Elements::ScaTraEleCalcPoro<distype>::compute_porosity(
 
   // save porosity in diffusion manager for later access
   diff_manager()->set_porosity(porosity);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -437,7 +420,6 @@ void Discret::Elements::ScaTraEleCalcPoro<distype>::calculate_scalars(
     }
   }  // loop over integration points
 
-  return;
 }  // ScaTraEleCalc::calculate_scalars
 
 // template classes

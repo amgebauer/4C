@@ -41,8 +41,6 @@ Discret::Elements::ScaTraEleCalcLS<distype>::ScaTraEleCalcLS(
   // safety check
   if (my::scatrapara_->rb_sub_gr_vel())
     FOUR_C_THROW("CalcSubgrVelocityLevelSet not available anymore");
-
-  return;
 }
 
 

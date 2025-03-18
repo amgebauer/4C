@@ -171,8 +171,6 @@ void FSI::Monolithic::init_tim_int_ada(const Teuchos::ParameterList& fsidyn)
         "(cf. PhD Thesis [Bornemann, 2003, p. 61, eq. (3.40)]). "
         "Choose an appropriate value!");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -285,8 +283,6 @@ void FSI::Monolithic::timeloop_ada_dt(
 
     write_ada_file();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -303,8 +299,6 @@ void FSI::Monolithic::prepare_adaptive_time_step()
     Core::IO::cout << "\n"
                    << "+++++++++++++++++++++++++++++NEW TIME STEP+++++++++++++++++++++++++++++";
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -413,8 +407,6 @@ void FSI::Monolithic::print_adaptivity_summary() const
       Core::IO::cout << "Time step " << step() << " will be repeated with dt = " << dt() << ".\n";
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -441,8 +433,6 @@ void FSI::Monolithic::time_step_auxiliary()
     fluid_field()->time_step_auxiliary();
   }
   // ---------------------------------------------------------------------------
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -585,7 +575,6 @@ void FSI::Monolithic::adapt_time_step_size()
   }
 
   // ---------------------------------------------------------------------------
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -604,8 +593,6 @@ void FSI::Monolithic::determine_ada_reason(const double dt)
 
   // no change in time step size
   if (dt == dt_past(1)) adareason_ = oldreason;
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -719,8 +706,6 @@ void FSI::Monolithic::set_dt(const double dtnew)
     dt_->set_step(1, dt());  // save step size of previous run of this time step for reset_time()
 
   Adapter::AlgorithmBase::set_dt(dtnew);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

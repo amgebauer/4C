@@ -53,8 +53,6 @@ Mortar::IntElement::IntElement(int lid, int id, int owner, Mortar::Element* pare
   // (data container has to be initialized first)
   initialize_data_container();
   mo_data().area() = compute_area();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -618,8 +616,6 @@ Mortar::IntCell::IntCell(int id, int nvertices, Core::LinAlg::Matrix<3, 3>& coor
   linvertex_[1] = linv2;
   linvertex_[2] = linv3;  // dummy for line2
   linauxn_ = linauxn;
-
-  return;
 }
 
 
@@ -690,8 +686,6 @@ void Mortar::IntCell::print()
             << coords()(2, 1) << std::endl;
   std::cout << "Coordinates for vertex 2 = " << coords()(0, 2) << " " << coords()(1, 2) << " "
             << coords()(2, 2) << std::endl;
-
-  return;
 }
 
 
@@ -896,8 +890,6 @@ void Mortar::IntCell::deriv_jacobian(Core::Gen::Pairedvector<int, double>& deriv
   // unknown case
   else
     FOUR_C_THROW("DerivJacobian (IntCell) called for unknown ele type!");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -916,7 +908,6 @@ Mortar::Vertex::Vertex(std::vector<double> coord, Vertex::VType type, std::vecto
       alpha_(alpha)
 {
   // empty constructor body
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -934,7 +925,6 @@ Mortar::Vertex::Vertex(const Vertex& old)
       alpha_(old.alpha_)
 {
   // empty copy constructor body
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

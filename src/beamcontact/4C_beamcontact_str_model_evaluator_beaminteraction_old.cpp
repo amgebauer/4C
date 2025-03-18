@@ -169,7 +169,6 @@ void Solid::ModelEvaluator::BeamInteractionOld::write_restart(
   // since the global output_step_state() routine is not called, if the
   // restart is written, we have to do it here manually.
   output_step_state(iowriter);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -177,8 +176,7 @@ void Solid::ModelEvaluator::BeamInteractionOld::write_restart(
 void Solid::ModelEvaluator::BeamInteractionOld::read_restart(
     Core::IO::DiscretizationReader& ioreader)
 {
-  beamcman_->read_restart(ioreader);  // ToDo
-  return;
+  beamcman_->read_restart(ioreader);
 }
 
 /*----------------------------------------------------------------------*
@@ -217,7 +215,6 @@ void Solid::ModelEvaluator::BeamInteractionOld::update_step_element()
 void Solid::ModelEvaluator::BeamInteractionOld::determine_stress_strain()
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -225,7 +222,6 @@ void Solid::ModelEvaluator::BeamInteractionOld::determine_stress_strain()
 void Solid::ModelEvaluator::BeamInteractionOld::determine_energy()
 {
   // ToDo
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -233,7 +229,6 @@ void Solid::ModelEvaluator::BeamInteractionOld::determine_energy()
 void Solid::ModelEvaluator::BeamInteractionOld::determine_optional_quantity()
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -241,12 +236,11 @@ void Solid::ModelEvaluator::BeamInteractionOld::determine_optional_quantity()
 void Solid::ModelEvaluator::BeamInteractionOld::output_step_state(
     Core::IO::DiscretizationWriter& iowriter) const
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
-void Solid::ModelEvaluator::BeamInteractionOld::reset_step_state() { return; }
+void Solid::ModelEvaluator::BeamInteractionOld::reset_step_state() {}
 
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
@@ -280,9 +274,6 @@ Solid::ModelEvaluator::BeamInteractionOld::get_last_time_step_solution_ptr() con
 void Solid::ModelEvaluator::BeamInteractionOld::post_output()
 {
   check_init_setup();
-  // empty
-
-  return;
 }  // post_output()
 
 FOUR_C_NAMESPACE_CLOSE

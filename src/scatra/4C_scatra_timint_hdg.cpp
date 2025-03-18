@@ -1058,7 +1058,6 @@ void ScaTra::TimIntHDG::calc_mat_initial()
     std::cout << "Number of non-zeros in system matrix: " << numglobalnonzeros << std::endl;
   }
 
-  return;
 }  // ScaTra::TimIntHDG::CalcMatInitial
 
 
@@ -1267,9 +1266,6 @@ void ScaTra::TimIntHDG::adapt_degree()
 
   if (myrank_ == 0)
     std::cout << "Time measurement for adaption of element degree: " << dtadapt << std::endl;
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1360,8 +1356,6 @@ void ScaTra::TimIntHDG::adapt_variable_vector(std::shared_ptr<Core::LinAlg::Vect
       if (lid >= 0) (*phi_new)[lid] = phi_ele(i);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1374,8 +1368,6 @@ void ScaTra::TimIntHDG::assemble_mat_and_rhs()
   else  // in semi-implicit evaluation matrix does not change, thus only rhs is assembled in every
         // step
     assemble_rhs();
-
-  return;
 }  // TimIntHDG::assemble_mat_and_rhs
 
 /*----------------------------------------------------------------------*
@@ -1439,8 +1431,6 @@ void ScaTra::TimIntHDG::assemble_rhs()
 
   // end time measurement for element
   dtele_ = Teuchos::Time::wallTime() - tcpuele;
-
-  return;
 }  // TimIntHDG::AssembleRHS
 
 /*----------------------------------------------------------------------*

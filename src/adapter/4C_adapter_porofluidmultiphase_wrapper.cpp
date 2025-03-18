@@ -25,7 +25,6 @@ Adapter::PoroFluidMultiphaseWrapper::PoroFluidMultiphaseWrapper(
     std::shared_ptr<PoroFluidMultiphase> porofluid)
     : porofluid_(porofluid)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -43,8 +42,6 @@ void Adapter::PoroFluidMultiphaseWrapper::init(const bool isale,  ///< ALE flag
   // initialize algorithm for specific time-integration scheme
   porofluid_->init(
       isale, nds_disp, nds_vel, nds_solidpressure, ndsporofluid_scatra, nearbyelepairs);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

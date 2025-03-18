@@ -97,7 +97,6 @@ void Mat::ElchMat::setup_mat_map()
     if (mat == nullptr) FOUR_C_THROW("Failed to allocate this material");
     mat_.insert(std::pair<int, std::shared_ptr<Core::Mat::Material>>(phaseid, mat));
   }
-  return;
 }
 
 
@@ -107,7 +106,6 @@ void Mat::ElchMat::clear()
 {
   params_ = nullptr;
   mat_.clear();
-  return;
 }
 
 /*----------------------------------------------------------------------*/

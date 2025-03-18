@@ -115,9 +115,7 @@ Adapter::FBIStructureWrapper::extract_interface_dispn()
 void Adapter::FBIStructureWrapper::apply_interface_forces(
     std::shared_ptr<Core::LinAlg::Vector<double>> iforce)
 {
-  fsi_model_evaluator()->get_interface_force_np_ptr()->update(
-      1.0, *iforce, 0.0);  // todo This has to be changed for mixed structure
-  return;
+  fsi_model_evaluator()->get_interface_force_np_ptr()->update(1.0, *iforce, 0.0);
 }
 
 /*----------------------------------------------------------------------*/

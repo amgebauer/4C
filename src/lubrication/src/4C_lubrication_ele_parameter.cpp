@@ -40,7 +40,6 @@ Discret::Elements::LubricationEleParameter::LubricationEleParameter(
       purelub_(true),
       roughness_deviation_(0.0)
 {
-  return;
 }
 
 //----------------------------------------------------------------------*/

@@ -65,8 +65,6 @@ Mortar::MortarEleDataContainer::MortarEleDataContainer()
   dualshapecoeff_ = nullptr;
   derivdualshapecoeff_ = nullptr;
   trafocoeff_ = nullptr;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -77,8 +75,6 @@ void Mortar::MortarEleDataContainer::pack(Core::Communication::PackBuffer& data)
 {
   // add area_
   add_to_pack(data, area_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -92,7 +88,6 @@ void Mortar::MortarEleDataContainer::unpack(Core::Communication::UnpackBuffer& b
 
   dualshapecoeff_ = nullptr;
   derivdualshapecoeff_ = nullptr;
-  return;
 }
 
 
@@ -110,7 +105,6 @@ Mortar::Element::Element(int id, int owner, const Core::FE::CellType& shape, con
       zero_sized_(false)  // information for nurbs integration
 {
   set_node_ids(numnode, nodeids);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -135,8 +129,6 @@ Mortar::Element::Element(const Mortar::Element& old)
 {
   // not yet used and thus not necessarily consistent
   FOUR_C_THROW("Mortar::Element copy-ctor not yet implemented");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -170,8 +162,6 @@ void Mortar::Element::print(std::ostream& os) const
     os << " Slave  ";
   else
     os << " Master ";
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -219,8 +209,6 @@ void Mortar::Element::pack(Core::Communication::PackBuffer& data) const
   // mesh size
   add_to_pack(data, traceHE_);
   add_to_pack(data, traceHCond_);
-
-  return;
 }
 
 
@@ -802,8 +790,6 @@ void Mortar::Element::deriv_unit_normal_at_xi(
     derivn[0][p->first] -= lllinv * sxsz * (p->second) * normalfac_;
     derivn[1][p->first] -= lllinv * sysz * (p->second) * normalfac_;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -943,8 +929,6 @@ void Mortar::Element::metrics(const double* xi, double* gxi, double* geta) const
     geta[1] = 0.0;
     geta[2] = 1.0;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1099,8 +1083,6 @@ void Mortar::Element::deriv_jacobian(
           jacinv * (cross[0] * gxi[1] - cross[1] * gxi[0]) * deriv(i, 1);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1591,8 +1573,6 @@ void Mortar::Element::reset_data_container()
 {
   // reset to nullptr
   modata_ = nullptr;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1619,8 +1599,6 @@ void Mortar::Element::delete_search_elements()
 
   // add new gid to vector of search candidates
   mo_data().search_elements().clear();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

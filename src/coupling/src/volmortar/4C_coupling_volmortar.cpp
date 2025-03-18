@@ -120,8 +120,6 @@ Coupling::VolMortar::VolMortarCoupl::VolMortarCoupl(int dim,
   cellcounter_ = 0;
   inteles_ = 0;
   volume_ = 0.0;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -166,8 +164,6 @@ void Coupling::VolMortar::VolMortarCoupl::build_maps(std::shared_ptr<Core::FE::D
   // dof map is the original, unpermuted distribution of dofs
   dofmap = std::make_shared<Epetra_Map>(
       -1, dofmapvec.size(), dofmapvec.data(), 0, Core::Communication::as_epetra_comm(comm_));
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -248,9 +244,6 @@ void Coupling::VolMortar::VolMortarCoupl::evaluate_volmortar()
   cellcounter_ = 0;
   inteles_ = 0;
   volume_ = 0.0;
-
-  // coupling done
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -293,8 +286,6 @@ void Coupling::VolMortar::VolMortarCoupl::init_dop_normals()
   dopnormals_(8, 0) = 0.0;
   dopnormals_(8, 1) = 1.0;
   dopnormals_(8, 2) = -1.0;
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  Init search tree                                         farah 05/14|
@@ -470,8 +461,6 @@ void Coupling::VolMortar::VolMortarCoupl::assign_materials()
      ***********************************************************/
     materialstrategy_->assign_material1_to2(this, Bele, found, dis1_, dis2_);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -699,8 +688,6 @@ void Coupling::VolMortar::VolMortarCoupl::create_trafo_operator(Core::Elements::
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -765,8 +752,6 @@ void Coupling::VolMortar::VolMortarCoupl::evaluate_consistent_interpolation()
    ***********************************************************/
   p12_->complete(*p12_dofdomainmap_, *p12_dofrowmap_);
   p21_->complete(*p21_dofdomainmap_, *p21_dofrowmap_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1011,8 +996,6 @@ void Coupling::VolMortar::VolMortarCoupl::evaluate_segments_3d(
   {
     // do nothing...
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1128,8 +1111,6 @@ void Coupling::VolMortar::VolMortarCoupl::check_initial_residuum()
 
   std::cout << "Result of init check= " << std::endl;
   result_A->print(std::cout);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1544,8 +1525,6 @@ void Coupling::VolMortar::VolMortarCoupl::mesh_init()
 
     std::cout << "final ra= " << finalra << "   final rb= " << finalrb << std::endl;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  print_status (public)                                     farah 02/14|
@@ -1574,8 +1553,6 @@ void Coupling::VolMortar::VolMortarCoupl::print_status(int& i, bool dis_switch)
 
     percent_counter++;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1737,8 +1714,6 @@ void Coupling::VolMortar::VolMortarCoupl::perform_cut(
   // DEFAULT           *************************
   else
     FOUR_C_THROW("ERROR: Chosen Cuttype for volmortar not supported!");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2219,8 +2194,6 @@ void Coupling::VolMortar::VolMortarCoupl::integrate_2d(Core::Elements::Element& 
       }
     }
   }  // end loop
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2650,7 +2623,6 @@ void Coupling::VolMortar::VolMortarCoupl::integrate_3d_cell(Core::Elements::Elem
       }
     }
   }  // end cell loop
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2757,8 +2729,6 @@ void Coupling::VolMortar::VolMortarCoupl::integrate_3d_ele_based_p12(
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2865,7 +2835,6 @@ void Coupling::VolMortar::VolMortarCoupl::integrate_3d_ele_based_p21(
       break;
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2931,8 +2900,6 @@ void Coupling::VolMortar::VolMortarCoupl::integrate_3d_ele_based_a_dis_mesh_init
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2998,7 +2965,6 @@ void Coupling::VolMortar::VolMortarCoupl::integrate_3d_ele_based_b_dis_mesh_init
       break;
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3010,8 +2976,6 @@ void Coupling::VolMortar::VolMortarCoupl::assemble_consistent_interpolation_p12(
   static ConsInterpolator interpolator;
   interpolator.interpolate(
       node, *p12_, *dis1_, *dis2_, foundeles, dofset12_, *p12_dofrowmap_, *p12_dofcolmap_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3023,8 +2987,6 @@ void Coupling::VolMortar::VolMortarCoupl::assemble_consistent_interpolation_p21(
   static ConsInterpolator interpolator;
   interpolator.interpolate(
       node, *p21_, *dis2_, *dis1_, foundeles, dofset21_, *p21_dofrowmap_, *p21_dofcolmap_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3181,8 +3143,6 @@ void Coupling::VolMortar::VolMortarCoupl::integrate_3d_cell_direct_divergence(
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3612,8 +3572,6 @@ void Coupling::VolMortar::VolMortarCoupl::integrate_3d(
 
   // integration element counter
   inteles_++;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3640,8 +3598,6 @@ void Coupling::VolMortar::VolMortarCoupl::initialize()
     t1_ = std::make_shared<Core::LinAlg::SparseMatrix>(*p12_dofrowmap_, 10);
     t2_ = std::make_shared<Core::LinAlg::SparseMatrix>(*p21_dofrowmap_, 10);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3662,8 +3618,6 @@ void Coupling::VolMortar::VolMortarCoupl::complete()
     t1_->complete(*p12_dofrowmap_, *p12_dofrowmap_);
     t2_->complete(*p21_dofrowmap_, *p21_dofrowmap_);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3733,8 +3687,6 @@ void Coupling::VolMortar::VolMortarCoupl::create_projection_operator()
     p12_ = aux12;
     p21_ = aux21;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3764,7 +3716,6 @@ void Coupling::VolMortar::VolMortarCoupl::define_vertices_slave(
     slave_vertices.push_back(Mortar::Vertex(
         vertices, Mortar::Vertex::slave, snodeids, nullptr, nullptr, false, false, nullptr, -1.0));
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3794,7 +3745,6 @@ void Coupling::VolMortar::VolMortarCoupl::define_vertices_master(
     slave_vertices.push_back(Mortar::Vertex(vertices, Mortar::Vertex::projmaster, snodeids, nullptr,
         nullptr, false, false, nullptr, -1.0));
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*

@@ -93,8 +93,6 @@ void Cut::BoundaryCell::transform_local_coords(Element* elem1,
       xyze, deriv, metrictensor, drs, &normal);
 
   x_gp_lin.multiply(xyze, funct);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -185,7 +183,6 @@ void Cut::BoundaryCell::dump_gmsh(std::ofstream& file, int* value)
 void Cut::Point1BoundaryCell::dump_gmsh_normal(std::ofstream& file)
 {
   // there is no normal for one point
-  return;
 }
 
 /*----------------------------------------------------------------------------*

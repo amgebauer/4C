@@ -157,8 +157,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScaTraMonolithicTwoWay::setup_system()
       std::vector<Core::LinAlg::EquilibrationMethod>(1, equilibration_method_);
   equilibration_ = Core::LinAlg::build_equilibration(
       Core::LinAlg::MatrixType::block_field, equilibration_method, fullmap_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -199,8 +197,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScaTraMonolithicTwoWay::setup_maps()
 
   // check global map extractor
   blockrowdofmap_->check_for_valid_map_extractor();
-
-  return;
 }
 
 /*-----------------------------------------------------------------------/
@@ -212,8 +208,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScaTraMonolithicTwoWay::build_combined_
   const std::shared_ptr<const Epetra_Map> scatracondmap =
       scatra_algo()->scatra_field()->dirich_maps()->cond_map();
   combinedDBCMap_ = Core::LinAlg::merge_map(porocondmap, scatracondmap, false);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------*
@@ -359,8 +353,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScaTraMonolithicTwoWay::time_step()
 
   // Error-Check
   newton_error_check();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

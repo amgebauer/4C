@@ -188,8 +188,6 @@ void CONSTRAINTS::MPConstraint3Penalty::evaluate(Teuchos::ParameterList& params,
   for (discriter = constraintdis_.begin(); discriter != constraintdis_.end(); discriter++)
     evaluate_constraint(discriter->second, params, systemmatrix1, systemmatrix2, systemvector1,
         systemvector2, systemvector3);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -503,7 +501,6 @@ void CONSTRAINTS::MPConstraint3Penalty::evaluate_error(Core::FE::Discretization&
   Core::LinAlg::Vector<double> acterrdist(*errormap_);
   acterrdist.export_to(systemvector, *errorexport_, Add);
   systemvector.import(acterrdist, *errorimport_, Insert);
-  return;
 }  // end of evaluate_error
 
 FOUR_C_NAMESPACE_CLOSE

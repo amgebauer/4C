@@ -591,9 +591,6 @@ void Thermo::TimIntImpl::prepare_system_for_newton_solve()
   // blank all off-diagonal terms and put 1s at diagonal terms of tang_
   Core::LinAlg::apply_dirichlet_to_system(
       *tang_, *tempi_, *fres_, *zeros_, *(dbcmaps_->cond_map()));
-
-  // final sip
-  return;
 }  // prepare_system_for_newton_solve()
 
 
@@ -618,7 +615,6 @@ void Thermo::TimIntImpl::update_iter(const int iter  //!< iteration counter
   }
 
   // morning is broken
-  return;
 }  // UpdateIter()
 
 
@@ -640,9 +636,6 @@ void Thermo::TimIntImpl::update_iter_incrementally(
 
   // Update using #tempi_
   update_iter_incrementally();
-
-  // leave this place
-  return;
 }  // update_iter_incrementally()
 
 
@@ -661,7 +654,6 @@ void Thermo::TimIntImpl::update()
   // correct iteration counter by adding all reset iterations
   iter_ += resetiter_;
   resetiter_ = 0;
-  return;
 
 }  // update()
 
@@ -677,7 +669,6 @@ void Thermo::TimIntImpl::update_newton(std::shared_ptr<const Core::LinAlg::Vecto
   // the sum of increments we get from NOX and apply the latest
   // increment only.
   update_iter_incrementally(tempi);
-  return;
 
 }  // UpdateNewton()
 
@@ -718,7 +709,6 @@ void Thermo::TimIntImpl::print_predictor()
   }
 
   // leave your hat on
-  return;
 
 }  // print_predictor()
 
@@ -796,9 +786,6 @@ void Thermo::TimIntImpl::print_newton_iter_header(FILE* ofile)
 
   // print it, now
   fflush(ofile);
-
-  // nice to have met you
-  return;
 }  // print_newton_iter_header()
 
 
@@ -861,9 +848,6 @@ void Thermo::TimIntImpl::print_newton_iter_text(FILE* ofile)
 
   // print it, now
   fflush(ofile);
-
-  // nice to have met you
-  return;
 }  // print_newton_iter_text()
 
 

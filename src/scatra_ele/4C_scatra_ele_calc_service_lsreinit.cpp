@@ -212,8 +212,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_correct
     calc_rhs_penalty(erhs, fac, penalty, deriv_sign, norm_gradphizero);
 
   }  // end: loop all Gauss points
-
-  return;
 }
 
 
@@ -305,8 +303,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::calc_ele_penal
 
   // compute penalty parameter
   if (std::abs(ele_dom) > 1.0e-9) penalty = ele_nom / ele_dom;
-
-  return;
 }
 
 
@@ -326,8 +322,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::calc_rhs_penal
 
     erhs[fvi] += vpenalty * my::funct_(vi);
   }
-
-  return;
 }
 
 
@@ -468,8 +462,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_nodal_v
       emat(fvi, fvi) = sum;
     }
   }
-
-  return;
 }
 
 

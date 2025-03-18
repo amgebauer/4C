@@ -228,8 +228,6 @@ void PoroElastScaTra::PoroScatraPart2WC::solve()
     // convergence is achieved overall
     stopnonliniter = convergence_check(itnum);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

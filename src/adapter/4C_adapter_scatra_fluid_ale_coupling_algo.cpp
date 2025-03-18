@@ -27,7 +27,6 @@ Adapter::ScaTraFluidAleCouplingAlgorithm::ScaTraFluidAleCouplingAlgorithm(MPI_Co
       condname_(condname)
 {
   // keep constructor empty
-  return;
 }
 
 
@@ -71,8 +70,6 @@ void Adapter::ScaTraFluidAleCouplingAlgorithm::setup()
 
   // the ale matrix might be build just once!
   ale_field()->create_system_matrix(ale_field()->interface());
-
-  return;
 }
 
 
@@ -108,8 +105,6 @@ void Adapter::ScaTraFluidAleCouplingAlgorithm::fluid_ale_nonlinear_solve(
   {
     fluid_field()->solve();
   }
-
-  return;
 }
 
 

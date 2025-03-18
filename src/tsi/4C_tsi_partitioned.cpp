@@ -172,7 +172,6 @@ void TSI::Partitioned::solve()
       break;
   }  // end switch
 
-  return;
 }  // Solve()
 
 
@@ -1040,7 +1039,6 @@ void TSI::Partitioned::outer_iteration_loop()
       }  // end OUTER ITERATION
     }  // relax temperatures
   }  // iterative staggered TSI with relaxation
-  return;
 
 }  // outer_iteration_loop()
 
@@ -1064,8 +1062,6 @@ void TSI::Partitioned::do_structure_step()
   // do the nonlinear solve for the time step. All boundary conditions have
   // been set.
   structure_field()->solve();
-
-  return;
 
 }  // do_structure_step()
 
@@ -1091,8 +1087,6 @@ void TSI::Partitioned::do_thermo_step()
   // do the solve for the time step. All boundary conditions have
   // been set.
   thermo_field()->solve();
-
-  return;
 
 }  // do_thermo_step()
 

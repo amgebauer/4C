@@ -31,7 +31,6 @@ CONTACT::ConstitutivelawInterface::ConstitutivelawInterface(
   std::shared_ptr<CONTACT::CONSTITUTIVELAW::ConstitutiveLaw> coconstlaw =
       CONTACT::CONSTITUTIVELAW::ConstitutiveLaw::factory(contactconstitutivelawid);
   coconstlaw_ = coconstlaw;
-  return;
 }
 /*----------------------------------------------------------------------*
  |  Evaluate regularized normal forces (nodes)                          |
@@ -134,8 +133,6 @@ void CONTACT::ConstitutivelawInterface::assemble_reg_normal_forces(
 
     }  // Macauley-Bracket
   }  // loop over slave nodes
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

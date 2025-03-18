@@ -171,7 +171,6 @@ void Mat::PAR::FluidPoroMultiPhase::initialize()
   }
 
   isinit_ = true;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -207,11 +206,7 @@ Mat::FluidPoroMultiPhase::FluidPoroMultiPhase(Mat::PAR::FluidPoroMultiPhase* par
 /*----------------------------------------------------------------------*
  | reset everything                                          vuong 08/16 |
  *----------------------------------------------------------------------*/
-void Mat::FluidPoroMultiPhase::clear()
-{
-  paramsporo_ = nullptr;
-  return;
-}
+void Mat::FluidPoroMultiPhase::clear() { paramsporo_ = nullptr; }
 
 /*----------------------------------------------------------------------*
  | initialize                                               vuong 08/16 |
@@ -237,7 +232,6 @@ void Mat::FluidPoroMultiPhase::initialize()
 
     if (not paramsporo_->isinit_) paramsporo_->initialize();
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -315,7 +309,6 @@ void Mat::FluidPoroMultiPhase::evaluate_gen_pressure(
     // evaluate generalized pressure (i.e. some kind of linear combination of the true pressures)
     genpressure[iphase] = singlephasemat.evaluate_gen_pressure(iphase, phinp);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -343,7 +336,6 @@ void Mat::FluidPoroMultiPhase::evaluate_saturation(std::vector<double>& saturati
       saturation[constraintsaturationphase] -= saturation[iphase];
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -358,7 +350,6 @@ void Mat::FluidPoroMultiPhase::transform_gen_pres_to_true_pres(
   phi_transformed.resize(phinp.size());
   for (int i = 0; i < num_fluid_phases(); i++)
     for (int j = 0; j < num_fluid_phases(); j++) phi_transformed[i] += dof2pres(i, j) * phinp[j];
-  return;
 }
 
 /*----------------------------------------------------------------------------------------*
@@ -381,7 +372,6 @@ void Mat::FluidPoroMultiPhase::evaluate_deriv_of_dof_wrt_pressure(
           singlephase.evaluate_deriv_of_dof_wrt_pressure(iphase, jphase, state);
     }
   }
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -414,7 +404,6 @@ void Mat::FluidPoroMultiPhase::evaluate_deriv_of_saturation_wrt_pressure(
       derivs(constraintsaturationphase, jphase) += -1.0 * saturationderiv;
     }
   }
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -451,7 +440,6 @@ void Mat::FluidPoroMultiPhase::evaluate_second_deriv_of_saturation_wrt_pressure(
       }
     }
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

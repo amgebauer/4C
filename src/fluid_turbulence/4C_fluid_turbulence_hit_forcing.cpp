@@ -230,8 +230,6 @@ namespace FLD
     // forcing factor: factor to multiply Fourier coefficients of velocity
     force_fac_ = std::make_shared<Core::LinAlg::SerialDenseVector>(
         nummodes_ * nummodes_ * (nummodes_ / 2 + 1));
-
-    return;
   }
 
 
@@ -389,19 +387,13 @@ namespace FLD
       TimeUpdateForcing();
 #endif
     }
-
-    return;
   }
 
 
   /*--------------------------------------------------------------*
    | activate calculation of forcing              rasthofer 04/13 |
    *--------------------------------------------------------------*/
-  void HomoIsoTurbForcing::activate_forcing(const bool activate)
-  {
-    activate_ = activate;
-    return;
-  }
+  void HomoIsoTurbForcing::activate_forcing(const bool activate) { activate_ = activate; }
 
 
   /*--------------------------------------------------------------*
@@ -825,7 +817,6 @@ namespace FLD
       E_kf_ = 0.0;
     }
 
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif
@@ -1086,8 +1077,6 @@ namespace FLD
     else
       // set force to zero
       forcing_->put_scalar(0.0);
-
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif
@@ -1120,8 +1109,6 @@ namespace FLD
       (*force_fac_)(rr) = 0.0;
 
     forcing_->put_scalar(0.0);
-
-    return;
   }
 
 
@@ -1198,8 +1185,6 @@ namespace FLD
     // forcing factor: factor to multiply Fourier coefficients of velocity
     force_fac_ = std::make_shared<Core::LinAlg::SerialDenseVector>(
         nummodes_ * nummodes_ * (nummodes_ / 2 + 1));
-
-    return;
   }
 
   /*--------------------------------------------------------------*
@@ -1209,10 +1194,6 @@ namespace FLD
   {
 #ifdef USE_TARGET_SPECTRUM
     HomoIsoTurbForcing::set_initial_spectrum(init_field_type);
-#else
-    FOUR_C_THROW("only USE_TARGET_SPECTRUM implemented for HDG");
-#endif
-    return;
   }
 
   /*--------------------------------------------------------------*
@@ -1651,7 +1632,6 @@ namespace FLD
       E_kf_ = 0.0;
     }
     discret_->clear_state(true);
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif
@@ -1963,10 +1943,6 @@ namespace FLD
     discret_->clear_state(true);
 
     return;
-#else
-    FOUR_C_THROW("FFTW required");
-#endif
-    return;
   }
 
   /*--------------------------------------------------------------*
@@ -1999,11 +1975,7 @@ namespace FLD
   /*--------------------------------------------------------------*
    | time update of periodic hill forcing                bk 12/14 |
    *--------------------------------------------------------------*/
-  void PeriodicHillForcing::update_forcing(const int step)
-  {
-    step_ = step;
-    return;
-  }
+  void PeriodicHillForcing::update_forcing(const int step) { step_ = step; }
 
   /*--------------------------------------------------------------*
    | time update of periodic hill forcing                bk 12/14 |
@@ -2092,7 +2064,6 @@ namespace FLD
     if (Core::Communication::my_mpi_rank(discret_->get_comm()) == 0)
       std::cout << "current mass flux:  " << oldflow_ << "/" << 49.46 << "  force:  " << oldforce_
                 << "/" << sum_ / (double)count_ << std::endl;
-    return;
   }
 
 }  // namespace FLD

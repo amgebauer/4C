@@ -37,7 +37,6 @@ BeamInteraction::BeamToBeamContactVariables<numnodes, numnodalvalues>::BeamToBea
       integratedenergy_(0.0),
       angle_(0.0)
 {
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: constructor

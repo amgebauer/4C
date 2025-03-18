@@ -109,8 +109,6 @@ Solid::TimAda::TimAda(const Teuchos::ParameterList& timeparams,  //!< TIS input 
     outenetime_ = timeinitial_ + outeneperiod_;
     outresttime_ = timeinitial_ + outrestperiod_;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -276,8 +274,6 @@ void Solid::TimAda::indicate(bool& accepted, double& stpsiznew)
   }
 
   stpsiznew = calculate_dt(norm);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -341,8 +337,6 @@ void Solid::TimAda::reset_step()
 {
   outrest_ = outsys_ = outstr_ = outene_ = false;
   sti_->reset_step();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -383,8 +377,6 @@ void Solid::TimAda::size_for_output()
     if (fabs(outenetime_) < fabs(outsystime_)) outsys_ = false;
     if (fabs(outenetime_) < fabs(outstrtime_)) outstr_ = false;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -427,8 +419,6 @@ void Solid::TimAda::output_period()
   {
     sti_->output_energy();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -439,8 +429,6 @@ void Solid::TimAda::update_period()
   if (outsys_) outsystime_ += outsysperiod_;
   if (outstr_) outstrtime_ += outstrperiod_;
   if (outene_) outenetime_ += outeneperiod_;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -474,7 +462,6 @@ void Solid::TimAda::print_constants(std::ostream& str) const
       << "   Error order = " << errorder_ << std::endl
       << "   Error tolerance = " << errtol_ << std::endl
       << "   Max adaptations = " << adaptstepmax_ << std::endl;
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -486,7 +473,6 @@ void Solid::TimAda::print_variables(std::ostream& str) const
       << "   Previous step size = " << stepsizepre_ << std::endl
       << "   Current step size = " << stepsize_ << std::endl
       << "   Current adaptive step = " << adaptstep_ << std::endl;
-  return;
 }
 
 
@@ -497,8 +483,6 @@ void Solid::TimAda::print(std::ostream& str) const
   str << "TimAda" << std::endl;
   print_constants(str);
   print_variables(str);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -512,8 +496,6 @@ void Solid::TimAda::attach_file_step_size()
     outsizefile_ = std::make_shared<std::ofstream>(filename.c_str());
     (*outsizefile_) << "# timestep time step-size adaptations" << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -523,18 +505,11 @@ void Solid::TimAda::update_step_size(const double dtnew)
   update_step_size();
   set_dt(dtnew);
   sti_->update_step_time();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
 /* Update step size                                                     */
-void Solid::TimAda::update_step_size()
-{
-  stepsizepre_ = stepsize_;
-
-  return;
-}
+void Solid::TimAda::update_step_size() { stepsizepre_ = stepsize_; }
 
 /*----------------------------------------------------------------------*/
 /* Set new time step size                                               */

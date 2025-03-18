@@ -273,8 +273,6 @@ void EXODUS::read_bc_file(const std::string& bcfile, std::vector<EXODUS::ElemDef
           "Cannot identify marker '{}'. Use *el (element block), *ns (nodeset) or *ss (sideset)",
           mesh_entity.c_str());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -427,7 +425,6 @@ void EXODUS::correct_nodal_coordinates_for_periodic_boundary_conditions(
   correct_yz_plane_for_periodic_boundary_conditions(mesh, condefs);
   correct_xz_plane_for_periodic_boundary_conditions(mesh, condefs);
   correct_xy_plane_for_periodic_boundary_conditions(mesh, condefs);
-  return;
 }
 
 
@@ -565,7 +562,6 @@ void EXODUS::correct_yz_plane_for_periodic_boundary_conditions(
       }
     }
   }
-  return;
 }
 
 
@@ -703,7 +699,6 @@ void EXODUS::correct_xz_plane_for_periodic_boundary_conditions(
       }
     }
   }
-  return;
 }
 
 
@@ -840,7 +835,6 @@ void EXODUS::correct_xy_plane_for_periodic_boundary_conditions(
       }
     }
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

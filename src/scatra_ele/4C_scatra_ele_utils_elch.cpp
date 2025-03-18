@@ -48,7 +48,6 @@ Discret::Elements::ScaTraEleUtilsElch<distype>::ScaTraEleUtilsElch(
     )
     : numdofpernode_(numdofpernode), numscal_(numscal)
 {
-  return;
 }
 
 
@@ -665,7 +664,6 @@ void Discret::Elements::ScaTraEleUtilsElch<distype>::evaluate_elch_kinetics_at_i
     }
   }
 
-  return;
 }  // Discret::Elements::ScaTraEleUtilsElch<distype>::evaluate_elch_kinetics_at_integration_point
 
 

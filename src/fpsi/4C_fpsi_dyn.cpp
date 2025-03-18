@@ -108,9 +108,6 @@ void fpsi_drt()
 
   // 5. - perform the result test
   fpsi->test_results(comm);
-
-
-  return;
 }  // fpsi_drt()
 
 /*----------------------------------------------------------------------*/

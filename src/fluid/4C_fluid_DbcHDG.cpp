@@ -133,8 +133,6 @@ void FLD::Utils::DbcHdgFluid::read_dirichlet_condition(const Teuchos::ParameterL
       }  // loop over DOFs of face
     }  // loop over all faces
   }  // if there are faces
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -376,8 +374,6 @@ void FLD::Utils::DbcHdgFluid::do_dirichlet_condition(const Teuchos::ParameterLis
     }  // loop over all faces
 
   }  // if there are faces
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -73,8 +73,6 @@ void Discret::Elements::ScaTraEleCalcAniso<distype, probdim>::calc_rhs_diff(
     get_laplacian_weak_form_rhs(laplawf, diff_manager()->get_anisotropic_diff(k), gradphi, vi);
     erhs[fvi] -= rhsfac * laplawf;
   }
-
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -96,7 +94,6 @@ void Discret::Elements::ScaTraEleCalcAniso<distype, probdim>::calc_mat_diff(
       emat(fvi, fui) += timefacfac * laplawf;
     }
   }
-  return;
 }
 
 

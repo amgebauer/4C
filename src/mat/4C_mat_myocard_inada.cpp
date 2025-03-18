@@ -880,7 +880,6 @@ void MyocardInada::set_internal_state(const int k, const double val)
     s0_[k] = val;
     s_[k] = val;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -942,8 +941,6 @@ void MyocardInada::update(const double phi, const double dt)
   voi_ += dt;
   // update initial values for next time step
   for (int i = 0; i < 29; i++) s0_[i] = s_[i];
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

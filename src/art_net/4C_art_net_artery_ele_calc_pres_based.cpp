@@ -199,9 +199,6 @@ void Discret::Elements::ArteryEleCalcPresBased<distype>::sysmat(Artery* ele,
     for (int inode = 0; inode < numnode; inode++)
       rhs(inode) -= my::deriv_(0, inode) * fac * pressgrad(0, 0);
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -239,8 +236,6 @@ void Discret::Elements::ArteryEleCalcPresBased<distype>::evaluate_flow(Artery* e
 
   // TODO: this works only for line 2 elements
   flowVec(0) = -hag_pois * (mypress(1) - mypress(0)) / L;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

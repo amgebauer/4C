@@ -27,7 +27,6 @@ Discret::Elements::Wall1Line::Wall1Line(int id, int owner, int nnode, const int*
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
   set_parent_master_element(parent, lline);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -36,7 +35,6 @@ Discret::Elements::Wall1Line::Wall1Line(int id, int owner, int nnode, const int*
 Discret::Elements::Wall1Line::Wall1Line(const Discret::Elements::Wall1Line& old)
     : Core::Elements::FaceElement(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -108,8 +106,6 @@ Core::FE::CellType Discret::Elements::Wall1Line::shape() const
 void Discret::Elements::Wall1Line::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("this Wall1Line element does not support communication");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -119,7 +115,6 @@ void Discret::Elements::Wall1Line::pack(Core::Communication::PackBuffer& data) c
 void Discret::Elements::Wall1Line::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("this line element does not support communication");
-  return;
 }
 
 
@@ -131,7 +126,6 @@ void Discret::Elements::Wall1Line::print(std::ostream& os) const
 {
   os << "Wall1Line ";
   Element::print(os);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

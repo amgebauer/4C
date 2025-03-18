@@ -88,7 +88,6 @@ STI::Partitioned::Partitioned(MPI_Comm comm,  //! communicator
     }
   }
 
-  return;
 }  // STI::Partitioned::Partitioned
 
 
@@ -188,7 +187,6 @@ void STI::Partitioned::solve()
     }
   }
 
-  return;
 }  // STI::Partitioned::Solve()
 
 
@@ -481,7 +479,6 @@ void STI::Partitioned::solve_two_way()
     }
   }
 
-  return;
 }  // STI::Partitioned::solve_two_way()
 
 FOUR_C_NAMESPACE_CLOSE

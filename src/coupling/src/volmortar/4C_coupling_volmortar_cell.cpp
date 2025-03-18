@@ -44,8 +44,6 @@ Coupling::VolMortar::Cell::Cell(int id, int nvertices,
 
   // std::cout << "SHAPE=     "<< shape_ << std::endl;
   if (shape_ != Core::FE::CellType::tet4) FOUR_C_THROW("wrong shape");
-
-  return;
 }
 
 /*---------------------------------------------------------------------*
@@ -133,8 +131,6 @@ void Coupling::VolMortar::Cell::local_to_global(double* local, double* global)
   }
   else
     FOUR_C_THROW("ERROR: Shape of integration cell not supported!");
-
-  return;
 }
 
 /*---------------------------------------------------------------------*
@@ -145,8 +141,6 @@ void Coupling::VolMortar::Cell::print()
   for (int i = 0; i < 4; ++i)
     std::cout << "coords= " << coords_(0, i) << " " << coords_(1, i) << " " << coords_(2, i)
               << std::endl;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

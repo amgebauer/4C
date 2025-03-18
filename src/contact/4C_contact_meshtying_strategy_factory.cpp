@@ -38,8 +38,6 @@ void Mortar::STRATEGY::FactoryMT::setup(const int dim)
   Mortar::STRATEGY::Factory::setup(dim);
 
   set_is_setup();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -302,8 +300,6 @@ void Mortar::STRATEGY::FactoryMT::read_and_check_input(Teuchos::ParameterList& p
     params.sublist("PARALLEL REDISTRIBUTION")
         .set<Inpar::Mortar::ParallelRedist>(
             "PARALLEL_REDIST", Inpar::Mortar::ParallelRedist::redist_none);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

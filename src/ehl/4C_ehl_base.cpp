@@ -222,8 +222,6 @@ void EHL::Base::set_struct_solution(std::shared_ptr<const Core::LinAlg::Vector<d
 
   // Create DBC map for unprojectable nodes
   setup_unprojectable_dbc();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -691,8 +689,6 @@ void EHL::Base::update()
   mortaradapter_->interface()->store_to_old(Mortar::StrategyBase::activeold);
   structure_field()->update();
   lubrication_->lubrication_field()->update();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

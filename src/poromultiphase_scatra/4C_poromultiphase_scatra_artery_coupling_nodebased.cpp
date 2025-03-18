@@ -36,8 +36,6 @@ PoroMultiPhaseScaTra::PoroMultiPhaseScaTraArtCouplNodeBased::PoroMultiPhaseScaTr
     std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
     std::cout << "\n";
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

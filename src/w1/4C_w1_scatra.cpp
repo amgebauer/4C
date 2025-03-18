@@ -74,7 +74,6 @@ void Discret::Elements::Wall1ScatraType::setup_element_definition(
 Discret::Elements::Wall1Scatra::Wall1Scatra(int id, int owner)
     : Wall1(id, owner), impltype_(Inpar::ScaTra::impltype_undefined)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -83,7 +82,6 @@ Discret::Elements::Wall1Scatra::Wall1Scatra(int id, int owner)
 Discret::Elements::Wall1Scatra::Wall1Scatra(const Discret::Elements::Wall1Scatra& old)
     : Wall1(old), impltype_(old.impltype_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -110,8 +108,6 @@ void Discret::Elements::Wall1Scatra::pack(Core::Communication::PackBuffer& data)
 
   // add base class Element
   Wall1::pack(data);
-
-  return;
 }
 
 
@@ -137,7 +133,6 @@ void Discret::Elements::Wall1Scatra::print(std::ostream& os) const
 {
   os << "Wall1_Scatra ";
   Wall1::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------*

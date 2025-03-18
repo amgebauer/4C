@@ -22,7 +22,6 @@ CONSTRAINTS::MPConstraint::MPConstraint(std::shared_ptr<Core::FE::Discretization
     const std::string& conditionname, int& minID, int& maxID)
     : CONSTRAINTS::Constraint(discr, conditionname, minID, maxID)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -32,7 +31,6 @@ CONSTRAINTS::MPConstraint::MPConstraint(
     std::shared_ptr<Core::FE::Discretization> discr, const std::string& conditionname)
     : CONSTRAINTS::Constraint(discr, conditionname)
 {
-  return;
 }
 
 /// Set state of the underlying constraint discretization

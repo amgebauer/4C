@@ -458,8 +458,6 @@ FLD::TurbulenceStatisticsCcy::TurbulenceStatisticsCcy(
 
   // clear statistics
   this->clear_statistics();
-
-  return;
 }  // TurbulenceStatisticsCcy::TurbulenceStatisticsCcy
 
 
@@ -499,8 +497,6 @@ void FLD::TurbulenceStatisticsCcy::do_time_sample(Core::LinAlg::Vector<double>& 
   //----------------------------------------------------------------------
   // loop planes and calculate pointwise means in each plane
   this->evaluate_pointwise_mean_values_in_planes();
-
-  return;
 }  // TurbulenceStatisticsCcy::DoTimeSample
 
 
@@ -1320,7 +1316,6 @@ void FLD::TurbulenceStatisticsCcy::evaluate_pointwise_mean_values_in_planes()
 
   }  // if(withscatra)
 
-  return;
 }  // TurbulenceStatisticsCcy::evaluate_pointwise_mean_values_in_planes()
 
 
@@ -1420,8 +1415,6 @@ void FLD::TurbulenceStatisticsCcy::time_average_means_and_output_of_statistics(i
   // log was written, so increase counter for records
   countrecord_++;
 
-  return;
-
 }  // TurbulenceStatisticsCcy::time_average_means_and_output_of_statistics
 
 
@@ -1480,7 +1473,6 @@ void FLD::TurbulenceStatisticsCcy::clear_statistics()
     }
   }
 
-  return;
 }  // TurbulenceStatisticsCcy::ClearStatistics
 
 
@@ -1531,7 +1523,6 @@ void FLD::TurbulenceStatisticsCcy::add_scatra_results(
     }
   }
 
-  return;
 }  // FLD::TurbulenceStatisticsCcy::AddScaTraResults
 
 FOUR_C_NAMESPACE_CLOSE

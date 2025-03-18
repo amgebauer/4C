@@ -44,7 +44,6 @@ Discret::Elements::ScaTraEleParameterElch::ScaTraEleParameterElch(
       frt_(0.0),
       temperature_(0.0)
 {
-  return;
 }
 
 

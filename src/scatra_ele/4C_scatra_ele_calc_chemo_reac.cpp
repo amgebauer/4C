@@ -157,7 +157,6 @@ void Discret::Elements::ScaTraEleCalcChemoReac<distype, probdim>::get_material_p
     advreac::materials(material, 0, densn[0], densnp[0], densam[0], visc, iquad);
   }
 
-  return;
 }  // ScaTraEleCalc::get_material_params
 
 

@@ -14,7 +14,6 @@ Core::Geo::NearestObject::NearestObject()
     : object_type_(NOTYPE_OBJECT), node_id_(-1), line_id_(-1), surf_id_(-1), label_(-1)
 {
   physcoord_.put_scalar(0.0);
-  return;
 }
 
 
@@ -26,7 +25,6 @@ Core::Geo::NearestObject::NearestObject(const Core::Geo::NearestObject& old)
       label_(old.label_),
       physcoord_(old.physcoord_)
 {
-  return;
 }
 
 
@@ -50,7 +48,6 @@ void Core::Geo::NearestObject::clear()
   surf_id_ = -1;
   label_ = -1;
   physcoord_.put_scalar(0.0);
-  return;
 }
 
 

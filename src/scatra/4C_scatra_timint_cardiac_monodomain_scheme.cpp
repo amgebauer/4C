@@ -28,7 +28,6 @@ ScaTra::TimIntCardiacMonodomainOST::TimIntCardiacMonodomainOST(
       TimIntCardiacMonodomain(actdis, solver, params, sctratimintparams, extraparams, output),
       TimIntOneStepTheta(actdis, solver, sctratimintparams, extraparams, output)
 {
-  return;
 }
 
 
@@ -42,8 +41,6 @@ void ScaTra::TimIntCardiacMonodomainOST::setup()
   TimIntOneStepTheta::setup();
 
   TimIntCardiacMonodomain::setup();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -57,8 +54,6 @@ void ScaTra::TimIntCardiacMonodomainOST::update()
 
   // time update of myocard material
   TimIntCardiacMonodomain::element_material_time_update();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -71,10 +66,7 @@ void ScaTra::TimIntCardiacMonodomainOST::write_restart() const
   TimIntCardiacMonodomain::write_restart();
 
   // Cardiac Monodomain specific
-  output_->write_mesh(
-      step_, time_);  // add info to control file for reading all variables in restart
-
-  return;
+  output_->write_mesh(step_, time_);
 }
 
 /*----------------------------------------------------------------------*
@@ -95,10 +87,7 @@ void ScaTra::TimIntCardiacMonodomainOST::read_restart(
 
   // Cardiac Monodomain specific
   reader->read_vector(activation_time_np_, "activation_time_np");
-  reader->read_history_data(step);  // Read all saved data in nodes and elements und call nodal and
-                                    // element Unpacking each global variable has to be read
-
-  return;
+  reader->read_history_data(step);
 }
 
 /*--------------------------------------------------------------------------*
@@ -110,8 +99,6 @@ void ScaTra::TimIntCardiacMonodomainOST::add_time_integration_specific_vectors(
   // Call function from baseclass
   TimIntOneStepTheta::add_time_integration_specific_vectors(forcedincrementalsolver);
   discret_->set_state("phin", phin_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -127,7 +114,6 @@ ScaTra::TimIntCardiacMonodomainBDF2::TimIntCardiacMonodomainBDF2(
       TimIntCardiacMonodomain(actdis, solver, params, sctratimintparams, extraparams, output),
       TimIntBDF2(actdis, solver, sctratimintparams, extraparams, output)
 {
-  return;
 }
 
 
@@ -141,8 +127,6 @@ void ScaTra::TimIntCardiacMonodomainBDF2::setup()
   TimIntBDF2::setup();
 
   TimIntCardiacMonodomain::setup();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -156,8 +140,6 @@ void ScaTra::TimIntCardiacMonodomainBDF2::update()
 
   // time update of myocard material
   TimIntCardiacMonodomain::element_material_time_update();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -170,10 +152,7 @@ void ScaTra::TimIntCardiacMonodomainBDF2::write_restart() const
   TimIntCardiacMonodomain::write_restart();
 
   // Cardiac Monodomain specific
-  output_->write_mesh(
-      step_, time_);  // add info to control file for reading all variables in restart
-
-  return;
+  output_->write_mesh(step_, time_);
 }
 
 
@@ -195,10 +174,7 @@ void ScaTra::TimIntCardiacMonodomainBDF2::read_restart(
 
   // Cardiac Monodomain specific
   reader->read_vector(activation_time_np_, "activation_time_np");
-  reader->read_history_data(step);  // Read all saved data in nodes and elements und call nodal and
-                                    // element Unpacking each global variable has to be read
-
-  return;
+  reader->read_history_data(step);
 }
 
 
@@ -215,7 +191,6 @@ ScaTra::TimIntCardiacMonodomainGenAlpha::TimIntCardiacMonodomainGenAlpha(
       TimIntCardiacMonodomain(actdis, solver, params, sctratimintparams, extraparams, output),
       TimIntGenAlpha(actdis, solver, sctratimintparams, extraparams, output)
 {
-  return;
 }
 
 
@@ -229,8 +204,6 @@ void ScaTra::TimIntCardiacMonodomainGenAlpha::setup()
   TimIntGenAlpha::setup();
 
   TimIntCardiacMonodomain::setup();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -244,8 +217,6 @@ void ScaTra::TimIntCardiacMonodomainGenAlpha::update()
 
   // time update of myocard material
   TimIntCardiacMonodomain::element_material_time_update();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -258,10 +229,7 @@ void ScaTra::TimIntCardiacMonodomainGenAlpha::write_restart() const
   TimIntCardiacMonodomain::write_restart();
 
   // Cardiac Monodomain specific
-  output_->write_mesh(
-      step_, time_);  // add info to control file for reading all variables in restart
-
-  return;
+  output_->write_mesh(step_, time_);
 }
 
 
@@ -279,10 +247,7 @@ void ScaTra::TimIntCardiacMonodomainGenAlpha::read_restart(
 
   // Cardiac Monodomain specific
   reader.read_vector(activation_time_np_, "activation_time_np");
-  reader.read_history_data(step);  // Read all saved data in nodes and elements und call nodal and
-                                   // element Unpacking each global variable has to be read
-
-  return;
+  reader.read_history_data(step);
 }
 
 /*--------------------------------------------------------------------------*
@@ -295,8 +260,6 @@ void ScaTra::TimIntCardiacMonodomainGenAlpha::add_time_integration_specific_vect
   TimIntGenAlpha::add_time_integration_specific_vectors(forcedincrementalsolver);
 
   if (incremental_ or forcedincrementalsolver) discret_->set_state("phin", phin_);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

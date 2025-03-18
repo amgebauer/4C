@@ -157,56 +157,6 @@ FSI::MonolithicStructureSplit::MonolithicStructureSplit(
   disgprev_ = nullptr;
   sgiprev_ = nullptr;
   sggprev_ = nullptr;
-
-#ifdef FOUR_C_ENABLE_ASSERTIONS
-  // check whether allocation was successful
-  if (sggtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'sggtransform_' failed.");
-  }
-  if (sgitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'sgitransform_' failed.");
-  }
-  if (sigtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'sigtransform_' failed.");
-  }
-  if (aigtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'aigtransform_' failed.");
-  }
-  if (fmiitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fmiitransform_' failed.");
-  }
-  if (fmgitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fmgitransform_' failed.");
-  }
-  if (fsaigtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fsaigtransform_' failed.");
-  }
-  if (fsmgitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fsmgitransform_' failed.");
-  }
-  if (fscoupfa_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fscoupfa_' failed.");
-  }
-  if (lambda_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'lambda_' failed.");
-  }
-  if (lambdaold_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'lambdaold_' failed.");
-  }
-#endif
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -299,8 +249,6 @@ void FSI::MonolithicStructureSplit::create_combined_dof_row_map()
     FOUR_C_THROW("No inner structural equations. Splitting not possible. Panic.");
 
   set_dof_row_maps(vecSpaces);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -330,8 +278,6 @@ void FSI::MonolithicStructureSplit::setup_dbc_map_extractor()
   {
     FOUR_C_THROW("Creation of FSI Dirichlet map extractor failed.");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -377,8 +323,6 @@ void FSI::MonolithicStructureSplit::setup_rhs_residual(Core::LinAlg::Vector<doub
 
   // add additional ale residual
   extractor().add_vector(*aleresidual_, 2, f);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -404,8 +348,6 @@ void FSI::MonolithicStructureSplit::setup_rhs_lambda(Core::LinAlg::Vector<double
     // add Lagrange multiplier
     extractor().add_vector(*lambdafull, 1, f);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -592,8 +534,6 @@ void FSI::MonolithicStructureSplit::setup_rhs_firstiter(Core::LinAlg::Vector<dou
   disgprev_ = nullptr;
   sgicur_ = nullptr;
   sggcur_ = nullptr;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1314,11 +1254,6 @@ void FSI::MonolithicStructureSplit::recover_lagrange_multiplier()
 
   // finally, divide by -(1.-stiparam) which is common to all terms
   lambda_->scale(1. / (1.0 - stiparam));
-
-  // Finally, the Lagrange multiplier 'lambda_' is recovered here.
-  // It represents nodal forces acting onto the structure.
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1348,8 +1283,6 @@ void FSI::MonolithicStructureSplit::calculate_interface_energy_increment()
   energysum_ += energy;
 
   write_interface_energy_file(energy, energysum_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

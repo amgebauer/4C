@@ -39,7 +39,6 @@ Adapter::XFluidFSI::XFluidFSI(std::shared_ptr<Fluid> fluid,  // the XFluid objec
 {
   // make sure
   if (fluid_ == nullptr) FOUR_C_THROW("Failed to create the underlying fluid adapter");
-  return;
 }
 
 /*----------------------------------------------------------------------*/

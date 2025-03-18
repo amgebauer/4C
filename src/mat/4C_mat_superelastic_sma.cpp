@@ -170,7 +170,6 @@ void Mat::SuperElasticSMA::pack(Core::Communication::PackBuffer& data) const
     add_to_pack(data, xi_s_last_->at(var));
   }
 
-  return;
 }  // pack()
 
 
@@ -235,8 +234,6 @@ void Mat::SuperElasticSMA::unpack(Core::Communication::UnpackBuffer& buffer)
 
 
 
-  return;
-
 }  // unpack()
 
 
@@ -265,7 +262,6 @@ void Mat::SuperElasticSMA::setup(int numgp, const Core::IO::InputParameterContai
   }
 
   isinit_ = true;
-  return;
 
 }  // setup()
 
@@ -291,7 +287,6 @@ void Mat::SuperElasticSMA::update()
     druckerpragerloadingcurr_->at(i) = 0.0;
     xi_s_curr_->at(i) = 0.0;
   }
-  return;
 }  // update()
 
 
@@ -989,8 +984,6 @@ void Mat::SuperElasticSMA::evaluate(const Core::LinAlg::Matrix<3, 3>* defgrd,
   xi_s_curr_->at(gp) = xi_S;
   druckerpragerloadingcurr_->at(gp) = drucker_prager_loading;
 
-  return;
-
 }  // evaluate()
 
 /*---------------------------------------------------------------------*
@@ -1136,7 +1129,6 @@ void Mat::SuperElasticSMA::strain_energy(
     const Core::LinAlg::Matrix<6, 1>& glstrain, double& psi, const int gp, const int eleGID) const
 {
   psi = strainenergy_;
-  return;
 }
 
 

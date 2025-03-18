@@ -76,7 +76,6 @@ CONTACT::AbstractStrategyDataContainer::AbstractStrategyDataContainer()
       stype_(CONTACT::SolvingStrategy::vague),
       constr_direction_(CONTACT::ConstraintDirection::vague)
 {
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

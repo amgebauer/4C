@@ -36,8 +36,6 @@ void Core::Geo::SearchTree::initialize_tree(const Core::LinAlg::Matrix<3, 2>& no
 
   // insert element map into tree root node
   if (elementsByLabel.size() > 0) tree_root_->set_element_list(elementsByLabel);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -127,8 +125,6 @@ void Core::Geo::SearchTree::build_static_search_tree(
   }
   else
     FOUR_C_THROW("element list is empty");
-
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -147,8 +143,6 @@ void Core::Geo::SearchTree::build_static_search_tree(
   }
   else
     FOUR_C_THROW("element list is empty");
-
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -169,8 +163,6 @@ void Core::Geo::SearchTree::search_collisions(
   }
   else
     FOUR_C_THROW("element list is empty");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -189,8 +181,6 @@ void Core::Geo::SearchTree::search_collisions(
     tree_root_->search_collisions(currentKDOPs, queryKDOP, label, contactEleIds);
   else
     return;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -381,14 +371,12 @@ void Core::Geo::SearchTree::TreeNode::get_child_node_box(
       childNodeBox(2, 1) = 0.0;
     }
   }
-  return;
 }
 
 
 void Core::Geo::SearchTree::TreeNode::insert_element(const int label, const int eleId)
 {
   element_list_[label].insert(eleId);
-  return;
 }
 
 void Core::Geo::SearchTree::TreeNode::create_children(const Core::FE::Discretization& dis,
@@ -443,7 +431,6 @@ void Core::Geo::SearchTree::TreeNode::create_children(
   }
   // this node becomes an inner tree node
   tree_node_type_ = INNER_NODE;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -644,7 +631,6 @@ void Core::Geo::SearchTree::TreeNode::classify_xaabb(
         octants.push_back(2);
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -708,7 +694,6 @@ void Core::Geo::SearchTree::TreeNode::classify_kdop(
       if (KDOP(2, 0) < (z_plane_coordinate_ + Core::Geo::TOL7)) octants.push_back(2);
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1229,7 +1214,6 @@ void Core::Geo::SearchTree::TreeNode::build_static_search_tree(
       children_[count]->build_static_search_tree(currentBVs);
     return;
   }
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -1248,7 +1232,6 @@ void Core::Geo::SearchTree::TreeNode::build_static_search_tree(
       children_[count]->build_static_search_tree(currentBVs);
     return;
   }
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -1294,7 +1277,6 @@ void Core::Geo::SearchTree::TreeNode::search_collisions(
     default:
       FOUR_C_THROW("should not get here\n");
   }
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -1340,7 +1322,6 @@ void Core::Geo::SearchTree::TreeNode::search_collisions(
     default:
       FOUR_C_THROW("should not get here\n");
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

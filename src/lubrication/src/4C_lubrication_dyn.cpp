@@ -82,8 +82,6 @@ void lubrication_dyn(int restart)
   Global::Problem::instance()->add_field_test(lubricationonly->create_lubrication_field_test());
   Global::Problem::instance()->test_all(comm);
 
-  return;
-
 }  // end of lubrication_dyn()
 
 FOUR_C_NAMESPACE_CLOSE

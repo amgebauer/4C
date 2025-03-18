@@ -129,8 +129,6 @@ void Adapter::FluidPoro::evaluate_no_penetration_cond(
     FOUR_C_THROW("unknown coupling type for no penetration BC");
 
   discretization()->clear_state();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

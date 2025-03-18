@@ -102,18 +102,13 @@ void Mat::MatListChemotaxis::setup_mat_map()
     if (mat == nullptr) FOUR_C_THROW("Failed to allocate this material");
     material_map_write()->insert(std::pair<int, std::shared_ptr<Core::Mat::Material>>(pairid, mat));
   }
-  return;
 }
 
 
 /*----------------------------------------------------------------------*
  | reset everything                                          thon 06/15 |
  *----------------------------------------------------------------------*/
-void Mat::MatListChemotaxis::clear()
-{
-  paramschemo_ = nullptr;
-  return;
-}
+void Mat::MatListChemotaxis::clear() { paramschemo_ = nullptr; }
 
 
 /*----------------------------------------------------------------------*

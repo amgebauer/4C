@@ -412,8 +412,6 @@ void Discret::Elements::StructuralSurface::surface_integration(std::vector<doubl
   normal[0] = dxyzdrs(0, 1) * dxyzdrs(1, 2) - dxyzdrs(0, 2) * dxyzdrs(1, 1);
   normal[1] = dxyzdrs(0, 2) * dxyzdrs(1, 0) - dxyzdrs(0, 0) * dxyzdrs(1, 2);
   normal[2] = dxyzdrs(0, 0) * dxyzdrs(1, 1) - dxyzdrs(0, 1) * dxyzdrs(1, 0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -443,8 +441,6 @@ void Discret::Elements::StructuralSurface::surface_integration(double& detA,
   normal[0] = dxyzdrs(0, 1) * dxyzdrs(1, 2) - dxyzdrs(0, 2) * dxyzdrs(1, 1);
   normal[1] = dxyzdrs(0, 2) * dxyzdrs(1, 0) - dxyzdrs(0, 0) * dxyzdrs(1, 2);
   normal[2] = dxyzdrs(0, 0) * dxyzdrs(1, 1) - dxyzdrs(0, 1) * dxyzdrs(1, 0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -510,8 +506,6 @@ void Discret::Elements::StructuralSurface::automatic_d_surface_integration(
       d_normal(dim, dxyz) = saccado_normal[dim].fastAccessDx(dxyz);
     }
   }
-
-  return;
 }
 
 
@@ -565,8 +559,6 @@ void Discret::Elements::StructuralSurface::analytical_d_surface_integration(
     d_normal(2, dof) =
         dg1(0, dof) * g2[1] + g1[0] * dg2(1, dof) - dg1(1, dof) * g2[0] - g1[1] * dg2(0, dof);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1313,7 +1305,6 @@ void Discret::Elements::StructuralSurface::compute_vol_deriv(
     }
   }
   V *= invnumind;
-  return;
 }
 
 
@@ -1452,8 +1443,6 @@ void Discret::Elements::StructuralSurface::compute_area_deriv(
       }
     }
   }
-
-  return;
 }
 
 

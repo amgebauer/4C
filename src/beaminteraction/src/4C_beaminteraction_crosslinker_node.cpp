@@ -39,9 +39,7 @@ CrossLinking::CrosslinkerNodeDataContainer::CrosslinkerNodeDataContainer() : num
   pair.first = -1;
   pair.second = -1;
   clbspots_.push_back(pair);  // first binding spot of crosslinker
-  clbspots_.push_back(pair);  // second binding spot of crosslinker
-
-  return;
+  clbspots_.push_back(pair);
 }
 
 /*----------------------------------------------------------------------------*
@@ -54,8 +52,6 @@ void CrossLinking::CrosslinkerNodeDataContainer::pack(Core::Communication::PackB
   add_to_pack(data, numbond_);
   // add clbspots_
   add_to_pack(data, clbspots_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -68,8 +64,6 @@ void CrossLinking::CrosslinkerNodeDataContainer::unpack(Core::Communication::Unp
   extract_from_pack(buffer, numbond_);
   // clbspots_
   extract_from_pack(buffer, clbspots_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -79,7 +73,6 @@ CrossLinking::CrosslinkerNode::CrosslinkerNode(
     int id, const std::vector<double>& coords, const int owner)
     : Core::Nodes::Node(id, coords, owner), mat_(nullptr)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -91,7 +84,6 @@ CrossLinking::CrosslinkerNode::CrosslinkerNode(const CrossLinking::CrosslinkerNo
   FOUR_C_THROW(
       "Copy constructor of CrosslinkerNodeDataContainer needs to "
       "implemented first");
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -121,9 +113,6 @@ void CrossLinking::CrosslinkerNode::print(std::ostream& os) const
   // Print id and coordinates
   os << "Crosslinker ";
   Core::Nodes::Node::print(os);
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -142,8 +131,6 @@ void CrossLinking::CrosslinkerNode::pack(Core::Communication::PackBuffer& data) 
   bool hasmat = (mat_ != nullptr);
   add_to_pack(data, hasmat);
   if (hasmat) mat_->pack(data);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -172,9 +159,6 @@ void CrossLinking::CrosslinkerNode::unpack(Core::Communication::UnpackBuffer& bu
   {
     mat_ = nullptr;
   }
-
-
-  return;
 }
 
 ///*----------------------------------------------------------------------------*

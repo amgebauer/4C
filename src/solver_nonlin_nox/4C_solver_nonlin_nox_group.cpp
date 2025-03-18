@@ -102,7 +102,6 @@ void NOX::Nln::Group::computeX(
   const ::NOX::Epetra::Vector& epetrad = dynamic_cast<const ::NOX::Epetra::Vector&>(d);
 
   computeX(*nlngrp, epetrad, step);
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -124,8 +123,6 @@ void NOX::Nln::Group::computeX(
   if (not skipUpdateX_) xVector.update(1.0, grp.xVector, step, d);
 
   prePostOperatorPtr_->run_post_compute_x(grp, d_view, step, *this);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

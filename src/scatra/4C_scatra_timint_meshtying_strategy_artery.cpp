@@ -132,8 +132,6 @@ void ScaTra::MeshtyingStrategyArtery::setup_meshtying()
           false, true);
 
   arttoscatracoupling_->setup();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -212,8 +210,6 @@ void ScaTra::MeshtyingStrategyArtery::init_conv_check_strategy()
 {
   convcheckstrategy_ = std::make_shared<ScaTra::ConvCheckStrategyPoroMultiphaseScatraArtMeshTying>(
       scatratimint_->scatra_parameter_list()->sublist("NONLINEAR"));
-
-  return;
 }
 
 /*------------------------------------------------------------------------------------------*
@@ -251,8 +247,6 @@ void ScaTra::MeshtyingStrategyArtery::solve(
   increment->update(1.0, *(myinc), 1.0);
   // update the artery-scatra field
   artscatratimint_->update_iter(*artscatrainc);
-
-  return;
 }
 
 /*------------------------------------------------------------------------------------------*
@@ -290,8 +284,6 @@ void ScaTra::MeshtyingStrategyArtery::update_art_scatra_iter(
   extract_single_field_vectors(combined_inc, myinc, artscatrainc);
 
   artscatratimint_->update_iter(*artscatrainc);
-
-  return;
 }
 
 /*-------------------------------------------------------------------------*
@@ -303,8 +295,6 @@ void ScaTra::MeshtyingStrategyArtery::extract_single_field_vectors(
     std::shared_ptr<const Core::LinAlg::Vector<double>>& vec_art) const
 {
   arttoscatracoupling_->extract_single_field_vectors(globalvec, vec_cont, vec_art);
-
-  return;
 }
 
 /*-------------------------------------------------------------------------*
@@ -315,8 +305,6 @@ void ScaTra::MeshtyingStrategyArtery::set_artery_scatra_time_integrator(
 {
   artscatratimint_ = artscatratimint;
   if (artscatratimint_ == nullptr) FOUR_C_THROW("could not set artery scatra time integrator");
-
-  return;
 }
 
 /*-------------------------------------------------------------------------*
@@ -327,8 +315,6 @@ void ScaTra::MeshtyingStrategyArtery::set_artery_time_integrator(
 {
   arttimint_ = arttimint;
   if (arttimint_ == nullptr) FOUR_C_THROW("could not set artery time integrator");
-
-  return;
 }
 
 /*-------------------------------------------------------------------------*
@@ -338,8 +324,6 @@ void ScaTra::MeshtyingStrategyArtery::set_nearby_ele_pairs(
     const std::map<int, std::set<int>>* nearbyelepairs)
 {
   arttoscatracoupling_->set_nearby_ele_pairs(nearbyelepairs);
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -348,7 +332,6 @@ void ScaTra::MeshtyingStrategyArtery::set_nearby_ele_pairs(
 void ScaTra::MeshtyingStrategyArtery::prepare_time_step() const
 {
   artscatratimint_->prepare_time_step();
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -357,7 +340,6 @@ void ScaTra::MeshtyingStrategyArtery::prepare_time_step() const
 void ScaTra::MeshtyingStrategyArtery::set_artery_pressure() const
 {
   artscatradis_->set_state(2, "one_d_artery_pressure", arttimint_->pressurenp());
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -366,7 +348,6 @@ void ScaTra::MeshtyingStrategyArtery::set_artery_pressure() const
 void ScaTra::MeshtyingStrategyArtery::apply_mesh_movement()
 {
   arttoscatracoupling_->apply_mesh_movement();
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -375,8 +356,6 @@ void ScaTra::MeshtyingStrategyArtery::apply_mesh_movement()
 void ScaTra::MeshtyingStrategyArtery::check_initial_fields() const
 {
   arttoscatracoupling_->check_initial_fields(scatratimint_->phinp(), artscatratimint_->phinp());
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

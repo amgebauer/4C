@@ -128,8 +128,6 @@ void Mat::ThermoPlasticLinElast::pack(Core::Communication::PackBuffer& data) con
 
   add_to_pack(data, plastic_step_);
 
-  return;
-
 }  // pack()
 
 
@@ -274,8 +272,6 @@ void Mat::ThermoPlasticLinElast::setup(
 
   isinit_ = true;
 
-  return;
-
 }  // setup()
 
 
@@ -313,7 +309,6 @@ void Mat::ThermoPlasticLinElast::update()
     strainbarplcurr_->at(i) = 0.0;
   }
 
-  return;
 }  // update()
 
 
@@ -1130,7 +1125,6 @@ void Mat::ThermoPlasticLinElast::strain_rate_split(int gp,    // current Gauss p
     strainelrate_->at(gp)(i) = strainrate(i, 0) - (1.0 / stepsize) * incstrainpl_->at(gp)(i);
   }
 
-  return;
 
 }  // StrainRateSplit
 

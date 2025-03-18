@@ -274,7 +274,6 @@ void MultiScale::MicroStatic::predictor(Core::LinAlg::Matrix<3, 3>* defgrd)
     predict_tang_dis(defgrd);
   else
     FOUR_C_THROW("requested predictor not implemented on the micro-scale");
-  return;
 }
 
 
@@ -343,8 +342,6 @@ void MultiScale::MicroStatic::predict_const_dis(Core::LinAlg::Matrix<3, 3>* defg
 
   // store norm of residual
   normfres_ = Solid::calculate_vector_norm(iternorm_, *fresn_);
-
-  return;
 }  // MultiScale::MicroStatic::Predictor()
 
 
@@ -504,8 +501,6 @@ void MultiScale::MicroStatic::predict_tang_dis(Core::LinAlg::Matrix<3, 3>* defgr
 
   // store norm of residual
   normfres_ = Solid::calculate_vector_norm(iternorm_, *fresn_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -612,7 +607,6 @@ void MultiScale::MicroStatic::full_newton()
     FOUR_C_THROW("Newton unconverged in {} iterations", numiter_);
   }
 
-  return;
 }  // MultiScale::MicroStatic::FullNewton()
 
 

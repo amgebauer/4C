@@ -25,7 +25,6 @@ Discret::Elements::Ale2Line::Ale2Line(int id, int owner, int nnode, const int* n
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
   set_parent_master_element(parent, lline);
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -33,7 +32,6 @@ Discret::Elements::Ale2Line::Ale2Line(int id, int owner, int nnode, const int* n
 Discret::Elements::Ale2Line::Ale2Line(const Discret::Elements::Ale2Line& old)
     : Core::Elements::FaceElement(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -65,8 +63,6 @@ Core::FE::CellType Discret::Elements::Ale2Line::shape() const
 void Discret::Elements::Ale2Line::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("this Ale2Line element does not support communication");
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -74,7 +70,6 @@ void Discret::Elements::Ale2Line::pack(Core::Communication::PackBuffer& data) co
 void Discret::Elements::Ale2Line::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("this Ale2Line element does not support communication");
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -83,7 +78,6 @@ void Discret::Elements::Ale2Line::print(std::ostream& os) const
 {
   os << "Ale2Line ";
   Element::print(os);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

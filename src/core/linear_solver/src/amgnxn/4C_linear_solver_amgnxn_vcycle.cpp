@@ -54,7 +54,6 @@ void Core::LinearSolver::AMGNxN::Vcycle::set_operators(
     avec_[i] = Avec[i];
   }
   flag_set_up_a_ = true;
-  return;
 }
 
 
@@ -71,7 +70,6 @@ void Core::LinearSolver::AMGNxN::Vcycle::set_projectors(
     pvec_[i] = Pvec[i];
   }
   flag_set_up_p_ = true;
-  return;
 }
 
 
@@ -88,7 +86,6 @@ void Core::LinearSolver::AMGNxN::Vcycle::set_restrictors(
     rvec_[i] = Rvec[i];
   }
   flag_set_up_r_ = true;
-  return;
 }
 
 
@@ -105,7 +102,6 @@ void Core::LinearSolver::AMGNxN::Vcycle::set_pre_smoothers(
     svec_pre_[i] = SvecPre[i];
   }
   flag_set_up_pre_ = true;
-  return;
 }
 
 /*------------------------------------------------------------------------------*/
@@ -122,7 +118,6 @@ void Core::LinearSolver::AMGNxN::Vcycle::set_pos_smoothers(
     svec_pos_[i] = SvecPos[i];
   }
   flag_set_up_pos_ = true;
-  return;
 }
 
 /*------------------------------------------------------------------------------*/
@@ -161,9 +156,6 @@ void Core::LinearSolver::AMGNxN::Vcycle::do_vcycle(
   {
     svec_pre_[level]->solve(X, Y, InitialGuessIsZero);
   }
-
-
-  return;
 }
 
 
@@ -182,7 +174,6 @@ void Core::LinearSolver::AMGNxN::Vcycle::solve(
   // Work!
   for (int i = 0; i < num_sweeps_; i++)
     do_vcycle(X, Y, first_level_, InitialGuessIsZero and i == 0);
-  return;
 }
 
 
@@ -219,7 +210,6 @@ void Core::LinearSolver::AMGNxN::VcycleSingle::set_operators(
     avec_[i] = Avec[i];
   }
   flag_set_up_a_ = true;
-  return;
 }
 
 
@@ -236,7 +226,6 @@ void Core::LinearSolver::AMGNxN::VcycleSingle::set_projectors(
     pvec_[i] = Pvec[i];
   }
   flag_set_up_p_ = true;
-  return;
 }
 
 
@@ -253,7 +242,6 @@ void Core::LinearSolver::AMGNxN::VcycleSingle::set_restrictors(
     rvec_[i] = Rvec[i];
   }
   flag_set_up_r_ = true;
-  return;
 }
 
 
@@ -270,7 +258,6 @@ void Core::LinearSolver::AMGNxN::VcycleSingle::set_pre_smoothers(
     svec_pre_[i] = SvecPre[i];
   }
   flag_set_up_pre_ = true;
-  return;
 }
 
 /*------------------------------------------------------------------------------*/
@@ -287,7 +274,6 @@ void Core::LinearSolver::AMGNxN::VcycleSingle::set_pos_smoothers(
     svec_pos_[i] = SvecPos[i];
   }
   flag_set_up_pos_ = true;
-  return;
 }
 
 /*------------------------------------------------------------------------------*/
@@ -328,8 +314,6 @@ void Core::LinearSolver::AMGNxN::VcycleSingle::do_vcycle(const Core::LinAlg::Mul
   {
     svec_pre_[level]->apply(X, Y, InitialGuessIsZero);
   }
-
-  return;
 }
 
 
@@ -348,7 +332,6 @@ void Core::LinearSolver::AMGNxN::VcycleSingle::apply(const Core::LinAlg::MultiVe
   // Work!
   for (int i = 0; i < num_sweeps_; i++)
     do_vcycle(X, Y, first_level_, InitialGuessIsZero and i == 0);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

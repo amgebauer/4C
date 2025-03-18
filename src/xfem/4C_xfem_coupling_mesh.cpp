@@ -352,7 +352,6 @@ void XFEM::MeshVolCoupling::get_coupling_ele_location_vector(
   std::vector<int> patchlmstride, patchlmowner;  // dummy
   Core::Elements::Element* coupl_ele = get_coupling_element(sid);
   coupl_ele->location_vector(*coupl_dis_, patchlm, patchlmowner, patchlmstride);
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -1021,8 +1020,6 @@ void XFEM::MeshCouplingWeakDirichlet::setup_configuration_map()
   // Configuration of Penalty Terms
   configuration_map_[Inpar::XFEM::F_Pen_Row] = std::pair<bool, double>(true, 1.0);
   configuration_map_[Inpar::XFEM::F_Pen_Col] = std::pair<bool, double>(true, 1.0);
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -1046,8 +1043,6 @@ void XFEM::MeshCouplingWeakDirichlet::update_configuration_map_gp(
 {
   // Configuration of Penalty Terms
   configuration_map_[Inpar::XFEM::F_Pen_Row].second = full_stab;
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -1133,8 +1128,6 @@ void XFEM::MeshCouplingNeumann::update_configuration_map_gp(
       configuration_map_[Inpar::XFEM::F_Pen_Row_linF3] = std::pair<bool, double>(false, 0);
     }
   }
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -2097,7 +2090,6 @@ void XFEM::MeshCouplingFSI::setup_configuration_map()
   else
     FOUR_C_THROW(
         "XFEM::MeshCouplingFSI: You want to initialize another strategy than Xfluid_Sided?");
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -2205,7 +2197,6 @@ void XFEM::MeshCouplingFSI::update_configuration_map_gp(double& kappa_m,  //< fl
     else
       FOUR_C_THROW("Intlaw not available!");
   }
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -2409,8 +2400,6 @@ void XFEM::MeshCouplingFSI::get_stress_tangent_slave(
   // this is a temporal hack as we calculate "E/h" directly with the generalized eigenvalue problem
   // ... need to work on the input section to clarify this ...
   e_s = timefac_;
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -2454,7 +2443,6 @@ void XFEM::MeshCouplingFSI::register_side_proc(int sid)
 {
   if (get_interface_law() == Inpar::XFEM::navierslip_contact)
     get_contact_comm()->register_side_proc(sid);
-  return;
 }
 
 
@@ -2557,8 +2545,6 @@ void XFEM::MeshCouplingFluidFluid::setup_configuration_map()
     FOUR_C_THROW("XFEM::MeshCouplingFluidFluid: Averaging Strategy not set!");
   else
     FOUR_C_THROW("XFEM::MeshCouplingFluidFluid: You want to initialize another strategy?");
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -2591,7 +2577,6 @@ void XFEM::MeshCouplingFluidFluid::update_configuration_map_gp(
   // Configuration of Penalty Terms
   configuration_map_[Inpar::XFEM::F_Pen_Row].second = full_stab;
   configuration_map_[Inpar::XFEM::X_Pen_Row].second = full_stab;
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -2607,8 +2592,6 @@ void XFEM::MeshCouplingFluidFluid::get_viscosity_slave(
     visc_s = std::dynamic_pointer_cast<Mat::NewtonianFluid>(mat_s)->viscosity();
   else
     FOUR_C_THROW("get_coupling_specific_average_weights: Slave Material not a fluid material?");
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -2630,8 +2613,6 @@ void XFEM::MeshCouplingFluidFluid::estimate_nitsche_trace_max_eigenvalue(
   Discret::Elements::FluidBoundaryParentInterface::impl(faceele)
       ->estimate_nitsche_trace_max_eigenvalue(
           faceele, params, *coupl_dis_, la[0].lm_, dummyelemat, dummyelevec);
-
-  return;
 }
 
 // -------------------------------------------------------------------

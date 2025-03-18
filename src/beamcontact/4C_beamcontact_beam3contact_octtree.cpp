@@ -176,8 +176,6 @@ Beam3ContactOctTree::Beam3ContactOctTree(Teuchos::ParameterList& params,
     std::cout << "max. tree depth        = " << maxtreedepth_
               << "\nmax. BB per octant     = " << minbboxesinoctant_ << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -471,8 +469,6 @@ void Beam3ContactOctTree::initialize_octree_search()
   if (periodic_bc_) maxnumshifts = 3;
   allbboxes_ = std::make_shared<Core::LinAlg::MultiVector<double>>(
       *(searchdis_.element_col_map()), (maxnumshifts + 1) * numbboxcoords + 1, true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -590,8 +586,6 @@ void Beam3ContactOctTree::create_bounding_boxes(
   if (!Core::Communication::my_mpi_rank(searchdis_.Comm()))
     std::cout << "\n\nBBox creation time:\t\t" << bbgentimeglobal << " seconds" << std::endl;
 #endif
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------*
@@ -698,8 +692,6 @@ void Beam3ContactOctTree::create_aabb(Core::LinAlg::SerialDenseMatrix& coord, co
 
   // store GID (=box number)
   (*allbboxes_)(allbboxes_->NumVectors() - 1)[elecolid] = elegid;
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------*
@@ -802,8 +794,6 @@ void Beam3ContactOctTree::create_cobb(Core::LinAlg::SerialDenseMatrix& coord, co
 
   // last entry: element GID
   (*allbboxes_)(allbboxes_->NumVectors() - 1)[elecolid] = elegid;
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------*
@@ -920,7 +910,6 @@ void Beam3ContactOctTree::create_spbb(Core::LinAlg::SerialDenseMatrix& coord, co
 
   // last entry: element GID
   (*allbboxes_)(allbboxes_->NumVectors() - 1)[elecolid] = elegid;
-  return;
 }
 /*-----------------------------------------------------------------------------------------*
  |  locate_all function (private); Recursive division of a 3-dimensional set.    meier 02/11|
@@ -1202,7 +1191,6 @@ void Beam3ContactOctTree::locate_box(std::vector<std::vector<double>>& allbboxes
       }
     }
   }  // end of loop which goes through all suboctants
-  return;
 }  // end of method locate_box
 
 /*----------------------------------------------------------------------------------*
@@ -1285,7 +1273,6 @@ void Beam3ContactOctTree::create_sub_octants(Core::LinAlg::Matrix<6, 1>& parento
       }
     }
   }
-  return;
 }
 
 /*-----------------------------------------------------------------------------------*
@@ -1572,7 +1559,6 @@ void Beam3ContactOctTree::bounding_box_intersection(
     std::cout << "intersection time:\t\t" << isectimeglobal << " seconds" << std::endl;
 #endif
 
-  return;
 }  // end of method bounding_box_intersection()
 
 /*-----------------------------------------------------------------------------------*
@@ -1822,7 +1808,6 @@ void Beam3ContactOctTree::communicate_vector(Core::LinAlg::Vector<double>& InVec
     InVec.export_to(OutVec, exporter, Add);
   }
   if (doimport) OutVec.import(InVec, importer, Insert);
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -1841,7 +1826,6 @@ void Beam3ContactOctTree::communicate_multi_vector(Core::LinAlg::MultiVector<dou
     InVec.Export(OutVec, exporter, Add);
   }
   if (doimport) OutVec.Import(InVec, importer, Insert);
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -1885,8 +1869,6 @@ void Beam3ContactOctTree::calc_corner_pos(Core::Elements::Element* element,
     coord(j, 0) = coord_min(j);
     coord(j, 1) = coord_max(j);
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -1916,7 +1898,6 @@ void Beam3ContactOctTree::undo_effect_of_periodic_boundary_condition(
       coord(dof, 1) += periodlength_->at(dof);
     }
   }
-  return;
 }
 /*-----------------------------------------------------------------------*
  | Get bounding-box-specific extrusion value               mueller 02/15 |

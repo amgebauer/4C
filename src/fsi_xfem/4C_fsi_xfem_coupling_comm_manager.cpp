@@ -160,7 +160,6 @@ void XFEM::CouplingCommManager::insert_vector(const int idxA,
     default:
       FOUR_C_THROW("Coupling_Comm_Manager::InsertVector: Transfer Type not implemented!");
   }
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -219,7 +218,6 @@ void XFEM::CouplingCommManager::setup(
                                      // full discretization (e.g. pres <==> vel&pres)
   }
   setup_full_extractor(dis);
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------*
@@ -269,7 +267,6 @@ void XFEM::CouplingCommManager::setup_full_map_extractors(
     }
     mme_[dit->first] = me;
   }
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -308,7 +305,6 @@ void XFEM::CouplingCommManager::setup_couplings(
           *(*betadis).second, (*mmebeta).second->Map(1), cond_name_, enddim_ - startdim_, true);
     }
   }
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -341,7 +337,6 @@ void XFEM::CouplingCommManager::setup_full_couplings(
           enddim_ - startdim_, false);
     }
   }
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -465,8 +460,6 @@ void XFEM::CouplingCommManager::debug_out(
 {
 #ifdef COUP_MANAGER_DEBUG_OUT
   std::cout << str1 << str2 << str3 << str4 << std::flush;
-#endif
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -37,7 +37,6 @@ Solid::TimIntAB2::TimIntAB2(const Teuchos::ParameterList& timeparams,
   // redistribution of elements. Only then call the setup to this class. This will call the setup to
   // all classes in the inheritance hierarchy. This way, this class may also override a method that
   // is called during setup() in a base class.
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -56,8 +55,6 @@ void Solid::TimIntAB2::init(const Teuchos::ParameterList& timeparams,
   {
     std::cout << "with Adams-Bashforth 2nd order" << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -81,8 +78,6 @@ void Solid::TimIntAB2::setup()
   fviscn_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
   fcmtn_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
   frimpn_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
-
-  return;
 }
 
 
@@ -99,8 +94,6 @@ void Solid::TimIntAB2::resize_m_step()
   dis_->resize(-1, 0, dof_row_map_view(), true);
   vel_->resize(-1, 0, dof_row_map_view(), true);
   acc_->resize(-1, 0, dof_row_map_view(), true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -269,8 +262,6 @@ void Solid::TimIntAB2::update_step_state()
 
   // update contact and meshtying
   update_step_contact_meshtying();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -287,8 +278,6 @@ void Solid::TimIntAB2::update_step_element()
   p.set("action", "calc_struct_update_istep");
   // go to elements
   discret_->evaluate(p, nullptr, nullptr, nullptr, nullptr, nullptr);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -296,14 +285,12 @@ void Solid::TimIntAB2::update_step_element()
 void Solid::TimIntAB2::read_restart_force()
 {
   FOUR_C_THROW("No restart ability for Adams-Bashforth 2nd order time integrator!");
-  return;
 }
 
 /*----------------------------------------------------------------------*/
 /* write internal and external forces for restart */
 void Solid::TimIntAB2::write_restart_force(std::shared_ptr<Core::IO::DiscretizationWriter> output)
 {
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

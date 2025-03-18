@@ -21,7 +21,6 @@ ScaTra::HDGResultTest::HDGResultTest(const std::shared_ptr<ScaTraTimIntImpl> tim
 
 {
   errors_ = scatratiminthdg_->compute_error();
-  return;
 }
 
 

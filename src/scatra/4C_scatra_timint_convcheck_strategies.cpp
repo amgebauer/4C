@@ -29,7 +29,6 @@ ScaTra::ConvCheckStrategyBase::ConvCheckStrategyBase(
       itmax_outer_(parameters.get<int>("ITEMAX_OUTER")),
       ittol_outer_(parameters.get<double>("CONVTOL_OUTER"))
 {
-  return;
 }
 
 

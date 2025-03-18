@@ -209,7 +209,6 @@ void Discret::Elements::ScaTraEleBoundaryCalcElch<distype, probdim>::calc_elch_b
         *stoich, nume, pot0, frt, timefac, scalar);
   }
 
-  return;
 }  // Discret::Elements::ScaTraEleBoundaryCalcElch<distype, probdim>::calc_elch_boundary_kinetics
 
 
@@ -363,8 +362,6 @@ void Discret::Elements::ScaTraEleBoundaryCalcElch<distype, probdim>::calc_cell_v
   // write results for electric potential and domain integrals into result vector
   scalars(0) = intpotential;
   scalars(1) = intdomain;
-
-  return;
 }
 
 
@@ -436,7 +433,6 @@ void Discret::Elements::ScaTraEleBoundaryCalcElch<distype,
     }  // loop over integration points
   }  // loop over all scalars
 
-  return;
 }  // Discret::Elements::ScaTraEleBoundaryCalcElch<distype,
    // probdim>::evaluate_elch_boundary_kinetics
 

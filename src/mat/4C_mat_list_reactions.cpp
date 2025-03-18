@@ -100,7 +100,6 @@ void Mat::MatListReactions::initialize()
       reacmat->initialize();
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -120,17 +119,12 @@ void Mat::MatListReactions::setup_mat_map()
     if (mat == nullptr) FOUR_C_THROW("Failed to allocate this material");
     material_map_write()->insert(std::pair<int, std::shared_ptr<Core::Mat::Material>>(reacid, mat));
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
  | reset everything                                          thon 11/14 |
  *----------------------------------------------------------------------*/
-void Mat::MatListReactions::clear()
-{
-  paramsreac_ = nullptr;
-  return;
-}
+void Mat::MatListReactions::clear() { paramsreac_ = nullptr; }
 
 /*----------------------------------------------------------------------*
  | Unpack data from a char vector into this class            thon 11/14 |

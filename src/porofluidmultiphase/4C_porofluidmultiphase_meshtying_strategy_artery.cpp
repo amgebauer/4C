@@ -105,8 +105,6 @@ POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::MeshtyingStrategyArtery(
       std::make_shared<Core::LinAlg::BlockSparseMatrix<Core::LinAlg::DefaultBlockMatrixStrategy>>(
           *arttoporofluidcoupling_->global_extractor(),
           *arttoporofluidcoupling_->global_extractor(), 81, false, true);
-
-  return;
 }
 
 
@@ -117,7 +115,6 @@ POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::MeshtyingStrategyArtery(
 void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::prepare_time_loop()
 {
   artnettimint_->prepare_time_loop();
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -126,18 +123,13 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::prepare_time_loop()
 void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::prepare_time_step()
 {
   artnettimint_->prepare_time_step();
-  return;
 }
 
 /*----------------------------------------------------------------------*
  | current solution becomes most recent solution of next timestep       |
  |                                                     kremheller 04/18 |
  *----------------------------------------------------------------------*/
-void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::update()
-{
-  artnettimint_->time_update();
-  return;
-}
+void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::update() { artnettimint_->time_update(); }
 
 /*--------------------------------------------------------------------------*
  | initialize the linear solver                            kremheller 07/20 |
@@ -204,8 +196,6 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::linear_solve(
   // setup_system_matrix or Evaluate
   solver_params.refactor = true;
   solver->solve(comb_systemmatrix_->epetra_operator(), comb_increment_, rhs_, solver_params);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -238,8 +228,6 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::calculate_norms(std::vector<d
 
   preresnorm[0] = Utils::calculate_vector_norm(vectornormfres_, *porofluidrhs);
   preresnorm[1] = Utils::calculate_vector_norm(vectornormfres_, *arterypressrhs);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -249,7 +237,6 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::create_field_test()
 {
   std::shared_ptr<Core::Utils::ResultTest> arteryresulttest = artnettimint_->create_field_test();
   Global::Problem::instance()->add_field_test(arteryresulttest);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -258,8 +245,6 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::create_field_test()
 void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::read_restart(const int step)
 {
   artnettimint_->read_restart(step);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -268,8 +253,6 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::read_restart(const int step)
 void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::output()
 {
   if (porofluidmultitimint_->step() != 0) artnettimint_->output(false, nullptr);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -293,8 +276,6 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::evaluate()
       porofluidmultitimint_->system_matrix(), artnettimint_->system_matrix(),
       porofluidmultitimint_->rhs(), artnettimint_->rhs(),
       porofluidmultitimint_->get_dbc_map_extractor(), artnettimint_->get_dbc_map_extractor());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -358,7 +339,6 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::check_initial_fields(
     std::shared_ptr<const Core::LinAlg::Vector<double>> vec_cont) const
 {
   arttoporofluidcoupling_->check_initial_fields(vec_cont, artnettimint_->pressurenp());
-  return;
 }
 
 /*-------------------------------------------------------------------------*
@@ -368,17 +348,12 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::set_nearby_ele_pairs(
     const std::map<int, std::set<int>>* nearbyelepairs)
 {
   arttoporofluidcoupling_->set_nearby_ele_pairs(nearbyelepairs);
-  return;
 }
 
 /*-------------------------------------------------------------------------*
  | setup the strategy                                     kremheller 03/19 |
  *------------------------------------------------------------------------ */
-void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::setup()
-{
-  arttoporofluidcoupling_->setup();
-  return;
-}
+void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::setup() { arttoporofluidcoupling_->setup(); }
 
 /*----------------------------------------------------------------------*
  | apply mesh movement                                 kremheller 06/18 |
@@ -386,7 +361,6 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::setup()
 void POROFLUIDMULTIPHASE::MeshtyingStrategyArtery::apply_mesh_movement() const
 {
   arttoporofluidcoupling_->apply_mesh_movement();
-  return;
 }
 
 /*----------------------------------------------------------------------*

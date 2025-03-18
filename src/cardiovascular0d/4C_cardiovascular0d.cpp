@@ -233,7 +233,6 @@ void Utils::Cardiovascular0D::initialize(Teuchos::ParameterList& params,
     std::shared_ptr<Core::LinAlg::Vector<double>> sysvec2)
 {
   FOUR_C_THROW("Overridden by derived class!");
-  return;
 }
 
 
@@ -252,7 +251,6 @@ void Utils::Cardiovascular0D::evaluate(Teuchos::ParameterList& params,
     std::shared_ptr<Core::LinAlg::Vector<double>> sysvec5)
 {
   FOUR_C_THROW("Overridden by derived class!");
-  return;
 }
 
 
@@ -487,8 +485,6 @@ void Utils::Cardiovascular0D::evaluate_d_struct_dp(
       sysmat.assemble(eid, lmstride, elevector, lm, lmowner, colvec);
     }
   }
-
-  return;
 }
 
 

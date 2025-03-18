@@ -132,7 +132,6 @@ void Mat::Robinson::pack(Core::Communication::PackBuffer& data) const
     add_to_pack(data, strain_last_.at(var));
   }
 
-  return;
 
 }  // pack()
 
@@ -213,8 +212,6 @@ void Mat::Robinson::unpack(Core::Communication::UnpackBuffer& buffer)
 
 
 
-  return;
-
 }  // unpack()
 
 
@@ -264,8 +261,6 @@ void Mat::Robinson::setup(const int numgp, const Core::IO::InputParameterContain
 
   isinit_ = true;
 
-  return;
-
 }  // setup()
 
 
@@ -300,7 +295,6 @@ void Mat::Robinson::update()
     backstresscurr_->at(i) = emptymat;
   }
 
-  return;
 
 }  // update()
 

@@ -218,8 +218,6 @@ namespace ScaTra
     // linear compensation factor for isotropic forcing
     force_fac_ = std::make_shared<Core::LinAlg::SerialDenseVector>(
         nummodes_ * nummodes_ * (nummodes_ / 2 + 1));
-
-    return;
   }
 
 
@@ -255,18 +253,13 @@ namespace ScaTra
     if (forcing_type_ == Inpar::FLUID::linear_compensation_from_intermediate_spectrum)
       TimeUpdateForcing();
 #endif
-    return;
   }
 
 
   /*--------------------------------------------------------------*
    | activate calculation of forcing              rasthofer 04/13 |
    *--------------------------------------------------------------*/
-  void HomoIsoTurbScalarForcing::activate_forcing(const bool activate)
-  {
-    activate_ = activate;
-    return;
-  }
+  void HomoIsoTurbScalarForcing::activate_forcing(const bool activate) { activate_ = activate; }
 
 
   /*--------------------------------------------------------------*
@@ -596,7 +589,6 @@ namespace ScaTra
       }
     }
 
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif
@@ -793,8 +785,6 @@ namespace ScaTra
     else
       // set force to zero
       forcing_->put_scalar(0.0);
-
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif
@@ -823,8 +813,6 @@ namespace ScaTra
       (*force_fac_)(rr) = 0.0;
 
     forcing_->put_scalar(0.0);
-
-    return;
   }
 
 

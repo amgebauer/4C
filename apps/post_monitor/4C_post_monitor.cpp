@@ -63,8 +63,6 @@ MonWriter::MonWriter(PostProblem& problem, std::string& infieldtype,
     if ((myrank_ == 0) and (numnodeowner > 1))
       FOUR_C_THROW("Found more than one owner of node {}: {}", node, numnodeowner);
   }
-
-  return;
 }
 
 
@@ -176,8 +174,6 @@ void MonWriter::write_mon_stress_file(
     // write it, now
     write_mon_str_file(filename, problem, infieldtype, "stress", stresstype, groupnames, node);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -202,8 +198,6 @@ void MonWriter::write_mon_strain_file(
     // write, now
     write_mon_str_file(filename, problem, infieldtype, "strain", straintype, groupnames, node);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -227,8 +221,6 @@ void MonWriter::write_mon_pl_strain_file(
     // write, now
     write_mon_str_file(filename, problem, infieldtype, "strain", straintype, groupnames, node);
   }
-
-  return;
 }
 
 
@@ -345,8 +337,6 @@ void MonWriter::write_mon_heatflux_file(
     write_mon_thermo_file(
         filename, problem, infieldtype, "heatflux", heatfluxtype, groupnames, node);
   }
-
-  return;
 }
 
 
@@ -373,8 +363,6 @@ void MonWriter::write_mon_tempgrad_file(
     write_mon_thermo_file(
         filename, problem, infieldtype, "tempgrad", tempgradtype, groupnames, node);
   }
-
-  return;
 }
 
 
@@ -732,8 +720,6 @@ void StructMonWriter::write_str_table_head(
       FOUR_C_THROW("Number of dimensions in space differs from 2 and 3!");
       break;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -811,8 +797,6 @@ void StructMonWriter::write_str_results(std::ofstream& outfile, PostProblem& pro
       write_str_result(outfile, field, result, groupname, name, numdf, node);
     } while (result.next_result());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -845,8 +829,6 @@ void StructMonWriter::write_str_result(std::ofstream& outfile, PostField*& field
       outfile << std::right << std::setw(16) << std::scientific << nodal_stress(i)[node];
     outfile << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1360,8 +1342,6 @@ void ThermoMonWriter::write_thermo_table_head(
       FOUR_C_THROW("Number of dimensions in space differs from 2 and 3!");
       break;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1414,8 +1394,6 @@ void ThermoMonWriter::write_thermo_results(std::ofstream& outfile, PostProblem& 
       write_thermo_result(outfile, field, result, groupname, name, dim, node);
     } while (result.next_result());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1491,8 +1469,6 @@ void ThermoMonWriter::write_thermo_result(std::ofstream& outfile, PostField*& fi
       outfile << std::right << std::setw(16) << std::scientific << *ns;
     outfile << std::endl;
   }
-
-  return;
 }
 
 

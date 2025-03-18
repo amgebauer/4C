@@ -90,8 +90,6 @@ FLD::XFluid::XFluid(const std::shared_ptr<Core::FE::Discretization>& actdis,
 
   if (levelsetcoupl_dis_.size() > 1)
     FOUR_C_THROW("so far the framework is tested just for one level-set coupling object");
-
-  return;
 }
 
 void FLD::XFluid::add_additional_scalar_dofset_and_coupling()
@@ -295,8 +293,6 @@ void FLD::XFluid::init(bool createinitialstate)
   // note that all vectors w.r.t np have to be set properly
 
   if (createinitialstate and (not restart)) create_initial_state();
-
-  return;
 }  // init()
 
 
@@ -450,8 +446,6 @@ void FLD::XFluid::set_element_general_fluid_xfem_parameter()
   // set the params in the XFEM-parameter-list class
   Discret::Elements::FluidType::instance().pre_evaluate(
       *discret_, eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-
-  return;
 }
 
 // -------------------------------------------------------------------
@@ -496,8 +490,6 @@ void FLD::XFluid::set_face_general_fluid_xfem_parameter()
     Discret::Elements::FluidIntFaceType::instance().pre_evaluate(
         *discret_, faceparams, nullptr, nullptr, nullptr, nullptr, nullptr);
   }
-
-  return;
 }
 
 
@@ -1613,8 +1605,6 @@ void FLD::XFluid::assemble_mat_and_rhs_gradient_penalty(
   // REMARK: for EpetraFECrs matrices Complete() calls the GlobalAssemble() routine to gather
   // entries from all processors
   sysmat_gp->complete();
-
-  return;
 }
 
 
@@ -2107,8 +2097,6 @@ void FLD::XFluid::check_x_fluid_params() const
     FOUR_C_THROW(
         "The option GHOST_PENALTY_ADD_INNER_FACES is only available if you use max 1 nodal "
         "dofset!");
-
-  return;
 }
 
 
@@ -2937,8 +2925,6 @@ void FLD::XFluid::check_matrix_nullspace()
       FOUR_C_THROW("Nullspace check for sysmat_ failed, Ac returned {:12.5e}", norm);
     }
   }
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -3122,8 +3108,6 @@ void FLD::XFluid::evaluate(
   // -------------------------------------------------------------------
   output_service_->gmsh_residual_output_debug("DEBUG_residual_wo_DBC", step_, itnum_out_, state_);
   output_service_->gmsh_solution_output_debug("DEBUG_sol", step_, itnum_out_, state_);
-
-  return;
 }
 
 
@@ -3351,9 +3335,6 @@ void FLD::XFluid::cut_and_set_state_vectors()
 
 
   if (myrank_ == 0 and screen_out) std::cout << "finished cut_and_set_state_vectors()" << std::endl;
-
-
-  return;
 }
 
 
@@ -3392,8 +3373,6 @@ void FLD::XFluid::x_timint_store_old_state_data(const bool firstcall_in_timestep
   // get the wizard w.r.t the last interface position (last XFSI iteration)
   wizard_Intnpi_ = state_->wizard();
   dofset_Intnpi_ = state_->dof_set();
-
-  return;
 }
 
 
@@ -3680,8 +3659,6 @@ void FLD::XFluid::x_timint_do_time_step_transfer(const bool screen_out)
   }
 
   condition_manager_->clear_state();
-
-  return;
 }
 
 
@@ -4034,9 +4011,6 @@ void FLD::XFluid::x_timint_get_reconstruct_status(
 
   timint_ghost_penalty = (glob_timint_ghost_penalty > 0);
   timint_semi_lagrangean = (glob_timint_semi_lagrangean > 0);
-
-  //------------------------------------------------------------------------------------
-  return;
 }
 
 
@@ -4104,8 +4078,6 @@ void FLD::XFluid::x_timint_ghost_penalty(std::vector<std::shared_ptr<Core::LinAl
 
 
   if (myrank_ == 0 and screen_out) std::cout << " done\n" << std::flush;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4257,8 +4229,6 @@ void FLD::XFluid::x_timint_reconstruct_ghost_values(
   // update velocity and pressure values by increments
   // -------------------------------------------------------------------
   vec->update(1.0, *incvel_gp, 1.0);
-
-  return;
 }  // ReconstructGhostValues
 
 
@@ -4362,8 +4332,6 @@ void FLD::XFluid::x_timint_semi_lagrangean(
   condition_manager_->clear_state();
 
   if (myrank_ == 0) std::cout << " done\n" << std::flush;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4434,9 +4402,6 @@ void FLD::XFluid::output()
   {
     output_service_->output(step_, time_, write_restart_data, *state_, dispnp_, gridvnp_);
   }
-
-
-  return;
 }
 
 
@@ -4765,8 +4730,6 @@ void FLD::XFluid::set_initial_flow_field(
 
   // write gmsh-output for start fields
   output_service_->gmsh_solution_output_previous("START", step_, state_);
-
-  return;
 }  // end SetInitialFlowField
 
 // -------------------------------------------------------------------
@@ -4953,8 +4916,6 @@ void FLD::XFluid::explicit_predictor()
   {
     printf("\n");
   }
-
-  return;
 }
 
 
@@ -5067,8 +5028,6 @@ void FLD::XFluid::predict_tang_vel_consist_acc()
 
   // free the system matrix to get the matrix deleted
   solver_->reset();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5090,8 +5049,6 @@ void FLD::XFluid::update_iter_incrementally(std::shared_ptr<const Core::LinAlg::
 
     *state_->velnp_ = *aux;
   }
-
-  return;
 }
 
 // -------------------------------------------------------------------
@@ -5406,7 +5363,6 @@ void FLD::XFluid::set_old_part_of_righthandside(Core::LinAlg::Vector<double>& ve
       break;
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5510,8 +5466,6 @@ void FLD::XFluid::calculate_acceleration(
       break;
     }
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

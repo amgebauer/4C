@@ -59,8 +59,6 @@ void Adapter::StructureFSITimIntAda::indicate_error_norms(double& err, double& e
 
   // Indicate has to be done by the FSI algorithm since it depends on the interface
   indicate_errors(err, errcond, errother, errinf, errinfcond, errinfother);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

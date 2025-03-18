@@ -225,7 +225,6 @@ void Cut::FacetIntegration::is_clockwise(
     if (dotProduct < 0.0) clockwise_ = 1;
   }
   // std::cout<<"clockwise = "<<clockwise_<<"\t"<<"is cut side = "<<iscut<<"\n";
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*

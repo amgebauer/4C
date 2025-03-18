@@ -29,8 +29,6 @@ CONTACT::UnbiasedSelfBinaryTree::UnbiasedSelfBinaryTree(Core::FE::Discretization
 {
   // safety check
   if (!two_half_pass_) FOUR_C_THROW("Only implemented for the two half pass approach so far!");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -50,8 +48,6 @@ void CONTACT::UnbiasedSelfBinaryTree::add_tree_nodes_to_contact_pairs(
     set_contact_pairs()[treenode1->elelist()[0]].push_back(treenode2->elelist()[0]);
     set_contact_pairs()[treenode2->elelist()[0]].push_back(treenode1->elelist()[0]);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -137,7 +133,6 @@ void CONTACT::UnbiasedSelfBinaryTree::calculate_proc_specific_dual_graph(
         if (j != k) (*dualGraph)[adjdualedges[k]].push_back(adjdualedges[j]);
   }  // all elements
 
-  return;
 }  // calculate_proc_specific_dual_graph
 
 /*----------------------------------------------------------------------*
@@ -177,8 +172,6 @@ void CONTACT::UnbiasedSelfBinaryTree::define_search_elements()
       if (contact_pairs().find(contacteleID[j]) != contact_pairs().end()) define_search_elements();
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -194,8 +187,6 @@ void CONTACT::UnbiasedSelfBinaryTree::get_contracted_node(
   // add owner of contracted node
   contractedNode->set_parent_owner(
       contractedEdge->get_node1()->owner(), contractedEdge->get_node2()->owner());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -231,8 +222,6 @@ void CONTACT::UnbiasedSelfBinaryTree::init()
   // now initialize unbiased self binary tree in a bottom-up way based on the processor specific
   // dual graph
   initialize_tree_bottom_up(&procdualgraph);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -329,8 +318,6 @@ void CONTACT::UnbiasedSelfBinaryTree::initialize_tree_bottom_up(std::map<int,
     calculate_adjacent_leaves();
     calculate_adjacent_tnodes();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -520,8 +507,6 @@ void CONTACT::UnbiasedSelfBinaryTree::search_contact()
   {
     define_search_elements();
   }
-
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -541,7 +526,6 @@ void CONTACT::UnbiasedSelfBinaryTree::communicate_search_elements_all_procs()
 
     if (searchelements_all.size()) set_contact_pairs()[elegid] = searchelements_all;
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

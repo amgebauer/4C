@@ -1041,9 +1041,6 @@ void EHL::Monolithic::print_newton_iter_header(FILE* ofile)
   // print it, now
   fflush(ofile);
 
-  // nice to have met you
-  return;
-
 }  // print_newton_iter_header()
 
 
@@ -1197,9 +1194,6 @@ void EHL::Monolithic::print_newton_iter_text(FILE* ofile)
   // print it, now
   fflush(ofile);
 
-  // nice to have met you
-  return;
-
 }  // print_newton_iter_text
 
 
@@ -1210,7 +1204,6 @@ void EHL::Monolithic::print_newton_iter_text(FILE* ofile)
 void EHL::Monolithic::print_newton_conv()
 {
   // somebody did the door
-  return;
 }  // print_newton_conv()
 
 
@@ -1259,8 +1252,6 @@ void EHL::Monolithic::apply_lubrication_coupl_matrix(
       *(lubrication_->lubrication_field()->discretization()->dof_row_map(0)));
 
   lubrication_->lubrication_field()->discretization()->clear_state(true);
-
-  return;
 }  // apply_lubrication_coupl_matrix()
 
 /*----------------------------------------------------------------------*
@@ -1579,8 +1570,6 @@ void EHL::Monolithic::set_default_parameters()
   normlubricationrhs_ = 0.0;
   normlubricationrhsiter0_ = 0.0;
 
-  return;
-
 }  // SetDefaultParameter()
 
 /*----------------------------------------------------------------------*
@@ -1623,8 +1612,6 @@ void EHL::Monolithic::lin_pressure_force_disp(
       *mortaradapter_->get_mortar_matrix_m(), true, *p_deriv_normal, false, false, false, true);
   if (!tmp) FOUR_C_THROW("matrix_multiply failed");
   dm_dd.add(*tmp, false, -1., 1.);
-
-  return;
 }
 
 void EHL::Monolithic::lin_poiseuille_force_disp(
@@ -1807,7 +1794,6 @@ void EHL::Monolithic::lin_poiseuille_force_pres(
     dm_dp.add(b, false, 1., 1.);
     dm_dp.complete(*d, *r);
   }
-  return;
 }
 
 void EHL::Monolithic::lin_couette_force_pres(

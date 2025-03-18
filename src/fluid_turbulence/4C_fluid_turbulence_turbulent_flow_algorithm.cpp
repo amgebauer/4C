@@ -61,8 +61,6 @@ FLD::TurbulentFlowAlgorithm::TurbulentFlowAlgorithm(
   // initialize fluid inflow algorithm
   // this is a second fluid algorithm
   inflowfluidalgo_ = std::make_shared<Adapter::FluidBaseAlgorithm>(fdyn, inflowdis_);
-
-  return;
 }
 
 
@@ -119,8 +117,6 @@ void FLD::TurbulentFlowAlgorithm::time_loop()
 
   // summarize the performance measurements
   Teuchos::TimeMonitor::summarize();
-
-  return;
 }
 
 
@@ -148,8 +144,6 @@ void FLD::TurbulentFlowAlgorithm::transfer_inflow_velocity()
 
   if (Core::Communication::my_mpi_rank(fluiddis_->get_comm()) == 0)
     std::cout << "done\n" << std::endl;
-
-  return;
 }
 
 
@@ -222,8 +216,6 @@ void FLD::TurbulentFlowAlgorithm::read_restart(const int restart)
 
   if (Core::Communication::my_mpi_rank(fluiddis_->get_comm()) == 0)
     std::cout << "#   ... done \n" << std::endl;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

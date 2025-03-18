@@ -119,8 +119,6 @@ void EHL::Partitioned::outer_loop()
     // convergence is achieved overall
     stopnonliniter = convergence_check(itnum);
   }
-
-  return;
 }
 
 

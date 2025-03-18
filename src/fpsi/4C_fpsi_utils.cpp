@@ -444,8 +444,6 @@ void FPSI::InterfaceUtils::setup_local_interface_facing_element_map(
     FOUR_C_THROW("ERROR: globalslavegeomsize != globalmatchedelements ({},{})", globalslavegeomsize,
         globalmatchedelements);
   }
-
-  return;
 }
 
 /*---------------------------------------------------------------------------/
@@ -599,7 +597,6 @@ void FPSI::InterfaceUtils::redistribute_interface(Core::FE::Discretization& mast
     std::cout << "\n EXTENDEDGHOSTING: checked " << counter
               << " elements in interfacefacingelementmap ... \n"
               << std::endl;
-  return;
 }
 
 /*---------------------------------------------------------------------------/
@@ -616,8 +613,6 @@ void FPSI::InterfaceUtils::setup_interface_map(MPI_Comm comm, Core::FE::Discreti
       *fluiddis, *porofluiddis, "fpsi_coupling", *poro_fluid_fluid_interface_map_);
   setup_local_interface_facing_element_map(
       *porofluiddis, *fluiddis, "fpsi_coupling", *fluid_poro_fluid_interface_map_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

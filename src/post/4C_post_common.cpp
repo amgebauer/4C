@@ -761,8 +761,6 @@ void PostResult::get_result_timesandsteps(
         "specified range! Check --start, --end, --step parameters.",
         fieldname.c_str());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

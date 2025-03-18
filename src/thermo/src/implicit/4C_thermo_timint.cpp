@@ -246,9 +246,6 @@ void Thermo::TimInt::determine_capa_consist_temp_rate()
   // effects (basically managers).
   tang_->reset();
 
-  // leave this hell
-  return;
-
 }  // determine_capa_consist_temp_rate()
 
 
@@ -279,9 +276,6 @@ void Thermo::TimInt::apply_dirichlet_bc(const double time,
   }
   discret_->clear_state();
 
-  // ciao
-  return;
-
 }  // apply_dirichlet_bc()
 
 
@@ -296,9 +290,6 @@ void Thermo::TimInt::update_step_time()
 
   timen_ += (*dt_)[0];
   stepn_ += 1;
-
-  // new deal
-  return;
 
 }  // UpdateStepTime()
 
@@ -325,7 +316,6 @@ void Thermo::TimInt::reset_step()
   }
 
   // I am gone
-  return;
 
 }  // reset_step()
 
@@ -362,7 +352,6 @@ void Thermo::TimInt::read_restart_state()
   reader.read_vector(raten_, "rate");
   rate_->update_steps(*raten_);
   reader.read_history_data(step_);
-  return;
 
 }  // ReadRestartState()
 
@@ -535,9 +524,6 @@ void Thermo::TimInt::output_state(bool& datawritten)
   output_->write_element_data(firstoutputofrun_);
   firstoutputofrun_ = false;
 
-  // leave for good
-  return;
-
 }  // output_state()
 
 
@@ -645,7 +631,6 @@ void Thermo::TimInt::output_heatflux_tempgrad(bool& datawritten)
   }
 
   // leave me alone
-  return;
 
 }  // output_heatflux_tempgrad()
 
@@ -683,9 +668,6 @@ void Thermo::TimInt::apply_force_external(const double time,   //!< evaluation t
   // get load vector
   discret_->evaluate_neumann(p, fext);
   discret_->clear_state();
-
-  // go away
-  return;
 
 }  // apply_force_external()
 
@@ -729,9 +711,6 @@ void Thermo::TimInt::apply_force_external_conv(Teuchos::ParameterList& p,
   discret_->evaluate_condition(p, tang, nullptr, fext, nullptr, nullptr, condstring);
   discret_->clear_state();
 
-  // go away
-  return;
-
 }  // apply_force_external_conv()
 
 
@@ -763,9 +742,6 @@ void Thermo::TimInt::apply_force_tang_internal(
   discret_->evaluate(p, tang, nullptr, fint, nullptr, nullptr);
 
   discret_->clear_state();
-
-  // that's it
-  return;
 
 }  // apply_force_tang_internal()
 
@@ -812,9 +788,6 @@ void Thermo::TimInt::apply_force_tang_internal(
   discret_->evaluate(p, tang, nullptr, fint, nullptr, fcap);
 
   discret_->clear_state();
-
-  // that's it
-  return;
 
 }  // apply_force_tang_internal()
 
@@ -918,7 +891,6 @@ void Thermo::TimInt::set_initial_field(const Thermo::InitialField init, const in
   }  // switch(init)
 
   // and back
-  return;
 
 }  // SetInitialField()
 

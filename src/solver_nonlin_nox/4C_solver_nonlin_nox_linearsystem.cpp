@@ -440,7 +440,6 @@ Teuchos::RCP<::NOX::Epetra::Scaling> NOX::Nln::LinearSystem::getScaling() { retu
 void NOX::Nln::LinearSystem::resetScaling(const Teuchos::RCP<::NOX::Epetra::Scaling>& scalingObject)
 {
   scaling_ = scalingObject;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -579,7 +578,6 @@ void NOX::Nln::LinearSystem::setJacobianOperatorForSolve(
     throw_error("setJacobianOperatorForSolve", "dynamic_cast to LINALG_SparseOperator failed!");
 
   set_jacobian_operator_for_solve(linalgSprOp);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -591,7 +589,6 @@ void NOX::Nln::LinearSystem::set_jacobian_operator_for_solve(
     throw_error("set_jacobian_operator_for_solve", "wrong operator type!");
 
   jac_ptr_ = Teuchos::rcp_const_cast<Core::LinAlg::SparseOperator>(solveJacOp);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -650,7 +647,6 @@ void NOX::Nln::LinearSystem::setPrecOperatorForSolve(
     const Teuchos::RCP<const Epetra_Operator>& solvePrecOp)
 {
   throw_error("setPrecOperatorForSolve", "no preconditioner supported");
-  return;
 }
 
 /*----------------------------------------------------------------------*

@@ -74,8 +74,6 @@ void Cut::Impl::SimplePointGraph1D::add_cut_points_to_cycle(
   // add the found cut points and actual in the case of a cut_side, no other points
   // were added till now, to the cycle.
   for (PointSet::const_iterator cit = cuts.begin(); cit != cuts.end(); ++cit) cycle.push_back(*cit);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

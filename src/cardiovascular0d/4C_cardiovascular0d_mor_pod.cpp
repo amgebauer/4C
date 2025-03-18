@@ -82,8 +82,6 @@ Cardiovascular0D::ProperOrthogonalDecomposition::ProperOrthogonalDecomposition(
   // importers for reduced system
   structrimpo_ = std::make_shared<Epetra_Import>(*structmapr_, *redstructmapr_);
   structrinvimpo_ = std::make_shared<Epetra_Import>(*redstructmapr_, *structmapr_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -194,8 +192,6 @@ void Cardiovascular0D::ProperOrthogonalDecomposition::multiply_epetra_multi_vect
   // import the result to a Core::LinAlg::MultiVector<double> whose elements/rows are distributed
   // over all procs
   result.Import(multivect_temp, impo, Insert, nullptr);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -224,7 +220,6 @@ void Cardiovascular0D::ProperOrthogonalDecomposition::epetra_multi_vector_to_lin
     sparsemat.complete();
   else
     sparsemat.complete(*domainmap, rangemap);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -363,8 +358,6 @@ void Cardiovascular0D::ProperOrthogonalDecomposition::read_pod_basis_vectors_fro
 
   // Inform user
   if (Core::Communication::my_mpi_rank(comm) == 0) std::cout << " --> Successful\n" << std::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

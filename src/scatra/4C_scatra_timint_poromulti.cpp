@@ -28,14 +28,13 @@ ScaTra::ScaTraTimIntPoroMulti::ScaTraTimIntPoroMulti(std::shared_ptr<Core::FE::D
   // DO NOT DEFINE ANY STATE VECTORS HERE (i.e., vectors based on row or column maps)
   // this is important since we have problems which require an extended ghosting
   // this has to be done before all state vectors are initialized
-  return;
 }
 
 
 /*----------------------------------------------------------------------*
  | initialize algorithm                                    vuong  08/16 |
  *----------------------------------------------------------------------*/
-void ScaTra::ScaTraTimIntPoroMulti::init() { return; }
+void ScaTra::ScaTraTimIntPoroMulti::init() {}
 
 /*----------------------------------------------------------------------*
  | set solution fields on given dof sets                    vuong  08/16 |
@@ -235,7 +234,6 @@ ScaTra::ScaTraTimIntPoroMultiOST::ScaTraTimIntPoroMultiOST(
       ScaTraTimIntPoroMulti(actdis, solver, params, sctratimintparams, extraparams, output),
       TimIntOneStepTheta(actdis, solver, sctratimintparams, extraparams, output)
 {
-  return;
 }
 
 
@@ -248,8 +246,6 @@ void ScaTra::ScaTraTimIntPoroMultiOST::init()
   // note: this order is important
   TimIntOneStepTheta::init();
   ScaTraTimIntPoroMulti::init();
-
-  return;
 }
 
 
@@ -262,8 +258,6 @@ void ScaTra::ScaTraTimIntPoroMultiOST::update()
 {
   TimIntOneStepTheta::update();
   ScaTraTimIntPoroMulti::update();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -279,7 +273,6 @@ ScaTra::ScaTraTimIntPoroMultiBDF2::ScaTraTimIntPoroMultiBDF2(
       ScaTraTimIntPoroMulti(actdis, solver, params, sctratimintparams, extraparams, output),
       TimIntBDF2(actdis, solver, sctratimintparams, extraparams, output)
 {
-  return;
 }
 
 
@@ -292,8 +285,6 @@ void ScaTra::ScaTraTimIntPoroMultiBDF2::init()
   // note: this order is important
   TimIntBDF2::init();
   ScaTraTimIntPoroMulti::init();
-
-  return;
 }
 
 
@@ -306,8 +297,6 @@ void ScaTra::ScaTraTimIntPoroMultiBDF2::update()
 {
   TimIntBDF2::update();
   ScaTraTimIntPoroMulti::update();
-
-  return;
 }
 
 
@@ -324,7 +313,6 @@ ScaTra::ScaTraTimIntPoroMultiGenAlpha::ScaTraTimIntPoroMultiGenAlpha(
       ScaTraTimIntPoroMulti(actdis, solver, params, sctratimintparams, extraparams, output),
       TimIntGenAlpha(actdis, solver, sctratimintparams, extraparams, output)
 {
-  return;
 }
 
 
@@ -337,8 +325,6 @@ void ScaTra::ScaTraTimIntPoroMultiGenAlpha::init()
   // note: this order is important
   TimIntGenAlpha::init();
   ScaTraTimIntPoroMulti::init();
-
-  return;
 }
 
 
@@ -351,8 +337,6 @@ void ScaTra::ScaTraTimIntPoroMultiGenAlpha::update()
 {
   TimIntGenAlpha::update();
   ScaTraTimIntPoroMulti::update();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -368,7 +352,6 @@ ScaTra::ScaTraTimIntPoroMultiStationary::ScaTraTimIntPoroMultiStationary(
       ScaTraTimIntPoroMulti(actdis, solver, params, sctratimintparams, extraparams, output),
       TimIntStationary(actdis, solver, sctratimintparams, extraparams, output)
 {
-  return;
 }
 
 
@@ -381,8 +364,6 @@ void ScaTra::ScaTraTimIntPoroMultiStationary::init()
   // note: this order is important
   TimIntStationary::init();
   ScaTraTimIntPoroMulti::init();
-
-  return;
 }
 
 
@@ -395,8 +376,6 @@ void ScaTra::ScaTraTimIntPoroMultiStationary::update()
 {
   TimIntStationary::update();
   ScaTraTimIntPoroMulti::update();
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

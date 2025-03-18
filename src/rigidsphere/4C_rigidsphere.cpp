@@ -129,7 +129,6 @@ Discret::Elements::Rigidsphere::Rigidsphere(const Discret::Elements::Rigidsphere
         FOUR_C_THROW("something went wrong, I am sorry. Please go debugging.");
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -147,7 +146,7 @@ Core::Elements::Element* Discret::Elements::Rigidsphere::clone() const
 /*----------------------------------------------------------------------*
  |  print this element (public)                              meier 05/12
  *----------------------------------------------------------------------*/
-void Discret::Elements::Rigidsphere::print(std::ostream& os) const { return; }
+void Discret::Elements::Rigidsphere::print(std::ostream& os) const {}
 
 
 /*----------------------------------------------------------------------*
@@ -177,8 +176,6 @@ void Discret::Elements::Rigidsphere::pack(Core::Communication::PackBuffer& data)
 
   add_to_pack(data, mybondstobeams_.size());
   for (auto const& iter : mybondstobeams_) iter.second->pack(data);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -207,9 +204,6 @@ void Discret::Elements::Rigidsphere::unpack(Core::Communication::UnpackBuffer& b
     if (link == nullptr) FOUR_C_THROW("Received object is not a beam to beam linkage");
     mybondstobeams_[link->id()] = link;
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

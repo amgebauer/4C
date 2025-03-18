@@ -158,47 +158,6 @@ FSI::SlidingMonolithicStructureSplit::SlidingMonolithicStructureSplit(
   disgprev_ = nullptr;
   sgiprev_ = nullptr;
   sggprev_ = nullptr;
-
-#ifdef FOUR_C_ENABLE_ASSERTIONS
-  if (coupsfm_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'coupsfm_' failed.");
-  }
-  if (fscoupfa_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fscoupfa_' failed.");
-  }
-  if (aigtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'aigtransform_' failed.");
-  }
-  if (fmiitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fmiitransform_' failed.");
-  }
-  if (fmgitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fmgitransform_' failed.");
-  }
-  if (fsaigtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fsaigtransform_' failed.");
-  }
-  if (fsmgitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fsmgitransform_' failed.");
-  }
-  if (lambda_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'lambda_' failed.");
-  }
-  if (lambdaold_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'lambdaold_' failed.");
-  }
-#endif
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -209,8 +168,6 @@ void FSI::SlidingMonolithicStructureSplit::set_lambda()
       *structure_field()->interface()->fsi_cond_map(), true);
   lambdaold_ = std::make_shared<Core::LinAlg::Vector<double>>(
       *structure_field()->interface()->fsi_cond_map(), true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -328,8 +285,6 @@ void FSI::SlidingMonolithicStructureSplit::create_combined_dof_row_map()
     FOUR_C_THROW("No inner structural equations. Splitting not possible. Panic.");
 
   set_dof_row_maps(vecSpaces);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -357,8 +312,6 @@ void FSI::SlidingMonolithicStructureSplit::setup_dbc_map_extractor()
   // Finally, create the global FSI Dirichlet map extractor
   dbcmaps_ = std::make_shared<Core::LinAlg::MapExtractor>(*dof_row_map(), dbcmap, true);
   if (dbcmaps_ == nullptr) FOUR_C_THROW("Creation of FSI Dirichlet map extractor failed.");
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -411,8 +364,6 @@ void FSI::SlidingMonolithicStructureSplit::setup_rhs_residual(Core::LinAlg::Vect
 
   // add additional ale residual
   extractor().add_vector(*aleresidual_, 2, f);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -443,8 +394,6 @@ void FSI::SlidingMonolithicStructureSplit::setup_rhs_lambda(Core::LinAlg::Vector
     // add Lagrange multiplier
     extractor().add_vector(*lambdafull, 1, f);
   }
-
-  return;
 }
 
 
@@ -657,8 +606,6 @@ void FSI::SlidingMonolithicStructureSplit::setup_rhs_firstiter(Core::LinAlg::Vec
   disgprev_ = nullptr;
   sgicur_ = nullptr;
   sggcur_ = nullptr;
-
-  return;
 }
 
 
@@ -1470,16 +1417,6 @@ void FSI::SlidingMonolithicStructureSplit::recover_lagrange_multiplier()
 
   // finally, divide by -(1.-stiparam) which is common to all terms
   lambda_->scale(1. / (1.0 - stiparam));
-
-  /* Finally, the Lagrange multiplier lambda_ is recovered here. It has the
-   * unit [N/m^2]. Actual nodal forces are obtained by multiplication with
-   * mortar matrices M or D later on.
-   */
-
-  //  check_kinematic_constraint();
-  //  check_dynamic_equilibrium();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1509,8 +1446,6 @@ void FSI::SlidingMonolithicStructureSplit::calculate_interface_energy_increment(
   energysum_ += energy;
 
   write_interface_energy_file(energy, energysum_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1566,8 +1501,6 @@ void FSI::SlidingMonolithicStructureSplit::check_kinematic_constraint()
   utils()->out() << std::scientific << "\nViolation of kinematic interface constraint:\n"
                  << "L_2-norm: " << violationl2 << "        L_inf-norm: " << violationinf << "\n";
   utils()->out().flags(flags);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1610,8 +1543,6 @@ void FSI::SlidingMonolithicStructureSplit::check_dynamic_equilibrium()
   utils()->out() << std::scientific << "\nViolation of dynamic interface equilibrium:\n"
                  << "L_2-norm: " << violationl2 << "        L_inf-norm: " << violationinf << "\n";
   utils()->out().flags(flags);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

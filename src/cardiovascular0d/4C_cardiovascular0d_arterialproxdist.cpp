@@ -327,7 +327,6 @@ void Utils::Cardiovascular0DArterialProxDist::evaluate(Teuchos::ParameterList& p
     evaluate_d_struct_dp(params, *sysmat3);
   }
 
-  return;
 }  // end of evaluate_condition
 
 
@@ -429,7 +428,6 @@ void Utils::Cardiovascular0DArterialProxDist::initialize(Teuchos::ParameterList&
                  "(pseudo-)smooth valve law =========\n"
               << std::endl;
   }
-  return;
 }  // end of Initialize Cardiovascular0D
 
 FOUR_C_NAMESPACE_CLOSE

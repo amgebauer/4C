@@ -242,8 +242,6 @@ void Discret::Elements::Wall1::pack(Core::Communication::PackBuffer& data) const
   add_to_pack(data, old_step_length_);
   Core::Communication::add_to_pack(data, material_post_setup_);
   Core::Communication::add_to_pack(data, kintype_);
-
-  return;
 }
 
 
@@ -279,8 +277,6 @@ void Discret::Elements::Wall1::unpack(Core::Communication::UnpackBuffer& buffer)
   extract_from_pack(buffer, old_step_length_);
   Core::Communication::extract_from_pack(buffer, material_post_setup_);
   Core::Communication::extract_from_pack(buffer, kintype_);
-
-  return;
 }
 
 
@@ -314,9 +310,7 @@ void Discret::Elements::Wall1::green_lagrange_plane3d(
   gl3d(2) = 0.0;                      // E_{33}
   gl3d(3) = glplane(2) + glplane(3);  // 2*E_{12}=E_{12}+E_{21}
   gl3d(4) = 0.0;                      // 2*E_{23}
-  gl3d(5) = 0.0;                      // 2*E_{31}
-
-  return;
+  gl3d(5) = 0.0;
 }
 
 void Discret::Elements::Wall1::set_params_interface_ptr(const Teuchos::ParameterList& p)

@@ -77,19 +77,13 @@ void Mat::MatListChemoReac::setup_mat_map()
   // here's the recursive creation of materials
   Mat::MatListReactions::setup_mat_map();
   Mat::MatListChemotaxis::setup_mat_map();
-
-  return;
 }
 
 
 /*----------------------------------------------------------------------*
  | reset everything                                          thon 06/15 |
  *----------------------------------------------------------------------*/
-void Mat::MatListChemoReac::clear()
-{
-  paramsreachemo_ = nullptr;
-  return;
-}
+void Mat::MatListChemoReac::clear() { paramsreachemo_ = nullptr; }
 
 
 /*----------------------------------------------------------------------*

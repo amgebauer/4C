@@ -321,8 +321,6 @@ void Mat::AAAneohooke::evaluate(const Core::LinAlg::Matrix<3, 3>* defgrd,
 
   // contribution: boeppel-product
   Core::LinAlg::Tensor::add_holzapfel_product(*cmat, invc, delta7);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -364,7 +362,6 @@ void Mat::AAAneohooke::strain_energy(
   // W_vol = K beta2^(-2) ( beta2 ln (J) + J^(-beta2) -1 )
   psi +=
       komp * pow(beta2, -2.) * (beta2 * log(pow(iiinv, -2.)) + pow(pow(iiinv, -2.), -beta2) - 1.0);
-  return;
 }
 
 

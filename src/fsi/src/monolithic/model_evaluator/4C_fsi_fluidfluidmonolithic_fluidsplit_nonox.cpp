@@ -669,8 +669,6 @@ void FSI::FluidFluidMonolithicFluidSplitNoNOX::setup_vector(Core::LinAlg::Vector
 
   // Insert ALE contribution
   extractor().insert_vector(*aov, 2, f);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1121,8 +1119,6 @@ void FSI::FluidFluidMonolithicFluidSplitNoNOX::recover_lagrange_multiplier()
 
   // Scaling everything with -1/(1-flintparam_)
   lambda_->scale(-1.0 / (1.0 - ftimintparam));
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

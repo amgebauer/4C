@@ -91,8 +91,6 @@ void Core::DOFSets::DofSetGIDBasedWrapper::check_is_assigned() const
       "assign_degrees_of_freedom was not called on parent dofset of this proxy,\n"
       "and/or this proxy was not notified.");
   FOUR_C_ASSERT(sourcedofset_ != nullptr, "dofset_ pointer is nullptr");
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

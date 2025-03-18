@@ -44,7 +44,6 @@ FOUR_C_NAMESPACE_OPEN
 FS3I::PartFPS3I::PartFPS3I(MPI_Comm comm) : FS3IBase(), comm_(comm)
 {
   // keep empty
-  return;
 }
 
 
@@ -295,9 +294,6 @@ void FS3I::PartFPS3I::init()
   // according to structure and fluid field
   if (scatravec_[0]->scatra_field()->is_incremental() == false)
     FOUR_C_THROW("Incremental formulation required for partitioned FS3I computations!");
-
-
-  return;
 }
 
 

@@ -347,7 +347,6 @@ void Adapter::StructureBaseAlgorithm::create_tim_int(const Teuchos::ParameterLis
     FOUR_C_THROW("no proper time integration found");
   }
   // see you
-  return;
 }
 
 

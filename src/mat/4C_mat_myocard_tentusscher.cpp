@@ -700,7 +700,6 @@ void MyocardTenTusscher::set_internal_state(const int k, const double val)
     s0_[k] = val;
     s_[k] = val;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -726,8 +725,6 @@ void MyocardTenTusscher::update(const double phi, const double dt)
   // update initial values for next time step
   for (int i = 0; i < 19; i++) s0_[i] = s_[i];
   voi_ += dt;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

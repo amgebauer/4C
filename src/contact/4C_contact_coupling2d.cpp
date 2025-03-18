@@ -32,8 +32,6 @@ CONTACT::Coupling2d::Coupling2d(Core::FE::Discretization& idiscret, int dim, boo
       stype_(Teuchos::getIntegralValue<CONTACT::SolvingStrategy>(params, "STRATEGY"))
 {
   // empty constructor
-
-  return;
 }
 
 
@@ -147,7 +145,6 @@ CONTACT::Coupling2dManager::Coupling2dManager(Core::FE::Discretization& idiscret
       stype_(Teuchos::getIntegralValue<CONTACT::SolvingStrategy>(params, "STRATEGY"))
 {
   // empty constructor
-  return;
 }
 
 
@@ -654,8 +651,6 @@ void CONTACT::Coupling2dManager::consistent_dual_shape()
 
   // store ae matrix in slave element data container
   slave_element().mo_data().dual_shape() = std::make_shared<Core::LinAlg::SerialDenseMatrix>(ae);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

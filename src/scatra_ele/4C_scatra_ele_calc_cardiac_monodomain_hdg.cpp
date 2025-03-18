@@ -140,8 +140,6 @@ void Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype, probdim>::pre
       (*difftensor).push_back(difftensortmp);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -158,8 +156,6 @@ void Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype, probdim>::pre
     prepare_materials_tet(ele, material, k, difftensor);
   else
     prepare_materials_all(ele, material, k, difftensor);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -227,8 +223,6 @@ void Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype, probdim>::pre
       (*difftensor).push_back(difftensortmp);
     }
   }
-
-  return;
 }
 
 
@@ -246,8 +240,6 @@ void Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype, probdim>::mat
     mat_myocard(material, k, difftensor, ivecn, ivecnp, ivecnpderiv);
   else
     FOUR_C_THROW("Material type is not supported");
-
-  return;
 }
 
 
@@ -402,7 +394,6 @@ void Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype, probdim>::mat
       }
   }
 
-  return;
 }  // ScaTraEleCalcHDGCardiacMonodomain<distype>::MatMyocard
 
 
@@ -450,8 +441,6 @@ void Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype, probdim>::tim
   {
     for (unsigned i = 0; i < updatemat.size(); i++) updatemat[i]->update(0.0, 0.0);
   }
-
-  return;
 }
 
 
@@ -493,8 +482,6 @@ void Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype,
     params.set<std::shared_ptr<Core::LinAlg::MultiVector<double>>>(
         "material_internal_state", material_internal_state);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -530,9 +517,6 @@ void Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype,
       }
     }
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

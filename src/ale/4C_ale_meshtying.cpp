@@ -212,8 +212,6 @@ void ALE::Meshtying::dirichlet_on_master(std::shared_ptr<const Epetra_Map> bmaps
           << std::endl;
     }
   }
-
-  return;
 }
 
 /*---------------------------------------------------*/
@@ -226,7 +224,6 @@ void ALE::Meshtying::prepare_meshtying_system(std::shared_ptr<Core::LinAlg::Spar
   TEUCHOS_FUNC_TIME_MONITOR("Meshtying:  2)   Condensation block matrix");
 
   condensation_operation_block_matrix(sysmat, residual, dispnp);
-  return;
 }
 
 /*-------------------------------------------------------*/
@@ -265,8 +262,6 @@ void ALE::Meshtying::split_vector(Core::LinAlg::Vector<double>& vector,
   splitvector[0] = fn;
   splitvector[1] = fm;
   splitvector[2] = fs;
-
-  return;
 }
 
 /*-------------------------------------------------------*/
@@ -281,8 +276,6 @@ void ALE::Meshtying::split_vector_based_on3x3(
   // build up the reduced residual
   Core::LinAlg::export_to(*(splitvector[0]), vectorbasedon2x2);
   Core::LinAlg::export_to(*(splitvector[1]), vectorbasedon2x2);
-
-  return;
 }
 
 
@@ -298,8 +291,6 @@ void ALE::Meshtying::is_multifield(
 {
   multifield_interface_ = interface;
   is_multifield_ = ismultifield;
-
-  return;
 }
 
 /*-------------------------------------------------------*/
@@ -592,8 +583,6 @@ void ALE::Meshtying::condensation_operation_block_matrix(
   // export r_s = zero to residual
   Core::LinAlg::Vector<double> fs_mod(*gsdofrowmap_, true);
   Core::LinAlg::export_to(fs_mod, *residual);
-
-  return;
 }
 
 /*-------------------------------------------------------*/
@@ -672,8 +661,6 @@ void ALE::Meshtying::update_slave_dof(std::shared_ptr<Core::LinAlg::Vector<doubl
 
   // define incremental vector to new incremental vector
   inc = incnew;
-
-  return;
 }
 
 /*-------------------------------------------------------*/

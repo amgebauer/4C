@@ -56,8 +56,6 @@ void ScaTra::LevelSetAlgorithm::set_velocity_field(
 
   // estimate velocity at contact points, i.e., intersection points of interface and (no-slip) walls
   if (cpbc_) apply_contact_point_boundary_condition();
-
-  return;
 }
 
 
@@ -102,8 +100,6 @@ void ScaTra::LevelSetAlgorithm::add_problem_specific_parameters_and_vectors(
           "boundary cells", interface_eleq_);
     }
   }
-
-  return;
 }
 
 
@@ -122,8 +118,6 @@ void ScaTra::LevelSetAlgorithm::capture_interface(
 
   // do mass conservation check
   mass_conservation_check(volminus, writetofile);
-
-  return;
 }
 
 
@@ -192,8 +186,6 @@ void ScaTra::LevelSetAlgorithm::mass_conservation_check(
             << Core::IO::endl;
     }
   }
-
-  return;
 }
 
 
@@ -306,8 +298,6 @@ void ScaTra::LevelSetAlgorithm::evaluate_error_compared_to_analytical_sol()
       FOUR_C_THROW("Cannot calculate error. Unknown type of analytical test problem");
       break;
   }
-
-  return;
 }
 
 
@@ -455,8 +445,6 @@ void ScaTra::LevelSetAlgorithm::apply_contact_point_boundary_condition()
   // update velocity vectors
   discret_->set_state(nds_vel(), "convective velocity field", convel_new);
   discret_->set_state(nds_vel(), "velocity field", convel_new);
-
-  return;
 }
 
 
@@ -898,9 +886,6 @@ void ScaTra::LevelSetAlgorithm::manipulate_fluid_field_for_gfunc()
   // update velocity vectors
   discret_->set_state(nds_vel(), "convective velocity field", conveltmp);
   discret_->set_state(nds_vel(), "velocity field", conveltmp);
-
-
-  return;
 }
 
 
@@ -975,7 +960,6 @@ void ScaTra::LevelSetAlgorithm::mass_center_using_smoothing()
     }
   }
 
-  return;
 
 }  // ScaTra::LevelSetAlgorithm::mass_center_using_smoothing
 
@@ -1129,8 +1113,6 @@ void ScaTra::LevelSetAlgorithm::redistribute(Core::LinAlg::Graph& nodegraph)
   }
 
   if (Core::Communication::my_mpi_rank(discret_->get_comm()) == 0) std::cout << "done" << std::endl;
-
-  return;
 }  // ScaTra::ScaTraTimIntImpl::redistribute
 
 FOUR_C_NAMESPACE_CLOSE

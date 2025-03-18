@@ -297,7 +297,6 @@ namespace Core::Communication
         subcomm_(MPI_COMM_NULL),
         np_type_(npType)
   {
-    return;
   }
 
   /*----------------------------------------------------------------------*
@@ -322,11 +321,7 @@ namespace Core::Communication
   /*----------------------------------------------------------------------*
    | set sub communicator                                     ghamm 04/12 |
    *----------------------------------------------------------------------*/
-  void Communicators::set_sub_comm(MPI_Comm subcomm)
-  {
-    subcomm_ = subcomm;
-    return;
-  }
+  void Communicators::set_sub_comm(MPI_Comm subcomm) { subcomm_ = subcomm; }
 
   /*----------------------------------------------------------------------*
    *----------------------------------------------------------------------*/

@@ -49,7 +49,6 @@ Discret::Elements::ScaTraEleParameterElchDiffCond::ScaTraEleParameterElchDiffCon
       newmanconstb_(-2.),
       newmanconstc_(-1.)
 {
-  return;
 }
 
 
@@ -81,8 +80,6 @@ void Discret::Elements::ScaTraEleParameterElchDiffCond::set_parameters(
   newmanconsta_ = diffcondparams.get<double>("MAT_NEWMAN_CONST_A");
   newmanconstb_ = diffcondparams.get<double>("MAT_NEWMAN_CONST_B");
   newmanconstc_ = diffcondparams.get<double>("MAT_NEWMAN_CONST_C");
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

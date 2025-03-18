@@ -1141,8 +1141,6 @@ void XFEM::MultiFieldMapExtractor::add_matrix(
   i_mat_row_col_transform(block)(src_ii, scale,
       Coupling::Adapter::CouplingSlaveConverter(i_coupling(block)),
       Coupling::Adapter::CouplingSlaveConverter(i_coupling(block)), full_mat, false, true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

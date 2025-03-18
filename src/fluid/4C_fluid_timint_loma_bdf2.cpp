@@ -24,7 +24,6 @@ FLD::TimIntLomaBDF2::TimIntLomaBDF2(const std::shared_ptr<Core::FE::Discretizati
       TimIntLoma(actdis, solver, params, output, alefluid)
 {
   std::cout << "\nWARNING: Loma has never been tested with BDF2 time integration!!\n" << std::endl;
-  return;
 }
 
 
@@ -37,8 +36,6 @@ void FLD::TimIntLomaBDF2::init()
   // note: this order is important
   TimIntBDF2::init();
   TimIntLoma::init();
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

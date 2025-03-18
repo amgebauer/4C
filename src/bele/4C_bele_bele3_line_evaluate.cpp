@@ -289,7 +289,6 @@ void Discret::Elements::Bele3Line::integrate_shape_function(Teuchos::ParameterLi
     }
   }  // end of loop over integrationen points
 
-  return;
 }  // Discret::Elements::Bele3Line::integrate_shape_function
 
 FOUR_C_NAMESPACE_CLOSE

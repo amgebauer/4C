@@ -52,7 +52,6 @@ Adapter::FluidFSI::FluidFSI(std::shared_ptr<Fluid> fluid,
 {
   // make sure
   if (fluid_ == nullptr) FOUR_C_THROW("Failed to create the underlying fluid adapter");
-  return;
 }
 
 
@@ -524,7 +523,6 @@ void Adapter::FluidFSI::reset(bool completeReset, int numsteps, int iter)
 
 {
   FluidWrapper::reset(completeReset, numsteps, iter);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -533,7 +531,6 @@ void Adapter::FluidFSI::calculate_error()
 
 {
   fluidimpl_->evaluate_error_compared_to_analytical_sol();
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -584,8 +581,6 @@ void Adapter::FluidFSI::time_step_auxiliary()
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -595,8 +590,6 @@ void Adapter::FluidFSI::explicit_euler(const Core::LinAlg::Vector<double>& veln,
 {
   // Do a single explicit Euler step
   velnp.update(1.0, veln, dt(), accn, 0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -613,8 +606,6 @@ void Adapter::FluidFSI::adams_bashforth2(const Core::LinAlg::Vector<double>& vel
   velnp.update(1.0, veln, 0.0);
   velnp.update((2.0 * current_dt * dto + current_dt * current_dt) / (2 * dto), accn,
       -current_dt * current_dt / (2.0 * dto), accnm, 1.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -670,8 +661,6 @@ void Adapter::FluidFSI::indicate_error_norms(double& err, double& errcond, doubl
   locerrvelnp_->norm_inf(&errinf);
   errorcond.norm_inf(&errinfcond);
   errorother->norm_inf(&errinfother);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

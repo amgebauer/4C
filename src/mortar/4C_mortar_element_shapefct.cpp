@@ -1862,8 +1862,6 @@ void Mortar::Element::shape_functions(Mortar::Element::ShapeType shape, const do
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4342,8 +4340,6 @@ void Mortar::Element::shape_function_linearizations(Mortar::Element::ShapeType s
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

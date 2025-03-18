@@ -293,8 +293,6 @@ void Wear::WearInterface::fd_check_gap_deriv()
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -406,8 +404,6 @@ void Wear::WearInterface::fd_check_gap_deriv_w()
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -722,8 +718,6 @@ void Wear::WearInterface::fd_check_deriv_e_d(Core::LinAlg::SparseMatrix& linedis
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1038,8 +1032,6 @@ void Wear::WearInterface::fd_check_deriv_e_d_master(Core::LinAlg::SparseMatrix& 
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1231,8 +1223,6 @@ void Wear::WearInterface::fd_check_deriv_t_d(Core::LinAlg::SparseMatrix& lintdis
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1424,8 +1414,6 @@ void Wear::WearInterface::fd_check_deriv_t_d_master(Core::LinAlg::SparseMatrix& 
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2484,8 +2472,6 @@ void Wear::WearInterface::fd_check_slip_deriv(Core::LinAlg::SparseMatrix& linsli
   initialize();
   evaluate();
 
-  return;
-
 }  // FDCheckSlipTrescaDeriv
 
 /*----------------------------------------------------------------------*
@@ -2655,8 +2641,6 @@ void Wear::WearInterface::fd_check_mortar_t_deriv()
   // contents of evaluate()
   // *******************************************************************
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2940,8 +2924,6 @@ void Wear::WearInterface::fd_check_mortar_t_master_deriv()
   // contents of evaluate()
   // *******************************************************************
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3111,8 +3093,6 @@ void Wear::WearInterface::fd_check_mortar_e_deriv()
   // contents of evaluate()
   // *******************************************************************
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3397,8 +3377,6 @@ void Wear::WearInterface::fd_check_mortar_e_master_deriv()
   // contents of evaluate()
   // *******************************************************************
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3548,9 +3526,6 @@ void Wear::WearInterface::fd_check_wear_deriv_lm()
     // store gap-values into refG
     cnode->wear_data().weighted_wear() = refW[i];
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3799,8 +3774,6 @@ void Wear::WearInterface::fd_check_wear_deriv()
 
     cnode->wear_data().weighted_wear() = refW[i];
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -458,8 +458,6 @@ void XFEM::MeshProjector::find_covering_elements_and_interpolate_values(
       }
     }
   }
-
-  return;
 }
 
 void XFEM::MeshProjector::communicate_nodes(
@@ -549,8 +547,6 @@ void XFEM::MeshProjector::receive_block(
 
   // for safety
   Core::Communication::barrier(exporter.get_comm());
-
-  return;
 }
 
 void XFEM::MeshProjector::send_block(
@@ -575,8 +571,6 @@ void XFEM::MeshProjector::send_block(
 
   // for safety
   Core::Communication::barrier(exporter.get_comm());
-
-  return;
 }
 
 void XFEM::MeshProjector::pack_values(std::vector<Core::LinAlg::Matrix<3, 1>>& tar_nodepositions,

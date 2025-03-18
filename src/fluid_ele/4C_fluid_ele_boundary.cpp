@@ -57,7 +57,6 @@ Discret::Elements::FluidBoundary::FluidBoundary(int id, int owner, int nnode, co
           "You need different NumDofPerNode for each node on this fluid boundary? ({} != {})",
           numdofpernode_, parent_master_element()->num_dof_per_node(*FluidBoundary::nodes()[nlid]));
   }
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -68,7 +67,6 @@ Discret::Elements::FluidBoundary::FluidBoundary(int id, int owner)
       distype_(Core::FE::CellType::dis_none),
       numdofpernode_(-1)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -77,7 +75,6 @@ Discret::Elements::FluidBoundary::FluidBoundary(int id, int owner)
 Discret::Elements::FluidBoundary::FluidBoundary(const Discret::Elements::FluidBoundary& old)
     : Core::Elements::FaceElement(old), distype_(old.distype_), numdofpernode_(old.numdofpernode_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -105,7 +102,6 @@ void Discret::Elements::FluidBoundary::pack(Core::Communication::PackBuffer& dat
   add_to_pack(data, distype_);
   // add numdofpernode_
   add_to_pack(data, numdofpernode_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -122,9 +118,6 @@ void Discret::Elements::FluidBoundary::unpack(Core::Communication::UnpackBuffer&
   extract_from_pack(buffer, distype_);
   // numdofpernode_
   extract_from_pack(buffer, numdofpernode_);
-
-
-  return;
 }
 
 
@@ -136,7 +129,6 @@ void Discret::Elements::FluidBoundary::print(std::ostream& os) const
 {
   os << "FluidBoundary ";
   Element::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------*

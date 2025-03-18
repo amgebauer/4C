@@ -92,8 +92,6 @@ void Core::LinAlg::export_to(
   {
     FOUR_C_THROW("Caught an Epetra exception {}", error);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -157,8 +155,6 @@ void Core::LinAlg::export_to(
   {
     FOUR_C_THROW("Caught an Epetra exception {}", error);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

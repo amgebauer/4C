@@ -131,8 +131,6 @@ void FLD::XFluidFluid::create_initial_state()
 
   if (ale_embfluid_)
     dispnpoldstate_ = std::make_shared<Core::LinAlg::Vector<double>>(*embedded_fluid_->dispnp());
-
-  return;
 }
 
 void FLD::XFluidFluid::use_block_matrix(bool splitmatrix)

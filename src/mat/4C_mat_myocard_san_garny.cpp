@@ -710,7 +710,6 @@ void MyocardSanGarny::set_internal_state(const int k, const double val)
 {
   s0_[k] = val;
   s_[k] = val;
-  return;
 }
 
 /*----------------------------------------------------------------------*

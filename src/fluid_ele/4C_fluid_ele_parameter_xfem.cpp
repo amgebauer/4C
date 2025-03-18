@@ -234,8 +234,6 @@ void Discret::Elements::FluidEleParameterXFEM::set_element_xfem_parameter(
 
   // finally, perform the consistency check
   check_parameter_consistency(myrank);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

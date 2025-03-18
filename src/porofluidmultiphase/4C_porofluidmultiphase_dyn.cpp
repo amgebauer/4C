@@ -152,8 +152,6 @@ void porofluidmultiphase_dyn(int restart)
   problem->add_field_test(algo->create_field_test());
   problem->test_all(comm);
 
-  return;
-
 }  // poromultiphase_dyn
 
 FOUR_C_NAMESPACE_CLOSE

@@ -24,10 +24,7 @@ FLD::Utils::FluidInfNormScaling::FluidInfNormScaling(Core::LinAlg::MapExtractor&
           Core::Communication::unpack_epetra_comm(mapextractor.Map(0)->Comm()))),
       velpressplitter_(mapextractor),
       leftscale_momentum_(true),
-      leftscale_continuity_(false)
-{
-  return;
-};
+      leftscale_continuity_(false) {};
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -183,8 +180,6 @@ void FLD::Utils::FluidInfNormScaling::scale_system(
   if (myrank_ == 0)
     std::cout << "MAX: leftscalemom: " << srownorm << "  rightscale: " << scolnorm
               << "  leftscaleconti: " << prownorm << std::endl;
-
-  return;
 }
 
 
@@ -238,8 +233,6 @@ void FLD::Utils::FluidInfNormScaling::unscale_solution(
     if (myrank_ == 0)
       std::cout << "Only unscaling for solution vector!!! Matrix untouched. " << std::endl;
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

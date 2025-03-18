@@ -19,7 +19,6 @@ FOUR_C_NAMESPACE_OPEN
 ScaTra::MeshtyingStrategyFluidElch::MeshtyingStrategyFluidElch(ScaTra::ScaTraTimIntElch* elchtimint)
     : MeshtyingStrategyFluid(elchtimint)
 {
-  return;
 }  // ScaTra::MeshtyingStrategyFluidElch::MeshtyingStrategyFluidElch
 
 
@@ -39,8 +38,6 @@ void ScaTra::MeshtyingStrategyFluidElch::init_meshtying()
 
   // call setup in base class
   ScaTra::MeshtyingStrategyFluid::init_meshtying();
-
-  return;
 }
 
 void ScaTra::MeshtyingStrategyFluidElch::setup_meshtying()
@@ -68,8 +65,6 @@ void ScaTra::MeshtyingStrategyFluidElch::init_conv_check_strategy()
 {
   convcheckstrategy_ = std::make_shared<ScaTra::ConvCheckStrategyStdElch>(
       scatratimint_->scatra_parameter_list()->sublist("NONLINEAR"));
-
-  return;
 }  // ScaTra::MeshtyingStrategyFluidElch::init_conv_check_strategy
 
 FOUR_C_NAMESPACE_CLOSE

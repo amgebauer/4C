@@ -187,8 +187,6 @@ void Discret::Elements::Rigidsphere::nlnstiffmass(Teuchos::ParameterList& params
   //      for ( int i = 0; i < 3; ++i )
   //        (*inertia_force)(i) = acc[i] * (*massmatrix)(i,i);
   //    }
-
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------------------*
@@ -240,8 +238,6 @@ void Discret::Elements::Rigidsphere::calc_drag_force(Teuchos::ParameterList& par
       (*stiffmatrix)(l, l) += gamma / dt;
     }
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------------------*
@@ -405,8 +401,6 @@ void Discret::Elements::Rigidsphere::calc_stochastic_force(
   }
 
   // no contribution to stiffmatrix
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

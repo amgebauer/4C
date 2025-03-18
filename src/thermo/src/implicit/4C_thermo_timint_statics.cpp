@@ -49,9 +49,6 @@ Thermo::TimIntStatics::TimIntStatics(const Teuchos::ParameterList& ioparams,
 
   //! set initial external force vector
   apply_force_external((*time_)[0], (*temp_)(0), *fext_);
-
-  //! have a nice day
-  return;
 }
 
 
@@ -67,9 +64,6 @@ void Thermo::TimIntStatics::predict_const_temp_consist_rate()
 
   //! new end-point temperature rates, these stay zero in static calculation
   raten_->put_scalar(0.0);
-
-  //! watch out
-  return;
 }  // predict_const_temp_consist_rate()
 
 
@@ -107,10 +101,7 @@ void Thermo::TimIntStatics::evaluate_rhs_tang_residual()
   //!    K_{Teffdyn} = K_{T}
   //! i.e. do nothing here
 
-  tang_->complete();  // close tangent matrix
-
-  //! hallelujah
-  return;
+  tang_->complete();
 }  // evaluate_rhs_tang_residual()
 
 
@@ -171,9 +162,6 @@ void Thermo::TimIntStatics::update_iter_incrementally()
   //! new end-point temperatures
   //! T_{n+1}^{<k+1>} := T_{n+1}^{<k>} + IncT_{n+1}^{<k>}
   tempn_->update(1.0, *tempi_, 1.0);
-
-  //! bye
-  return;
 }  // update_iter_incrementally()
 
 
@@ -185,9 +173,6 @@ void Thermo::TimIntStatics::update_iter_iteratively()
   //! new end-point temperatures
   //! T_{n+1}^{<k+1>} := T_{n+1}^{<k>} + IncT_{n+1}^{<k>}
   tempn_->update(1.0, *tempi_, 1.0);
-
-  //! bye
-  return;
 }  // update_iter_iteratively()
 
 
@@ -211,9 +196,6 @@ void Thermo::TimIntStatics::update_step_state()
   //! update new internal force
   //!    F_{int;n} := F_{int;n+1}
   fint_->update(1.0, *fintn_, 0.0);
-
-  //! look out
-  return;
 }  // update_step_state()
 
 
@@ -242,7 +224,6 @@ void Thermo::TimIntStatics::update_step_element()
 void Thermo::TimIntStatics::read_restart_force()
 {
   // do nothing
-  return;
 
 }  // ReadRestartForce()
 
@@ -254,7 +235,6 @@ void Thermo::TimIntStatics::write_restart_force(
     std::shared_ptr<Core::IO::DiscretizationWriter> output)
 {
   // do nothing
-  return;
 
 }  // WriteRestartForce()
 
@@ -277,8 +257,6 @@ void Thermo::TimIntStatics::apply_force_tang_internal(const double time,  //!< e
 
   //! call the base function
   TimInt::apply_force_tang_internal(p, time, dt, temp, tempi, fint, tang);
-  //! finish
-  return;
 
 }  // apply_force_tang_internal()
 
@@ -299,8 +277,6 @@ void Thermo::TimIntStatics::apply_force_internal(const double time,  //!< evalua
   // ...
   //! call the base function
   TimInt::apply_force_internal(p, time, dt, temp, tempi, fint);
-  //! finish
-  return;
 
 }  // apply_force_tang_internal()
 
@@ -321,8 +297,6 @@ void Thermo::TimIntStatics::apply_force_external_conv(const double time,  //!< e
   // ...
   // call the base function
   TimInt::apply_force_external_conv(p, time, tempn, temp, fext, tang);
-  // finish
-  return;
 
 }  // apply_force_external_conv()
 

@@ -45,7 +45,6 @@ Discret::Elements::ScaTraEleBoundaryCalcElchNP<distype, probdim>::ScaTraEleBound
     :  // constructor of base class
       myelch::ScaTraEleBoundaryCalcElch(numdofpernode, numscal, disname)
 {
-  return;
 }
 
 
@@ -236,7 +235,6 @@ void Discret::Elements::ScaTraEleBoundaryCalcElchNP<distype,
     }
   }  // switch(myelch::elchparams_->EquPot())
 
-  return;
 }  // Discret::Elements::ScaTraEleBoundaryCalcElchNP<distype,
    // probdim>::evaluate_elch_boundary_kinetics
 

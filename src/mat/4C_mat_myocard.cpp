@@ -113,8 +113,6 @@ void Mat::Myocard::pack(Core::Communication::PackBuffer& data) const
     for (int k = -1; k < nb_state_variables_; ++k)  // Starting from -1 for mechanical activation
       for (int i = 0; i < myocard_mat_->get_number_of_gp(); ++i)  // loop over Gauss points
         add_to_pack(data, myocard_mat_->get_internal_state(k, i));
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -284,7 +282,6 @@ void Mat::Myocard::setup_diffusion_tensor(const std::vector<double>& fiber1)
   // done
 
   difftensor_.push_back(difftensor);
-  return;
 }
 
 void Mat::Myocard::setup_diffusion_tensor(const Core::LinAlg::Matrix<3, 1>& fiber1)
@@ -315,8 +312,6 @@ void Mat::Myocard::setup_diffusion_tensor(const Core::LinAlg::Matrix<3, 1>& fibe
   // done
 
   difftensor_.push_back(difftensor);
-
-  return;
 }
 
 void Mat::Myocard::setup_diffusion_tensor(const Core::LinAlg::Matrix<2, 1>& fiber1)
@@ -341,14 +336,11 @@ void Mat::Myocard::setup_diffusion_tensor(const Core::LinAlg::Matrix<2, 1>& fibe
   // done
 
   difftensor_.push_back(difftensor);
-
-  return;
 }
 
 void Mat::Myocard::diffusivity(Core::LinAlg::Matrix<1, 1>& diffus3, int gp) const
 {
   diffus3(0, 0) = difftensor_[gp](0, 0);
-  return;
 }
 
 void Mat::Myocard::diffusivity(Core::LinAlg::Matrix<2, 2>& diffus3, int gp) const
@@ -360,8 +352,6 @@ void Mat::Myocard::diffusivity(Core::LinAlg::Matrix<2, 2>& diffus3, int gp) cons
       diffus3(i, j) = difftensor_[gp](i, j);
     }
   }
-
-  return;
 }
 
 void Mat::Myocard::diffusivity(Core::LinAlg::Matrix<3, 3>& diffus3, int gp) const
@@ -373,7 +363,6 @@ void Mat::Myocard::diffusivity(Core::LinAlg::Matrix<3, 3>& diffus3, int gp) cons
       diffus3(i, j) = difftensor_[gp](i, j);
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -550,8 +539,6 @@ void Mat::Myocard::initialize()
         "Myocard Material type is not supported! (for the moment only MV,FHN,INADA,TNNP and SAN)");
 
   nb_state_variables_ = myocard_mat_->get_number_of_internal_state_variables();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -560,7 +547,6 @@ void Mat::Myocard::initialize()
 void Mat::Myocard::resize_internal_state_variables()
 {
   myocard_mat_->resize_internal_state_variables(params_->num_gp);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -569,8 +555,6 @@ void Mat::Myocard::resize_internal_state_variables()
 void Mat::Myocard::update(const double phi, const double dt)
 {
   myocard_mat_->update(phi, dt * (params_->time_scale));
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

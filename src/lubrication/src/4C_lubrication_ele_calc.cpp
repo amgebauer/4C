@@ -60,8 +60,6 @@ Discret::Elements::LubricationEleCalc<distype, probdim>::LubricationEleCalc(
 {
   FOUR_C_ASSERT(
       nsd_ >= nsd_ele_, "problem dimension has to be equal or larger than the element dimension!");
-
-  return;
 }
 
 
@@ -184,8 +182,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::read_element_coord
   // Directly copy the coordinates since in 3D the transformation is just the identity
   Core::Geo::fill_initial_position_array<distype, nsd_, Core::LinAlg::Matrix<nsd_, nen_>>(
       ele, xyze_);
-
-  return;
 }  // LubricationEleCalc::read_element_coordinates
 
 /*----------------------------------------------------------------------*
@@ -320,8 +316,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::extract_element_an
 
   // extract the local values at the element nodes
   Core::FE::extract_my_values<Core::LinAlg::Matrix<nen_, 1>>(*prenp, eprenp_, lm);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -626,7 +620,6 @@ void Discret::Elements::LubricationEleCalc<distype,
     probdim>::set_internal_variables_for_mat_and_rhs()
 {
   lubricationvarmanager_->set_internal_variables(funct_, derxy_, eprenp_);
-  return;
 }
 
 /*------------------------------------------------------------------------------*
@@ -647,7 +640,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_p_flow_fac_at
     pflowfac(i) = 1 + 3 * r * r;
     pflowfacderiv(i) = (-6) * r * r / heightint;
   }
-  return;
 }
 
 /*------------------------------------------------------------------------------*
@@ -665,7 +657,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_s_flow_fac_at
   sflowfac = (-3 * r - 30 * r * r * r) / (1 + 6 * r * r);
   sflowfacderiv = (3 * r + 54 * r * r * r - 360 * r * r * r * r * r) /
                   (heightint * (1 + 6 * r * r) * (1 + 6 * r * r));
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -686,8 +677,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::get_material_param
   std::shared_ptr<Core::Mat::Material> material = ele->material();
 
   materials(material, densn, densnp, densam, visc, dvisc, iquad);
-
-  return;
 }  // LubricationEleCalc::get_material_params
 
 /*----------------------------------------------------------------------*
@@ -714,7 +703,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::materials(
       FOUR_C_THROW("Material type {} is not supported", material->material_type());
       break;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -742,10 +730,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::mat_lubrication(
 
   visc = actmat->compute_viscosity(pre);
   dvisc = actmat->compute_viscosity_deriv(pre, visc);
-
-
-  // viscmanager_->SetIsotropicVisc(visc);
-  return;
 }  // LubricationEleCalc<distype>::mat_lubrication
 
 /*------------------------------------------------------------------- *
@@ -763,7 +747,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::get_laplacian_weak
   {
     val += derxy_(j, vi) * derxy_(j, ui);
   }
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -782,8 +765,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::get_laplacian_weak
   {
     val += derxy_(j, vi) * derxy_(j, ui) * pflowfac(j);
   }
-
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -801,7 +782,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::get_laplacian_weak
   {
     val += derxy_(j, vi) * gradpre(j);
   }
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -820,7 +800,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::get_laplacian_weak
   {
     val += derxy_(j, vi) * gradpre(j) * pflowfac(j);
   }
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -842,7 +821,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_mat_psl(
       emat(vi, ui) -= fac_psl * laplawf;
     }
   }
-  return;
 }
 
 /*-----------------------------------------------------------------*
@@ -869,7 +847,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_mat_psl_vis(
       emat(vi, ui) += fac_pslvisc * laplawf * funct_(ui);
     }
   }
-  return;
 }
 
 
@@ -895,7 +872,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_mat_psl(
       emat(vi, ui) -= fac_psl * laplawf;
     }
   }
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -917,7 +893,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_rhs_psl(
     get_laplacian_weak_form_rhs(laplawf, gradpre, vi);
     erhs[vi] += fac_rhs_psl * laplawf;
   }
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -941,7 +916,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_rhs_psl(
     get_laplacian_weak_form_rhs(laplawf, gradpre, vi, pflowfac);
     erhs[vi] += fac_rhs_psl * laplawf;
   }
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -965,7 +939,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_rhs_wdg(
     }
     erhs[vi] -= fac_rhs_wdg * val;
   }
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -983,7 +956,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_rhs_sqz(
   {
     erhs[vi] += fac_rhs_sqz * funct_(vi);
   }
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -1010,7 +982,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_rhs_shear(
     }
     erhs[vi] -= fac_rhs_shear * val;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1158,7 +1129,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_height_at_int
         funct_(j) * eheinp_(0, j);  // Note that the same value is stored for all space dimensions
   }
 
-  return;
 }  // ReynoldsEleCalc::calc_height_at_int_point
 
 /*-----------------------------------------------------------------------*
@@ -1176,8 +1146,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_height_dot_at
         funct_(j) *
         eheidotnp_(0, j);  // Note that the same value is stored for all space dimensions
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -1191,8 +1159,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_avr_vel_at_in
 {
   // interpolate the velocities at the integration point
   avrvel.multiply(1., eAvTangVel_, funct_, 0.);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -1206,8 +1172,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calc_rel_vel_at_in
 {
   // interpolate the velocities at the integration point
   relvel.multiply(1., eRelTangVel_, funct_, 0.);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1412,7 +1376,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::cal_error_compared
       break;
   }  // switch(errortype)
 
-  return;
 }  // Discret::Elements::LubricationEleCalc<distype,probdim>::cal_error_compared_to_analyt_solution
 
 /*---------------------------------------------------------------------*
@@ -1458,7 +1421,6 @@ void Discret::Elements::LubricationEleCalc<distype, probdim>::calculate_pressure
     }
   }  // loop over integration points
 
-  return;
 }  // LubricationEleCalc::calculate_pressures
 
 // template classes

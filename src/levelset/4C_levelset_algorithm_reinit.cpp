@@ -49,8 +49,6 @@ void ScaTra::LevelSetAlgorithm::reinit_eq()
 
   // cleaning of all necessary modifications
   finish_time_loop_reinit();
-
-  return;
 }
 
 
@@ -116,8 +114,6 @@ void ScaTra::LevelSetAlgorithm::set_reinitialization_element_parameters(
 
   // call standard loop over elements
   discret_->evaluate(eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-
-  return;
 }
 
 
@@ -143,8 +139,6 @@ void ScaTra::LevelSetAlgorithm::set_reinitialization_element_time_parameters()
 
   // call standard loop over elements
   discret_->evaluate(eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-
-  return;
 }
 
 
@@ -168,8 +162,6 @@ void ScaTra::LevelSetAlgorithm::prepare_time_loop_reinit()
   set_reinitialization_element_time_parameters();
   // set element parameters for reinitialization equation
   set_reinitialization_element_parameters();
-
-  return;
 }
 
 
@@ -211,8 +203,6 @@ void ScaTra::LevelSetAlgorithm::time_loop_reinit()
     // -------------------------------------------------------------------
     update_reinit();
   }
-
-  return;
 }
 
 
@@ -231,8 +221,6 @@ void ScaTra::LevelSetAlgorithm::finish_time_loop_reinit()
   // reset general parameters for element evaluation
   set_element_general_parameters();
   set_element_turbulence_parameters();
-
-  return;
 }
 
 
@@ -317,9 +305,6 @@ void ScaTra::LevelSetAlgorithm::prepare_time_step_reinit()
   // -------------------------------------------------------------------
 #ifdef USE_PHIN_FOR_VEL
   if (useprojectedreinitvel_ == Inpar::ScaTra::vel_reinit_node_based) calc_node_based_reinit_vel();
-#endif
-
-  return;
 }
 
 
@@ -417,7 +402,6 @@ void ScaTra::LevelSetAlgorithm::calc_node_based_reinit_vel()
       (*nb_grad_val_)(idim).replace_local_values(1, &val, &lnodeid);
     }
   }
-  return;
 }
 
 
@@ -432,8 +416,6 @@ void ScaTra::LevelSetAlgorithm::solve_reinit()
   // parameters is handled via the switchreinit_-flag in the concrete time-integration
   // schemes for level-set problems
   nonlinear_solve();
-
-  return;
 }
 
 
@@ -488,8 +470,6 @@ void ScaTra::LevelSetAlgorithm::correction_reinit()
   system_matrix()->reset();
   // reset the solver as well
   solver_->reset();
-
-  return;
 }
 
 
@@ -961,8 +941,6 @@ void ScaTra::LevelSetAlgorithm::reinit_geo(
   }
 
   if (myrank_ == 0) std::cout << " done" << std::endl;
-
-  return;
 }
 
 
@@ -1066,8 +1044,6 @@ void ScaTra::LevelSetAlgorithm::find_facing_patch_proj_cell_space(
   //    << "patch vertices z component " << patchcoord(2,0) << " " << patchcoord(2,1) << " " <<
   //    patchcoord(2,2) << std::endl;
   //  }
-
-  return;
 }
 
 
@@ -1138,8 +1114,6 @@ void ScaTra::LevelSetAlgorithm::compute_distance_to_edge(const Core::LinAlg::Mat
       if (edgedisttmp < edgedist) edgedist = edgedisttmp;
     }
   }
-
-  return;
 }
 
 
@@ -1176,8 +1150,6 @@ void ScaTra::LevelSetAlgorithm::compute_distance_to_patch(const Core::LinAlg::Ma
     vertexdisttmp = dist.norm2();
     if (vertexdisttmp < vertexdist) vertexdist = vertexdisttmp;
   }
-
-  return;
 }
 
 
@@ -1228,8 +1200,6 @@ void ScaTra::LevelSetAlgorithm::compute_normal_vector_to_interface(
   double norm = sqrt(normal(0) * normal(0) + normal(1) * normal(1) + normal(2) * normal(2));
   if (norm == 0.0) FOUR_C_THROW("norm of normal vector is zero!");
   normal.scale(1.0 / norm);
-
-  return;
 }
 
 
@@ -1404,8 +1374,6 @@ void ScaTra::LevelSetAlgorithm::correct_volume()
   phinp_->update(thickness, one, 1.0);
 
   if (myrank_ == 0) Core::IO::cout << "done" << Core::IO::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1510,8 +1478,6 @@ void ScaTra::LevelSetAlgorithm::reinitialize_with_elliptic_equation()
   interface_eleq_ = nullptr;
   initialphireinit_ = nullptr;
   if (projection_ == true) nb_grad_val_->PutScalar(0.0);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

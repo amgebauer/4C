@@ -48,7 +48,6 @@ Discret::Elements::ScaTraEleBoundaryCalcStd<distype, probdim>::ScaTraEleBoundary
     const int numdofpernode, const int numscal, const std::string& disname)
     : my::ScaTraEleBoundaryCalc(numdofpernode, numscal, disname)
 {
-  return;
 }
 
 

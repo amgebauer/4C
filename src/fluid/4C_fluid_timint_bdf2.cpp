@@ -26,7 +26,6 @@ FLD::TimIntBDF2::TimIntBDF2(const std::shared_ptr<Core::FE::Discretization>& act
     const std::shared_ptr<Core::IO::DiscretizationWriter>& output, bool alefluid /*= false*/)
     : FluidImplicitTimeInt(actdis, solver, params, output, alefluid), theta_(1.0)
 {
-  return;
 }
 
 
@@ -46,8 +45,6 @@ void FLD::TimIntBDF2::init()
   set_element_time_parameter();
 
   complete_general_init();
-
-  return;
 }
 
 
@@ -62,7 +59,6 @@ void FLD::TimIntBDF2::print_time_step_info()
     printf("TIME: %11.4E/%11.4E  DT = %11.4E       BDF2          STEP = %4d/%4d \n", time_,
         maxtime_, dta_, step_, stepmax_);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -80,8 +76,6 @@ void FLD::TimIntBDF2::set_theta()
     velnm_->update(1.0, *veln_, 0.0);  // results in hist_ = veln_
     theta_ = 1.0;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -98,19 +92,12 @@ void FLD::TimIntBDF2::set_old_part_of_righthandside()
   */
 
   hist_->update(4. / 3., *veln_, -1. / 3., *velnm_, 0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
 | set integration-scheme-specific state                        bk 12/13 |
 *-----------------------------------------------------------------------*/
-void FLD::TimIntBDF2::set_state_tim_int()
-{
-  discret_->set_state("velaf", velnp_);
-
-  return;
-}
+void FLD::TimIntBDF2::set_state_tim_int() { discret_->set_state("velaf", velnp_); }
 
 /*----------------------------------------------------------------------*
 | calculate acceleration                                       bk 12/13 |
@@ -141,27 +128,17 @@ void FLD::TimIntBDF2::calculate_acceleration(
 
   accnp->update((2.0 * dta_ + dtp_) / (dta_ * sum), *velnp, -sum / (dta_ * dtp_), *veln, 0.0);
   accnp->update(dta_ / (dtp_ * sum), *velnm, 1.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
 | set gamma                                                    bk 12/13 |
 *-----------------------------------------------------------------------*/
-void FLD::TimIntBDF2::set_gamma(Teuchos::ParameterList& eleparams)
-{
-  eleparams.set("gamma", 1.0);
-  return;
-}
+void FLD::TimIntBDF2::set_gamma(Teuchos::ParameterList& eleparams) { eleparams.set("gamma", 1.0); }
 
 /*----------------------------------------------------------------------*
 | scale separation                                             bk 12/13 |
 *-----------------------------------------------------------------------*/
-void FLD::TimIntBDF2::sep_multiply()
-{
-  Sep_->multiply(false, *velnp_, *fsvelaf_);
-  return;
-}
+void FLD::TimIntBDF2::sep_multiply() { Sep_->multiply(false, *velnp_, *fsvelaf_); }
 
 /*----------------------------------------------------------------------*
  | paraview output of filtered velocity                  rasthofer 02/11|
@@ -183,8 +160,6 @@ void FLD::TimIntBDF2::outputof_filtered_vel(std::shared_ptr<Core::LinAlg::Vector
   outvec->update(1.0, *velnp_, -1.0, *row_finescaleveltmp, 0.0);
 
   fsoutvec->update(1.0, *row_finescaleveltmp, 0.0);
-
-  return;
 }
 
 // -------------------------------------------------------------------
@@ -210,7 +185,6 @@ void FLD::TimIntBDF2::set_element_time_parameter()
 
   // call standard loop over elements
   discret_->evaluate(eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-  return;
 }
 
 /*----------------------------------------------------------------------*

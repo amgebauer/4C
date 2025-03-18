@@ -144,8 +144,6 @@ void Adapter::FluidFluidFSI::apply_mesh_displacement(
   meshmap_->insert_cond_vector(*disp, *xfluidfluid_->write_access_disp_old_state());
   // apply mesh displacement and update grid velocity
   FluidFSI::apply_mesh_displacement(fluiddisp);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -286,8 +284,6 @@ void Adapter::FluidFluidFSI::setup_interface(const int nds_master)
       xfluidfluid_->x_fluid_fluid_map_extractor()->x_fluid_map();
   // do the setup
   mergedfluidinterface_->setup(xfluidmap, *FluidFSI::interface());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

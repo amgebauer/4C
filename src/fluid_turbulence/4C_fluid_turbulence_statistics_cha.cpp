@@ -1342,8 +1342,6 @@ FLD::TurbulenceStatisticsCha::TurbulenceStatisticsCha(
 
   // clear statistics
   this->clear_statistics();
-
-  return;
 }  // TurbulenceStatisticsCha::TurbulenceStatisticsCha
 
 
@@ -1489,7 +1487,6 @@ void FLD::TurbulenceStatisticsCha::do_time_sample(
     }
   }
 
-  return;
 }  // TurbulenceStatisticsCha::DoTimeSample
 
 
@@ -1647,7 +1644,6 @@ void FLD::TurbulenceStatisticsCha::do_loma_time_sample(const Core::LinAlg::Vecto
     }
   }
 
-  return;
 }  // TurbulenceStatisticsCha::DoLomaTimeSample
 
 
@@ -1805,7 +1801,6 @@ void FLD::TurbulenceStatisticsCha::do_scatra_time_sample(const Core::LinAlg::Vec
     }
   }
 
-  return;
 }  // TurbulenceStatisticsCha::DoScatraTimeSample
 
 
@@ -2015,7 +2010,6 @@ void FLD::TurbulenceStatisticsCha::evaluate_integral_mean_values_in_planes()
     (*sumsqp_)[i] += (*globsumsqp)[i] / (*globarea)[i];
   }
 
-  return;
 
 }  // TurbulenceStatisticsCha::evaluate_integral_mean_values_in_planes()
 
@@ -2253,7 +2247,6 @@ void FLD::TurbulenceStatisticsCha::evaluate_loma_integral_mean_values_in_planes(
     (*sumw_t_)[i] += (*globsumwT)[i] / (*globarea)[i];
   }
 
-  return;
 
 }  // TurbulenceStatisticsCha::evaluate_loma_integral_mean_values_in_planes()
 
@@ -2463,7 +2456,6 @@ void FLD::TurbulenceStatisticsCha::evaluate_scatra_integral_mean_values_in_plane
     (*sumw_t_)[i] += (*globsumwphi)[i] / (*globarea)[i];
   }
 
-  return;
 
 }  // TurbulenceStatisticsCha::evaluate_scatra_integral_mean_values_in_planes()
 
@@ -2643,7 +2635,6 @@ void FLD::TurbulenceStatisticsCha::evaluate_pointwise_mean_values_in_planes()
     planenum++;
   }
 
-  return;
 }  // TurbulenceStatisticsCha::evaluate_pointwise_mean_values_in_planes()
 
 
@@ -2775,8 +2766,6 @@ void FLD::TurbulenceStatisticsCha::add_dynamic_smagorinsky_quantities()
   modelparams->set<std::shared_ptr<std::vector<double>>>("local_Ci_sum", local_Ci_sum);
   modelparams->set<std::shared_ptr<std::vector<double>>>(
       "local_Ci_delta_sq_sum", local_Ci_delta_sq_sum);
-
-  return;
 }  // FLD::TurbulenceStatisticsCha::add_dynamic_smagorinsky_quantities
 
 
@@ -3027,7 +3016,6 @@ void FLD::TurbulenceStatisticsCha::add_model_params_multifractal(
     }
   }
 
-  return;
 }  // FLD::TurbulenceStatisticsCha::add_model_params_multifractal();
 
 
@@ -3764,7 +3752,6 @@ void FLD::TurbulenceStatisticsCha::evaluate_residuals(
     }  // end if scatra
   }  // end if dissipation
 
-  return;
 }  // FLD::TurbulenceStatisticsCha::EvaluateResiduals
 
 
@@ -4267,8 +4254,6 @@ void FLD::TurbulenceStatisticsCha::time_average_means_and_output_of_statistics(c
   // log was written, so increase counter for records
   countrecord_++;
 
-  return;
-
 }  // TurbulenceStatisticsCha::time_average_means_and_output_of_statistics
 
 
@@ -4647,7 +4632,6 @@ void FLD::TurbulenceStatisticsCha::dump_statistics(const int step)
     }  // end subgrid_dissipation_
   }  // end myrank 0
 
-  return;
 
 }  // TurbulenceStatisticsCha::DumpStatistics
 
@@ -5142,7 +5126,6 @@ void FLD::TurbulenceStatisticsCha::dump_loma_statistics(const int step)
     }  // end smagorinsky_
   }
 
-  return;
 
 }  // TurbulenceStatisticsCha::DumpLomaStatistics
 
@@ -5683,7 +5666,6 @@ void FLD::TurbulenceStatisticsCha::dump_scatra_statistics(const int step)
     }  // end smagorinsky_
   }
 
-  return;
 
 }  // TurbulenceStatisticsCha::dump_scatra_statistics
 
@@ -5869,7 +5851,6 @@ void FLD::TurbulenceStatisticsCha::clear_statistics()
     }
   }  // end subgrid_dissipation_
 
-  return;
 }  // TurbulenceStatisticsCha::ClearStatistics
 
 
@@ -5911,7 +5892,6 @@ void FLD::TurbulenceStatisticsCha::store_scatra_discret_and_params(
       if (dens_ != 1.0) FOUR_C_THROW("Kinematic quantities assumed!");
     }
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

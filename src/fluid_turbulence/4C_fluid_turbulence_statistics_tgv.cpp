@@ -259,8 +259,6 @@ FLD::TurbulenceStatisticsTgv::TurbulenceStatisticsTgv(
 
   // clear statistics
   this->clear_statistics();
-
-  return;
 }  // TurbulenceStatisticsCha::TurbulenceStatisticsTgv
 
 
@@ -762,8 +760,6 @@ void FLD::TurbulenceStatisticsTgv::evaluate_residuals(
 
   eleparams_.set<std::shared_ptr<std::vector<double>>>("incrcrossstress", local_incrcrossstress);
   eleparams_.set<std::shared_ptr<std::vector<double>>>("incrreystress", local_incrreystress);
-
-  return;
 }  // FLD::TurbulenceStatisticsTgv::EvaluateResiduals
 
 
@@ -967,7 +963,6 @@ void FLD::TurbulenceStatisticsTgv::dump_statistics(const int step)
   }  // end myrank 0
 
 
-  return;
 
 }  // TurbulenceStatisticsTvg::time_average_means_and_output_of_statistics
 
@@ -1041,7 +1036,6 @@ void FLD::TurbulenceStatisticsTgv::clear_statistics()
     (*sumspressnp_sq_)[rr] = 0.0;
   }
 
-  return;
 }  // TurbulenceStatisticsTvg::ClearStatistics
 
 FOUR_C_NAMESPACE_CLOSE

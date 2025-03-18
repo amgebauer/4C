@@ -26,7 +26,6 @@ XFEM::DiscretizationXFEM::DiscretizationXFEM(
       initialfulldofrowmap_(nullptr),
       initialpermdofrowmap_(nullptr)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -108,8 +107,6 @@ void XFEM::DiscretizationXFEM::store_initial_dofs(const std::vector<int>& nds)
       extend_map(fsds->dof_row_map(), numdofspernodedofset, numdofsetspernode, false);
 
   initialized_ = true;
-
-  return;
 }
 
 /*------------------------------------------------------------------------------*
@@ -241,7 +238,6 @@ void XFEM::DiscretizationXFEM::set_initial_state(unsigned nds, const std::string
     Core::LinAlg::export_to(*state, *tmp);
     state_[nds][name] = tmp;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------------*

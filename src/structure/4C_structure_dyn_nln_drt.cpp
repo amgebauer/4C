@@ -55,8 +55,6 @@ void caldyn_drt()
           "unknown time integration scheme '{}'", sdyn.get<std::string>("DYNAMICTYPE").c_str());
       break;
   }
-
-  return;
 }
 
 
@@ -157,9 +155,6 @@ void dyn_nlnstructural_drt()
   std::shared_ptr<const Teuchos::Comm<int>> TeuchosComm =
       Core::Communication::to_teuchos_comm<int>(structdis->get_comm());
   Teuchos::TimeMonitor::summarize(Teuchos::Ptr(TeuchosComm.get()), std::cout, false, true, true);
-
-  // time to go home...
-  return;
 
 }  // end of dyn_nlnstructural_drt()
 

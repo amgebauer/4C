@@ -24,7 +24,6 @@ Adapter::FluidXFEM::FluidXFEM(const Teuchos::ParameterList& prbdyn, std::string 
           prbdyn, Global::Problem::instance()->fluid_dynamic_params(), "fluid", false)
               ->fluid_field())
 {
-  return;
 }
 
 

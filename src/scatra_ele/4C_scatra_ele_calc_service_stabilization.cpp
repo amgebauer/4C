@@ -83,7 +83,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau(
     }
   }
 
-  return;
 }  // ScaTraEleCalc::CalcTau
 
 /*----------------------------------------------------------------------*
@@ -192,8 +191,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_taylor_hughes_
 
   // computation of stabilization parameter tau
   tau = 1.0 / (sqrt(c1 * dens_sqr * ((sigma_tot) * (sigma_tot)) + Gnormu + Gdiff));
-
-  return;
 }
 
 
@@ -261,8 +258,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_franca_valenti
   const double xi1 = std::max(epe1, 1.0);
 
   tau = ((h) * (h)) / (((h) * (h)) * densnp * sigma_tot * xi1 + 2.0 * xi / mk);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -393,8 +388,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_codina(
   const double c3 = 4.0 / mk;
 
   tau = 1.0 / (c1 * densnp * sigma_tot + c2 * densnp * vel_norm / h + c3 * diffus / (h * h));
-
-  return;
 }
 
 /*---------------------------------------------------------------------------*
@@ -455,8 +448,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_franca_madurei
 
   if (scatrapara_->tau_def() == Inpar::ScaTra::tau_franca_madureira_valentin or reacoeff != 0.0)
     tau = ((h) * (h)) / (c_u * ((h) * (h)) * densnp * sigma_tot * xi + (2.0 * diffus / mk));
-
-  return;
 }
 
 
@@ -499,8 +490,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_1d_exact(
   }
   else
     tau = 0.0;
-
-  return;
 }
 
 
@@ -833,8 +822,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_artificial_diff(
   //  if (artdiff>1e-8)
   //    std::cout<<__FILE__<<__LINE__<<"\t artdiff=\t"<<artdiff<<std::endl;
   diffmanager_->set_isotropic_sub_grid_diff(artdiff, k);
-
-  return;
 }  // ScaTraEleCalc::calc_subgr_diff
 
 
@@ -892,7 +879,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_strong_residual(
     }
   }
 
-  return;
 }  // ScaTraEleCalc::calc_strong_residual
 
 
@@ -1082,7 +1068,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_subgr_velocity(
     }
   }
 
-  return;
 }  // ScaTraEleCalc::calc_subgr_velocity
 
 
@@ -1118,8 +1103,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_subgr_velocity_vis
 
   else
     FOUR_C_THROW("Epsilon(u) is not implemented for the 1D case!");
-
-  return;
 }  // Discret::Elements::ScaTraEleCalc<distype,probdim>::calc_subgr_velocity_visc
 
 FOUR_C_NAMESPACE_CLOSE

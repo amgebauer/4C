@@ -2008,8 +2008,6 @@ void FLD::FluidImplicitTimeInt::evaluate_fluid_edge_based(
   int err2 = res_tmp.export_to(*residual_col, exporter, Add);
   if (err2) FOUR_C_THROW("Export using exporter returned err={}", err2);
   systemvector1.update(1.0, res_tmp, 1.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

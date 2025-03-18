@@ -354,8 +354,6 @@ void Adapter::StructureTimeAda::size_for_output()
     if (fabs(outenetime_) < fabs(outsystime_)) outsys_ = false;
     if (fabs(outenetime_) < fabs(outstrtime_)) outstr_ = false;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -531,8 +529,6 @@ void Adapter::StructureTimeAda::update_period()
   if (outsys_) outsystime_ += outsysperiod_;
   if (outstr_) outstrtime_ += outstrperiod_;
   if (outene_) outenetime_ += outeneperiod_;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

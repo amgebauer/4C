@@ -54,7 +54,6 @@ Discret::Elements::PoroFluidMultiPhaseEleParameter::PoroFluidMultiPhaseEleParame
       isset_generalparams_(false),
       domainint_funct_(0)
 {
-  return;
 }
 
 //----------------------------------------------------------------------*/
@@ -119,8 +118,6 @@ void Discret::Elements::PoroFluidMultiPhaseEleParameter::set_time_step_parameter
   {
     timefacrhs_ = 0.0;
   }
-
-  return;
 }
 
 //----------------------------------------------------------------------*/

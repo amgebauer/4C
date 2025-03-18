@@ -24,7 +24,6 @@ FLD::TimIntRedModelsGenAlpha::TimIntRedModelsGenAlpha(
       TimIntGenAlpha(actdis, solver, params, output, alefluid),
       TimIntRedModels(actdis, solver, params, output, alefluid)
 {
-  return;
 }
 
 
@@ -37,8 +36,6 @@ void FLD::TimIntRedModelsGenAlpha::init()
   // note: this order is important
   TimIntGenAlpha::init();
   TimIntRedModels::init();
-
-  return;
 }
 
 
@@ -50,8 +47,6 @@ void FLD::TimIntRedModelsGenAlpha::read_restart(int step)
   // call of base classes
   TimIntGenAlpha::read_restart(step);
   TimIntRedModels::read_restart(step);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

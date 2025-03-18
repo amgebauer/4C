@@ -24,7 +24,6 @@ FLD::TimIntLomaOst::TimIntLomaOst(const std::shared_ptr<Core::FE::Discretization
       TimIntLoma(actdis, solver, params, output, alefluid)
 {
   std::cout << "\nWARNING: Loma has never been tested with OST time integration!!\n" << std::endl;
-  return;
 }
 
 
@@ -37,8 +36,6 @@ void FLD::TimIntLomaOst::init()
   // note: this order is important
   TimIntOneStepTheta::init();
   TimIntLoma::init();
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

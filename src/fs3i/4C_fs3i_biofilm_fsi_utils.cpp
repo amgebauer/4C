@@ -62,8 +62,6 @@ void FS3I::BioFilm::Utils::scatra_change_config(Core::FE::Discretization& scatra
 
     mynode->change_pos(nvector);
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

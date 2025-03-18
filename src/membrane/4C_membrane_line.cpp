@@ -64,7 +64,6 @@ Discret::Elements::MembraneLine<distype>::MembraneLine(int id, int owner, int nn
       FOUR_C_THROW("shape type unknown!\n");
       break;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -75,7 +74,6 @@ Discret::Elements::MembraneLine<distype>::MembraneLine(
     const Discret::Elements::MembraneLine<distype>& old)
     : Core::Elements::FaceElement(old), intpointsline_(old.intpointsline_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -108,8 +106,6 @@ template <Core::FE::CellType distype>
 void Discret::Elements::MembraneLine<distype>::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("this membrane line element does not support communication");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -120,7 +116,6 @@ template <Core::FE::CellType distype>
 void Discret::Elements::MembraneLine<distype>::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("this membrane line element does not support communication");
-  return;
 }
 
 
@@ -134,7 +129,6 @@ void Discret::Elements::MembraneLine<distype>::print(std::ostream& os) const
   os << " discretization type: "
      << Core::FE::cell_type_to_string(Core::FE::DisTypeToFaceShapeType<distype>::shape).c_str();
   Element::print(os);
-  return;
 }
 
 template class Discret::Elements::MembraneLine<Core::FE::CellType::tri3>;

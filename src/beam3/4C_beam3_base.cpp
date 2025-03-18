@@ -60,8 +60,6 @@ void Discret::Elements::Beam3Base::pack(Core::Communication::PackBuffer& data) c
   add_to_pack(data, bspotposxi_);
   // filamenttype_
   add_to_pack(data, filamenttype_);
-
-  return;
 }
 
 
@@ -78,8 +76,6 @@ void Discret::Elements::Beam3Base::unpack(Core::Communication::UnpackBuffer& buf
   extract_from_pack(buffer, bspotposxi_);
   // filamenttype_
   extract_from_pack(buffer, filamenttype_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -98,8 +94,6 @@ void Discret::Elements::Beam3Base::set_params_interface_ptr(const Teuchos::Param
 void Discret::Elements::Beam3Base::set_brownian_dyn_params_interface_ptr()
 {
   browndyn_interface_ptr_ = interface_ptr_->get_brownian_dyn_param_interface();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

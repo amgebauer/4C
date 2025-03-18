@@ -153,8 +153,6 @@ void BeamInteraction::BeamCrosslinkerHandler::fill_linker_into_bins_round_robin(
     // erase everything that is left
     homelesslinker.clear();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

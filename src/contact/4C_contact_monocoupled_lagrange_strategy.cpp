@@ -27,7 +27,6 @@ CONTACT::MonoCoupledLagrangeStrategy::MonoCoupledLagrangeStrategy(
       has_to_recover_(false)
 {
   // do some security checks ...
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -51,7 +50,6 @@ void CONTACT::MonoCoupledLagrangeStrategy::apply_force_stiff_cmt_coupled(
     evaluate_off_diag_contact(*(matiter->second), matiter->first);
   }
   has_to_evaluate_ = false;
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -72,7 +70,6 @@ void CONTACT::MonoCoupledLagrangeStrategy::apply_force_stiff_cmt_coupled(
   evaluate_off_diag_contact(k_sx, 0);
 
   has_to_evaluate_ = false;
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -269,7 +266,6 @@ void CONTACT::MonoCoupledLagrangeStrategy::evaluate_off_diag_contact(
   {
     FOUR_C_THROW("Trying to use not condensed form --- Feel Free to implement!");
   }
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -402,7 +398,6 @@ void CONTACT::MonoCoupledLagrangeStrategy::recover_coupled(
                                                            // contact --> not wanted
 
   has_to_recover_ = false;
-  return;
 }
 
 
@@ -417,7 +412,6 @@ void CONTACT::MonoCoupledLagrangeStrategy::recover_coupled(
   incm.insert(std::pair<int, std::shared_ptr<Core::LinAlg::Vector<double>>>(0, inc));
 
   recover_coupled(disi, incm);
-  return;
 }
 
 /*---------------------------------------------------------------------------*

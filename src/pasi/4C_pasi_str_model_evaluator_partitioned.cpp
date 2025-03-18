@@ -65,6 +65,6 @@ bool Solid::ModelEvaluator::PartitionedPASI::assemble_force(
   return true;
 }
 
-void Solid::ModelEvaluator::PartitionedPASI::update_step_state(const double& timefac_n) { return; }
+void Solid::ModelEvaluator::PartitionedPASI::update_step_state(const double& timefac_n) {}
 
 FOUR_C_NAMESPACE_CLOSE

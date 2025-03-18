@@ -16,7 +16,6 @@ FOUR_C_NAMESPACE_OPEN
 Core::DOFSets::IndependentDofSet::IndependentDofSet(bool ignoreminnodegid /*=false*/)
     : Core::DOFSets::DofSet(), ignoreminnodegid_(ignoreminnodegid)
 {
-  return;
 }
 
 
@@ -25,7 +24,6 @@ Core::DOFSets::IndependentDofSet::IndependentDofSet(bool ignoreminnodegid /*=fal
 Core::DOFSets::IndependentDofSet::IndependentDofSet(const IndependentDofSet& old)
     : Core::DOFSets::DofSet(old), ignoreminnodegid_(old.ignoreminnodegid_)
 {
-  return;
 }
 
 
@@ -35,7 +33,6 @@ Core::DOFSets::IndependentDofSet::IndependentDofSet(const IndependentDofSet& old
 void Core::DOFSets::IndependentDofSet::add_dof_setto_list()
 {
   // We do nothing here as an independent DofSet should not show up in the dof set list.
-  return;
 }
 
 

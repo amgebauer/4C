@@ -187,8 +187,6 @@ void sti_dyn(const int& restartstep  //! time step for restart
   problem->add_field_test(std::shared_ptr<Core::Utils::ResultTest>(
       new ScaTra::ScaTraResultTest(sti_algorithm->thermo_field())));
   problem->test_all(comm);
-
-  return;
 }  // sti_dyn()
 
 FOUR_C_NAMESPACE_CLOSE

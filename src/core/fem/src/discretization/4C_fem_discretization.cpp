@@ -838,8 +838,6 @@ void Core::FE::Discretization::add_multi_vector_to_parameter_list(Teuchos::Param
   }
   else
     p.set(name, nullptr);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

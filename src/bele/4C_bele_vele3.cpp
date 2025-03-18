@@ -93,14 +93,13 @@ std::shared_ptr<Core::Elements::Element> Discret::Elements::Vele3LineType::creat
 
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
-Discret::Elements::Vele3::Vele3(int id, int owner) : Core::Elements::Element(id, owner) { return; }
+Discret::Elements::Vele3::Vele3(int id, int owner) : Core::Elements::Element(id, owner) {}
 
 
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
 Discret::Elements::Vele3::Vele3(const Discret::Elements::Vele3& old) : Core::Elements::Element(old)
 {
-  return;
 }
 
 
@@ -150,8 +149,6 @@ void Discret::Elements::Vele3::pack(Core::Communication::PackBuffer& data) const
   add_to_pack(data, type);
   // add base class Element
   Element::pack(data);
-
-  return;
 }
 
 
@@ -163,10 +160,6 @@ void Discret::Elements::Vele3::unpack(Core::Communication::UnpackBuffer& buffer)
 
   // extract base class Element
   Element::unpack(buffer);
-
-
-
-  return;
 }
 
 
@@ -176,7 +169,6 @@ void Discret::Elements::Vele3::print(std::ostream& os) const
 {
   os << "Vele3 " << Core::FE::cell_type_to_string(shape());
   Element::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------*

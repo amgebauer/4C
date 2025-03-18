@@ -90,8 +90,6 @@ void Solid::ModelEvaluator::BrownianDynData::init(
 
   // set flag
   isinit_ = true;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -102,8 +100,6 @@ void Solid::ModelEvaluator::BrownianDynData::setup()
 
   // set flag
   issetup_ = true;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -116,8 +112,6 @@ void Solid::ModelEvaluator::BrownianDynData::resize_random_force_m_vector(
   // resize in case of new crosslinkers that were set and are now part of the discretization
   randomforces_ = std::make_shared<Core::LinAlg::MultiVector<double>>(
       *(discret_ptr->element_col_map()), maxrandnumelement, true);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

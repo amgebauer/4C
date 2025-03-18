@@ -80,8 +80,6 @@ void Arteries::TimInt::init(const Teuchos::ParameterList& globaltimeparams,
           Global::Problem::instance()->io_params(), "VERBOSITY"));
 
   discret_->compute_null_space_if_necessary(solver_->params());
-
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -115,7 +113,6 @@ void Arteries::TimInt::integrate(
     Teuchos::TimeMonitor::summarize();
   }
 
-  return;
 }  // ArtNetExplicitTimeInt::Integrate
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -130,7 +127,6 @@ void Arteries::TimInt::integrate(
 void Arteries::TimInt::prepare_time_loop()
 {
   // do nothing
-  return;
 }
 
 

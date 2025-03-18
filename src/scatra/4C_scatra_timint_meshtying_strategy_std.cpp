@@ -21,7 +21,6 @@ FOUR_C_NAMESPACE_OPEN
 ScaTra::MeshtyingStrategyStd::MeshtyingStrategyStd(ScaTra::ScaTraTimIntImpl* scatratimint)
     : MeshtyingStrategyBase(scatratimint)
 {
-  return;
 }  // ScaTra::MeshtyingStrategyStd::MeshtyingStrategyStd
 
 
@@ -37,16 +36,14 @@ const Epetra_Map& ScaTra::MeshtyingStrategyStd::dof_row_map() const
 /*----------------------------------------------------------------------*
  | dummy meshtying evaluate for standard scalar transport    fang 12/14 |
  *----------------------------------------------------------------------*/
-void ScaTra::MeshtyingStrategyStd::evaluate_meshtying()
-{
-  return;
+void ScaTra::MeshtyingStrategyStd::evaluate_meshtying() {
 }  // ScaTra::MeshtyingStrategyStd::evaluate_meshtying
 
 
 /*----------------------------------------------------------------------*
  | setup meshtying objects                                   fang 02/16 |
  *----------------------------------------------------------------------*/
-void ScaTra::MeshtyingStrategyStd::setup_meshtying() { return; }
+void ScaTra::MeshtyingStrategyStd::setup_meshtying() {}
 
 
 /*----------------------------------------------------------------------*
@@ -56,7 +53,6 @@ void ScaTra::MeshtyingStrategyStd::init_meshtying()
 {
   // instantiate strategy for Newton-Raphson convergence check
   init_conv_check_strategy();
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -74,8 +70,6 @@ void ScaTra::MeshtyingStrategyStd::solve(
   solver_params.refactor = true;
   solver_params.reset = iteration == 1;
   solver->solve(systemmatrix->epetra_operator(), increment, residual, solver_params);
-
-  return;
 }  // ScaTra::MeshtyingStrategyStd::Solve
 
 
@@ -104,8 +98,6 @@ void ScaTra::MeshtyingStrategyStd::init_conv_check_strategy()
   else
     convcheckstrategy_ = std::make_shared<ScaTra::ConvCheckStrategyStd>(
         scatratimint_->scatra_parameter_list()->sublist("NONLINEAR"));
-
-  return;
 }  // ScaTra::MeshtyingStrategyStd::init_conv_check_strategy
 
 FOUR_C_NAMESPACE_CLOSE

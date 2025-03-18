@@ -141,8 +141,6 @@ void Mortar::sort(double* dlist, int N, int* list2)
     }
     dlist[0] = dRR;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -859,8 +857,6 @@ void Mortar::Utils::prepare_nurbs_element(Core::FE::Discretization& discret,
   cele.zero_sized() = zero_size;
   cele.knots() = mortarknots;
   cele.normal_fac() = normalfac;
-
-  return;
 }
 
 
@@ -872,8 +868,6 @@ void Mortar::Utils::prepare_nurbs_node(Core::Nodes::Node* node, Mortar::Node& mn
   Core::FE::Nurbs::ControlPoint* cp = dynamic_cast<Core::FE::Nurbs::ControlPoint*>(node);
 
   mnode.nurbs_w() = cp->w();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -955,8 +949,6 @@ void Mortar::Utils::mortar_matrix_condensation(std::shared_ptr<Core::LinAlg::Spa
 
   // return new matrix
   k = kteffnew;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -982,8 +974,6 @@ void Mortar::Utils::mortar_rhs_condensation(
   Core::LinAlg::Vector<double> fm_cond_full(rhs.get_map());
   Core::LinAlg::export_to(fm_cond, fm_cond_full);
   if (rhs.update(1., fm_cond_full, 1.)) FOUR_C_THROW("update failed");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1004,8 +994,6 @@ void Mortar::Utils::mortar_recover(Core::LinAlg::Vector<double>& inc, Core::LinA
   Core::LinAlg::Vector<double> s_inc_full(inc.get_map());
   Core::LinAlg::export_to(s_inc, s_inc_full);
   if (inc.update(1., s_inc_full, 1.)) FOUR_C_THROW("update failed");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

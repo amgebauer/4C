@@ -55,7 +55,6 @@ Discret::Elements::ScaTraEleBoundaryCalcPoro<distype, probdim>::ScaTraEleBoundar
       eprenp_(true),
       isnodalporosity_(false)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*

@@ -421,7 +421,6 @@ FLD::TurbulenceStatisticsBfda::TurbulenceStatisticsBfda(
     log_2->flush();
   }
 
-  return;
 }  // TurbulenceStatisticsBfda::TurbulenceStatisticsBfda
 
 
@@ -596,7 +595,6 @@ void FLD::TurbulenceStatisticsBfda::do_time_sample(Core::LinAlg::Vector<double>&
   //----------------------------------------------------------------------
   //----------------------------------------------------------------------
 
-  return;
 }  // TurbulenceStatisticsBfda::DoTimeSample
 
 
@@ -670,7 +668,6 @@ void FLD::TurbulenceStatisticsBfda::dump_statistics(int step)
     log->flush();
     log_2->flush();
   }
-  return;
 }  // TurbulenceStatisticsBfda::DumpStatistics
 
 FOUR_C_NAMESPACE_CLOSE

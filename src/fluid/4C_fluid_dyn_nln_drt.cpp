@@ -86,7 +86,6 @@ void dyn_fluid_drt(const int restart)
   }
 
   // have fun with your results!
-  return;
 
 }  // end of dyn_fluid_drt()
 

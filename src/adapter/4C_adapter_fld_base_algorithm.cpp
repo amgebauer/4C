@@ -65,7 +65,6 @@ Adapter::FluidBaseAlgorithm::FluidBaseAlgorithm(
     const Teuchos::ParameterList& prbdyn, const std::shared_ptr<Core::FE::Discretization> discret)
 {
   setup_inflow_fluid(prbdyn, discret);
-  return;
 }
 
 
@@ -1005,8 +1004,6 @@ void Adapter::FluidBaseAlgorithm::setup_fluid(const Teuchos::ParameterList& prbd
 
     set_initial_flow_field(fdyn);
   }
-
-  return;
 }
 
 
@@ -1224,8 +1221,6 @@ void Adapter::FluidBaseAlgorithm::setup_inflow_fluid(
   fluid_->init();
 
   set_initial_inflow_field(fdyn);
-
-  return;
 }
 
 
@@ -1398,8 +1393,6 @@ void Adapter::FluidBaseAlgorithm::set_general_parameters(
 
   // ---------------------------parallel evaluation
   fluidtimeparams->set<bool>("OFF_PROC_ASSEMBLY", fdyn.get<bool>("OFF_PROC_ASSEMBLY"));
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

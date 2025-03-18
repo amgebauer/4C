@@ -90,7 +90,6 @@ Thermo::TemperBoundaryImpl<distype>::TemperBoundaryImpl(int numdofpernode)
       fac_(0.0),
       normalfac_(1.0)
 {
-  return;
 }  // TemperBoundaryImpl()
 
 
@@ -678,7 +677,6 @@ void Thermo::TemperBoundaryImpl<distype>::calculate_convection_fint_cond(
 
   }  // ---------------------------------- end loop over Gauss Points
 
-  return;
 
 }  // calculate_convection_fint_cond()
 
@@ -876,7 +874,6 @@ void Thermo::TemperBoundaryImpl<distype>::calculate_nln_convection_fint_cond(
 
   }  // ---------------------------------- end loop over Gauss Points
 
-  return;
 
 }  // calculate_nln_convection_fint_cond()
 
@@ -917,9 +914,6 @@ void Thermo::TemperBoundaryImpl<distype>::eval_shape_func_and_int_fac(
 
   // set the integration factor = GP_weight * sqrt ( det(metrictensor_) )
   fac_ = intpoints.ip().qwgt[iquad] * drs * normalfac_;
-
-  // say goodbye
-  return;
 }  // eval_shape_func_and_int_fac()
 
 
@@ -972,8 +966,6 @@ void Thermo::TemperBoundaryImpl<distype>::get_const_normal(
   const double length = normal.norm2();
   // outward-pointing normal of length 1.0
   normal.scale(1 / length);
-
-  return;
 }  // get_const_normal()
 
 
@@ -1019,8 +1011,6 @@ void Thermo::TemperBoundaryImpl<distype>::integrate_shape_functions(
 
   // add contribution to the global value
   params.set<double>("boundaryint", boundaryint);
-
-  return;
 
 }  // integrate_shape_function()
 
@@ -1088,8 +1078,6 @@ void Thermo::TemperBoundaryImpl<distype>::surface_integration(
       FOUR_C_THROW("Illegal number of space dimensions: {}", nsd_);
       break;
   }  // switch(nsd)
-
-  return;
 }
 
 template <Core::FE::CellType distype>

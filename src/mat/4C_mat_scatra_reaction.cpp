@@ -189,8 +189,6 @@ Mat::PAR::ScatraReactionMat::ScatraReactionMat(const Core::Mat::PAR::Parameter::
   // if all checks are passed, we can build the reaction class
   reaction_ = Mat::PAR::REACTIONCOUPLING::ReactionInterface::create_reaction(
       coupling_, isreacstart_, reacstart_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -372,8 +370,6 @@ void Mat::ScatraReactionMat::calc_rea_body_force_deriv_matrix(const int k,  //!<
   {
     calc_rea_body_force_deriv(k, derivs, phinp, constants, reaccoeff * stoich()->at(k), scale_phi);
   }
-
-  return;
 }
 
 /*--------------------------------------------------------------------------------*
@@ -396,8 +392,6 @@ void Mat::ScatraReactionMat::calc_rea_body_force_deriv_matrix_add_variables(
     calc_rea_body_force_deriv_add_variables(
         k, derivs, variables, constants, reaccoeff * stoich()->at(k), scale_phi);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------/
@@ -411,8 +405,6 @@ void Mat::ScatraReactionMat::add_additional_variables(const int k,  //!< current
   {
     params_->reaction_->add_additional_variables(k, variables, *couprole());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -446,8 +438,6 @@ void Mat::ScatraReactionMat::calc_rea_body_force_deriv(int k,  //!< current scal
 {
   params_->reaction_->calc_rea_body_force_deriv(
       k, num_scal(), derivs, phinp, constants, *couprole(), scale_reac, scale_phi);
-
-  return;
 }
 
 /*--------------------------------------------------------------------------------*
@@ -466,8 +456,6 @@ void Mat::ScatraReactionMat::calc_rea_body_force_deriv_add_variables(int k,  //!
 {
   params_->reaction_->calc_rea_body_force_deriv_add_variables(
       k, derivs, variables, constants, *couprole(), scale_reac, scale_phi);
-
-  return;
 }
 
 /*---------------------------------------------------------------------------------/

@@ -124,8 +124,6 @@ void POROFLUIDMULTIPHASE::Utils::setup_material(
     }
 
   }  // end loop over column elements
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -564,8 +562,6 @@ void POROFLUIDMULTIPHASE::print_logo()
   std::cout << "/ /-\\     /-\\ \\         / /-\\     /-\\ \\" << std::endl;
   std::cout << " / /-`---'-\\ \\           / /-`---'-\\ \\" << std::endl;
   std::cout << "  /         \\             /         \\" << std::endl;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

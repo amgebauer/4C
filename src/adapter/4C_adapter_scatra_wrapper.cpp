@@ -31,7 +31,6 @@ void Adapter::AdapterScatraWrapper::evaluate_additional_solution_depending_model
     std::shared_ptr<Core::LinAlg::Vector<double>> rhs)
 {
   // do nothing so far
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

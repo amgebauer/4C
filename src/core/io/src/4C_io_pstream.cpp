@@ -168,8 +168,6 @@ void Core::IO::Pstream::flush()
     std::flush(std::cout);
     buffer_.str(std::string());
   }
-
-  return;
 }
 
 
@@ -236,8 +234,6 @@ Core::IO::Level& Core::IO::flush(Core::IO::Level& out)
 void Core::IO::Level::flush()
 {
   if (level_ <= pstream_->requested_output_level()) pstream_->flush();
-
-  return;
 }
 
 

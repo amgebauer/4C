@@ -1006,7 +1006,6 @@ void XFEM::LevelSetCouplingBC::prepare_solve()
   if (myrank_ == 0) Core::IO::cout << "\t set level-set field, time " << time_ << Core::IO::endl;
 
   has_interface_moved_ = set_level_set_field(time_);
-  return;
 }
 
 
@@ -1053,7 +1052,6 @@ void XFEM::LevelSetCouplingWeakDirichlet::setup_configuration_map()
   // Configuration of Penalty Terms
   configuration_map_[Inpar::XFEM::F_Pen_Row] = std::pair<bool, double>(true, 1.0);
   configuration_map_[Inpar::XFEM::F_Pen_Col] = std::pair<bool, double>(true, 1.0);
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -1077,8 +1075,6 @@ void XFEM::LevelSetCouplingWeakDirichlet::update_configuration_map_gp(
 {
   // Configuration of Penalty Terms
   configuration_map_[Inpar::XFEM::F_Pen_Row].second = full_stab;
-
-  return;
 }
 
 
@@ -1165,8 +1161,6 @@ void XFEM::LevelSetCouplingNeumann::update_configuration_map_gp(
       configuration_map_[Inpar::XFEM::F_Pen_Row_linF3] = std::pair<bool, double>(false, 0);
     }
   }
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -1460,7 +1454,6 @@ void XFEM::LevelSetCouplingNavierSlip::setup_configuration_map()
     FOUR_C_THROW(
         "XFEM::LevelSetCouplingNavierSlip: You want to initialize another strategy than "
         "Xfluid_Sided?");
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -1512,10 +1505,7 @@ void XFEM::LevelSetCouplingNavierSlip::update_configuration_map_gp(
   }
 
   // Configuration of Penalty Terms
-  configuration_map_[Inpar::XFEM::F_Pen_n_Row].second =
-      visc_stab_tang;  // full_stab <-- to keep results!
-
-  return;
+  configuration_map_[Inpar::XFEM::F_Pen_n_Row].second = visc_stab_tang;
 }
 
 FOUR_C_NAMESPACE_CLOSE

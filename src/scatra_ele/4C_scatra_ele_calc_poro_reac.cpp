@@ -32,8 +32,6 @@ Discret::Elements::ScaTraEleCalcPoroReac<distype>::ScaTraEleCalcPoroReac(
   // safety check
   if (not my::scatrapara_->tau_gp())
     FOUR_C_THROW("For poro reactions, tau needs to be evaluated by integration-point evaluations!");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -73,8 +71,6 @@ void Discret::Elements::ScaTraEleCalcPoroReac<distype>::get_material_params(
 
   // call advreac base class
   advreac::get_material_params(ele, densn, densnp, densam, visc, iquad);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -100,7 +96,6 @@ void Discret::Elements::ScaTraEleCalcPoroReac<distype>::materials(
       FOUR_C_THROW("Material type {} is not supported", material->material_type());
       break;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -118,8 +113,6 @@ void Discret::Elements::ScaTraEleCalcPoroReac<distype>::mat_scatra(
 )
 {
   poro::mat_scatra(material, k, densn, densnp, densam, visc, iquad);
-
-  return;
 }  // ScaTraEleCalcPoroReac<distype>::MatScaTra
 
 /*----------------------------------------------------------------------*
@@ -132,8 +125,6 @@ void Discret::Elements::ScaTraEleCalcPoroReac<distype>::extract_element_and_node
 {
   // call base class routine
   poro::extract_element_and_node_values(ele, params, discretization, la);
-
-  return;
 }
 
 // template classes

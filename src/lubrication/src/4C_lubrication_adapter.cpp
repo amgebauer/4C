@@ -95,9 +95,6 @@ void Lubrication::LubricationBaseAlgorithm::setup(
       actdis, solver, lubricationtimeparams, extraparams, output);
 
   lubrication_->init();
-  // initialize algorithm for specific time-integration scheme
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

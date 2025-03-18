@@ -42,8 +42,6 @@ CONTACT::LineToSurfaceCoupling3d::LineToSurfaceCoupling3d(Core::FE::Discretizati
       int_type_(type)
 {
   // empty constructor
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -105,8 +103,6 @@ void CONTACT::LineToSurfaceCoupling3d::evaluate_coupling()
     // 13. integration
     integrate_line();
   }  // end loop
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -143,8 +139,6 @@ void CONTACT::LineToSurfaceCoupling3d::initialize()
 
   // clear integration line
   int_line() = nullptr;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -400,8 +394,6 @@ void CONTACT::LineToSurfaceCoupling3d::consist_dual_shape()
 
   // store ae matrix in slave element data container
   surface_element().mo_data().dual_shape() = std::make_shared<Core::LinAlg::SerialDenseMatrix>(ae);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -429,8 +421,6 @@ void CONTACT::LineToSurfaceCoupling3d::integrate_line()
   }
   else
     FOUR_C_THROW("wrong integration type for line coupling!");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1294,8 +1284,6 @@ void CONTACT::LineToSurfaceCoupling3d::line_clipping()
     std::cout << "Intersections= " << inter_sections().size() << std::endl;
     FOUR_C_THROW("intersections not possible!!!");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1319,8 +1307,6 @@ void CONTACT::LineToSurfaceCoupling3d::create_integration_lines(
       Core::FE::CellType::line2, linvertex[0], linvertex[1],
       linvertex[1],  // dummy
       get_deriv_auxn());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1438,8 +1424,6 @@ void CONTACT::LineToSurfaceCoupling3d::linearize_vertices(
     else
       FOUR_C_THROW("VertexLinearization: Invalid Vertex Type!");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1644,8 +1628,6 @@ void CONTACT::LineToSurfaceCoupling3d::lineclip_vertex_linearization(Mortar::Ver
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2122,8 +2104,6 @@ void CONTACT::LineToSurfaceCoupling3d::slave_vertex_linearization(
         currlin[i][k][p->first] -= (mrtrmnode->xspatial()[2] - auxc()[2]) * auxn()[k] * (p->second);
     }
   }
-
-  return;
 }
 
 
@@ -2299,8 +2279,6 @@ void CONTACT::LineToSurfaceCoupling3d::master_vertex_linearization(
         currlin[i][k][p->first] -= (mrtrsnode->xspatial()[2] - auxc()[2]) * auxn()[k] * (p->second);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2360,8 +2338,6 @@ void CONTACT::LineToLineCouplingPoint3d::evaluate_coupling()
 
   // 5. evaluate terms
   evaluate_terms(&sxi, &mxi, dsxi, dmxi);
-
-  return;
 }
 
 
@@ -2935,8 +2911,6 @@ void CONTACT::LineToLineCouplingPoint3d::evaluate_terms(double* sxi, double* mxi
       djmapfinal[2][p->first] += jump[2] * p->second;
 
   }  // end friction
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3276,8 +3250,6 @@ void CONTACT::LineToLineCouplingPoint3d::line_intersection(double* sxi, double* 
 
   sxi[0] = xiS;
   mxi[0] = xiM;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

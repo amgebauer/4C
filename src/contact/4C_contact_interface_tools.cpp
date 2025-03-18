@@ -285,8 +285,6 @@ void CONTACT::Interface::fd_check_normal_deriv()
 
   // contents of evaluate()
   evaluate();
-
-  return;
 }
 
 
@@ -775,8 +773,6 @@ void CONTACT::Interface::fd_check_normal_cpp_deriv()
 
   // contents of evaluate()
   evaluate();
-
-  return;
 }
 
 
@@ -1047,8 +1043,6 @@ void CONTACT::Interface::fd_check_mortar_d_deriv()
   // contents of evaluate()
   // *******************************************************************
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1315,8 +1309,6 @@ void CONTACT::Interface::fd_check_mortar_m_deriv()
   // contents of evaluate()
   // *******************************************************************
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1549,8 +1541,6 @@ void CONTACT::Interface::fd_check_slip_incr_deriv_txi()
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1784,8 +1774,6 @@ void CONTACT::Interface::fd_check_slip_incr_deriv_teta()
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 
@@ -2158,8 +2146,6 @@ void CONTACT::Interface::fd_check_alpha_deriv()
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 
@@ -2541,8 +2527,6 @@ void CONTACT::Interface::fd_check_gap_deriv_ltl()
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 
@@ -2923,8 +2907,6 @@ void CONTACT::Interface::fd_check_jump_deriv_ltl()
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 
@@ -3293,8 +3275,6 @@ void CONTACT::Interface::fd_check_gap_deriv()
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 }
 
 
@@ -3860,8 +3840,6 @@ void CONTACT::Interface::fd_check_tang_lm_deriv()
     mortar_coupling(selement, melements, nullptr);
   }
   // *******************************************************************
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4394,8 +4372,6 @@ void CONTACT::Interface::fd_check_stick_deriv(
   // back to normal...
   initialize();
   evaluate();
-
-  return;
 
 }  // fd_check_stick_deriv
 
@@ -5235,8 +5211,6 @@ void CONTACT::Interface::fd_check_slip_deriv(
   initialize();
   evaluate();
 
-  return;
-
 }  // FDCheckSlipTrescaDeriv
 
 /*----------------------------------------------------------------------*
@@ -5522,8 +5496,6 @@ void CONTACT::Interface::fd_check_penalty_trac_nor()
   evaluate();
   bool isincontact, activesetchange = false;
   assemble_reg_normal_forces(isincontact, activesetchange);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -6106,9 +6078,6 @@ void CONTACT::Interface::fd_check_penalty_trac_fric()
   // back to normal...
   initialize();
   evaluate();
-  // evaluate_relative_movement();
-
-  return;
 }  // FDCheckPenaltyFricTrac
 
 /*----------------------------------------------------------------------------*

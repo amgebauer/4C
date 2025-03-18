@@ -29,7 +29,6 @@ Discret::Elements::Vele3Line::Vele3Line(int id, int owner, int nnode, const int*
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
   set_parent_master_element(parent, lline);
-  return;
 }
 
 
@@ -39,7 +38,6 @@ Discret::Elements::Vele3Line::Vele3Line(int id, int owner, int nnode, const int*
 Discret::Elements::Vele3Line::Vele3Line(const Discret::Elements::Vele3Line& old)
     : Core::Elements::FaceElement(old)
 {
-  return;
 }
 
 
@@ -79,8 +77,6 @@ Core::FE::CellType Discret::Elements::Vele3Line::shape() const
 void Discret::Elements::Vele3Line::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("this Vele3Line element does not support communication");
-
-  return;
 }
 
 
@@ -91,7 +87,6 @@ void Discret::Elements::Vele3Line::pack(Core::Communication::PackBuffer& data) c
 void Discret::Elements::Vele3Line::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("this Vele3Line element does not support communication");
-  return;
 }
 
 
@@ -103,7 +98,6 @@ void Discret::Elements::Vele3Line::print(std::ostream& os) const
 {
   os << "Vele3Line ";
   Element::print(os);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

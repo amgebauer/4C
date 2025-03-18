@@ -97,7 +97,6 @@ void POROMULTIPHASE::PoroMultiPhasePartitionedTwoWay::init(
 void POROMULTIPHASE::PoroMultiPhasePartitionedTwoWay::setup_system()
 {
   // Do nothing, just monolithic coupling needs this method
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -160,8 +159,6 @@ void POROMULTIPHASE::PoroMultiPhasePartitionedTwoWay::outer_loop()
     // stop iteration loop if converged
     stopnonliniter = convergence_check(itnum_);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -293,8 +290,6 @@ void POROMULTIPHASE::PoroMultiPhasePartitionedTwoWay::do_struct_step()
 
   // Newton-Raphson iteration
   structure_field()->solve();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -306,8 +301,6 @@ void POROMULTIPHASE::PoroMultiPhasePartitionedTwoWay::do_fluid_step()
   //                  solve nonlinear / linear equation
   // -------------------------------------------------------------------
   fluid_field()->solve();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -317,8 +310,6 @@ void POROMULTIPHASE::PoroMultiPhasePartitionedTwoWay::set_relaxed_fluid_solution
 {
   // set fluid solution on structure
   structure_field()->discretization()->set_state(1, "porofluid", fluidphinp_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -371,8 +362,6 @@ void POROMULTIPHASE::PoroMultiPhasePartitionedTwoWay::perform_relaxation(
 
   // save the old fluid solution
   fluidphioldnp_->update(1.0, *fluidphinp_, 0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -442,8 +431,6 @@ void POROMULTIPHASE::PoroMultiPhasePartitionedTwoWay::iter_update_states()
   if (artery_coupling_active_)
     arterypressincnp_->update(1.0, *fluid_field()->art_net_tim_int()->pressurenp(), 0.0);
   dispincnp_->update(1.0, *structure_field()->dispnp(), 0.0);
-
-  return;
 }  // iter_update_states()
 
 /*-------------------------------------------------------------------------*
@@ -467,9 +454,6 @@ void POROMULTIPHASE::PoroMultiPhasePartitionedTwoWay::read_restart(int restart)
     // get omega_ from restart
     reader.read_vector(fluidphioldnp_, "fluidphioldnp_");
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

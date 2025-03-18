@@ -72,7 +72,6 @@ Core::Conditions::PeriodicBoundaryConditions::PeriodicBoundaryConditions(
     timepbcrenumdofs_ = Teuchos::TimeMonitor::getNewTimer("8)      +call discret->redistribute");
   }
 
-  return;
 
 }  // PeriodicBoundaryConditions(std::shared_ptr<Core::FE::Discretization> actdis)
 
@@ -209,7 +208,6 @@ void Core::Conditions::PeriodicBoundaryConditions::update_dofs_for_periodic_boun
       }
     }
   }  // end if numpbcpairs_>0
-  return;
 
 }  // update_dofs_for_periodic_boundary_conditions()
 
@@ -594,7 +592,6 @@ void Core::Conditions::PeriodicBoundaryConditions::put_all_slaves_to_masters_pro
     // time measurement --- this causes the TimeMonitor tm5 to stop here
     tm5_ref_ = nullptr;
   }  // if (numpbcpairs_ > 2)
-  return;
 }  // put_all_slaves_to_masters_proc()
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -645,8 +642,6 @@ void Core::Conditions::PeriodicBoundaryConditions::create_node_coupling_for_sing
 
   // time measurement --- this causes the TimeMonitor tm3 to stop here
   tm3_ref_ = nullptr;
-
-  return;
 }  // Core::Conditions::PeriodicBoundaryConditions::create_node_coupling_for_single_pbc
 
 
@@ -899,7 +894,6 @@ void Core::Conditions::PeriodicBoundaryConditions::add_connectivity(
     }  // end complete matching
   }
 
-  return;
 }  // Core::Conditions::PeriodicBoundaryConditions::add_connectivity
 
 
@@ -1322,7 +1316,6 @@ void Core::Conditions::PeriodicBoundaryConditions::redistribute_and_create_dof_c
     oldnodegraph = nullptr;
   }
 
-  return;
 }  // Core::Conditions::PeriodicBoundaryConditions::redistribute_and_create_dof_coupling
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//

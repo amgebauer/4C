@@ -107,7 +107,6 @@ void Discret::Elements::Wall1::w1_eassetup(Core::LinAlg::SerialDenseMatrix& bopl
   } /* end of loop over nodes */
 
 
-  return;
 }  // end of w1_eassetup
 
 
@@ -305,7 +304,6 @@ void Discret::Elements::Wall1::w1_call_defgrad_enh(Core::LinAlg::SerialDenseMatr
 
   }  // end loop over eas parameter
 
-  return;
 }  // end of w1_call_fenh
 
 
@@ -332,8 +330,6 @@ void Discret::Elements::Wall1::w1_call_defgrad_tot(const Core::LinAlg::SerialDen
   strain[1] = 0.5 * (F_tot(0, 2) * F_tot(0, 2) + F_tot(3, 2) * F_tot(3, 2) - 1.0);
   strain[2] = 0.5 * (F_tot(0, 0) * F_tot(0, 2) + F_tot(3, 0) * F_tot(3, 2));
   strain[3] = strain[2];
-
-  return;
 }  // end of w1_call_defgrad_tot
 
 /*-----------------------------------------------------------------------------*
@@ -352,8 +348,6 @@ void Discret::Elements::Wall1::w1_stress_eas(const Core::LinAlg::SerialDenseMatr
 
   /*-first piola-kirchhoff stress vector--------------------------------------*/
   Core::LinAlg::multiply(p_stress, F_tot, stress_red);
-
-  return;
 }  // end of w1_p_stress
 
 
@@ -401,8 +395,6 @@ void Discret::Elements::Wall1::w1_kdd(const Core::LinAlg::SerialDenseMatrix& bop
   // Kdd = (B+W0)^T*FCF^T*(B+W0) + (B+W0)^T*S*(B+W0)
   Core::LinAlg::multiply_tn(1.0, estif, fac, BplusW, Temp1);
   Core::LinAlg::multiply_tn(1.0, estif, fac, BplusW, Temp3);
-
-  return;
 }  // Discret::Elements::Wall1::w1_kdd
 
 
@@ -443,7 +435,6 @@ void Discret::Elements::Wall1::w1_kda(const Core::LinAlg::SerialDenseMatrix& FCF
     }
   }
 
-  return;
 }  // Discret::Elements::Wall1::w1_kda
 
 
@@ -465,8 +456,6 @@ void Discret::Elements::Wall1::w1_kaa(const Core::LinAlg::SerialDenseMatrix& FCF
   // Kaa = G^T*FCF^T*G + G^T*S*G
   Core::LinAlg::multiply_tn(1.0, Kaa, fac, G, Temp1);
   Core::LinAlg::multiply_tn(1.0, Kaa, fac, G, Temp3);
-
-  return;
 }  // Discret::Elements::Wall1::w1_kaa
 
 
@@ -495,8 +484,6 @@ void Discret::Elements::Wall1::w1_fint_eas(const Core::LinAlg::SerialDenseMatrix
   Core::LinAlg::multiply_tn(Temp2, G, p_stress);
 
   for (int i = 0; i < Wall1::neas_; i++) feas(i) += fac * Temp2(i, 0);
-
-  return;
 }  // Discret::Elements::Wall1::w1_fint_eas
 
 

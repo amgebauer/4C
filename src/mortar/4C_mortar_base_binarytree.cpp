@@ -27,7 +27,6 @@ Mortar::BaseBinaryTree::BaseBinaryTree(Core::FE::Discretization& discret, int di
       kdop_(-1)
 {
   // keep the constructor clean
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -98,8 +97,6 @@ void Mortar::BaseBinaryTree::init()
       FOUR_C_THROW("ERROR: Problem dimension must be 2D or 3D!");
       break;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -129,8 +126,6 @@ Mortar::BaseBinaryTreeNode::BaseBinaryTreeNode(Core::FE::Discretization& discret
       FOUR_C_THROW("ERROR: Problem dimension must be 2D or 3D!");
       break;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -216,8 +211,6 @@ void Mortar::BaseBinaryTreeNode::calculate_slabs_dop()
   }
   // Prints Slabs to std::cout
   // PrintSlabs();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -231,8 +224,6 @@ void Mortar::BaseBinaryTreeNode::enlarge_geometry(double& enlarge)
     slabs_(i, 0) -= enlarge;
     slabs_(i, 1) += enlarge;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -249,8 +240,6 @@ void Mortar::BaseBinaryTreeNode::print_slabs()
     std::cout << "\nslab: " << i << " min: " << slabs_.operator()(i, 0)
               << " max: " << slabs_.operator()(i, 1);
   std::cout << "\n**********************************************************\n";
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

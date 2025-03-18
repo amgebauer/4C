@@ -36,7 +36,6 @@ FOUR_C_NAMESPACE_OPEN
 FS3I::BiofilmFSI::BiofilmFSI(MPI_Comm comm) : PartFS3I1Wc(comm), comm_(comm)
 {
   // has to stay empty
-  return;
 }
 
 
@@ -137,8 +136,6 @@ void FS3I::BiofilmFSI::init()
     FOUR_C_THROW(
         "Fluid-scatra and solid-scatra discretizations must have boundary conditions for flux "
         "calculation at FSI interface!");
-
-  return;
 }
 
 
@@ -235,8 +232,6 @@ void FS3I::BiofilmFSI::setup()
       *(fsi_->structure_field()->discretization()->node_row_map()));
   tangtractiontwo_ = std::make_shared<Core::LinAlg::Vector<double>>(
       *(fsi_->structure_field()->discretization()->node_row_map()));
-
-  return;
 }
 
 
@@ -728,8 +723,6 @@ void FS3I::BiofilmFSI::compute_interface_vectors(Core::LinAlg::Vector<double>& i
 
   std::shared_ptr<Core::LinAlg::Vector<double>> fluididisp = fsi_->struct_to_fluid(struidispnp);
   idispnp.update(1.0, *fluididisp, 0.0);
-
-  return;
 }
 
 
@@ -777,11 +770,6 @@ void FS3I::BiofilmFSI::fluid_ale_solve()
   // fluid scatra
   vec_to_scatravec(*scatradis, *fluid_growth_disp_, *scatra_fluid_growth_disp_);
   scatra->scatra_field()->set_sc_fld_gr_disp(scatra_fluid_growth_disp_);
-
-  // computation of fluid solution
-  // fluid_->Solve();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -825,11 +813,6 @@ void FS3I::BiofilmFSI::struct_ale_solve()
   // structure scatra
   vec_to_scatravec(*struscatradis, *struct_growth_disp_, *scatra_struct_growth_disp_);
   struscatra->scatra_field()->set_sc_str_gr_disp(scatra_struct_growth_disp_);
-
-  // computation of structure solution
-  // structure_->Solve();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -913,8 +896,6 @@ void FS3I::BiofilmFSI::vec_to_scatravec(Core::FE::Discretization& scatradis,
       if (err != 0) FOUR_C_THROW("Error while inserting value into vector scatravec!");
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -965,8 +946,6 @@ void FS3I::BiofilmFSI::struct_gmsh_output()
   }
 
   gmshfilecontent.close();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1016,8 +995,6 @@ void FS3I::BiofilmFSI::fluid_gmsh_output()
   }
 
   gmshfilecontent.close();
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

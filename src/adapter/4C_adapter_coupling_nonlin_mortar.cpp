@@ -109,8 +109,6 @@ void Adapter::CouplingNonLinMortar::setup(std::shared_ptr<Core::FE::Discretizati
 
   // set setup flag
   issetup_ = true;
-
-  return;
 }
 
 
@@ -123,7 +121,6 @@ void Adapter::CouplingNonLinMortar::create_strategy(
     int numcoupleddof)
 {
   // nothing to do for pure adapter
-  return;
 }
 
 
@@ -218,8 +215,6 @@ void Adapter::CouplingNonLinMortar::read_mortar_condition(
 
   // as two half pass approach is not implemented for this approach set false
   input.set<bool>("Two_half_pass", false);
-
-  return;
 }
 
 
@@ -463,8 +458,6 @@ void Adapter::CouplingNonLinMortar::add_mortar_elements(
       interface->add_element(cele);
     }
   }
-
-  return;
 }
 
 
@@ -491,9 +484,6 @@ void Adapter::CouplingNonLinMortar::init_matrices()
       *slavedofrowmap_, 81, true, false, Core::LinAlg::SparseMatrix::FE_MATRIX);
   MLin_ = std::make_shared<Core::LinAlg::SparseMatrix>(
       *masterdofrowmap_, 81, true, false, Core::LinAlg::SparseMatrix::FE_MATRIX);
-
-  // bye
-  return;
 }
 
 
@@ -569,8 +559,6 @@ void Adapter::CouplingNonLinMortar::complete_interface(
 
   // store interface
   interface_ = interface;
-
-  return;
 }
 
 
@@ -766,8 +754,6 @@ void Adapter::CouplingNonLinMortar::setup_spring_dashpot(
 
   // set setup flag
   issetup_ = true;
-
-  return;
 }
 
 
@@ -837,8 +823,6 @@ void Adapter::CouplingNonLinMortar::integrate_lin_d(const std::string& statename
     D_ = Mortar::matrix_row_col_transform(*D_, *pslavedofrowmap_, *pslavedofrowmap_);
     DLin_ = Mortar::matrix_row_col_transform(*DLin_, *pslavedofrowmap_, *pslavedofrowmap_);
   }
-
-  return;
 }
 
 
@@ -881,9 +865,6 @@ void Adapter::CouplingNonLinMortar::integrate_lin_dm(const std::string& statenam
 
   // transform to initial parallel distrib.
   matrix_row_col_transform();
-
-  // bye bye
-  return;
 }
 
 
@@ -937,8 +918,6 @@ void Adapter::CouplingNonLinMortar::matrix_row_col_transform()
       gap_ = pgap;
     }
   }  // end parredist
-
-  return;
 }
 
 
@@ -983,8 +962,6 @@ void Adapter::CouplingNonLinMortar::integrate_all(const std::string& statename,
 
   // transform to initial parallel distrib.
   matrix_row_col_transform();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1036,8 +1013,6 @@ void Adapter::CouplingNonLinMortar::evaluate_sliding(const std::string& statenam
 
   // transform to initial parallel distrib.
   matrix_row_col_transform();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1092,9 +1067,6 @@ void Adapter::CouplingNonLinMortar::create_p()
 
   // complete the matrix
   P_->complete(*masterdofrowmap_, *slavedofrowmap_);
-
-  // bye
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

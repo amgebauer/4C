@@ -115,12 +115,6 @@ Solid::TimIntImpl::TimIntImpl(const Teuchos::ParameterList& timeparams,
   FOUR_C_ASSERT_ALWAYS(Teuchos::getIntegralValue<Inpar::Solid::StcScale>(
                            sdynparams, "STC_SCALING") == Inpar::Solid::StcScale::stc_inactive,
       "STC is not supported in the old time integration framework");
-  // Keep this constructor empty!
-  // First do everything on the more basic objects like the discretizations, like e.g.
-  // redistribution of elements. Only then call the setup to this class. This will call the setup to
-  // all classes in the inheritance hierarchy. This way, this class may also override a method that
-  // is called during setup() in a base class. general variable verifications:
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -180,9 +174,6 @@ void Solid::TimIntImpl::init(const Teuchos::ParameterList& timeparams,
     nox_setup();
   else if (itertype_ == Inpar::Solid::soltech_noxgeneral)
     nox_setup(xparams.sublist("NOX"));
-
-  // done so far
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -294,8 +285,6 @@ void Solid::TimIntImpl::setup()
   // iterative displacement increments IncD_{n+1}
   // also known as residual displacements
   disi_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -468,9 +457,6 @@ void Solid::TimIntImpl::predict()
 
   // output
   print_predictor();
-
-  // enjoy your meal
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -530,9 +516,6 @@ void Solid::TimIntImpl::prepare_partition_step()
 
   // output
   print_predictor();
-
-  // enjoy your meal
-  return;
 }
 
 
@@ -558,7 +541,6 @@ void Solid::TimIntImpl::prepare_line_search()
     fresn_str_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
     fintn_str_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
   }
-  return;
 }
 /*----------------------------------------------------------------------*/
 /* predict solution as constant displacements, velocities
@@ -570,9 +552,6 @@ void Solid::TimIntImpl::predict_const_dis_vel_acc()
   veln_->update(1.0, *(*vel_)(0), 0.0);
   accn_->update(1.0, *(*acc_)(0), 0.0);
   disi_->put_scalar(0.0);
-
-  // see you next time step
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -736,7 +715,6 @@ void Solid::TimIntImpl::predict_tang_dis_consist_vel_acc()
   }
 
   // shalom
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -848,7 +826,6 @@ void Solid::TimIntImpl::apply_force_stiff_external(const double time,  //!< eval
   }
 
   // go away
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -946,8 +923,6 @@ void Solid::TimIntImpl::apply_force_stiff_internal_and_inertial(const double tim
   discret_->clear_state();
 
   mass->complete();
-
-  return;
 };
 
 /*----------------------------------------------------------------------*/
@@ -962,8 +937,6 @@ void Solid::TimIntImpl::apply_force_stiff_constraint(const double time,
   {
     conman_->evaluate_force_stiff(time, dis, disn, fint, stiff, pcon);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -977,8 +950,6 @@ void Solid::TimIntImpl::apply_force_stiff_cardiovascular0_d(const double time,
   {
     cardvasc0dman_->evaluate_force_stiff(time, disn, fint, stiff, pwindk);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -997,8 +968,6 @@ void Solid::TimIntImpl::apply_force_stiff_spring_dashpot(
     if (stiff_sparse == nullptr) FOUR_C_THROW("Cannot cast stiffness matrix to sparse matrix!");
     springman_->stiffness_and_internal_forces(stiff_sparse, fint, disn, veln, psprdash);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1047,8 +1016,6 @@ void Solid::TimIntImpl::apply_force_stiff_contact_meshtying(
     dtcmt_ = timer_->wallTime() - dtcpu;
     // *********** time measurement ***********
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1090,8 +1057,6 @@ void Solid::TimIntImpl::apply_force_stiff_beam_contact(Core::LinAlg::SparseOpera
     beamcman_->ConsoleOutput();
 #endif  // #ifdef GMSHNEWTONSTEPS
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1119,8 +1084,6 @@ void Solid::TimIntImpl::limit_stepsize_beam_contact(Core::LinAlg::Vector<double>
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -2204,8 +2167,6 @@ void Solid::TimIntImpl::ls_update_structural_rh_sand_stiff(bool& isexcept, doubl
   ***************************************************************/
   int err = ls_eval_merit_fct(merit_fct);
   isexcept = (isexcept || err);
-
-  return;
 }
 
 
@@ -3200,8 +3161,6 @@ void Solid::TimIntImpl::cmt_linear_solve()
 
   // reset tolerance for contact solver
   contactsolver_->reset_tolerance();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -3517,7 +3476,6 @@ void Solid::TimIntImpl::update_iter(const int iter  //!< iteration counter
   }
 
   // morning is broken
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -3540,9 +3498,6 @@ void Solid::TimIntImpl::update_iter_incrementally(
 
   // Update using #disi_
   update_iter_incrementally();
-
-  // leave this place
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -3580,7 +3535,6 @@ void Solid::TimIntImpl::print_predictor()
   }
 
   // leave your hat on
-  return;
 }
 
 
@@ -3767,9 +3721,6 @@ void Solid::TimIntImpl::print_newton_iter_header(FILE* ofile)
 
   // print it, now
   fflush(ofile);
-
-  // nice to have met you
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -3931,9 +3882,6 @@ void Solid::TimIntImpl::print_newton_iter_text(FILE* ofile)
 
   // print it, now
   fflush(ofile);
-
-  // nice to have met you
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -3986,8 +3934,6 @@ void Solid::TimIntImpl::export_contact_quantities()
   }
   else
     FOUR_C_THROW("ERROR: File could not be opened.");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -4001,7 +3947,6 @@ void Solid::TimIntImpl::print_newton_conv()
   }
 
   // somebody did the door
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -4037,9 +3982,6 @@ void Solid::TimIntImpl::print_step_text(FILE* ofile)
 
   // print it, now
   fflush(ofile);
-
-  // fall asleep
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -4116,7 +4058,6 @@ void Solid::TimIntImpl::prepare_system_for_newton_solve(const bool preparejacobi
   }
 
   // final sip
-  return;
 }
 
 /*----------------------------------------------------------------------*

@@ -24,7 +24,6 @@ FOUR_C_NAMESPACE_OPEN
 Adapter::FluidAleXFEM::FluidAleXFEM(const Teuchos::ParameterList& prbdyn, std::string condname)
     : FluidAle(prbdyn, condname)
 {
-  return;
 }
 
 

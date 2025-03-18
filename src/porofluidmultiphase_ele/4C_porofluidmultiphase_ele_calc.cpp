@@ -47,7 +47,6 @@ Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::PoroFluidMultiPhaseEleCa
       j_(0.0),
       phasemanager_(nullptr)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -187,8 +186,6 @@ void Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::gauss_point_loop(
 
   // start loop over gauss points
   gauss_point_loop(intpoints, ele, elemat, elevec, discretization, la);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
@@ -231,8 +228,6 @@ void Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::gauss_point_loop_od
 
   // start loop over gauss points
   gauss_point_loop_od_struct(intpoints, ele, elemat, elevec, discretization, la);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -253,8 +248,6 @@ void Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::gauss_point_loop_od
 
   // start loop over gauss points
   gauss_point_loop_od_scatra(intpoints, ele, elemat, elevec, discretization, la);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -264,7 +257,6 @@ template <Core::FE::CellType distype>
 void Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::prepare_gauss_point_loop(
     Core::Elements::Element* ele)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -310,8 +302,6 @@ void Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::gauss_point_loop(
     // clear current gauss point data for safety
     phasemanager_->clear_gp_state();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -348,8 +338,6 @@ void Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::gauss_point_loop_od
     // clear current gauss point data for safety
     phasemanager_->clear_gp_state();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -387,8 +375,6 @@ void Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::gauss_point_loop_od
     // clear current gauss point data for safety
     phasemanager_->clear_gp_state();
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -471,8 +457,6 @@ void Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::evaluate_only_eleme
   //----------------------------------------------------------------
   evaluator_->evaluate_vector(elevec, funct_, derxy_, xyze_, totalnumdofpernode_, *phasemanager_,
       *variablemanager_, 1.0, 1.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -538,7 +522,6 @@ void Discret::Elements::PoroFluidMultiPhaseEleCalc<distype>::extract_element_and
     Core::FE::Discretization& discretization, Core::Elements::LocationArray& la)
 {
   variablemanager_->extract_element_and_node_values(*ele, discretization, la, xyze_);
-  return;
 }
 
 

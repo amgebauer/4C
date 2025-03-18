@@ -74,7 +74,6 @@ FLD::Utils::FluidImpedanceWrapper::FluidImpedanceWrapper(
           "There are more than one impedance condition lines with the same ID. This can not yet be "
           "handled.");
   }  // end loop over condition lines from input
-  return;
 }  // end FluidImpedanceWrapper
 
 /*----------------------------------------------------------------------*
@@ -92,7 +91,6 @@ void FLD::Utils::FluidImpedanceWrapper::use_block_matrix(
     mapiter->second->FluidImpedanceBc::use_block_matrix(
         condelements, domainmaps, rangemaps, splitmatrix);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -111,7 +109,6 @@ void FLD::Utils::FluidImpedanceWrapper::add_impedance_bc_to_residual_and_sysmat(
     mapiter->second->FluidImpedanceBc::calculate_impedance_tractions_and_update_residual_and_sysmat(
         residual, sysmat, dta, time, mapiter->first);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -126,7 +123,6 @@ void FLD::Utils::FluidImpedanceWrapper::time_update_impedances(const double time
     // update time step
     mapiter->second->FluidImpedanceBc::time_update_impedance(time, mapiter->first);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -140,7 +136,6 @@ void FLD::Utils::FluidImpedanceWrapper::write_restart(Core::IO::DiscretizationWr
   {
     mapiter->second->FluidImpedanceBc::write_restart(output, mapiter->first);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -152,8 +147,6 @@ void FLD::Utils::FluidImpedanceWrapper::read_restart(Core::IO::DiscretizationRea
 
   for (mapiter = impmap_.begin(); mapiter != impmap_.end(); mapiter++)
     mapiter->second->FluidImpedanceBc::read_restart(reader, mapiter->first);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -244,8 +237,6 @@ FLD::Utils::FluidImpedanceBc::FluidImpedanceBc(
     std::cout << "Impedance type: " << treetype_.c_str() << std::endl;
     std::cout << "------------------------------------------------------" << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -265,8 +256,6 @@ void FLD::Utils::FluidImpedanceBc::use_block_matrix(std::shared_ptr<std::set<int
     mat->set_cond_elements(condelements);
     impedancetbcsysmat_ = mat;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -315,11 +304,6 @@ void FLD::Utils::FluidImpedanceBc::flow_rate_calculation(const int condid)
       &local_flowrate, &flowrate, 1, Core::Communication::unpack_epetra_comm(dofrowmap->Comm()));
 
   q_np_ = flowrate;
-
-  //  if (myrank_ == 0)
-  //    std::cout<<"Impedance condition Id: "<<condid<<", Current flux: "<<flowrate<<std::endl;
-
-  return;
 }  // FluidImplicitTimeInt::flow_rate_calculation
 
 
@@ -461,8 +445,6 @@ void FLD::Utils::FluidImpedanceBc::calculate_impedance_tractions_and_update_resi
 
   // Add linearisation to fluid sysmat
   sysmat.add(*impedancetbcsysmat_, false, Q_np_fac, 1.0);
-
-  return;
 }  // FluidImplicitTimeInt::outflow_boundary
 
 /*----------------------------------------------------------------------*
@@ -493,8 +475,6 @@ void FLD::Utils::FluidImpedanceBc::time_update_impedance(const double time, cons
   // shift time step
   p_n_ = p_np_;
   q_n_ = q_np_;
-
-  return;
 }  // FluidImplicitTimeInt::outflow_boundary
 
 /*----------------------------------------------------------------------*
@@ -529,8 +509,6 @@ void FLD::Utils::FluidImpedanceBc::write_restart(
   stream5 << "Q_n" << condnum;
   // write the flux pressure at time step n
   output.write_double(stream5.str(), q_n_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -573,8 +551,6 @@ void FLD::Utils::FluidImpedanceBc::read_restart(
   {
     w_krelerror_ = 0.0;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

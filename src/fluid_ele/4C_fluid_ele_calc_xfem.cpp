@@ -2688,8 +2688,6 @@ namespace Discret
           }
         }
       }
-
-      return;
     }
 
     /*--------------------------------------------------------------------------------
@@ -2809,8 +2807,6 @@ namespace Discret
       rhs_s(Sigmaxx, 0)->update(viscfac * timefacfac * press, my::funct_, 1.0);
       rhs_s(Sigmayy, 0)->update(viscfac * timefacfac * press, my::funct_, 1.0);
       rhs_s(Sigmazz, 0)->update(viscfac * timefacfac * press, my::funct_, 1.0);
-
-      return;
 
     }  // EvaluateMatricesMSH
 
@@ -3957,8 +3953,6 @@ namespace Discret
       //-----------------------------------------------------------------------------------
 
       nit_build_patch_cuiui(Cuiui, Cuiui_coupling);
-
-      return;
     }
 
 
@@ -4145,8 +4139,6 @@ namespace Discret
           }
         }
       }
-
-      return;
     }
 
     /*--------------------------------------------------------------------------------
@@ -4278,8 +4270,6 @@ namespace Discret
               cond_type);
           break;
       }
-
-      return;
     }
 
 
@@ -4320,8 +4310,6 @@ namespace Discret
 
         ipatchsizesbefore += Cuiui_mats[0].numCols();
       }
-
-      return;
     }
 
     /*--------------------------------------------------------------------------------
@@ -4394,8 +4382,6 @@ namespace Discret
 
       // compute global first derivates
       my::derxy_.multiply(my::xji_, my::deriv_);
-
-      return;
     }
 
 
@@ -4425,8 +4411,6 @@ namespace Discret
 
       // add the pressure part and scale the viscous part with the viscosity
       traction.update(-press, normal, viscaf_master_);
-
-      return;
     }
 
     /*----------------------------------------------------------------------*
@@ -4451,8 +4435,6 @@ namespace Discret
         // f^i = ( N^i, t ) = ( N^i, (-pI+2mu*eps(u))*n )
         (iforcecol)[dofcolmap->LID(gdof)] += iforce[idof];
       }
-
-      return;
     }
 
 
@@ -4541,8 +4523,6 @@ namespace Discret
           }
         }
       }
-
-      return;
     }
 
     /*--------------------------------------------------------------------------------
@@ -4597,8 +4577,6 @@ namespace Discret
       my::get_material_params(material, my::evelaf_, my::epreaf_, my::epream_, my::escaaf_,
           my::escaam_, my::escabofoaf_, thermpressaf, thermpressam, thermpressdtaf, thermpressdtam,
           vol, densam, densaf, densn, viscaf, viscn, gamma);
-
-      return;
     }
 
   }  // end namespace Elements

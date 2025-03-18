@@ -33,8 +33,6 @@ CONTACT::Coupling3d::Coupling3d(Core::FE::Discretization& idiscret, int dim, boo
       stype_(Teuchos::getIntegralValue<CONTACT::SolvingStrategy>(params, "STRATEGY"))
 {
   // empty constructor
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1063,7 +1061,6 @@ CONTACT::Coupling3dManager::Coupling3dManager(Core::FE::Discretization& idiscret
       ncells_(0),
       stype_(Teuchos::getIntegralValue<CONTACT::SolvingStrategy>(params, "STRATEGY"))
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1077,7 +1074,6 @@ CONTACT::Coupling3dQuadManager::Coupling3dQuadManager(Core::FE::Discretization& 
       smintpairs_(-1),
       intcells_(-1)
 {
-  return;
 }
 
 
@@ -1229,7 +1225,6 @@ void CONTACT::Coupling3dManager::integrate_coupling(
                 (shape_fcn() == Inpar::Mortar::shape_petrovgalerkin);
     dynamic_cast<CONTACT::Element&>(slave_element()).assemble_dderiv_to_nodes(dual);
   }
-  return;
 }
 
 
@@ -1429,8 +1424,6 @@ void CONTACT::Coupling3dQuadManager::integrate_coupling(
     dynamic_cast<CONTACT::Element&>(slave_element())
         .assemble_dderiv_to_nodes((shape_fcn() == Inpar::Mortar::shape_dual ||
                                    shape_fcn() == Inpar::Mortar::shape_petrovgalerkin));
-
-  return;
 }
 
 
@@ -1946,8 +1939,6 @@ void CONTACT::Coupling3dManager::consistent_dual_shape()
 
   // store ae matrix in slave element data container
   slave_element().mo_data().dual_shape() = std::make_shared<Core::LinAlg::SerialDenseMatrix>(ae);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1970,8 +1961,6 @@ void CONTACT::Coupling3dManager::find_feasible_master_elements(
     }
   }
   feasible_ma_eles.resize(fcount);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

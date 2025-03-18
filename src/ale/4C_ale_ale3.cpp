@@ -140,10 +140,7 @@ Discret::Elements::Ale3::Ale3(int id, int owner) : Core::Elements::Element(id, o
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-Discret::Elements::Ale3::Ale3(const Discret::Elements::Ale3& old) : Core::Elements::Element(old)
-{
-  return;
-}
+Discret::Elements::Ale3::Ale3(const Discret::Elements::Ale3& old) : Core::Elements::Element(old) {}
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
@@ -207,8 +204,6 @@ void Discret::Elements::Ale3::print(std::ostream& os) const
   os << "Ale3 ";
   Element::print(os);
   std::cout << std::endl;
-  // cout << data_;
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

@@ -230,7 +230,6 @@ Discret::Elements::Beam3k::Beam3k(int id, int owner)
       bending_moment_2_gp_(0),
       bending_moment_3_gp_(0)
 {
-  return;
 }
 /*----------------------------------------------------------------------*
  |  copy-ctor (public)                                       meier 05/12|
@@ -278,7 +277,6 @@ Discret::Elements::Beam3k::Beam3k(const Discret::Elements::Beam3k& old)
       bending_moment_2_gp_(old.bending_moment_2_gp_),
       bending_moment_3_gp_(old.bending_moment_3_gp_)
 {
-  return;
 }
 /*--------------------------------------------------------------------------------*
  |  Deep copy this instance of Beam3k and return pointer to it (public) |
@@ -295,7 +293,7 @@ Core::Elements::Element* Discret::Elements::Beam3k::clone() const
 /*----------------------------------------------------------------------*
  |  print this element (public)                              meier 05/12
  *----------------------------------------------------------------------*/
-void Discret::Elements::Beam3k::print(std::ostream& os) const { return; }
+void Discret::Elements::Beam3k::print(std::ostream& os) const {}
 
 /*----------------------------------------------------------------------*
  |                                                             (public) |
@@ -376,8 +374,6 @@ void Discret::Elements::Beam3k::pack(Core::Communication::PackBuffer& data) cons
   add_to_pack(data, torque_gp_);
   add_to_pack(data, bending_moment_2_gp_);
   add_to_pack(data, bending_moment_3_gp_);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  Unpack data                                                (public) |
@@ -432,9 +428,6 @@ void Discret::Elements::Beam3k::unpack(Core::Communication::UnpackBuffer& buffer
   extract_from_pack(buffer, torque_gp_);
   extract_from_pack(buffer, bending_moment_2_gp_);
   extract_from_pack(buffer, bending_moment_3_gp_);
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

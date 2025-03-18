@@ -420,8 +420,6 @@ void XFEM::XFluidContactComm::get_states(const int fluidele_id, const std::vecto
   }
   else
     FOUR_C_THROW("Your Slave Element is not a quad4?!");
-
-  return;
 }
 
 void XFEM::XFluidContactComm::get_penalty_param(Core::Elements::Element* fluidele,
@@ -534,7 +532,6 @@ void XFEM::XFluidContactComm::get_penalty_param(Core::Elements::Element* fluidel
       theta_ * dt_, false, actmat->density(), actmat->density(), mass_conservation_scaling_,
       mass_conservation_combination_, nit_stab_gamma_, Inpar::XFEM::ConvStabScaling_none,
       Inpar::XFEM::XFF_ConvStabScaling_none, false, false);
-  return;
 }
 
 void XFEM::XFluidContactComm::get_penalty_param(
@@ -544,7 +541,6 @@ void XFEM::XFluidContactComm::get_penalty_param(
                 std::dynamic_pointer_cast<XFEM::MeshCouplingFSI>(mc_[mcidx_])->get_time_fac() *
                 std::dynamic_pointer_cast<XFEM::MeshCouplingFSI>(mc_[mcidx_])
                     ->get_estimate_nitsche_trace_max_eigenvalue(sele);
-  return;
 }
 
 void XFEM::XFluidContactComm::setup_surf_ele_ptrs(Core::FE::Discretization& contact_interface_dis)
@@ -1305,7 +1301,6 @@ void XFEM::XFluidContactComm::get_cut_side_integration_points(
   }
 
   npg = weights.size() - 1;
-  return;
 }
 
 void XFEM::XFluidContactComm::fill_complete_sele_map()

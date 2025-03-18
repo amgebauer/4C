@@ -68,7 +68,6 @@ XFEM::XfluidTimeintBase::XfluidTimeintBase(
       TOL_dist_(1.0e-12)  /// tolerance to find the shortest distance of point to its projection on
                           /// the surface dis
 {
-  return;
 }  // end constructor
 
 
@@ -84,8 +83,6 @@ void XFEM::XfluidTimeintBase::type(int iter, int iterMax)
     FGIType_ = FRS1FGINot1_;
   else
     FGIType_ = FRSNot1_;
-
-  return;
 }  // end function type
 
 
@@ -538,7 +535,6 @@ void XFEM::XfluidTimeintBase::call_x_to_xi_coords(
       break;
   }  // end switch
 
-  return;
 }  // end function call_x_to_xi_coords
 
 
@@ -633,7 +629,6 @@ void XFEM::XfluidTimeintBase::eval_shape_and_deriv(
     shapeFcnDerivXY.multiply(xji, shapeFcnDeriv);  // (dN/dx)^T = (dN/dxi)^T * J^(-T)
   }
 
-  return;
 };  // end template eval_shape_and_deriv
 
 
@@ -735,7 +730,6 @@ void XFEM::XfluidTimeintBase::reset_state(
     if (data->state_ == oldState) data->state_ = newState;
   }
 
-  return;
 }  // end function resetState
 
 
@@ -761,7 +755,6 @@ void XFEM::XfluidTimeintBase::clear_state(TimeIntData::State state  /// state of
     if (data == timeIntData_->end()) break;
   }  // end while loop over data to be cleared
 
-  return;
 }  // end function clear state
 
 
@@ -971,7 +964,6 @@ XFEM::XfluidStd::XfluidStd(
     }  // end loop over nodes
   }
 
-  return;
 }  // end constructor
 
 
@@ -1054,7 +1046,6 @@ void XFEM::XfluidStd::element_search(
     }
   }  // end loop over processor elements
 
-  return;
 }  // end elementSearch
 
 
@@ -1094,7 +1085,6 @@ void XFEM::XfluidStd::get_gp_values(Core::Elements::Element* ele,  ///< pointer 
       break;
   }  // end switch
 
-  return;
 }  // end function getGPValues
 
 
@@ -1181,7 +1171,6 @@ void XFEM::XfluidStd::get_gp_values_t(Core::Elements::Element* ele,  ///< pointe
     pres_deriv.multiply_tt(epre, shapeFcnDeriv);
   }
 
-  return;
 };  // end template getGPValuesT
 
 
@@ -1216,7 +1205,6 @@ void XFEM::XfluidStd::startpoints()
   }  // end loop over nodes which changed interface side
 
 
-  return;
 }  // end startpoints()
 
 
@@ -1907,8 +1895,6 @@ void XFEM::XfluidStd::compute_start_point_side(
 
   // map point into fluid domain along normal vector
   start_point.update(1.0, proj_x_n, dist, normal);
-
-  return;
 }
 
 void XFEM::XfluidStd::compute_start_point_line(
@@ -1968,8 +1954,6 @@ void XFEM::XfluidStd::compute_start_point_line(
 
   // map point into fluid domain along normal vector
   start_point.update(1.0, proj_x_n, dist, normal_avg);
-
-  return;
 }
 
 
@@ -2021,8 +2005,6 @@ void XFEM::XfluidStd::compute_start_point_avg(
 
   // map point into fluid domain along normal vector
   start_point.update(1.0, proj_x_n, dist, normal_avg);
-
-  return;
 }
 
 
@@ -2160,8 +2142,6 @@ void XFEM::XfluidStd::get_normal_side_tn(
   normal(2) = dx_dr(0) * dx_ds(1) - dx_ds(0) * dx_dr(1);
 
   normal.scale(1.0 / normal.norm2());
-
-  return;
 }
 
 
@@ -2256,9 +2236,6 @@ void XFEM::XfluidStd::get_projxn_line(
 
   // projected point tracked back at t^n
   proj_x_n.multiply(xyze_, funct);
-
-
-  return;
 }
 
 
@@ -2303,7 +2280,6 @@ void XFEM::XfluidStd::addeidisp(
     xyze(2, inode) += eidisp(2, inode);
   }
 
-  return;
 }  // addeidisp
 
 
@@ -2457,8 +2433,6 @@ void XFEM::XfluidStd::call_project_on_side(
 #endif
     }
   }
-
-  return;
 }
 
 
@@ -2636,8 +2610,6 @@ void XFEM::XfluidStd::call_project_on_line(
       FOUR_C_THROW(" no negative distance to line possible");
     }
   }  // on_line
-
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -2701,8 +2673,6 @@ void XFEM::XfluidStd::call_project_on_point(Core::Nodes::Node* node,  ///< point
     proj_nid_np = node->id();
     //--------------------
   }
-
-  return;
 }
 
 
@@ -3092,8 +3062,6 @@ void XFEM::XfluidStd::project_on_point(
   dist = direction.norm2();
 
   x_point.update(1.0, p, 0.0);
-
-  return;
 }  // project_on_point
 
 

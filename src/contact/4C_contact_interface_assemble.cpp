@@ -45,7 +45,6 @@ void CONTACT::Interface::assemble_slave_coord(std::shared_ptr<Core::LinAlg::Vect
     // do assembly
     Core::LinAlg::assemble(*xsmod, xspatial, dof, owner);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -180,8 +179,6 @@ void CONTACT::Interface::assemble_reg_normal_forces(
 
     }  // Macauley-Bracket
   }  // loop over slave nodes
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -955,8 +952,6 @@ void CONTACT::Interface::assemble_lin_z(Core::LinAlg::SparseMatrix& linzglobal)
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1289,8 +1284,6 @@ void CONTACT::Interface::assemble_t_nderiv(std::shared_ptr<Core::LinAlg::SparseM
     }
 
   }  // for (int i=0;i<activenodes_->NumMyElements();++i)
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1376,8 +1369,6 @@ void CONTACT::Interface::assemble_lin_d(Core::LinAlg::SparseMatrix& lindglobal, 
       FOUR_C_THROW("AssembleLinDM: Not all DISP slave entries of DerivD considered!");
     /******************************** Finished with LinDMatrix **********/
   }
-
-  return;
 }
 
 
@@ -1464,8 +1455,6 @@ void CONTACT::Interface::assemble_lin_m(Core::LinAlg::SparseMatrix& linmglobal, 
       FOUR_C_THROW("AssembleLinDM: Not all master entries of DerivM considered!");
     /******************************** Finished with LinMMatrix **********/
   }
-
-  return;
 }
 
 
@@ -1478,8 +1467,6 @@ void CONTACT::Interface::assemble_lin_dm(
   // call both sub functions
   assemble_lin_d(lindglobal, usePoroLM);
   assemble_lin_m(linmglobal, usePoroLM);
-
-  return;
 }
 
 
@@ -1569,8 +1556,6 @@ void CONTACT::Interface::assemble_g(Core::LinAlg::Vector<double>& gglobal)
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2548,7 +2533,6 @@ void CONTACT::Interface::assemble_lin_stick(Core::LinAlg::SparseMatrix& linstick
       }
     }
   }
-  return;
 }
 
 /*---------------------------------------------------------------------*
@@ -4235,8 +4219,6 @@ void CONTACT::Interface::assemble_lin_slip(Core::LinAlg::SparseMatrix& linslipLM
       }
     }
   }  // Tresca friction
-
-  return;
 }
 
 void CONTACT::Interface::assemble_normal_contact_regularization(Core::LinAlg::SparseMatrix& d_disp,
@@ -4307,8 +4289,6 @@ void CONTACT::Interface::assemble_normal_contact_regularization(Core::LinAlg::Sp
           d_disp.assemble(val, cnode->dofs()[0], col);
       }
   }
-
-  return;
 }
 
 void CONTACT::Interface::assemble_lin_slip_normal_regularization(
@@ -5114,8 +5094,6 @@ void CONTACT::Interface::assemble_lin_slip_normal_regularization(
   {
     FOUR_C_THROW("no tresca friction with regularized normal constraint");
   }  // Tresca friction
-
-  return;
 }
 
 /*---------------------------------------------------------------------------*
@@ -5152,8 +5130,6 @@ void CONTACT::Interface::assemble_normal_coupling(Core::LinAlg::Vector<double>& 
       Core::LinAlg::assemble(gglobal, gnode, lm, lmowner);
     }
   }
-
-  return;
 }
 
 /*---------------------------------------------------------------------*
@@ -5226,7 +5202,6 @@ void CONTACT::Interface::assemble_normal_coupling_linearisation(Core::LinAlg::Sp
       }
     }
   }
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -5303,8 +5278,6 @@ void CONTACT::Interface::assemble_coup_lin_d(
     if (scurr != dderiv.end())
       FOUR_C_THROW("AssembleCoupLin: Not all connected slave nodes to Lin(D*z_s) considered!");
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------*

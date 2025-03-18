@@ -208,8 +208,6 @@ void FLD::XWall::set_x_wall_params(Teuchos::ParameterList& eleparams)
   eleparams.set("gpnorm", gp_norm_);
   eleparams.set("gpnormow", gp_norm_ow_);
   eleparams.set("gppar", gp_par_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -229,7 +227,6 @@ void FLD::XWall::set_x_wall_params_xw_dis(Teuchos::ParameterList& eleparams)
   eleparams.set("gpnorm", gp_norm_);
   eleparams.set("gpnormow", gp_norm_ow_);
   eleparams.set("gppar", gp_par_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -276,8 +273,6 @@ void FLD::XWall::setup()
 
     restart_wss_ = nullptr;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -352,7 +347,6 @@ void FLD::XWall::init_x_wall_maps()
   if (myrank_ == 0)
     std::cout << xwallrownodemap_->NumGlobalElements() << " XWall nodes initialized!" << std::endl;
   if (xwallrownodemap_->NumGlobalElements() == 0) FOUR_C_THROW("No XWall elements found");
-  return;
 }
 
 
@@ -492,7 +486,6 @@ void FLD::XWall::init_wall_dist()
   if (myrank_ == 0) std::cout << "done!  " << std::endl;
 
   commondis = nullptr;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -558,8 +551,6 @@ void FLD::XWall::init_toggle_vector()
   if (myrank_ == 0) std::cout << gcount << " blending nodes identified... ";
 
   if (myrank_ == 0) std::cout << "done!  " << std::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -659,8 +650,6 @@ void FLD::XWall::setup_x_wall_dis()
     xwdiscret_->replace_dof_set(newdofset);
     xwdiscret_->fill_complete(true, true, true);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -853,8 +842,6 @@ void FLD::XWall::setup_l2_projection()
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -954,8 +941,6 @@ void FLD::XWall::update_tau_w(int step, std::shared_ptr<Core::LinAlg::Vector<dou
 
   // destruct vector so that we don't use it next time
   if (restart_wss_ != nullptr) restart_wss_ = nullptr;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1124,8 +1109,6 @@ void FLD::XWall::calc_tau_w(
         "STRESS CALC SURF CONDITIONS where the stress should be calculated.");
 
   if (myrank_ == 0) std::cout << "tauw mean:  " << meansp;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1261,9 +1244,6 @@ void FLD::XWall::l2_project_vector(Core::LinAlg::Vector<double>& veln,
   veln.update(1.0, *incveln_, 1.0);
   if (accn != nullptr) accn->update(1.0, *incaccn_, 1.0);
   if (velnp != nullptr) velnp->update(1.0, *incvelnp_, 1.0);
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1301,8 +1281,6 @@ void FLD::XWall::adapt_ml_nullspace(Core::LinAlg::Solver& solver)
       nullspace[lrowdofs * 3 + firstlocaldofid + 7] = 0.0;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1331,9 +1309,6 @@ void FLD::XWall::calc_mk()
   Core::LinAlg::export_to(mkxwv, *mkxwstate_);
   Core::LinAlg::export_to(mkxwv, mkv);
   Core::LinAlg::export_to(mkv, *mkstate_);
-
-
-  return;
 }  // end calc_mk
 
 /*----------------------------------------------------------------------*
@@ -1379,7 +1354,6 @@ void FLD::XWall::transfer_and_save_tauw()
     turbulent_inflow_condition_->transfer(oldtauw_, oldtauw_, 0.0);
     turbulent_inflow_condition_->transfer(oldinctauw_, oldinctauw_, 0.0);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1421,7 +1395,6 @@ void FLD::XWall::overwrite_transferred_values()
     Core::LinAlg::export_to(inctauwtmp, *inctauw_);
     Core::LinAlg::export_to(tauwtmp, *tauw_);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1437,7 +1410,6 @@ void FLD::XWall::read_restart(Core::IO::DiscretizationReader& reader)
 
   restart_wss_ = std::make_shared<Core::LinAlg::Vector<double>>(*(discret_->dof_row_map()), true);
   reader.read_vector(restart_wss_, "wss");
-  return;
 }
 
 
@@ -1606,7 +1578,6 @@ FLD::XWallAleFSI::XWallAleFSI(std::shared_ptr<Core::FE::Discretization> dis, int
 {
   incwdistxwdis_ =
       std::make_shared<Core::LinAlg::Vector<double>>(*(xwdiscret_->node_col_map()), true);
-  return;
 }
 
 void FLD::XWallAleFSI::update_w_dist_wale()
@@ -1678,8 +1649,6 @@ void FLD::XWallAleFSI::update_w_dist_wale()
 
   if (myrank_ == 0)
     std::cout << "the new mean distance from the wall of all XWall nodes is: " << mean << std::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1688,7 +1657,6 @@ void FLD::XWallAleFSI::update_w_dist_wale()
 void FLD::XWallAleFSI::set_x_wall_params(Teuchos::ParameterList& eleparams)
 {
   XWall::set_x_wall_params(eleparams);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1709,8 +1677,6 @@ void FLD::XWallAleFSI::set_x_wall_params_xw_dis(Teuchos::ParameterList& eleparam
 
   xwdiscret_->set_state("dispnp", xwdisdispnp);
   xwdiscret_->set_state("gridv", xwdisgridv);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1741,8 +1707,6 @@ void FLD::XWallAleFSI::update_tau_w(int step,
       FOUR_C_THROW(
           "projection required for ale case even with constant tauw, since wdist is updating");
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

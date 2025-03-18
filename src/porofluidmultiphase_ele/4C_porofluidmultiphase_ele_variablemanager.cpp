@@ -154,7 +154,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerPhi<nsd,
 
   // set flag
   this->isextracted_ = true;
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -180,8 +179,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerPhi<nsd, nen>::evaluate
 
   // done
   this->isevaluated_ = true;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -207,8 +204,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerPhiGradPhi<nsd,
 
   // call base class
   VariableManagerPhi<nsd, nen>::evaluate_gp_variables(funct, derxy);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -240,8 +235,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerInstat<nsd,
 
   // call wrapped class
   this->varmanager_->extract_element_and_node_values(ele, discretization, la, xyze, dofsetnum);
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -265,8 +258,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerInstat<nsd, nen>::evalu
 
   // call wrapped class
   this->varmanager_->evaluate_gp_variables(funct, derxy);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -326,8 +317,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerStruct<nsd,
 
   // add nodal displacements to point coordinates
   xyze += edispnp_;
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -355,8 +344,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerStruct<nsd, nen>::evalu
 
   // call wrapped class
   this->varmanager_->evaluate_gp_variables(funct, derxy);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -388,8 +375,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerScalar<nsd,
   // extract local values of displacement field from global state vector
   Core::FE::extract_my_values<Core::LinAlg::Matrix<nen, 1>>(
       *scalarnp, escalarnp_, la[ndsscalar_].lm_);
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -416,8 +401,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerScalar<nsd, nen>::evalu
       gradscalarnp_[k].multiply(derxy, escalarnp_[k]);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -469,8 +452,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerMaximumNodalVolFracValu
     ele_has_valid_volfrac_spec_[k] =
         ephin[k + numfluidphases].min_value() > volfracpressmat.min_vol_frac();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -486,8 +467,6 @@ void Discret::Elements::PoroFluidManager::VariableManagerMaximumNodalVolFracValu
 {
   // call wrapped class
   this->varmanager_->evaluate_gp_variables(funct, derxy);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

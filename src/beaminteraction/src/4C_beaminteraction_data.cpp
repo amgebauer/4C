@@ -116,8 +116,6 @@ void BeamInteraction::Data::BeamData::pack(Core::Communication::PackBuffer& data
   add_to_pack(data, bspottriad_);
   // pack bspotstatus_
   add_to_pack(data, bspotstatus_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -132,10 +130,6 @@ void BeamInteraction::Data::BeamData::unpack(Core::Communication::UnpackBuffer& 
   extract_from_pack(buffer, bspottriad_);
   // bspotstatus
   extract_from_pack(buffer, bspotstatus_);
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -171,8 +165,6 @@ void BeamInteraction::Data::BindEventData::pack(Core::Communication::PackBuffer&
   add_to_pack(data, requestproc_);
 
   add_to_pack(data, permission_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -188,10 +180,6 @@ void BeamInteraction::Data::BindEventData::unpack(Core::Communication::UnpackBuf
   extract_from_pack(buffer, requestproc_);
 
   extract_from_pack(buffer, permission_);
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -213,8 +201,6 @@ void BeamInteraction::Data::UnBindEventData::pack(Core::Communication::PackBuffe
   add_to_pack(data, eletoupdate_);
 
   add_to_pack(data, linkertype_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -226,10 +212,6 @@ void BeamInteraction::Data::UnBindEventData::unpack(Core::Communication::UnpackB
   extract_from_pack(buffer, eletoupdate_);
 
   extract_from_pack(buffer, linkertype_);
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

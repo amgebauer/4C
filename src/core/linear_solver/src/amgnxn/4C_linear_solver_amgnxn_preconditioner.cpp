@@ -59,8 +59,6 @@ void Core::LinearSolver::AmGnxnPreconditioner::setup(bool create, Epetra_Operato
 
   // Do all the setup
   setup(Core::Utils::shared_ptr_from_ref(*A_bl));
-
-  return;
 }
 
 /*------------------------------------------------------------------------------*/
@@ -113,8 +111,6 @@ void Core::LinearSolver::AmGnxnPreconditioner::setup(
       Core::Communication::my_mpi_rank(Core::Communication::unpack_epetra_comm(A->Comm())) == 0)
     std::cout << "       Calling Core::LinAlg::SOLVER::AMGnxn_Preconditioner::Setup takes "
               << std::setw(16) << std::setprecision(6) << elaptime << " s" << std::endl;
-
-  return;
 }
 
 /*------------------------------------------------------------------------------*/
@@ -394,7 +390,6 @@ void Core::LinearSolver::AmGnxnOperator::setup()
 
 
   is_setup_flag_ = true;
-  return;
 }
 
 
@@ -562,7 +557,6 @@ void Core::LinearSolver::BlockSmootherOperator::setup()
   }
 
   is_setup_flag_ = true;
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -23,7 +23,6 @@ FOUR_C_NAMESPACE_OPEN
 POROFLUIDMULTIPHASE::ResultTest::ResultTest(TimIntImpl& porotimint)
     : Core::Utils::ResultTest("POROFLUIDMULTIPHASE"), porotimint_(porotimint)
 {
-  return;
 }
 
 
@@ -71,8 +70,6 @@ void POROFLUIDMULTIPHASE::ResultTest::test_node(
       test_count++;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

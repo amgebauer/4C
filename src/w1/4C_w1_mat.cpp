@@ -178,7 +178,6 @@ void Discret::Elements::Wall1::w1_call_matgeononl(
     }
   }  // switch(material->material_type())
 
-  return;
 }  // Discret::Elements::Wall1::w1_call_matgeononl
 
 /*----------------------------------------------------------------------*/
@@ -327,10 +326,7 @@ void Discret::Elements::Wall1::material_response3d_plane(Core::LinAlg::SerialDen
   C(3, 0) = cmat(3, 0);  // C_{2111} = C_{1211}
   C(3, 1) = cmat(3, 1);  // C_{2122} = C_{1222}
   C(3, 2) = cmat(3, 3);  // C_{2112} = C_{1212}
-  C(3, 3) = cmat(3, 3);  // C_{2121} = C_{1212}
-
-  // leave this dump
-  return;
+  C(3, 3) = cmat(3, 3);
 }
 
 /*----------------------------------------------------------------------*/
@@ -340,8 +336,6 @@ void Discret::Elements::Wall1::material_response3d(Core::LinAlg::Matrix<6, 1>* s
     Teuchos::ParameterList& params, const int gp)
 {
   solid_material()->evaluate(nullptr, glstrain, params, stress, cmat, gp, id());
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*

@@ -543,8 +543,6 @@ namespace
     {
       printf("Initial field set.\n\n");
     }
-
-    return;
   }
 }  // namespace
 

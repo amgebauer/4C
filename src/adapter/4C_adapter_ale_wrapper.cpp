@@ -16,8 +16,6 @@ void Adapter::AleNOXCorrectionWrapper::prepare_time_step()
   AleWrapper::prepare_time_step();
 
   if (stepinc_ != nullptr) stepinc_->put_scalar(0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -50,8 +48,6 @@ void Adapter::AleNOXCorrectionWrapper::evaluate(
   {
     AleWrapper::evaluate(nullptr);
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

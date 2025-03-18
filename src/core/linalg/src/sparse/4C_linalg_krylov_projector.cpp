@@ -94,7 +94,6 @@ void Core::LinAlg::KrylovProjector::set_cw(Core::LinAlg::MultiVector<double>& c0
   w_ = std::make_shared<Core::LinAlg::MultiVector<double>>(*newmap, nsdim_, false);
   *c_ = c0;
   *w_ = w0;
-  return;
 }
 
 void Core::LinAlg::KrylovProjector::set_cw(
@@ -102,7 +101,6 @@ void Core::LinAlg::KrylovProjector::set_cw(
 {
   *c_ = c0;
   *w_ = w0;
-  return;
 }
 
 /* --------------------------------------------------------------------
@@ -176,8 +174,6 @@ void Core::LinAlg::KrylovProjector::fill_complete()
         "projection.");
 
   complete_ = true;
-
-  return;
 }
 // Core::LinAlg::KrylovProjector::fill_complete
 
@@ -393,8 +389,6 @@ void Core::LinAlg::KrylovProjector::create_projector(std::shared_ptr<Core::LinAl
 
   // call fill complete
   P->complete();
-
-  return;
 }
 
 

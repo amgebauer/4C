@@ -38,8 +38,6 @@ Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::ScaTraEleCalcMultiPoroRe
   // replace internal variable manager by internal variable manager for muliporo
   my::scatravarmanager_ =
       std::make_shared<ScaTraEleInternalVariableManagerMultiPoro<nsd_, nen_>>(my::numscal_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -477,8 +475,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::extract_element_and
   // i.e., set special body force for homogeneous isotropic turbulence
   //--------------------------------------------------------------------------------
   my::other_node_based_source_terms(lm, discretization, params);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -511,8 +507,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::extract_nodal_flux(
     Core::FE::extract_my_values<Core::LinAlg::Matrix<nsd_, nen_>>(
         *convel, efluxnp_[curphase], la[ndsvel].lm_);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -571,8 +565,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::materials(
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -617,7 +609,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::mat_multi_poro_flui
     poro::set_densities(volfrac_fluid, densn, densnp, densam);
   }
 
-  return;
 }  // ScaTraEleCalcMultiPoroReac<distype>::mat_multi_poro_fluid
 
 
@@ -661,7 +652,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::mat_multi_poro_vol_
     poro::set_densities(volfrac, densn, densnp, densam);
   }
 
-  return;
 }  // ScaTraEleCalcMultiPoroReac<distype>::MatMultiPoro
 
 /*----------------------------------------------------------------------*
@@ -708,7 +698,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::mat_multi_poro_soli
     poro::set_densities(volfrac_solid_phase, densn, densnp, densam);
   }
 
-  return;
 }  // ScaTraEleCalcMultiPoroReac<distype>::MatMultiPoro
 
 /*----------------------------------------------------------------------*
@@ -781,7 +770,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::mat_multi_poro_temp
     poro::set_densities(cp_eff, densn, densnp, densam);
   }
 
-  return;
 }  // ScaTraEleCalcMultiPoroReac<distype>::MatMultiPoro
 
 /*------------------------------------------------------------------------------*
@@ -798,8 +786,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<
   {
     var_manager()->adapt_convective_term_for_l2(my::funct_, my::derxy_, efluxnp_);
   }
-
-  return;
 }
 
 /*-------------------------------------------------------------------------------*
@@ -999,7 +985,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_mat_conv(
     pororeac::calc_mat_conv(emat, k, timefacfac, 1.0, sgconv);
   }
 
-  return;
 }  // ScaTraEleCalc<distype>::CalcMatConv
 
 /*-----------------------------------------------------------------------------*
@@ -1030,7 +1015,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_mat_mass(
       }
     }
   }
-  return;
 }  // ScaTraEleCalc<distype>::CalcMatConv
 
 
@@ -1044,8 +1028,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_mat_conv_add_c
 {
   // the only difference to the base class version is, that there is no scaling with the density
   pororeac::calc_mat_conv_add_cons(emat, k, timefacfac, vdiv, 1.0);
-
-  return;
 }
 
 /*------------------------------------------------------------------- *
@@ -1058,7 +1040,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::recompute_conv_phi_
 {
   // the only difference to the base class version is, that there is no scaling with the density
   pororeac::recompute_conv_phi_for_rhs(k, sgvelint, 1.0, 1.0, vdiv);
-  return;
 }
 
 /*-------------------------------------------------------------------- *
@@ -1157,7 +1138,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_conv_od_mesh(
     else
       FOUR_C_THROW("Species type no valid!");
   }
-  return;
 }
 
 /*-------------------------------------------------------------------- *
@@ -1180,8 +1160,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_lin_mass_od_me
     my::calc_lin_mass_od_mesh(
         emat, k, ndofpernodemesh, rhsfac, myfac, densam, densnp, phinp, hist, J, dJ_dmesh);
   }
-
-  return;
 }
 
 /*-------------------------------------------------------------------- *
@@ -1243,8 +1221,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_hist_and_sourc
       }
     }
   }
-
-  return;
 }
 
 /*-------------------------------------------------------------------- *
@@ -1289,7 +1265,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_diff_od_mesh(
       }
     }
   }
-  return;
 }
 
 /*-------------------------------------------------------------------- *
@@ -1309,8 +1284,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_react_od_mesh(
     // call base class
     my::calc_react_od_mesh(emat, k, ndofpernodemesh, myfac, rea_phi, J, dJ_dmesh);
   }
-
-  return;
 }
 
 /*-------------------------------------------------------------------- *
@@ -1414,7 +1387,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_mat_conv_od_fl
       }
     }
   }
-  return;
 }
 
 /*-------------------------------------------------------------------------- *
@@ -1472,8 +1444,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_lin_mass_od_fl
     calc_lin_mass_matrix_type_od_fluid(
         emat, k, &prefaclinmassodfluid, totalnummultiphasedofpernode, vtrans);
   }
-
-  return;
 }
 
 /*---------------------------------------------------------------------- *
@@ -1502,8 +1472,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_lin_mass_matri
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------- *
@@ -1594,8 +1562,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_hist_and_sourc
       }
     }
   }
-
-  return;
 }
 
 /*-------------------------------------------------------------------- *
@@ -1619,8 +1585,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_react_od_fluid
     calc_lin_mass_matrix_type_od_fluid(
         emat, k, &prefaclinmassodfluid, totalnummultiphasedofpernode, vrhs);
   }
-
-  return;
 }
 
 /*------------------------------------------------------------------ *
@@ -1667,7 +1631,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::calc_diff_od_fluid(
       }
     }
   }
-  return;
 }
 /*---------------------------------------------------------------------*
  | standard Galerkin terms  -- "shapederivatives" pressure gradient    |
@@ -1771,8 +1734,6 @@ void Discret::Elements::ScaTraEleCalcMultiPoroReac<distype>::apply_shape_derivs_
   }
   else
     FOUR_C_THROW("shapederivatives not implemented for 1D!");
-
-  return;
 }
 
 /*------------------------------------------------------------------------------*

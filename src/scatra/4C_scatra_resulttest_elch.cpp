@@ -17,7 +17,6 @@ FOUR_C_NAMESPACE_OPEN
 ScaTra::ElchResultTest::ElchResultTest(std::shared_ptr<ScaTraTimIntElch> elchtimint)
     : ScaTraResultTest::ScaTraResultTest(elchtimint)
 {
-  return;
 }
 
 

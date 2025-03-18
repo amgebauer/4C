@@ -167,9 +167,6 @@ void StructureFilter::write_all_results(PostField* field)
 
   // Write element and node owners
   write_element_results(field);
-  //  WriteNodeResults(field); // Uncomment to visualize owner proc on a nodal basis
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -180,7 +177,6 @@ void StructureFilter::write_all_results_one_time_step(
   writer_->write_result_one_time_step(result, "displacement", "displacement", dofbased,
       result.field()->problem()->num_dim(), firststep, laststep);
   write_node_results(result.field());
-  return;
 }
 
 /*----------------------------------------------------------------------*/

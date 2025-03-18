@@ -243,8 +243,6 @@ void Adapter::CouplingPoroMortar::add_mortar_elements(
 
     interface->add_element(cele);
   }
-
-  return;
 }
 
 
@@ -385,8 +383,6 @@ void Adapter::CouplingPoroMortar::complete_interface(
 
   // create binary search tree
   interface_->create_search_tree();
-
-  return;
 }
 
 
@@ -429,7 +425,6 @@ void Adapter::CouplingPoroMortar::evaluate_poro_mt(
 
   // do system matrix manipulations
   porolagstrategy_->evaluate_poro_no_pen_contact(k_fs, f, frhs);
-  return;
 }  // Adapter::CouplingNonLinMortar::EvaluatePoroMt()
 
 
@@ -442,7 +437,6 @@ void Adapter::CouplingPoroMortar::update_poro_mt()
   check_setup();
 
   porolagstrategy_->poro_mt_update();
-  return;
 }  // Adapter::CouplingNonLinMortar::UpdatePoroMt()
 
 /*----------------------------------------------------------------------*
@@ -456,7 +450,6 @@ void Adapter::CouplingPoroMortar::recover_fluid_lm_poro_mt(
   check_setup();
 
   porolagstrategy_->recover_poro_no_pen(disi, veli);
-  return;
 }  // Adapter::CouplingNonLinMortar::recover_fluid_lm_poro_mt
 
 FOUR_C_NAMESPACE_CLOSE

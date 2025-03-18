@@ -96,8 +96,6 @@ void NOX::Nln::Solver::PseudoTransient::init()
 
   // create the group pre/post operator
   create_group_pre_post_operator();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -111,8 +109,6 @@ void NOX::Nln::Solver::PseudoTransient::reset(const ::NOX::Abstract::Vector& ini
   if (not innerTests.is_null()) iTestPtr_ = innerTests;
 
   init();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -124,8 +120,6 @@ void NOX::Nln::Solver::PseudoTransient::reset(const ::NOX::Abstract::Vector& ini
   if (not outerTests.is_null()) testPtr = outerTests;
 
   init();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -215,7 +209,6 @@ void NOX::Nln::Solver::PseudoTransient::create_lin_system_pre_post_operator()
         << "\" sub-sublist!" << std::endl;
     throw_error("create_lin_system_pre_post_operator()", msg.str());
   }
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -243,8 +236,6 @@ void NOX::Nln::Solver::PseudoTransient::create_group_pre_post_operator()
   /* Call the reset function of the nox nln group to reset the corresponding
    * pre/post operator map. */
   nlnSoln->reset_pre_post_operator(p_grpOpt, true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -412,8 +403,6 @@ void NOX::Nln::Solver::PseudoTransient::eval_model_reduction_ratio()
     utilsPtr->out() << "(" << fref << " - " << fnew << ") / (" << fref << " - " << modelnew << ")"
                     << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -448,8 +437,6 @@ void NOX::Nln::Solver::PseudoTransient::compute_pseudo_velocity()
     xDot_->init(0.0);
   else
     xDot_->update(invDelta_, solnPtr->getX(), -invDelta_, oldSolnPtr->getX(), 0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -480,8 +467,6 @@ void NOX::Nln::Solver::PseudoTransient::adjust_pseudo_time_step()
                     << std::scientific << delta_ << " |" << std::endl
                     << "*-------------------------------*" << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -626,8 +611,6 @@ void NOX::Nln::Solver::PseudoTransient::update_pseudo_time_step()
     delta_ = std::numeric_limits<double>::infinity();
     invDelta_ = 0.0;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -810,8 +793,6 @@ void NOX::Nln::LinSystem::PrePostOp::PseudoTransient::run_post_compute_jacobian(
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -877,7 +858,6 @@ void NOX::Nln::LinSystem::PrePostOp::PseudoTransient::modify_jacobian(
       break;
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -963,8 +943,6 @@ void NOX::Nln::GROUP::PrePostOp::PseudoTransient::run_post_compute_f(
 
   // set the flag
   is_pseudo_transient_residual_ = true;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -992,8 +970,6 @@ void NOX::Nln::GROUP::PrePostOp::PseudoTransient::run_pre_compute_f(
 
   // set flag
   is_pseudo_transient_residual_ = false;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

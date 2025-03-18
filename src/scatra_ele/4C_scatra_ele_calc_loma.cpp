@@ -61,8 +61,6 @@ Discret::Elements::ScaTraEleCalcLoma<distype>::ScaTraEleCalcLoma(
   // safety check
   if (my::turbparams_->mfs_conservative())
     FOUR_C_THROW("Conservative formulation not supported for loma!");
-
-  return;
 }
 
 
@@ -86,8 +84,6 @@ void Discret::Elements::ScaTraEleCalcLoma<distype>::materials(
     mat_thermo_st_venant_kirchhoff(material, k, densn, densnp, densam, visc);
   else
     FOUR_C_THROW("Material type is not supported");
-
-  return;
 }
 
 
@@ -147,8 +143,6 @@ void Discret::Elements::ScaTraEleCalcLoma<distype>::mat_sutherland(
   if (my::scatrapara_->rb_sub_gr_vel() or
       my::turbparams_->turb_model() == Inpar::FLUID::multifractal_subgrid_scales)
     visc = actmat->compute_viscosity(tempnp);
-
-  return;
 }
 
 
@@ -206,8 +200,6 @@ void Discret::Elements::ScaTraEleCalcLoma<distype>::mat_thermo_st_venant_kirchho
 
   // compute diffusivity as ratio of conductivity and specific heat capacity at constant volume
   my::diffmanager_->set_isotropic_diff(actmat->conductivity() / actmat->capacity(), k);
-
-  return;
 }
 
 
@@ -246,7 +238,6 @@ void Discret::Elements::ScaTraEleCalcLoma<distype>::get_rhs_int(
       rhsint = my::bodyforce_[k].dot(my::funct_);
   }
 
-  return;
 }  // GetRhsInt
 
 
@@ -276,7 +267,6 @@ void Discret::Elements::ScaTraEleCalcLoma<distype>::calc_mat_conv_add_cons(
       emat(fvi, fui) += v * my::funct_(ui);
     }
   }
-  return;
 }
 
 
@@ -327,8 +317,6 @@ void Discret::Elements::ScaTraEleCalcLoma<distype>::recompute_conv_phi_for_rhs(d
     // multiply convective term by density
     conv_phi *= densn;
   }
-
-  return;
 }
 
 

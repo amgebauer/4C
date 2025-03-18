@@ -113,7 +113,6 @@ double MyocardFitzhughNagumo::get_internal_state(const int k, int gp) const
 void MyocardFitzhughNagumo::set_internal_state(const int k, const double val)
 {
   set_internal_state(k, val, 0);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -141,7 +140,6 @@ void MyocardFitzhughNagumo::set_internal_state(const int k, const double val, in
       break;
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -188,8 +186,6 @@ void MyocardFitzhughNagumo::update(const double phi, const double dt)
 {
   // update initial values for next time step
   r0_ = r_;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

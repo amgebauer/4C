@@ -1337,8 +1337,6 @@ void Discret::Elements::Ale3Impl<distype>::static_ke_spring(Ale3* ele,
   residual.put_scalar(0.0);
   for (int i = 0; i < 3 * iel; ++i)
     for (int j = 0; j < 3 * iel; ++j) residual(i, 0) += sys_mat(i, j) * displacements[j];
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1560,8 +1558,6 @@ void Discret::Elements::Ale3Impl<distype>::static_ke_nonlinear(Ale3* ele,
     /* =========================================================================*/
   } /* ==================================================== end of Loop over GP */
   /* =========================================================================*/
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1712,8 +1708,6 @@ void Discret::Elements::Ale3Impl<distype>::static_ke_laplace(Ale3* ele,
   residual.putScalar(0.0);
   for (int i = 0; i < nd; ++i)
     for (int j = 0; j < nd; ++j) residual[i] += sys_mat(i, j) * my_dispnp[j];
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

@@ -803,7 +803,6 @@ void Core::LinAlg::sym_matrix_3x3_exp_2nd_deriv_voigt(const Core::LinAlg::Matrix
           ddexp_mat[J](I, vmap::non_symmetric_tensor_to_voigt9_index(k, l)) =
               matrix_exp_2nd_deriv[I][J](k, l);
         }
-  return;
 }
 
 

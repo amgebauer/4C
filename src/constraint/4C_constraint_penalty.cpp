@@ -160,7 +160,6 @@ void CONSTRAINTS::ConstraintPenalty::evaluate(Teuchos::ParameterList& params,
   }
   evaluate_constraint(
       params, systemmatrix1, *systemmatrix2, systemvector1, *systemvector2, *systemvector3);
-  return;
 }
 
 /*-----------------------------------------------------------------------*

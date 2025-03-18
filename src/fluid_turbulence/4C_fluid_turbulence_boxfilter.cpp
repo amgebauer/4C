@@ -94,8 +94,6 @@ FLD::Boxfilter::Boxfilter(
     modeled_subgrid_stress_ = true;
   }
   if (loma_ and vreman_dynamic_) FOUR_C_THROW("Dynamic Vreman model not implemented for loma!");
-
-  return;
 }
 
 
@@ -106,8 +104,6 @@ FLD::Boxfilter::Boxfilter(
 void FLD::Boxfilter::add_scatra(std::shared_ptr<Core::FE::Discretization> scatradis)
 {
   scatradiscret_ = scatradis;
-
-  return;
 }
 
 void FLD::Boxfilter::initialize_vreman()
@@ -116,8 +112,6 @@ void FLD::Boxfilter::initialize_vreman()
   expression_ = true;
   alphaij_ = true;
   alpha2_ = true;
-
-  return;
 }
 
 void FLD::Boxfilter::initialize_vreman_scatra(std::shared_ptr<Core::FE::Discretization> scatradis)
@@ -128,7 +122,6 @@ void FLD::Boxfilter::initialize_vreman_scatra(std::shared_ptr<Core::FE::Discreti
   phi2_ = true;
   phiexpression_ = true;
   alphaijsc_ = true;
-  return;
 }
 
 
@@ -142,8 +135,6 @@ void FLD::Boxfilter::apply_filter(
 {
   // perform filtering depending on the LES model
   apply_box_filter(velocity, scalar, thermpress, *dirichtoggle);
-
-  return;
 }
 
 void FLD::Boxfilter::apply_filter_scatra(
@@ -152,8 +143,6 @@ void FLD::Boxfilter::apply_filter_scatra(
 {
   // perform filtering depending on the LES model
   apply_box_filter_scatra(scalar, thermpress, *dirichtoggle, ndsvel);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -950,7 +939,6 @@ void FLD::Boxfilter::apply_box_filter(
   if (alphaij_) Core::LinAlg::export_to(*filtered_alphaij_, *col_filtered_alphaij_);
   if (expression_) Core::LinAlg::export_to(*filtered_expression_, *col_filtered_expression_);
   if (alpha2_) Core::LinAlg::export_to(*filtered_alpha2_, *col_filtered_alpha2_);
-  return;
 }
 
 
@@ -1583,8 +1571,6 @@ void FLD::Boxfilter::apply_box_filter_scatra(
   if (phiexpression_)
     Core::LinAlg::export_to(*filtered_phiexpression_, *col_filtered_phiexpression_);
   if (alphaijsc_) Core::LinAlg::export_to(*filtered_alphaijsc_, *col_filtered_alphaijsc_);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

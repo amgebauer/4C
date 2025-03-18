@@ -25,7 +25,6 @@ ScaTra::LevelSetTimIntStationary::LevelSetTimIntStationary(
   // DO NOT DEFINE ANY STATE VECTORS HERE (i.e., vectors based on row or column maps)
   // this is important since we have problems which require an extended ghosting
   // this has to be done before all state vectors are initialized
-  return;
 }
 
 
@@ -49,8 +48,6 @@ void ScaTra::LevelSetTimIntStationary::init()
     std::cout << "*------------------------------------------------------------------------*\n"
               << std::endl;
   }
-
-  return;
 }
 
 
@@ -73,8 +70,6 @@ void ScaTra::LevelSetTimIntStationary::setup()
     std::cout << "*------------------------------------------------------------------------*\n"
               << std::endl;
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

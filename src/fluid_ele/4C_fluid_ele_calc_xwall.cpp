@@ -422,8 +422,6 @@ void Discret::Elements::FluidEleCalcXWall<distype, enrtype>::get_ele_properties(
   Core::LinAlg::Matrix<nsd_, nen_> edispnp(true);
   if (ele->is_ale()) get_grid_disp_ale(discretization, lm, edispnp);
   prepare_gauss_rule();
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -438,8 +436,6 @@ void Discret::Elements::FluidEleCalcXWall<distype, enrtype>::x_wall_tau_w_inc_ba
     epsi_(inode) = epsiold_(inode);
     ewdist_(inode) -= eincwdist_(inode);
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -454,8 +450,6 @@ void Discret::Elements::FluidEleCalcXWall<distype, enrtype>::x_wall_tau_w_inc_fo
     epsi_(inode) = epsinew_(inode);
     ewdist_(inode) += eincwdist_(inode);
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -471,7 +465,6 @@ void Discret::Elements::FluidEleCalcXWall<distype, enrtype>::
   eval_std_shape_func_and_derivs_at_int_point(gpcoord, gpweight);
 
   eval_enrichment();
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -551,8 +544,6 @@ void Discret::Elements::FluidEleCalcXWall<distype, enrtype>::
   }
   else
     derxy2_.clear();
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -655,8 +646,6 @@ void Discret::Elements::FluidEleCalcXWall<distype, enrtype>::eval_enrichment()
       }
     }
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -1343,8 +1332,6 @@ void Discret::Elements::FluidEleCalcXWall<distype, enrtype>::lin_mesh_motion_3d(
   // xGderiv_ = sum(gridx(k,i) * deriv_(j,k), k);
   // xGderiv_ == xjm_
   FOUR_C_THROW("wrong");
-
-  return;
 }
 
 
@@ -1460,8 +1447,6 @@ void Discret::Elements::FluidEleCalcXWall<distype, enrtype>::prepare_gauss_rule(
     Core::FE::GaussIntegration grule(cgp_);
     my::intpoints_ = grule;
   }
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -1500,7 +1485,6 @@ void Discret::Elements::FluidEleCalcXWall<distype, enrtype>::sysmat(
       eforce, eporo, egradphi, ecurvature, thermpressaf, thermpressam, thermpressdtaf,
       thermpressdtam, material, Cs_delta_sq, Ci_delta_sq, Cv, isale, saccn, sveln, svelnp,
       intpoints);
-  return;
 }
 
 template class Discret::Elements::FluidEleCalcXWall<Core::FE::CellType::tet4,

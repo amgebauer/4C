@@ -416,8 +416,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScaTraBase::apply_additional_dbc_for_vo
 
   // add the condition
   scatra_algo()->scatra_field()->add_dirich_cond(add_dirichmaps_volfrac_spec_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

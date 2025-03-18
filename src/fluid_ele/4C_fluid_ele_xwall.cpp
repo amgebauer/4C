@@ -87,15 +87,12 @@ void Discret::Elements::FluidXWallType::setup_element_definition(
  |  ctor (public)                                            gammi 02/08|
  |  id             (in)  this element's global id                       |
  *----------------------------------------------------------------------*/
-Discret::Elements::FluidXWall::FluidXWall(int id, int owner) : Fluid(id, owner) { return; }
+Discret::Elements::FluidXWall::FluidXWall(int id, int owner) : Fluid(id, owner) {}
 
 /*----------------------------------------------------------------------*
  |  copy-ctor (public)                                       gammi 02/08|
  *----------------------------------------------------------------------*/
-Discret::Elements::FluidXWall::FluidXWall(const Discret::Elements::FluidXWall& old) : Fluid(old)
-{
-  return;
-}
+Discret::Elements::FluidXWall::FluidXWall(const Discret::Elements::FluidXWall& old) : Fluid(old) {}
 
 /*----------------------------------------------------------------------*
  |  Deep copy this instance of Fluid and return pointer to it (public) |
@@ -133,7 +130,6 @@ void Discret::Elements::FluidXWall::print(std::ostream& os) const
 {
   os << "FluidXWall ";
   Element::print(os);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

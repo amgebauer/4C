@@ -23,8 +23,6 @@ FOUR_C_NAMESPACE_OPEN
 NOX::Nln::Solver::Factory::Factory()
 {
   // empty constructor
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

@@ -511,8 +511,6 @@ void BeamInteraction::BeamToSpherePotentialPair<numnodes, numnodalvalues>::get_s
     FOUR_C_THROW(
         "Only beam elements with one (nodal positions) or two (nodal positions + nodal tangents)"
         " values are valid!");
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -533,8 +531,6 @@ void BeamInteraction::BeamToSpherePotentialPair<numnodes, numnodalvalues>::compu
       r(i) += N_i(j) * elepos(3 * j + i);
     }
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*

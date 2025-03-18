@@ -93,7 +93,6 @@ void TSI::Utils::ThermoStructureCloneStrategy::set_element_data(
     FOUR_C_THROW(
         "unsupported element type '{}'", Core::Utils::get_dynamic_type_name(*newele).c_str());
   }
-  return;
 }  // set_element_data()
 
 
@@ -260,9 +259,6 @@ void TSI::Utils::TSIMaterialStrategy::assign_material2_to1(
   // call default assignment
   Coupling::VolMortar::Utils::DefaultMaterialStrategy::assign_material2_to1(
       volmortar, ele1, ids_2, dis1, dis2);
-
-  // done
-  return;
 };
 
 
@@ -325,7 +321,6 @@ void TSI::Utils::TSIMaterialStrategy::assign_material1_to2(
   }
 
   // done
-  return;
 }
 
 

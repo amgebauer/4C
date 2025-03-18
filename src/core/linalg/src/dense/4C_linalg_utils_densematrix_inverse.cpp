@@ -38,7 +38,6 @@ void Core::LinAlg::symmetric_inverse(Core::LinAlg::SerialDenseMatrix& A, const i
 
   for (int i = 0; i < dim; ++i)
     for (int j = 0; j < i; ++j) A(j, i) = A(i, j);
-  return;
 }
 
 /*----------------------------------------------------------------------*

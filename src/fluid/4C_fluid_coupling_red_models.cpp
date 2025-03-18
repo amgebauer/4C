@@ -214,7 +214,6 @@ FLD::Utils::FluidCouplingWrapperBase::FluidCouplingWrapperBase(
 
   }  // end if there were conditions
 
-  return;
 }  // end FluidCouplingWrapperBase
 
 
@@ -236,8 +235,6 @@ void FLD::Utils::FluidCouplingWrapperBase ::flow_rate_calculation(double time, d
   {
     mapiter->second->FluidCouplingBc ::flow_rate_calculation(time, dta, mapiter->first);
   }
-
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -258,8 +255,6 @@ void FLD::Utils::FluidCouplingWrapperBase::pressure_calculation(double time, dou
   {
     mapiter->second->FluidCouplingBc::pressure_calculation(time, dta, mapiter->first);
   }
-
-  return;
 }
 
 
@@ -524,7 +519,6 @@ void FLD::Utils::FluidCouplingWrapperBase::apply_boundary_conditions(
       exit(0);
     }
   }
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -547,8 +541,6 @@ void FLD::Utils::FluidCouplingWrapperBase::update_residual(Core::LinAlg::Vector<
   {
     mapiter->second->FluidCouplingBc::update_residual(residual);
   }
-
-  return;
 }
 
 
@@ -573,8 +565,6 @@ void FLD::Utils::FluidCouplingWrapperBase::evaluate_dirichlet(
   {
     mapiter->second->FluidCouplingBc::evaluate_dirichlet(velnp, condmap, time);
   }
-
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -624,8 +614,6 @@ void FLD::Utils::FluidCouplingWrapperBase::write_restart(Core::IO::Discretizatio
   {
     mapiter->second->FluidCouplingBc::write_restart(output, mapiter->first);
   }
-
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -681,8 +669,6 @@ void FLD::Utils::FluidCouplingWrapperBase::read_restart(Core::IO::Discretization
 
   for (mapiter = coup_map_3d_.begin(); mapiter != coup_map_3d_.end(); mapiter++)
     mapiter->second->FluidCouplingBc::read_restart(reader, mapiter->first);
-
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -784,7 +770,6 @@ FLD::Utils::FluidCouplingBc::FluidCouplingBc(std::shared_ptr<Core::FE::Discretiz
   }
 
   velocity_ = 0.0;
-  return;
 }
 
 
@@ -811,8 +796,6 @@ void FLD::Utils::FluidCouplingBc::write_restart(Core::IO::DiscretizationWriter& 
   // write time steps size
   output.write_double("dta_3D", dt_f3_);
   output.write_double("reduced_D_dta", dt_rm_);
-
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -835,9 +818,6 @@ void FLD::Utils::FluidCouplingBc::read_restart(Core::IO::DiscretizationReader& r
   // read time steps size
   dt_f3_ = reader.read_double("dta_3D");
   dt_rm_ = reader.read_double("reduced_D_dta");
-
-
-  return;
 }
 
 
@@ -1061,10 +1041,6 @@ void FLD::Utils::FluidCouplingBc::outflow_boundary(
   couplingbc_->put_scalar(0.0);
   const std::string condstring("Art_3D_redD_CouplingCond");
   discret_3d_->evaluate_condition(eleparams, couplingbc_, condstring, condid);
-
-  //  discret_3D_->ClearState();
-
-  return;
 }  // FluidImplicitTimeInt::outflow_boundary
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//

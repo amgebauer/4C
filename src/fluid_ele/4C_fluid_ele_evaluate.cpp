@@ -75,8 +75,6 @@ void Discret::Elements::FluidType::pre_evaluate(Core::FE::Discretization& dis,
     fldpara->set_element_turbulence_parameters(p);
     fldpara->set_element_xfem_parameter(p, Core::Communication::my_mpi_rank(dis.get_comm()));
   }
-
-  return;
 }
 
 
@@ -784,8 +782,6 @@ void Discret::Elements::FluidIntFaceType::pre_evaluate(Core::FE::Discretization&
   }
   else
     FOUR_C_THROW("unknown action type for FluidIntFaceType::pre_evaluate");
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

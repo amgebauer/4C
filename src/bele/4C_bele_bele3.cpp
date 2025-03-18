@@ -135,7 +135,6 @@ std::shared_ptr<Core::Elements::Element> Discret::Elements::Bele3LineType::creat
 Discret::Elements::Bele3::Bele3(int id, int owner)
     : Core::Elements::Element(id, owner), numdofpernode_(-1)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -143,7 +142,6 @@ Discret::Elements::Bele3::Bele3(int id, int owner)
 Discret::Elements::Bele3::Bele3(const Discret::Elements::Bele3& old)
     : Core::Elements::Element(old), numdofpernode_(old.numdofpernode_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -187,8 +185,6 @@ void Discret::Elements::Bele3::pack(Core::Communication::PackBuffer& data) const
   Element::pack(data);
   // numdofpernode_
   add_to_pack(data, numdofpernode_);
-
-  return;
 }
 
 
@@ -212,7 +208,6 @@ void Discret::Elements::Bele3::print(std::ostream& os) const
 {
   os << "Bele3_" << numdofpernode_ << " " << Core::FE::cell_type_to_string(shape());
   Element::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------*

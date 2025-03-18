@@ -68,8 +68,6 @@ Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::ScaTraEleCalcLsRein
           "Evaluation of material and stabilization parameters need to be done at the integration "
           "points for reinitialization due to artificial diff!");
   }
-
-  return;
 }
 
 
@@ -335,8 +333,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::elliptic_newto
   //----------------------------------------------------------------
 
   evaluate_interface_term(emat, erhs, bcell);
-
-  return;
 }
 
 
@@ -773,8 +769,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_hyperbo
       my::calc_rhs_trans_conv_diff_stab(erhs, 0, rhstaufac, 1.0, scatrares, sgconv, diff);
 
   }  // end: loop all Gauss points
-
-  return;
 }
 
 
@@ -904,8 +898,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_ellipti
   //----------------------------------------------------------------
 
   evaluate_interface_term(&emat, &erhs, bcell);
-
-  return;
 }
 
 
@@ -953,7 +945,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sign_function(
   }
   else
     FOUR_C_THROW("unknown type of sign function!");
-  return;
 }
 
 
@@ -973,8 +964,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::deriv_sign_fun
     deriv_sign = 0.0;
   else
     deriv_sign = 1.0 / (2.0 * epsilon) * (1.0 + cos(M_PI * phizero / epsilon));
-
-  return;
 }
 
 
@@ -1085,7 +1074,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::calc_mat_diff(
       emat(fvi, fui) += fac_diffus * laplawf;
     }
   }
-  return;
 }
 
 
@@ -1125,8 +1113,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::calc_rhs_diff(
 
     erhs[fvi] -= vrhs * laplawf;
   }
-
-  return;
 }
 
 
@@ -1175,8 +1161,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::evaluate_inter
         break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -1329,8 +1313,6 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::calc_penalty_t
     my::calc_mat_mass(emat, 0, fac, lsreinitparams_->penalty_para());
 
   }  // loop Gaussian points
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

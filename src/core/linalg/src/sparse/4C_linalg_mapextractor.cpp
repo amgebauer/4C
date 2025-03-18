@@ -72,8 +72,6 @@ void Core::LinAlg::MultiMapExtractor::check_for_valid_map_extractor() const
       }
     }
   }
-
-  return;
 }
 
 

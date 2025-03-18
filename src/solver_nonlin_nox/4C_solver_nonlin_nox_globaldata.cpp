@@ -150,7 +150,6 @@ void NOX::Nln::GlobalData::check_input() const
       msg << std::setw(109) << std::setfill('!') << "\n" << std::setfill(' ') << std::right;
       if (Core::Communication::my_mpi_rank(comm_) == 0) std::cout << msg.str() << std::endl;
     }
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -171,8 +170,6 @@ void NOX::Nln::GlobalData::setup()
 
   // set status test parameters
   set_status_test_parameters();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -180,8 +177,6 @@ void NOX::Nln::GlobalData::setup()
 void NOX::Nln::GlobalData::set_printing_parameters()
 {
   NOX::Nln::Aux::set_printing_parameters(*nlnparams_, comm_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -254,8 +249,6 @@ void NOX::Nln::GlobalData::set_solver_option_parameters()
    * non-linear iteration process. */
   pre_post_op_ptr_ = Teuchos::make_rcp<NOX::Nln::Solver::PrePostOp::Generic>();
   NOX::Nln::Aux::add_to_pre_post_op_vector(solverOptionsList, pre_post_op_ptr_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

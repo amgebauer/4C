@@ -527,7 +527,6 @@ Discret::Elements::ScaTraHDGBoundary::ScaTraHDGBoundary(int id, int owner, int n
   set_parent_master_element(parent, lsurface);
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
-  return;
 }
 
 
@@ -538,7 +537,6 @@ Discret::Elements::ScaTraHDGBoundary::ScaTraHDGBoundary(
     const Discret::Elements::ScaTraHDGBoundary& old)
     : Core::Elements::FaceElement(old)
 {
-  return;
 }
 
 
@@ -575,11 +573,6 @@ void Discret::Elements::ScaTraHDGBoundary::pack(Core::Communication::PackBuffer&
   add_to_pack(data, type);
   // add base class Element
   Element::pack(data);
-
-  // Discretisation type
-  // add_to_pack(data,distype_);
-
-  return;
 }
 
 
@@ -593,10 +586,6 @@ void Discret::Elements::ScaTraHDGBoundary::unpack(Core::Communication::UnpackBuf
 
   // extract base class Element
   Element::unpack(buffer);
-
-
-
-  return;
 }
 
 
@@ -608,7 +597,6 @@ void Discret::Elements::ScaTraHDGBoundary::print(std::ostream& os) const
 {
   os << "ScaTraHDGBoundary ";
   Element::print(os);
-  return;
 }
 
 
@@ -677,7 +665,6 @@ void Discret::Elements::ScaTraHDGBoundary::location_vector(const Core::FE::Discr
 {
   // we have to do it this way
   parent_master_element()->location_vector(dis, la, false);
-  return;
 }
 
 
@@ -689,7 +676,6 @@ void Discret::Elements::ScaTraHDGBoundary::location_vector(const Core::FE::Discr
 {
   // we have to do it this way
   parent_master_element()->location_vector(dis, lm, lmowner, lmstride);
-  return;
 }
 
 
@@ -737,7 +723,6 @@ Discret::Elements::ScaTraHDGIntFace::ScaTraHDGIntFace(int id,  ///< element id
 
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -747,7 +732,6 @@ Discret::Elements::ScaTraHDGIntFace::ScaTraHDGIntFace(
     const Discret::Elements::ScaTraHDGIntFace& old)
     : Core::Elements::FaceElement(old), degree_(old.degree_), degree_old_(old.degree_old_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -777,7 +761,6 @@ Core::FE::CellType Discret::Elements::ScaTraHDGIntFace::shape() const
 void Discret::Elements::ScaTraHDGIntFace::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("this ScaTraHDGIntFace element does not support communication");
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -787,7 +770,6 @@ void Discret::Elements::ScaTraHDGIntFace::pack(Core::Communication::PackBuffer& 
 void Discret::Elements::ScaTraHDGIntFace::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("this ScaTraHDGIntFace element does not support communication");
-  return;
 }
 
 
@@ -985,8 +967,6 @@ void Discret::Elements::ScaTraHDGIntFace::patch_location_vector(
     else
       FOUR_C_THROW("face's nodes not contained in masternodes_offset map");
   }
-
-  return;
 }
 
 
@@ -998,7 +978,6 @@ void Discret::Elements::ScaTraHDGIntFace::print(std::ostream& os) const
 {
   os << "ScaTraHDGIntFace ";
   Element::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------*

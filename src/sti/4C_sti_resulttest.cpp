@@ -25,7 +25,6 @@ STI::STIResultTest::STIResultTest(const std::shared_ptr<STI::Algorithm>&
       // store pointer to time integrator for scatra-thermo interaction
       sti_algorithm_(sti_algorithm)
 {
-  return;
 }
 
 

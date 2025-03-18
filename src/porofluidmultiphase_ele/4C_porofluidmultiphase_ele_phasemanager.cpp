@@ -245,7 +245,6 @@ Discret::Elements::PoroFluidManager::PhaseManagerCore::PhaseManagerCore(
       isevaluated_(false),
       issetup_(false)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -270,7 +269,6 @@ Discret::Elements::PoroFluidManager::PhaseManagerCore::PhaseManagerCore(const Ph
       isevaluated_(old.isevaluated_),
       issetup_(old.issetup_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -343,7 +341,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerCore::setup(
   }
 
   issetup_ = true;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -416,8 +413,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerCore::evaluate_gp_state(
 
   // done
   isevaluated_ = true;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -440,8 +435,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerCore::clear_gp_state()
 
   // states are reset
   isevaluated_ = false;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -661,8 +654,6 @@ Discret::Elements::PoroFluidManager::PhaseManagerDeriv::PhaseManagerDeriv(
   solidpressurederiv_ = std::make_shared<Core::LinAlg::SerialDenseVector>(numfluidphases);
   solidpressurederivderiv_ =
       std::make_shared<Core::LinAlg::SerialDenseMatrix>(numfluidphases, numfluidphases);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -756,8 +747,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerDeriv::evaluate_gp_state(
         (*solidpressurederivderiv_)(jphase, kphase) +=
             (*pressurederiv_)(iphase, kphase) * (*saturationderiv_)(iphase, jphase) +
             (*saturationderiv_)(iphase, kphase) * (*pressurederiv_)(iphase, jphase);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -778,9 +767,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerDeriv::clear_gp_state()
     (*saturationderivderiv_)[iphase].putScalar(0.0);
   solidpressurederiv_->putScalar(0.0);
   solidpressurederivderiv_->putScalar(0.0);
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -858,8 +844,6 @@ Discret::Elements::PoroFluidManager::PhaseManagerDerivAndPorosity::PhaseManagerD
   const int totalnumdof = phasemanager_->total_num_dof();
   // initialize matrixes and vectors
   porosityderiv_ = std::make_shared<Core::LinAlg::SerialDenseVector>(totalnumdof);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -913,8 +897,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerDerivAndPorosity::evaluate
 
   // recalculate the solid pressure in case of volume fractions
   if (phasemanager_->num_vol_frac() > 0) phasemanager_->recalculate_solid_pressure(porosity_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -933,8 +915,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerDerivAndPorosity::clear_gp
   dporosity_dj_ = 0.0;
   dporosity_dp_ = 0.0;
   porosityderiv_->putScalar(0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1015,7 +995,6 @@ Discret::Elements::PoroFluidManager::PhaseManagerReaction::PhaseManagerReaction(
     std::shared_ptr<PoroFluidManager::PhaseManagerInterface> phasemanager)
     : PhaseManagerDecorator(phasemanager), numscal_(0)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1137,8 +1116,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerReaction::setup(
       isreactive_[iphase] = isreactive_[iphase] or singlephasemat.is_reactive(iphase);
     }
   }
-
-  return;
 }
 
 
@@ -1243,8 +1220,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerReaction::evaluate_gp_stat
       myphasederiv[doftoderive] += myderivsvolfracpress[doftoderive - numfluidphases - numvolfrac];
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1264,8 +1239,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerReaction::clear_gp_state()
   reactermsderivsscalar_.clear();
   reactermsderivsvolfrac_.clear();
   reactermsderivsvolfracpressure_.clear();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1338,7 +1311,6 @@ Discret::Elements::PoroFluidManager::PhaseManagerDiffusion<nsd>::PhaseManagerDif
     std::shared_ptr<PoroFluidManager::PhaseManagerInterface> phasemanager)
     : PhaseManagerDecorator(phasemanager)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1404,8 +1376,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerDiffusion<nsd>::setup(
     const double permeability = volfracpressmat.permeability();
     for (int i = 0; i < nsd; i++) (permeabilitytensorsvolfracpress_[ivolfrac])(i, i) = permeability;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | constructor                                              vuong 08/16 |
@@ -1453,8 +1423,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerDiffusion<nsd>::evaluate_g
         singlephasemat.evaluate_deriv_of_rel_permeability_wrt_saturation(
             phasemanager_->saturation(iphase));
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1469,8 +1437,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerDiffusion<nsd>::clear_gp_s
 
   relpermeabilities_.clear();
   derrelpermeabilities_.clear();
-
-  return;
 }
 
 /*---------------------------------------------------------------------------*
@@ -1673,7 +1639,6 @@ Discret::Elements::PoroFluidManager::PhaseManagerVolFrac<nsd>::PhaseManagerVolFr
     std::shared_ptr<PoroFluidManager::PhaseManagerInterface> phasemanager)
     : PhaseManagerDecorator(phasemanager)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1731,8 +1696,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerVolFrac<nsd>::setup(
       omega_half_[ivolfrac] = singlevolfracmat.omega_half();
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | constructor                                         kremheller 08/17 |
@@ -1785,8 +1748,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerVolFrac<nsd>::evaluate_gp_
             ((omega_half_[ivolfrac])[iscal]) / ((omega_half_[ivolfrac])[iscal] + scalars[iscal]);
     }
   }
-
-  return;
 }
 
 /*---------------------------------------------------------------------------*
@@ -1872,8 +1833,6 @@ void Discret::Elements::PoroFluidManager::PhaseManagerVolFrac<nsd>::clear_gp_sta
   phasemanager_->clear_gp_state();
 
   scalardiffs_.clear();
-
-  return;
 }
 
 ///*----------------------------------------------------------------------*

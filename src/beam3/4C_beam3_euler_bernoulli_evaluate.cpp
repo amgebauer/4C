@@ -1815,8 +1815,6 @@ void Discret::Elements::Beam3eb::calc_internal_and_inertia_forces_and_stiff(
     }
   }
 #endif
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------------------*
@@ -1926,8 +1924,6 @@ void Discret::Elements::Beam3eb::evaluate_ptc(
     for (int k = 0; k < 3; k++)
       elemat1(node * 6 + k, node * 6 + k) += params.get<double>("ctransptc", 0.0) * 0.5 * jacobi_;
   }
-
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------------------*

@@ -240,8 +240,6 @@ EXODUS::Mesh::Mesh(const std::string exofilename)
 
   // close ExoFile
   close_exo();
-
-  return;
 }
 
 EXODUS::Mesh::Mesh()
@@ -474,7 +472,6 @@ void EXODUS::Mesh::set_node(const int NodeID, const std::vector<double> coord)
   if (nodes_->find(NodeID) != nodes_->end()) nodes_->erase(NodeID);
 
   nodes_->insert(std::make_pair(NodeID, coord));
-  return;
 }
 
 
@@ -1274,7 +1271,6 @@ void EXODUS::Mesh::plot_element_blocks_gmsh(
   gmshfilecontent << "};" << std::endl;
   f_system << gmshfilecontent.str();
   f_system.close();
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -1330,7 +1326,6 @@ void EXODUS::Mesh::plot_element_blocks_gmsh(
   gmshfilecontent << "};" << std::endl;
   f_system << gmshfilecontent.str();
   f_system.close();
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -1407,7 +1402,6 @@ void EXODUS::Mesh::plot_conn_gmsh(const std::string fname, const EXODUS::Mesh& m
   gmshfilecontent << "};" << std::endl;
   f_system << gmshfilecontent.str();
   f_system.close();
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1426,7 +1420,6 @@ EXODUS::ElementBlock::ElementBlock(ElementBlock::Shape Distype,
       FOUR_C_THROW("number of read nodes does not fit the distype");
     }
   }
-  return;
 }
 
 
@@ -1494,7 +1487,6 @@ EXODUS::NodeSet::NodeSet(
     const std::set<int>& nodeids, const std::string& name, const std::string& propname)
     : nodeids_(nodeids), name_(name.c_str()), propname_(propname.c_str())
 {
-  return;
 }
 
 
@@ -1533,7 +1525,6 @@ void EXODUS::NodeSet::fill_nodelist_array(int* nodelist) const
 EXODUS::SideSet::SideSet(const std::map<int, std::vector<int>>& sides, const std::string& name)
     : sides_(sides), name_(name.c_str())
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*/

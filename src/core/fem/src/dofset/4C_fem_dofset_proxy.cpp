@@ -34,7 +34,6 @@ Core::DOFSets::DofSetProxy::~DofSetProxy()
 void Core::DOFSets::DofSetProxy::add_dof_setto_list()
 {
   // We do nothing here as a proxy does not show up in the dof set list.
-  return;
 }
 
 
@@ -63,7 +62,6 @@ void Core::DOFSets::DofSetProxy::notify_assigned()
     isassigned_ = dofset_->filled();
 
   DofSetBase::notify_assigned();
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -107,8 +105,6 @@ void Core::DOFSets::DofSetProxy::check_is_assigned() const
       "assign_degrees_of_freedom was not called on parent dofset of this proxy,\n"
       "and/or this proxy was not notified.");
   FOUR_C_ASSERT(dofset_ != nullptr, "dofset_ pointer is nullptr");
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

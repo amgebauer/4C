@@ -39,7 +39,6 @@ BeamInteraction::BeamLinkRigidJointed::BeamLinkRigidJointed(
       lambdarel1_(old.lambdarel1_),
       lambdarel2_(old.lambdarel2_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -219,8 +218,6 @@ void BeamInteraction::BeamLinkRigidJointed::pack(Core::Communication::PackBuffer
   add_to_pack(data, lambdarel1_);
   // Lambdarel2_
   add_to_pack(data, lambdarel2_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -240,10 +237,6 @@ void BeamInteraction::BeamLinkRigidJointed::unpack(Core::Communication::UnpackBu
   extract_from_pack(buffer, lambdarel1_);
   // Lambdarel2_
   extract_from_pack(buffer, lambdarel2_);
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

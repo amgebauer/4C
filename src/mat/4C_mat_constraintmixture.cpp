@@ -156,8 +156,6 @@ void Mat::ConstraintMixture::pack(Core::Communication::PackBuffer& data) const
     add_to_pack(data, sizehistory);
     for (int idpast = 0; idpast < sizehistory; idpast++) history_->at(idpast).pack(data);
   }
-
-  return;
 }
 
 
@@ -309,8 +307,6 @@ void Mat::ConstraintMixture::unpack(Core::Communication::UnpackBuffer& buffer)
   }
   std::cout << "Unpack called, history of mass/stretch is lost" << std::endl;
   */
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2922,8 +2918,6 @@ void Mat::ConstraintMixture::evaluate_fiber_vecs(const int gp,
   a3_->at(gp).update(1.0 / a3_0norm, a3_0);
   double a4_0norm = a4_0.norm2();
   a4_->at(gp).update(1.0 / a4_0norm, a4_0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3204,8 +3198,6 @@ void Mat::constraint_mixture_output_to_gmsh(
   gmshfilecontent_pre << "};" << std::endl;
   f_system_pre << gmshfilecontent_pre.str();
   f_system_pre.close();
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

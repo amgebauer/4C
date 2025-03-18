@@ -118,8 +118,6 @@ FLD::DynSmagFilter::DynSmagFilter(
   }
 
   boxf_ = std::make_shared<FLD::Boxfilter>(discret_, params_);
-
-  return;
 }
 
 
@@ -133,8 +131,6 @@ void FLD::DynSmagFilter::add_scatra(std::shared_ptr<Core::FE::Discretization> sc
 
   boxfsc_ = std::make_shared<FLD::Boxfilter>(scatradiscret_, params_);
   boxfsc_->add_scatra(scatradiscret_);
-
-  return;
 }
 
 
@@ -203,8 +199,6 @@ void FLD::DynSmagFilter::apply_filter_for_dynamic_computation_of_cs(
       (*modelparams->get<std::shared_ptr<std::vector<double>>>("local_Ci_delta_sq_sum"))[rr] = 0.0;
     }
   }
-
-  return;
 }
 
 
@@ -284,8 +278,6 @@ void FLD::DynSmagFilter::apply_filter_for_dynamic_computation_of_prt(
         "global_Cs_delta_sq_sum", global_Cs_delta_sq_sum);
     extramodelparams->set<int>("numele_layer", numele_layer);
   }
-
-  return;
 }
 
 
@@ -692,7 +684,6 @@ void FLD::DynSmagFilter::dyn_smag_compute_cs()
   }  // end if home dir
 
 
-  return;
 }  // end FLD::DynSmagFilter::dyn_smag_compute_cs
 
 
@@ -1032,7 +1023,6 @@ void FLD::DynSmagFilter::dyn_smag_compute_prt(
     }
   }  // end if turbulent channel flow
 
-  return;
 }  // end FLD::DynSmagFilter::dyn_smag_compute_prt
 
 FOUR_C_NAMESPACE_CLOSE

@@ -203,8 +203,6 @@ void XFEM::Utils::XFEMDiscretizationBuilder::setup_xfem_discretization(
 
   // print all dofsets
   xdis->get_dof_set_proxy()->print_all_dofsets(xdis->get_comm());
-
-  return;
 }
 
 
@@ -233,8 +231,6 @@ void XFEM::Utils::XFEMDiscretizationBuilder::setup_xfem_discretization(
 
   Core::Rebalance::Utils::print_parallel_distribution(*dis);
   Core::Rebalance::Utils::print_parallel_distribution(embedded_dis);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -437,9 +433,6 @@ void XFEM::Utils::XFEMDiscretizationBuilder::split_discretization(
   }
   // re-partitioning
   redistribute(sourcedis, othernoderowvec, othernodecolvec);
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

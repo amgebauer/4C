@@ -749,7 +749,6 @@ void Discret::Elements::Wall1Line::compute_area_constr_deriv(
   elevector[2] = xscurr(0, 1) + xscurr(1, 1);
   elevector[3] = xscurr(1, 0) - xscurr(0, 0);
   elevector.scale(-0.5);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -780,7 +779,6 @@ void Discret::Elements::Wall1Line::compute_area_constr_stiff(
   elematrix(3, 3) = 0.0;
 
   elematrix.scale(-1.0);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

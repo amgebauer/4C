@@ -601,8 +601,6 @@ void Discret::Elements::FluidEleCalcLoma<distype>::sysmat_od(
   //------------------------------------------------------------------------
   //  end loop over integration points
   //------------------------------------------------------------------------
-
-  return;
 }
 
 

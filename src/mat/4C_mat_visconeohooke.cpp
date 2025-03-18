@@ -97,7 +97,6 @@ void Mat::ViscoNeoHooke::pack(Core::Communication::PackBuffer& data) const
     add_to_pack(data, histstresslast_->at(var));
     add_to_pack(data, artstresslast_->at(var));
   }
-  return;
 }
 
 
@@ -148,10 +147,6 @@ void Mat::ViscoNeoHooke::unpack(Core::Communication::UnpackBuffer& buffer)
     extract_from_pack(buffer, tmp);
     artstresslast_->push_back(tmp);
   }
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -183,7 +178,6 @@ void Mat::ViscoNeoHooke::setup(int numgp, const Core::IO::InputParameterContaine
   if (E_f < E_s) FOUR_C_THROW("Wrong ratio between fast and slow Young's modulus");
   if (tau <= 0.0) FOUR_C_THROW("Relaxation time tau has to be positive!");
   isinit_ = true;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -204,8 +198,6 @@ void Mat::ViscoNeoHooke::update()
     histstresscurr_->at(j) = emptyvec;
     artstresscurr_->at(j) = emptyvec;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -385,7 +377,6 @@ void Mat::ViscoNeoHooke::evaluate(const Core::LinAlg::Matrix<3, 3>* defgrd,
                        + scalarvisco * (scalar3)*Cinv(i) * Cinv(j) / 3.0;  // add scalar Cinv x Cinv
     }
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

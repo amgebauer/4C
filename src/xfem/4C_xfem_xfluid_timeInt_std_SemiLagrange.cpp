@@ -39,7 +39,6 @@ XFEM::XfluidSemiLagrange::XfluidSemiLagrange(
       rel_tol_incr_(1.0e-10),
       rel_tol_res_(1.0e-10)
 {
-  return;
 }  // end constructor
 
 
@@ -755,9 +754,6 @@ void XFEM::XfluidSemiLagrange::newton_iter(
 
   // find the element the new approximation lies in
   element_search(ele, data->startpoint_, xi, elefound);
-
-
-  return;
 }  // end function newton_iter
 
 
@@ -902,7 +898,6 @@ void XFEM::XfluidSemiLagrange::get_data_for_not_converged_nodes()
     }  // if(failedSL_)
   }  // end loop over nodes
 
-  return;
 }  // end get_data_for_not_converged_nodes
 
 
@@ -1537,9 +1532,6 @@ void XFEM::XfluidSemiLagrange::back_tracking(
   data->velValues_ = velValues;
   data->presValues_ = presValues;
   data->state_ = TimeIntData::doneStd_;
-
-
-  return;
 }  // end back_tracking
 
 
@@ -1683,8 +1675,6 @@ void XFEM::XfluidSemiLagrange::get_nodal_dof_set(
       nds.push_back(0);
     }
   }
-
-  return;
 }
 
 

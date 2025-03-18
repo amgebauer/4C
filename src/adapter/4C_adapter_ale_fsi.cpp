@@ -18,8 +18,6 @@ Adapter::AleFsiWrapper::AleFsiWrapper(std::shared_ptr<Ale> ale) : AleWrapper(ale
   // create the FSI interface
   interface_ = std::make_shared<ALE::Utils::MapExtractor>();
   interface_->setup(*discretization());
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

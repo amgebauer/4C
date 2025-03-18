@@ -78,8 +78,6 @@ void XFEM::Utils::get_volume_cell_material(Core::Elements::Element* actele,
   {
     mat = material;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -134,8 +132,6 @@ void XFEM::Utils::safety_check_materials(
   {
     FOUR_C_THROW("up to now I expect a FLUID (m_fluid) material for edge stabilization\n");
   }
-
-  return;
 }
 
 //! Extract a quantity for an element

@@ -45,7 +45,6 @@ FOUR_C_NAMESPACE_OPEN
 FS3I::PartFS3I::PartFS3I(MPI_Comm comm) : FS3IBase(), comm_(comm)
 {
   // Keep constructor empty!
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -319,8 +318,6 @@ void FS3I::PartFS3I::setup()
   // discretizations and definition of the permeability coefficient
   //---------------------------------------------------------------------
   check_f_s3_i_inputs();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

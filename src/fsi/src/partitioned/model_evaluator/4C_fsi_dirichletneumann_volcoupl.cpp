@@ -53,8 +53,6 @@ void FSI::DirichletNeumannVolCoupl::setup()
   setup_coupling_struct_ale(fsidyn, get_comm());
 
   setup_interface_corrector(fsidyn, get_comm());
-
-  return;
 }
 
 
@@ -177,8 +175,6 @@ void FSI::InterfaceCorrector::setup(std::shared_ptr<Adapter::FluidAle> fluidale)
 
   volcorrector_ = std::make_shared<VolCorrector>();
   volcorrector_->setup(Global::Problem::instance()->n_dim(), fluidale);
-
-  return;
 }
 
 
@@ -192,7 +188,6 @@ void FSI::InterfaceCorrector::set_interface_displacements(
   icoupfs_ = Core::Utils::shared_ptr_from_ref(icoupfs);
 
   deltadisp_ = nullptr;
-  return;
 }
 
 
@@ -227,8 +222,6 @@ void FSI::InterfaceCorrector::correct_interface_displacements(
   // reset
   idisp_ = nullptr;
   icoupfs_ = nullptr;
-
-  return;
 }
 
 
@@ -253,9 +246,6 @@ void FSI::VolCorrector::correct_vol_displacements(std::shared_ptr<Adapter::Fluid
   if (Core::Communication::my_mpi_rank(fluidale->ale_field()->discretization()->get_comm()) == 0)
     std::cout << "******************FSI Volume Correction Step Done***********************"
               << std::endl;
-
-
-  return;
 }
 
 
@@ -385,8 +375,6 @@ void FSI::VolCorrector::correct_vol_displacements_para_space(
   // output
   if (Core::Communication::my_mpi_rank(fluidale->ale_field()->discretization()->get_comm()) == 0)
     std::cout << "Norm of correction (parameter space): " << norm << std::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -428,8 +416,6 @@ void FSI::VolCorrector::correct_vol_displacements_phys_space(
   // output
   if (Core::Communication::my_mpi_rank(fluidale->ale_field()->discretization()->get_comm()) == 0)
     std::cout << "Norm of correction (physical space): " << norm << std::endl;
-
-  return;
 }
 
 
@@ -552,8 +538,6 @@ void FSI::VolCorrector::setup(const int dim, std::shared_ptr<Adapter::FluidAle> 
   if (Core::Communication::my_mpi_rank(fluidale->ale_field()->discretization()->get_comm()) == 0)
     std::cout << "******************FSI Volume Correction Setup Done***********************"
               << std::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -596,8 +580,6 @@ void FSI::VolCorrector::init_dop_normals()
   dopnormals_(8, 0) = 0.0;
   dopnormals_(8, 1) = 1.0;
   dopnormals_(8, 2) = -1.0;
-
-  return;
 }
 
 

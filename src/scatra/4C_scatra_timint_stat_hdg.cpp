@@ -26,7 +26,6 @@ ScaTra::TimIntStationaryHDG::TimIntStationaryHDG(std::shared_ptr<Core::FE::Discr
   // DO NOT DEFINE ANY STATE VECTORS HERE (i.e., vectors based on row or column maps)
   // this is important since we have problems which require an extended ghosting
   // this has to be done before all state vectors are initialized
-  return;
 }
 
 
@@ -37,8 +36,6 @@ void ScaTra::TimIntStationaryHDG::init()
 {
   // initialize base class
   TimIntHDG::init();
-
-  return;
 }
 
 
@@ -66,8 +63,6 @@ void ScaTra::TimIntStationaryHDG::set_element_time_parameter(bool forcedincremen
 
   // call standard loop over elements
   discret_->evaluate(eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-
-  return;
 }
 
 
@@ -78,6 +73,5 @@ void ScaTra::TimIntStationaryHDG::set_element_time_parameter(bool forcedincremen
 void ScaTra::TimIntStationaryHDG::set_time_for_neumann_evaluation(Teuchos::ParameterList& params)
 {
   params.set("total time", time_);
-  return;
 }
 FOUR_C_NAMESPACE_CLOSE

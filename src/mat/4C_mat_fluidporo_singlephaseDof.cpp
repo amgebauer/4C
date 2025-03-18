@@ -85,11 +85,7 @@ Mat::PAR::FluidPoroPhaseDofDiffPressure::FluidPoroPhaseDofDiffPressure(
 /*----------------------------------------------------------------------*
  *  Initialize                                               vuong 08/16 |
  *----------------------------------------------------------------------*/
-void Mat::PAR::FluidPoroPhaseDofDiffPressure::initialize()
-{
-  phaselaw_->initialize();
-  return;
-}
+void Mat::PAR::FluidPoroPhaseDofDiffPressure::initialize() { phaselaw_->initialize(); }
 
 /*----------------------------------------------------------------------*
  *  return phase law type                                  vuong 08/16 |
@@ -184,17 +180,12 @@ Mat::PAR::FluidPoroPhaseDofPressure::FluidPoroPhaseDofPressure(
     : FluidPoroPhaseDof(matdata), phaselawId_(matdata.parameters.get<int>("PHASELAWID"))
 {
   phaselaw_ = Mat::PAR::FluidPoroPhaseLaw::create_phase_law(phaselawId_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
  *  Initialize                                               vuong 08/16 |
  *----------------------------------------------------------------------*/
-void Mat::PAR::FluidPoroPhaseDofPressure::initialize()
-{
-  phaselaw_->initialize();
-  return;
-}
+void Mat::PAR::FluidPoroPhaseDofPressure::initialize() { phaselaw_->initialize(); }
 
 /*----------------------------------------------------------------------*
  *  return phase law type                                  vuong 08/16 |
@@ -282,17 +273,12 @@ Mat::PAR::FluidPoroPhaseDofSaturation::FluidPoroPhaseDofSaturation(
     : FluidPoroPhaseDof(matdata), phaselawId_(matdata.parameters.get<int>("PHASELAWID"))
 {
   phaselaw_ = Mat::PAR::FluidPoroPhaseLaw::create_phase_law(phaselawId_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
  *  Initialize                                               vuong 08/16 |
  *----------------------------------------------------------------------*/
-void Mat::PAR::FluidPoroPhaseDofSaturation::initialize()
-{
-  phaselaw_->initialize();
-  return;
-}
+void Mat::PAR::FluidPoroPhaseDofSaturation::initialize() { phaselaw_->initialize(); }
 
 /*----------------------------------------------------------------------*
  *  return phase law type                                  vuong 08/16 |

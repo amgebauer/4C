@@ -18,7 +18,6 @@ template <Core::FE::CellType distype>
 Discret::Elements::Wall1PoroScatra<distype>::Wall1PoroScatra(int id, int owner)
     : Discret::Elements::Wall1Poro<distype>(id, owner), impltype_(Inpar::ScaTra::impltype_undefined)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -29,7 +28,6 @@ Discret::Elements::Wall1PoroScatra<distype>::Wall1PoroScatra(
     const Discret::Elements::Wall1PoroScatra<distype>& old)
     : Discret::Elements::Wall1Poro<distype>(old), impltype_(old.impltype_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -58,8 +56,6 @@ void Discret::Elements::Wall1PoroScatra<distype>::pack(Core::Communication::Pack
 
   // add base class Element
   my::pack(data);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -75,10 +71,6 @@ void Discret::Elements::Wall1PoroScatra<distype>::unpack(Core::Communication::Un
 
   // extract base class Element
   my::unpack(buffer);
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -90,7 +82,6 @@ void Discret::Elements::Wall1PoroScatra<distype>::print(std::ostream& os) const
   os << "Wall1_Poro_Scatra ";
   Core::Elements::Element::print(os);
   std::cout << std::endl;
-  return;
 }
 
 /*----------------------------------------------------------------------*

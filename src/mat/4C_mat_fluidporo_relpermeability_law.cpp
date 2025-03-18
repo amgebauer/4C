@@ -63,7 +63,6 @@ Mat::PAR::FluidPoroRelPermeabilityLawConstant::FluidPoroRelPermeabilityLawConsta
     FOUR_C_THROW(
         "relative permeability (actually the sum of the relative permeabilites) of phase cannot be "
         "greater than 1.0");
-  return;
 }
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
@@ -75,9 +74,6 @@ Mat::PAR::FluidPoroRelPermeabilityLawExponent::FluidPoroRelPermeabilityLawExpone
 {
   if (exp_ <= 1.0)
     FOUR_C_THROW("exponent in relative permeability phase law has to be bigger than 1.0");
-  // if(minsat_ < 0.0 or minsat_ > 1.0)
-  //  FOUR_C_THROW("minimal saturation has to be between 0 and 1");
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

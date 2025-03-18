@@ -48,8 +48,6 @@ void NOX::Nln::Aux::set_printing_parameters(Teuchos::ParameterList& p_nox, MPI_C
     outputinformationlevel += ::NOX::Utils::TestDetails;
   if (printParams.get<bool>("Debug", false)) outputinformationlevel += ::NOX::Utils::Debug;
   printParams.set("Output Information", outputinformationlevel);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

@@ -38,7 +38,6 @@ Mortar::BinaryTreeNode::BinaryTreeNode(Mortar::BinaryTreeNodeType type,
       mleafsmap_(mleafsmap)
 {
   // keep the constructor clean
-  return;
 }
 
 
@@ -99,8 +98,6 @@ void Mortar::BinaryTreeNode::initialize_tree(double& enlarge)
       rightchild_->initialize_tree(enlarge);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -137,8 +134,6 @@ void Mortar::BinaryTreeNode::update_slabs_bottom_up(double& enlarge)
     // Prints Slabs to std::cout
     // PrintSlabs();
   }  // current treenode is leaf
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | Divide treenode (public)                                   popp 10/08|
@@ -332,8 +327,6 @@ void Mortar::BinaryTreeNode::divide_tree_node()
 
   else
     FOUR_C_THROW("Only 1 or 0 elements in map-->TreeNode cannot be divided!!");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -368,8 +361,6 @@ void Mortar::BinaryTreeNode::print_type()
       FOUR_C_THROW("Unknown Mortar::BinaryTreeNodeType detected.");
       break;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -385,7 +376,6 @@ Mortar::BinaryTree::BinaryTree(Core::FE::Discretization& discret,
       useauxpos_(useauxpos)
 {
   // keep the constructor clean
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -514,8 +504,6 @@ void Mortar::BinaryTree::init()
     Core::Communication::barrier(Comm());
   }
   */
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -529,8 +517,6 @@ void Mortar::BinaryTree::init_internal_variables()
   couplingmap_.resize(2);
   sleafsmap_.resize(2);
   mleafsmap_.resize(2);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -583,8 +569,6 @@ void Mortar::BinaryTree::evaluate_search()
 
   // evaluate search algorithm
   evaluate_search(sroot_, mroot_);
-
-  return;
 }
 
 
@@ -626,8 +610,6 @@ void Mortar::BinaryTree::set_enlarge()
 
   // set the class variables
   enlarge() = eps() * lmin;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -654,8 +636,6 @@ void Mortar::BinaryTree::print_tree(BinaryTreeNode& treenode)
     print_tree(*treenode.leftchild());
     print_tree(*treenode.rightchild());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -681,8 +661,6 @@ void Mortar::BinaryTree::print_tree_of_map(
       std::cout << ") ";
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -701,8 +679,6 @@ void Mortar::BinaryTree::evaluate_update_tree_top_down(BinaryTreeNode& treenode)
     evaluate_update_tree_top_down(*treenode.leftchild());
     evaluate_update_tree_top_down(*treenode.rightchild());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -717,8 +693,6 @@ void Mortar::BinaryTree::evaluate_update_tree_bottom_up(
     for (int j = 0; j < (int)(treenodesmap[i].size()); j++)
       treenodesmap[i][j]->update_slabs_bottom_up(enlarge());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -789,8 +763,6 @@ void Mortar::BinaryTree::evaluate_search(
       selement->add_search_elements(mgid);
     }
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -48,8 +48,6 @@ Discret::Elements::ScaTraEleCalcElchNP<distype>::ScaTraEleCalcElchNP(
   // formulation
   my::scatravarmanager_ = std::shared_ptr<ScaTraEleInternalVariableManagerElchNP<nsd_, nen_>>(
       new ScaTraEleInternalVariableManagerElchNP<nsd_, nen_>(my::numscal_, myelch::elchparams_));
-
-  return;
 }
 
 
@@ -263,7 +261,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_mat_and_rhs(
       break;
     }
   }  // end switch(myelch::elchparams_->EquPot())
-  return;
 }
 
 
@@ -335,7 +332,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_mat_and_rhs_outside_s
       break;
     }
   }  // end switch(myelch::elchparams_->EquPot())
-  return;
 }
 
 
@@ -500,7 +496,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_mat_conv_stab(
     }
   }
 
-  return;
 }  // ScaTraEleCalcElchNP<distype>::calc_mat_mass_stab
 
 
@@ -542,7 +537,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_mat_migr(
     }
   }
 
-  return;
 }  // ScaTraEleCalcElchNP<distype>::calc_mat_migr
 
 
@@ -588,8 +582,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_mat_pot_equ_encpde(
               myelch::diff_manager()->get_valence(k) * conint * laplawf);
     }  // for ui
   }  // for vi
-
-  return;
 }
 
 
@@ -652,8 +644,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_mat_pot_equ_encpde_el
       emat(pvi, pui) += myelch::diff_manager()->get_valence(k) * matvalpot;
     }  // for ui
   }  // for vi
-
-  return;
 }
 
 
@@ -697,8 +687,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_mat_pot_equ_poisson(
       emat(pvi, fui) -= alphaF_valence_k_fac_funct_vi * my::funct_(ui);
     }  // for ui
   }  // for vi
-
-  return;
 }
 
 
@@ -725,8 +713,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_mat_pot_equ_laplace(
       emat(pvi, pui) += my::scatraparatimint_->alpha_f() * fac * laplawf;
     }  // for ui
   }  // for vi
-
-  return;
 }
 
 
@@ -744,8 +730,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_rhs_conv_add_cons(
 {
   for (unsigned vi = 0; vi < nen_; ++vi)
     erhs[vi * my::numdofpernode_ + k] -= rhsfac * my::funct_(vi) * conint * vdiv;
-
-  return;
 }
 
 
@@ -778,7 +762,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_rhs_conv_stab(
                    myelch::diff_manager()->get_valence(k) * migconv(vi) * residual;
   }
 
-  return;
 }  // ScaTraEleCalcElchNP<distype>::calc_rhs_conv_stab
 
 
@@ -800,8 +783,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_rhs_migr(
 
   for (unsigned vi = 0; vi < nen_; ++vi)
     erhs[vi * my::numdofpernode_ + k] += rhsfac_con_diffus_valence_k * migconv(vi);
-
-  return;
 }
 
 
@@ -831,8 +812,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_rhs_pot_equ_encpde(
                 conint * migconv(vi) -
             myelch::diff_manager()->get_isotropic_diff(k) * laplawf);
   }  // for vi
-
-  return;
 }
 
 
@@ -871,8 +850,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_rhs_pot_equ_encpde_el
                          myelch::diff_manager()->get_valence(my::numscal_) * conint * migconv(vi) -
                      myelch::diff_manager()->get_isotropic_diff(my::numscal_) * laplawf);
   }  // for vi
-
-  return;
 }
 
 
@@ -909,8 +886,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_rhs_pot_equ_poisson(
     // residuum of Poisson equation on the rhs
     erhs[pvi] += myelch::diff_manager()->get_valence(k) * fac * my::funct_(vi) * conint;
   }  // for vi
-
-  return;
 }
 
 
@@ -933,8 +908,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_rhs_pot_equ_laplace(
 
     erhs[pvi] -= fac * laplawf;
   }  // for vi
-
-  return;
 }
 
 
@@ -989,8 +962,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::correction_for_flux_across
       }  // for k
     }  // for vi
   }  // if EquPot()
-
-  return;
 }
 
 
@@ -1026,8 +997,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::get_material_params(
   }
   else
     FOUR_C_THROW("Invalid material type!");
-
-  return;
 }  // ScaTraEleCalc::get_material_params
 
 
@@ -1049,8 +1018,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::materials(
     myelch::utils_->mat_ion(material, k, myelch::elchparams_->equ_pot(), myelch::diff_manager());
   else
     FOUR_C_THROW("Material type is not supported");
-
-  return;
 }
 
 
@@ -1147,7 +1114,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::prepare_stabilization(
     }
   }
 
-  return;
 }  // ScaTraEleCalcElch<distype>::prepare_stabilization
 
 
@@ -1204,8 +1170,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calc_tau_der_pot_taylor_hu
   // Finalize derivative of present tau w.r.t electric potential
   // Note: Factor alpha_f in gen-alpha time integration scheme is included at a later point
   tauderpot.scale(0.5 * tau * tau * tau);
-
-  return;
 }
 
 

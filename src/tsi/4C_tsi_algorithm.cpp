@@ -174,8 +174,6 @@ TSI::Algorithm::Algorithm(MPI_Comm comm)
   // reset states
   structure_field()->discretization()->clear_state(true);
   thermo_field()->discretization()->clear_state(true);
-
-  return;
 }
 
 
@@ -190,7 +188,6 @@ void TSI::Algorithm::update()
   thermo_field()->update();
   if (contact_strategy_lagrange_ != nullptr)
     contact_strategy_lagrange_->update((structure_field()->dispnp()));
-  return;
 }
 
 
@@ -379,7 +376,6 @@ void TSI::Algorithm::output_deformation_in_thermo(
 
   }  // for lnodid
 
-  return;
 
 }  // output_deformation_in_thermo()
 

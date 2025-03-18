@@ -204,8 +204,6 @@ void EnsightWriter::write_files(PostFilterBase& filter)
       casefile.close();
     }
   }  // end of loop
-
-  return;
 }
 
 
@@ -240,8 +238,6 @@ void EnsightWriter::write_geo_file(const std::string& geofilename)
   // write_index_table(geofile, resultfilepos["geo"]);
 
   if (geofile.is_open()) geofile.close();
-
-  return;
 }
 
 
@@ -325,7 +321,6 @@ void EnsightWriter::write_geo_file_one_time_step(std::ofstream& file,
   write_cells(file, field_->discretization(), proc0map);
 
   write(file, "END TIME STEP");
-  return;
 }
 
 
@@ -579,7 +574,6 @@ void EnsightWriter::write_cells(std::ofstream& geofile,
 
     write_node_connectivity_par(geofile, *dis, nodevector, *proc0map);
   }
-  return;
 }
 
 
@@ -665,8 +659,6 @@ void EnsightWriter::write_node_connectivity_par(std::ofstream& geofile,
     Core::Communication::barrier(exporter.get_comm());
 
   }  // for pid
-
-  return;
 }
 
 
@@ -1108,8 +1100,6 @@ void EnsightWriter::write_result(const std::string groupname, const std::string 
 
   // close result file
   if (file.is_open()) file.close();
-
-  return;
 }
 
 void EnsightWriter::write_result_one_time_step(PostResult& result, const std::string groupname,
@@ -1296,8 +1286,6 @@ void EnsightWriter::write_result_one_time_step(PostResult& result, const std::st
 
   // close result file
   if (file.is_open()) file.close();
-
-  return;
 }
 
 
@@ -1471,7 +1459,6 @@ void EnsightWriter::file_switcher(std::ofstream& file, bool& multiple_files,
     }
     file.open(newfilename.str().c_str());
   }  // if (myrank_==0)
-  return;
 }
 
 
@@ -1673,7 +1660,6 @@ void EnsightWriter::write_dof_result_step(std::ofstream& file, PostResult& resul
   }
 
   write(file, "END TIME STEP");
-  return;
 }
 
 
@@ -1783,7 +1769,6 @@ void EnsightWriter::write_nodal_result_step(std::ofstream& file,
   }
 
   write(file, "END TIME STEP");
-  return;
 }
 
 
@@ -1929,7 +1914,6 @@ void EnsightWriter::write_element_dof_result_step(std::ofstream& file, PostResul
 
 
   write(file, "END TIME STEP");
-  return;
 }
 
 
@@ -2074,7 +2058,6 @@ void EnsightWriter::write_element_result_step(std::ofstream& file,
 
   // finish writing the current time step
   write(file, "END TIME STEP");
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -2092,7 +2075,6 @@ void EnsightWriter::write_index_table(
   write(file, 0);
   write<long>(file, lastpos);
   write(file, "FILE_INDEX");
-  return;
 }
 
 
@@ -2110,8 +2092,6 @@ void EnsightWriter::write_string(std::ofstream& stream, const std::string str) c
     s.push_back('\0');
   }
   stream.write(s.data(), 80);
-
-  return;
 }
 
 
@@ -2388,8 +2368,6 @@ void EnsightWriter::write_coordinates_for_polynomial_shapefunctions(
       write(geofile, static_cast<float>(coords[i]));
     }
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

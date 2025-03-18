@@ -32,7 +32,6 @@ Discret::Elements::Vele3Surface::Vele3Surface(int id, int owner, int nnode, cons
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
   set_parent_master_element(parent, lsurface);
-  return;
 }
 
 
@@ -43,7 +42,6 @@ Discret::Elements::Vele3Surface::Vele3Surface(int id, int owner, int nnode, cons
 Discret::Elements::Vele3Surface::Vele3Surface(const Discret::Elements::Vele3Surface& old)
     : Core::Elements::FaceElement(old)
 {
-  return;
 }
 
 
@@ -81,7 +79,6 @@ Core::FE::CellType Discret::Elements::Vele3Surface::shape() const
 void Discret::Elements::Vele3Surface::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("this Vele3Surface element does not support communication");
-  return;
 }
 
 
@@ -90,7 +87,6 @@ void Discret::Elements::Vele3Surface::pack(Core::Communication::PackBuffer& data
 void Discret::Elements::Vele3Surface::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("this Vele3Surface element does not support communication");
-  return;
 }
 
 
@@ -100,7 +96,6 @@ void Discret::Elements::Vele3Surface::print(std::ostream& os) const
 {
   os << "Vele3Surface " << Core::FE::cell_type_to_string(shape());
   Element::print(os);
-  return;
 }
 
 

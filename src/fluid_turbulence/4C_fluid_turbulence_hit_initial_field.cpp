@@ -184,8 +184,6 @@ namespace FLD
     if (type_ == Inpar::FLUID::initfield_hit_comte_bellot_corrsin)
       // of Comte-Bellot-Corrsin experiment
       prepare_exparimental_data();
-
-    return;
   }
 
   // also consider routine for HDG further down
@@ -528,8 +526,6 @@ namespace FLD
     // initialize veln_ as well
     veln_->update(1.0, *velnp_, 0.0);
     velnm_->update(1.0, *velnp_, 0.0);
-
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif
@@ -613,8 +609,6 @@ namespace FLD
 
     for (std::size_t rr = 0; rr < E_exp_.size(); rr++)
       E_exp_[rr] *= ((0.01 * 0.01 * 0.01) * (t_ref * t_ref) / (L_ref * L_ref * L_ref));
-
-    return;
   }
 
 
@@ -862,8 +856,6 @@ namespace FLD
           for (int i = 0; i < 5; i++) coordinates_->push_back(*coord1 - elesize * localcoords[i]);
       }
     }
-
-    return;
   }
 
 
@@ -1270,7 +1262,6 @@ namespace FLD
     veln_->update(1.0, *velnp_, 0.0);
     velnm_->update(1.0, *velnp_, 0.0);
     discret_->clear_state(true);
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif

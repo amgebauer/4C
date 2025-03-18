@@ -273,8 +273,6 @@ void BeamInteraction::BeamLinkBeam3rLine2PinJointed::pack(
 
   // pack linker element
   if (linkele_ != nullptr) linkele_->pack(data);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -302,8 +300,6 @@ void BeamInteraction::BeamLinkBeam3rLine2PinJointed::unpack(
   }
   else
     linkele_ = nullptr;
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

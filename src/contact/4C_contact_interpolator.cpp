@@ -58,8 +58,6 @@ NTS::Interpolator::Interpolator(Teuchos::ParameterList& params, const int& dim)
     // wear coefficient
     wearcoeffm_ = iparams_.get<double>("WEARCOEFF_MASTER");
   }
-
-  return;
 }
 
 
@@ -228,8 +226,6 @@ void NTS::Interpolator::interpolate_2d(Mortar::Node& snode, std::vector<Mortar::
   }  // End Loop over all Master Elements
 
   //**************************************************************
-
-  return;
 }
 
 
@@ -626,8 +622,6 @@ void NTS::Interpolator::interpolate_master_temp_3d(
     }  // End Loop over all Master Elements
   }
   //**************************************************************
-
-  return;
 }
 
 
@@ -660,7 +654,6 @@ void NTS::Interpolator::nw_t_e_2d(CONTACT::Node& mynode, double& area, double& j
     for (_CI p = dslipmatrix.begin(); p != dslipmatrix.end(); ++p)
       tmmap_jk[p->first] += fac * (p->second);
   }
-  return;
 }
 
 
@@ -799,8 +792,6 @@ void NTS::Interpolator::nw_slip_2d(CONTACT::Node& mynode, Mortar::Element& mele,
 
   double fac = 1.0;
   for (_CI p = dslipgp.begin(); p != dslipgp.end(); ++p) djumpmap[p->first] += fac * (p->second);
-
-  return;
 }
 
 
@@ -1025,8 +1016,6 @@ void NTS::Interpolator::nw_wear_2d(CONTACT::Node& mynode, Mortar::Element& mele,
     for (_CI p = dmap_coord_y.begin(); p != dmap_coord_y.end(); ++p)
       dslipmatrix[p->first] += xabsxT * gpt[1] * (p->second);
   }
-
-  return;
 }
 
 
@@ -1113,8 +1102,6 @@ void NTS::Interpolator::nw_gap_2d(CONTACT::Node& mynode, Mortar::Element& sele,
 
   // (1) Lin(g) - gap function
   for (_CI p = dgapgp.begin(); p != dgapgp.end(); ++p) dgmap[p->first] += (p->second);
-
-  return;
 }
 
 
@@ -1211,8 +1198,6 @@ void NTS::Interpolator::nw_gap_3d(CONTACT::Node& mynode, Mortar::Element& mele,
   // (1) Lin(g) - gap function
   double fac = 1.0;
   for (_CI p = dgapgp.begin(); p != dgapgp.end(); ++p) dgmap[p->first] += fac * (p->second);
-
-  return;
 }
 
 
@@ -1254,8 +1239,6 @@ void NTS::Interpolator::nw_master_temp(CONTACT::Node& mynode, Mortar::Element& m
         dest += mderiv(mn, d) *
                 (dynamic_cast<CONTACT::Node*>(mele.nodes()[mn])->tsi_data().temp()) * p->second;
     }
-
-  return;
 }
 
 
@@ -1301,8 +1284,6 @@ void NTS::Interpolator::nw_d_m_2d(CONTACT::Node& mynode, Mortar::Element& sele,
     fac = mderiv(k, 0);
     for (_CI p = dmxi.begin(); p != dmxi.end(); ++p) dmmap_jk[p->first] += fac * (p->second);
   }  // loop over master nodes
-
-  return;
 }
 
 
@@ -1351,8 +1332,6 @@ void NTS::Interpolator::nw_d_m_3d(CONTACT::Node& mynode, Mortar::Element& mele,
     fac = mderiv(k, 1);
     for (_CI p = dmxi[1].begin(); p != dmxi[1].end(); ++p) dmmap_jk[p->first] += fac * (p->second);
   }  // loop over master nodes
-
-  return;
 }
 
 
@@ -1540,8 +1519,6 @@ void NTS::Interpolator::deriv_xi_gp_2d(Mortar::Element& sele, Mortar::Element& m
   // multiply all entries with cmxigp
   for (_CI p = derivmxi.begin(); p != derivmxi.end(); ++p)
     derivmxi[p->first] = cmxigp * (p->second);
-
-  return;
 }
 
 
@@ -1713,8 +1690,6 @@ void NTS::Interpolator::deriv_xi_gp_3d(Mortar::Element& sele, Mortar::Element& m
     derivmxi[0][p->first] += alpha * lmatrix(0, 2) * (p->second);
     derivmxi[1][p->first] += alpha * lmatrix(1, 2) * (p->second);
   }
-
-  return;
 }
 
 
@@ -1809,8 +1784,6 @@ void NTS::MTInterpolatorCalc<distype_m>::interpolate(
     interpolate_3d(snode, meles);
   else
     FOUR_C_THROW("wrong dimension!");
-
-  return;
 }
 
 
@@ -1871,8 +1844,6 @@ void NTS::MTInterpolatorCalc<distype_m>::interpolate_2d(
   }  // End Loop over all Master Elements
 
   //**************************************************************
-
-  return;
 }
 
 
@@ -2060,8 +2031,6 @@ void NTS::MTInterpolatorCalc<distype_m>::interpolate_3d(
     }  // End hit ele
   }  // End Loop over all Master Elements
   //**************************************************************
-
-  return;
 }
 
 

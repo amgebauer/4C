@@ -39,7 +39,6 @@ ScaTra::ScaTraTimIntLoma::ScaTraTimIntLoma(std::shared_ptr<Core::FE::Discretizat
   // DO NOT DEFINE ANY STATE VECTORS HERE (i.e., vectors based on row or column maps)
   // this is important since we have problems which require an extended ghosting
   // this has to be done before all state vectors are initialized
-  return;
 }
 
 
@@ -53,19 +52,13 @@ void ScaTra::ScaTraTimIntLoma::init()
     FOUR_C_THROW(
         "Material update using subgrid-scale temperature currently not supported for loMa "
         "problems. Read remark in file 'scatra_ele_calc_loma.H'!");
-
-  return;
 }
 
 
 /*----------------------------------------------------------------------*
  | setup algorithm                                          rauch 09/16 |
  *----------------------------------------------------------------------*/
-void ScaTra::ScaTraTimIntLoma::setup()
-{
-  setup_splitter();
-  return;
-}
+void ScaTra::ScaTraTimIntLoma::setup() { setup_splitter(); }
 
 /*----------------------------------------------------------------------*
  | setup splitter                                          deanda 11/17 |
@@ -78,8 +71,6 @@ void ScaTra::ScaTraTimIntLoma::setup_splitter()
     splitter_ = std::make_shared<Core::LinAlg::MapExtractor>();
     Core::LinAlg::create_map_extractor_from_discretization(*discret_, num_scal() - 1, *splitter_);
   }
-
-  return;
 }
 
 
@@ -118,8 +109,6 @@ void ScaTra::ScaTraTimIntLoma::set_initial_therm_pressure()
   // -> For constant thermodynamic pressure, this is done here once and
   // for all simulation time.
   compute_therm_pressure_intermediate_values();
-
-  return;
 }  // ScaTra::ScaTraTimIntLoma::set_initial_therm_pressure
 
 
@@ -161,7 +150,6 @@ void ScaTra::ScaTraTimIntLoma::compute_initial_mass()
               << std::endl;
   }
 
-  return;
 }  // ScaTra::ScaTraTimIntLoma::ComputeInitialMass
 
 
@@ -209,8 +197,6 @@ void ScaTra::ScaTraTimIntLoma::compute_therm_pressure_from_mass_cons()
   // compute values at intermediate time steps
   // (only for generalized-alpha time-integration scheme)
   compute_therm_pressure_intermediate_values();
-
-  return;
 }  // ScaTra::ScaTraTimIntLoma::compute_therm_pressure_from_mass_cons
 
 
@@ -222,7 +208,6 @@ void ScaTra::ScaTraTimIntLoma::add_problem_specific_parameters_and_vectors(
 )
 {
   add_therm_press_to_parameter_list(params);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

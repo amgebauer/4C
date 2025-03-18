@@ -55,7 +55,6 @@ ScaTra::LevelSetAlgorithm::LevelSetAlgorithm(std::shared_ptr<Core::FE::Discretiz
   // DO NOT DEFINE ANY STATE VECTORS HERE (i.e., vectors based on row or column maps)
   // this is important since we have problems which require an extended ghosting
   // this has to be done before all state vectors are initialized
-  return;
 }
 
 
@@ -69,8 +68,6 @@ void ScaTra::LevelSetAlgorithm::init()
   // DO NOT CALL init() IN ScaTraTimIntImpl
   // issue with writeflux and probably scalarhandler_
   // this should not be
-
-  return;
 }
 
 
@@ -221,8 +218,6 @@ void ScaTra::LevelSetAlgorithm::setup()
   discret_->get_condition("LsContact", lscontactpoint);
 
   if (not lscontactpoint.empty()) cpbc_ = true;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -295,8 +290,6 @@ void ScaTra::LevelSetAlgorithm::time_loop()
     check_and_write_output_and_restart();
 
   }  // while
-
-  return;
 }
 
 
@@ -307,8 +300,6 @@ void ScaTra::LevelSetAlgorithm::prepare_time_step()
 {
   // prepare basic scalar transport solver
   ScaTraTimIntImpl::prepare_time_step();
-
-  return;
 }
 
 
@@ -324,8 +315,6 @@ void ScaTra::LevelSetAlgorithm::solve()
     nonlinear_solve();
   else
     linear_solve();
-
-  return;
 }
 
 

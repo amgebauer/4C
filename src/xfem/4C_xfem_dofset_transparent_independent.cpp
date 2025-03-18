@@ -18,7 +18,6 @@ XFEM::XFEMTransparentIndependentDofSet::XFEMTransparentIndependentDofSet(
     std::shared_ptr<Cut::CutWizard> wizard)
     : Core::DOFSets::TransparentIndependentDofSet(sourcedis, parallel), wizard_(wizard)
 {
-  return;
 }
 
 int XFEM::XFEMTransparentIndependentDofSet::num_dof_per_node(const Core::Nodes::Node& node) const

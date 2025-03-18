@@ -131,7 +131,6 @@ void Discret::Elements::Nurbs::Wall1Nurbs::print(std::ostream& os) const
 {
   os << "Wall1Nurbs ";
   Element::print(os);
-  return;
 }
 
 

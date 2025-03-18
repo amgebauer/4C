@@ -39,7 +39,6 @@ Discret::Elements::FluidXWallBoundary::FluidXWallBoundary(int id, int owner, int
     const int lsurface)
     : FluidBoundary(id, owner, nnode, nodeids, nodes, parent, lsurface)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -49,7 +48,6 @@ Discret::Elements::FluidXWallBoundary::FluidXWallBoundary(
     const Discret::Elements::FluidXWallBoundary& old)
     : FluidBoundary(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -70,7 +68,6 @@ void Discret::Elements::FluidXWallBoundary::print(std::ostream& os) const
 {
   os << "FluidXWallBoundary ";
   Element::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -228,9 +225,6 @@ void Discret::Elements::FluidXWallBoundary::location_vector(const Core::FE::Disc
       }  // for (int dofset=0; dofset<la.Size(); ++dofset)
       break;
   }
-
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

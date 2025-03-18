@@ -94,8 +94,6 @@ void CONTACT::LagrangeStrategyTsi::set_state(
       break;
     }
   }
-
-  return;
 }
 
 
@@ -794,8 +792,6 @@ void CONTACT::LagrangeStrategyTsi::evaluate(
 
   // we need to return the rhs, not the residual
   combined_RHS->scale(-1.);
-
-  return;
 }
 
 
@@ -814,7 +810,6 @@ void CONTACT::Utils::add_vector(
   Core::LinAlg::Vector<double> tmp = Core::LinAlg::Vector<double>(dst.get_map(), true);
   Core::LinAlg::export_to(src, tmp);
   if (dst.update(1., tmp, 1.)) FOUR_C_THROW("vector update went wrong");
-  return;
 }
 
 void CONTACT::LagrangeStrategyTsi::recover_coupled(
@@ -886,8 +881,6 @@ void CONTACT::LagrangeStrategyTsi::recover_coupled(
   // Note: this does not store coupST
   store_nodal_quantities(Mortar::StrategyBase::lmupdate, *coupST);
   store_nodal_quantities(Mortar::StrategyBase::lmThermo, *coupST);
-
-  return;
 };
 
 void CONTACT::LagrangeStrategyTsi::store_nodal_quantities(
@@ -1018,7 +1011,6 @@ void CONTACT::LagrangeStrategyTsi::set_alphaf_thermo(const Teuchos::ParameterLis
     default:
       FOUR_C_THROW("unknown thermal time integration type");
   }
-  return;
 }
 
 

@@ -93,7 +93,6 @@ void EXODUS::validate_mesh_element_jacobians(Mesh& mymesh)
       std::cout << invalid_dets << " negative Jacobian determinants in EB of shape "
                 << shape_to_string(eb->get_shape()) << std::endl;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -176,8 +175,6 @@ void EXODUS::validate_element_jacobian(
   if (numrewindedeles > 0)
     std::cout << "...Successfully rewinded " << numrewindedeles
               << " elements. For details see *.err file" << std::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

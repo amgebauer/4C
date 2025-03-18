@@ -522,8 +522,6 @@ void Cut::Node::sort_nodal_dof_sets()
     // cells sets REMARK: do not sort the first dofset, it has to be kept the standard dofset
     sort(it_start, nodaldofsets_.end(), NodalDofSetCmp());
   }
-
-  return;
 }
 
 

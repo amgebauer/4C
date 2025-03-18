@@ -136,7 +136,6 @@ std::shared_ptr<Core::Elements::Element> Discret::Elements::LubricationBoundaryT
 Discret::Elements::Lubrication::Lubrication(int id, int owner)
     : Core::Elements::Element(id, owner), distype_(Core::FE::CellType::dis_none)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -145,7 +144,6 @@ Discret::Elements::Lubrication::Lubrication(int id, int owner)
 Discret::Elements::Lubrication::Lubrication(const Discret::Elements::Lubrication& old)
     : Core::Elements::Element(old), distype_(old.distype_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -179,8 +177,6 @@ void Discret::Elements::Lubrication::pack(Core::Communication::PackBuffer& data)
 
   // add internal data
   add_to_pack(data, distype_);
-
-  return;
 }
 
 
@@ -197,10 +193,6 @@ void Discret::Elements::Lubrication::unpack(Core::Communication::UnpackBuffer& b
 
   // extract internal data
   extract_from_pack(buffer, distype_);
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -240,8 +232,6 @@ void Discret::Elements::Lubrication::print(std::ostream& os) const
   Element::print(os);
   std::cout << std::endl;
   std::cout << "DiscretizationType:  " << Core::FE::cell_type_to_string(distype_) << std::endl;
-
-  return;
 }
 
 
@@ -296,7 +286,6 @@ Discret::Elements::LubricationBoundary::LubricationBoundary(int id, int owner, i
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
   set_parent_master_element(parent, lsurface);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -306,7 +295,6 @@ Discret::Elements::LubricationBoundary::LubricationBoundary(
     const Discret::Elements::LubricationBoundary& old)
     : Core::Elements::FaceElement(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -333,8 +321,6 @@ Core::FE::CellType Discret::Elements::LubricationBoundary::shape() const
 void Discret::Elements::LubricationBoundary::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("This LubricationBoundary element does not support communication");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -343,7 +329,6 @@ void Discret::Elements::LubricationBoundary::pack(Core::Communication::PackBuffe
 void Discret::Elements::LubricationBoundary::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("This LubricationBoundary element does not support communication");
-  return;
 }
 
 
@@ -358,7 +343,6 @@ void Discret::Elements::LubricationBoundary::print(std::ostream& os) const
   std::cout << std::endl;
   std::cout << "DiscretizationType:  " << Core::FE::cell_type_to_string(shape()) << std::endl;
   std::cout << std::endl;
-  return;
 }
 
 /*----------------------------------------------------------------------*

@@ -50,7 +50,6 @@ BeamInteraction::BeamLink::BeamLink(const BeamInteraction::BeamLink& old)
       timelinkwasset_(old.timelinkwasset_),
       reflength_(old.reflength_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*

@@ -164,8 +164,6 @@ void Discret::Elements::RedAcinus::pack(Core::Communication::PackBuffer& data) c
   add_to_pack(data, acinus_params_.alveolar_duct_volume);
   add_to_pack(data, acinus_params_.volume_init);
   add_to_pack(data, acinus_params_.generation);
-
-  return;
 }
 
 
@@ -187,10 +185,6 @@ void Discret::Elements::RedAcinus::unpack(Core::Communication::UnpackBuffer& buf
   extract_from_pack(buffer, acinus_params_.alveolar_duct_volume);
   extract_from_pack(buffer, acinus_params_.volume_init);
   extract_from_pack(buffer, acinus_params_.generation);
-
-
-
-  return;
 }
 
 
@@ -202,8 +196,6 @@ void Discret::Elements::RedAcinus::print(std::ostream& os) const
 {
   os << "RedAcinus ";
   Element::print(os);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*

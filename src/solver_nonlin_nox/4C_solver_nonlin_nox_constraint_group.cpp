@@ -26,7 +26,6 @@ NOX::Nln::CONSTRAINT::Group::Group(Teuchos::ParameterList& printParams,
       NOX::Nln::Group(printParams, grpOptionParams, i, x, linSys),
       user_constraint_interfaces_(iConstr)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*

@@ -117,7 +117,6 @@ void XFEM::MeshCouplingFPI::register_side_proc(int sid)
 {
   if (contact_ && coupled_field_ == MeshCouplingFPI::ps_ps)
     get_contact_comm()->register_side_proc(sid);
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -245,7 +244,6 @@ void XFEM::MeshCouplingFPI::setup_configuration_map()
       break;
     }
   }
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -379,8 +377,6 @@ void XFEM::MeshCouplingFPI::update_configuration_map_gp(double& kappa_m,  //< fl
   else
     update_configuration_map_gp_contact(kappa_m, visc_m, visc_s, density_m, visc_stab_tang,
         full_stab, x, cond, ele, bele, funct, derxy, rst_slave, normal, vel_m, fulltraction);
-
-  return;
 }
 
 /*--------------------------------------------------------------------------*
@@ -555,7 +551,6 @@ void XFEM::MeshCouplingFPI::update_configuration_map_gp_contact(
       break;
     }
   }
-  return;
 }
 
 /*--------------------------------------------------------------------------*

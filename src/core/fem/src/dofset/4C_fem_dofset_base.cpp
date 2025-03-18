@@ -23,7 +23,7 @@ std::list<Core::DOFSets::DofSetInterface*> Core::DOFSets::DofSetBase::static_dof
 /*----------------------------------------------------------------------*
  |  ctor (public)                                             ukue 04/07|
  *----------------------------------------------------------------------*/
-Core::DOFSets::DofSetBase::DofSetBase() : DofSetInterface() { return; }
+Core::DOFSets::DofSetBase::DofSetBase() : DofSetInterface() {}
 
 
 /*----------------------------------------------------------------------*
@@ -39,7 +39,6 @@ Core::DOFSets::DofSetBase::~DofSetBase()
   }
   // remove dofset from static list if necessary
   static_dofsets_.remove(this);
-  return;
 }
 
 
@@ -51,7 +50,6 @@ void Core::DOFSets::DofSetBase::add_dof_setto_list()
   {
     static_dofsets_.push_back(this);
   }
-  return;
 }
 
 
@@ -71,7 +69,6 @@ void Core::DOFSets::DofSetBase::replace_in_static_dofsets(
     static_dofsets_.insert(iterold, this);
     static_dofsets_.remove(&(*olddofset));
   }
-  return;
 }
 
 
@@ -170,7 +167,6 @@ void Core::DOFSets::DofSetBase::print_all_dofsets(MPI_Comm comm) const
     for (int i = 0; i < arrowlen; ++i) Core::IO::cout << "-";
     Core::IO::cout << "> DofGID" << Core::IO::endl;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*

@@ -78,8 +78,6 @@ void FLD::Utils::StressManager::init_aggr(std::shared_ptr<Core::LinAlg::SparseOp
   if (sep_enr_ == nullptr) FOUR_C_THROW("SepEnr matrix has not been build correctly. Strange...");
 
   isinit_ = true;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -457,8 +455,6 @@ void FLD::Utils::StressManager::calc_sep_enr(std::shared_ptr<Core::LinAlg::Spars
     sep_enr_ = Core::LinAlg::matrix_multiply(Ptent, false, Ptent, true);
     sep_enr_->complete();
   }
-
-  return;
 }
 
 
@@ -743,8 +739,6 @@ void FLD::Utils::lift_drag(const std::shared_ptr<const Core::FE::Discretization>
       std::cout << "\n";
     }
   }
-
-  return;
 }
 
 // -------------------------------------------------------------------
@@ -954,8 +948,6 @@ void FLD::Utils::project_gradient_and_set_param(Core::FE::Discretization& discre
   // store multi vector in parameter list after export to col layout
   if (projected_velgrad != nullptr)
     discret.add_multi_vector_to_parameter_list(eleparams, paraname, projected_velgrad);
-
-  return;
 }
 
 

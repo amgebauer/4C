@@ -311,7 +311,6 @@ Discret::Elements::Beam3r::Beam3r(int id, int owner)
       l_(true),
       p_(true)
 {
-  return;
 }
 /*----------------------------------------------------------------------*
  |  copy-ctor (public)                                       cyron 01/08|
@@ -370,7 +369,6 @@ Discret::Elements::Beam3r::Beam3r(const Discret::Elements::Beam3r& old)
       material_bending_moment_2_gp_elastm_(old.material_bending_moment_2_gp_elastm_),
       material_bending_moment_3_gp_elastm_(old.material_bending_moment_3_gp_elastm_)
 {
-  return;
 }
 /*----------------------------------------------------------------------*
  |  Deep copy this instance of Beam3r and return pointer to it (public) |
@@ -391,7 +389,6 @@ void Discret::Elements::Beam3r::print(std::ostream& os) const
 {
   os << "beam3r ";
   Element::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -468,7 +465,6 @@ void Discret::Elements::Beam3r::pack(Core::Communication::PackBuffer& data) cons
   add_to_pack(data, rnew_gp_mass_);
   add_to_pack(data, qconv_gp_dampstoch_);
   add_to_pack(data, qnew_gp_dampstoch_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -545,9 +541,6 @@ void Discret::Elements::Beam3r::unpack(Core::Communication::UnpackBuffer& buffer
   spatial_x_moment_gp_elastm_.clear();
   spatial_y_moment_2_gp_elastm_.clear();
   spatial_z_moment_3_gp_elastm_.clear();
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1158,8 +1151,6 @@ void Discret::Elements::Beam3r::set_up_reference_geometry(
       jacobi_gp_neumannline_[numgp] = dr0dxi.norm2();
     }
   }
-
-  return;
 }
 
 /*--------------------------------------------------------------------------------------------*
@@ -1227,8 +1218,6 @@ void Discret::Elements::Beam3r::get_pos_at_xi(
     default:
       FOUR_C_THROW("no valid number for number of centerline nodes");
   }
-
-  return;
 }
 
 double Discret::Elements::Beam3r::get_jacobi_fac_at_xi(const double& xi) const

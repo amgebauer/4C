@@ -108,8 +108,6 @@ void Discret::Elements::ScaTraEleCalcArtery<distype, probdim>::materials(
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -121,8 +119,6 @@ void Discret::Elements::ScaTraEleCalcArtery<distype,
 {
   var_manager()->set_internal_variables_artery(my::funct_, my::derxy_, my::deriv_, my::xjm_,
       my::ephinp_, my::ephin_, my::ehist_, earterypressurenp_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -246,7 +242,6 @@ void Discret::Elements::ScaTraEleCalcArtery<distype, probdim>::calc_mat_conv_od_
       emat(fvi, fui) += v * laplawf;
     }
   }
-  return;
 }
 
 // template classes

@@ -134,8 +134,6 @@ void MultiScale::MicroStatic::convert_mat(const Core::LinAlg::MultiVector<double
   }
 
   cmat.scale(0.25);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

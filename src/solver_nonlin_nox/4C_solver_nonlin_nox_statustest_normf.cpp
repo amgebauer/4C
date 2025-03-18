@@ -58,8 +58,6 @@ void NOX::Nln::StatusTest::NormF::relative_setup(
     else if (toleranceType_[i] == ::NOX::StatusTest::NormF::Absolute)
       trueTolerance_[i] = specifiedTolerance_[i];
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

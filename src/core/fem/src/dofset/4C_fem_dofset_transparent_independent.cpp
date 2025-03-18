@@ -18,7 +18,6 @@ Core::DOFSets::TransparentIndependentDofSet::TransparentIndependentDofSet(
     std::shared_ptr<Core::FE::Discretization> sourcedis, bool parallel)
     : TransparentDofSet(sourcedis, parallel)
 {
-  return;
 }
 
 int Core::DOFSets::TransparentIndependentDofSet::assign_degrees_of_freedom(

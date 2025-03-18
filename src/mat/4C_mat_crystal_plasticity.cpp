@@ -477,7 +477,6 @@ void Mat::CrystalPlasticity::setup(int numgp, const Core::IO::InputParameterCont
   }
 
   isinit_ = true;
-  return;
 }  // setup()
 
 
@@ -518,7 +517,6 @@ void Mat::CrystalPlasticity::update()
     (*gamma_current_)[i] = emptyvect;
     (*defect_densities_current_)[i] = emptyvect;
   }
-  return;
 }  // update()
 
 /*-------------------------------------------------------------------------------*
@@ -557,10 +555,6 @@ void Mat::CrystalPlasticity::evaluate(const Core::LinAlg::Matrix<3, 3>* defgrd,
   (*stress)(3) = second_pk_stress_result(0, 1);
   (*stress)(4) = second_pk_stress_result(1, 2);
   (*stress)(5) = second_pk_stress_result(0, 2);
-  //!!!!!!
-  // TODO!!! USE NEW VOIGHT NOTATION METHOD!!!!
-  // !!!!!!
-  return;
 }  // evaluate()
 
 /*---------------------------------------------------------------------------------*
@@ -1093,7 +1087,6 @@ void Mat::CrystalPlasticity::setup_lattice_vectors()
       twin_direction_[i].scale(1.0 / twin_direction_[i].norm2());
     }
   }
-  return;
 }
 
 /*---------------------------------------------------------------------------------*
@@ -1148,7 +1141,6 @@ void Mat::CrystalPlasticity::miller_bravais_to_miller(
         std::sqrt(3.0) * (0.5 * direction_hex.at(i)(0, 0) + direction_hex.at(i)(1, 0));
     direction[i](2, 0) = direction_hex.at(i)(3, 0) * c_to_a_ratio_;
   }
-  return;
 }
 
 /*---------------------------------------------------------------------------------*
@@ -1402,7 +1394,6 @@ void Mat::CrystalPlasticity::newton_raphson(Core::LinAlg::Matrix<3, 3>& deform_g
     FOUR_C_THROW("Internal Newton Raphson did not converge within max iterations.");
   }
 
-  return;
 }  // NewtonRaphson
 
 
@@ -1678,7 +1669,6 @@ void Mat::CrystalPlasticity::setup_flow_rule(Core::LinAlg::Matrix<3, 3> deform_g
       residuals_trial[i] = (delta_gamma_trial[i] / dt_) - gamma_dot;
     }
   }
-  return;
 }  // FlowRuleSetup()
 
 /*---------------------------------------------------------------------*

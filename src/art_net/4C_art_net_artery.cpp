@@ -75,8 +75,6 @@ Discret::Elements::Artery::Artery(int id, int owner)
     : Core::Elements::Element(id, owner), impltype_(Inpar::ArtDyn::impltype_undefined)
 {
   gaussrule_ = Core::FE::GaussRule1D::undefined;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -86,7 +84,6 @@ Discret::Elements::Artery::Artery(int id, int owner)
 Discret::Elements::Artery::Artery(const Discret::Elements::Artery& old)
     : Core::Elements::Element(old), impltype_(old.impltype_), gaussrule_(old.gaussrule_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -129,8 +126,6 @@ void Discret::Elements::Artery::pack(Core::Communication::PackBuffer& data) cons
   // Gaussrule
   add_to_pack(data, gaussrule_);
   add_to_pack(data, impltype_);
-
-  return;
 }
 
 
@@ -147,9 +142,6 @@ void Discret::Elements::Artery::unpack(Core::Communication::UnpackBuffer& buffer
   // Gaussrule
   extract_from_pack(buffer, gaussrule_);
   extract_from_pack(buffer, impltype_);
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -169,8 +161,6 @@ void Discret::Elements::Artery::print(std::ostream& os) const
 {
   os << "Artery ";
   Element::print(os);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

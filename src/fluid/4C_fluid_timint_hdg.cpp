@@ -599,7 +599,6 @@ void FLD::TimIntHDG::calc_intermediate_solution()
     // ----------------------------------------------------------------
     gen_alpha_intermediate_values();
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -626,7 +625,6 @@ void FLD::TimIntHDG::init_forcing()
     else
       FOUR_C_THROW("forcing interface doesn't know this flow");
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

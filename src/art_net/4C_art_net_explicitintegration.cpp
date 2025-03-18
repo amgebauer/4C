@@ -502,7 +502,6 @@ void Arteries::ArtNetExplicitTimeInt::time_update()
     scatraO2n_->update(1.0, *scatraO2np_, 0.0);
   }
 
-  return;
 }  // ArtNetExplicitTimeInt::TimeUpdate
 
 
@@ -538,7 +537,6 @@ void Arteries::ArtNetExplicitTimeInt::init_save_state()
     saved_scatraO2nm_ = Core::LinAlg::create_vector(*dofrowmap, true);
   }
 
-  return;
 }  // ArtNetExplicitTimeInt::InitSaveState
 
 
@@ -574,7 +572,6 @@ void Arteries::ArtNetExplicitTimeInt::save_state()
     saved_scatraO2nm_->update(1.0, *scatraO2nm_, 0.0);
   }
 
-  return;
 }  // ArtNetExplicitTimeInt::SaveState
 
 
@@ -610,7 +607,6 @@ void Arteries::ArtNetExplicitTimeInt::load_state()
     scatraO2nm_->update(1.0, *saved_scatraO2nm_, 0.0);
   }
 
-  return;
 }  // ArtNetExplicitTimeInt::LoadState
 
 
@@ -755,7 +751,6 @@ void Arteries::ArtNetExplicitTimeInt::output(
     time_ = time_backup;
   }
 
-  return;
 }  // ArteryExplicitTimeInt::Output
 
 

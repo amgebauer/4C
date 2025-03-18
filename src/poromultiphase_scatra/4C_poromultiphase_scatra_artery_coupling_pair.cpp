@@ -2760,8 +2760,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScatraArteryCouplingPair<distype_art, d
           "extremely small integration segment",
           ele1_gid(), ele2_gid());
   }
-
-  return;
 }
 /*-----------------------------------------------------------------------------*
  *-----------------------------------------------------------------------------*/
@@ -3205,8 +3203,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScatraArteryCouplingPair<distype_art, d
     else
       std::cout << "Projection not allowed" << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3465,8 +3461,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScatraArteryCouplingPair<distype_art, d
     else
       std::cout << "Projection not allowed" << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3487,8 +3481,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScatraArteryCouplingPair<distype_art, d
   // Get values and derivatives of shape functions
   Core::FE::shape_function_1d(N1, eta, distype);
   Core::FE::shape_function_1d_deriv1(N1_eta, eta, distype);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3524,8 +3516,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScatraArteryCouplingPair<distype_art, d
     default:
       FOUR_C_THROW("Only quad4, hex8, tet4 and tet10 are valid so far for second element");
   }
-
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -3548,7 +3538,6 @@ void PoroMultiPhaseScaTra::PoroMultiPhaseScatraArteryCouplingPair<distype_art, d
       r1_eta(idim) += N1_eta(j) * ele1posref_(numdim_ * j + idim);
     }
   }
-  return;
 }
 
 /*------------------------------------------------------------------------*

@@ -107,8 +107,6 @@ void Core::FE::compute_metric_tensor_for_surface(const Core::LinAlg::SerialDense
 
   sqrtdetg[0] =
       sqrt(metrictensor(0, 0) * metrictensor(1, 1) - metrictensor(0, 1) * metrictensor(1, 0));
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -493,8 +491,6 @@ void Core::FE::line_gp_to_parent_gp(V& pqxg, W& derivtrafo, const IntegrationPoi
         "only line2/quad4, line3/quad8, line3/quad9, nurbs3/nurbs9, line2/tri3 and line3/tri6 "
         "mappings of surface gausspoint to parent element implemented up to now\n");
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------
@@ -513,7 +509,6 @@ void Core::FE::boundary_gp_to_parent_gp<3>(Core::LinAlg::SerialDenseMatrix& pqxg
   if (derivtrafo.numRows() != 3 || derivtrafo.numCols() != 3) derivtrafo.shape(3, 3);
 
   Core::FE::surface_gp_to_parent_gp(pqxg, derivtrafo, intpoints.ip(), pdistype, distype, surfaceid);
-  return;
 }
 
 //! specialization for 2D
@@ -527,7 +522,6 @@ void Core::FE::boundary_gp_to_parent_gp<2>(Core::LinAlg::SerialDenseMatrix& pqxg
   if (derivtrafo.numRows() != 2 || derivtrafo.numCols() != 2) derivtrafo.shape(2, 2);
 
   Core::FE::line_gp_to_parent_gp(pqxg, derivtrafo, intpoints.ip(), pdistype, distype, surfaceid);
-  return;
 }
 
 //! specialization for 3D
@@ -541,7 +535,6 @@ void Core::FE::boundary_gp_to_parent_gp<3>(Core::LinAlg::SerialDenseMatrix& pqxg
   derivtrafo.clear();
 
   Core::FE::surface_gp_to_parent_gp(pqxg, derivtrafo, intpoints.ip(), pdistype, distype, surfaceid);
-  return;
 }
 
 //! specialization for 2D
@@ -555,7 +548,6 @@ void Core::FE::boundary_gp_to_parent_gp<2>(Core::LinAlg::SerialDenseMatrix& pqxg
   derivtrafo.clear();
 
   Core::FE::line_gp_to_parent_gp(pqxg, derivtrafo, intpoints.ip(), pdistype, distype, surfaceid);
-  return;
 }
 
 //! specializations for GaussPoint quadrature rules
@@ -570,7 +562,6 @@ void Core::FE::boundary_gp_to_parent_gp<3>(Core::LinAlg::SerialDenseMatrix& pqxg
   if (derivtrafo.numRows() != 3 || derivtrafo.numCols() != 3) derivtrafo.shape(3, 3);
 
   Core::FE::surface_gp_to_parent_gp(pqxg, derivtrafo, intpoints, pdistype, distype, surfaceid);
-  return;
 }
 
 //! specialization for 2D
@@ -584,7 +575,6 @@ void Core::FE::boundary_gp_to_parent_gp<2>(Core::LinAlg::SerialDenseMatrix& pqxg
   if (derivtrafo.numRows() != 2 || derivtrafo.numCols() != 2) derivtrafo.shape(2, 2);
 
   Core::FE::line_gp_to_parent_gp(pqxg, derivtrafo, intpoints, pdistype, distype, surfaceid);
-  return;
 }
 
 //! specialization for 3D
@@ -598,7 +588,6 @@ void Core::FE::boundary_gp_to_parent_gp<3>(Core::LinAlg::SerialDenseMatrix& pqxg
   derivtrafo.clear();
 
   Core::FE::surface_gp_to_parent_gp(pqxg, derivtrafo, intpoints, pdistype, distype, surfaceid);
-  return;
 }
 
 //! specialization for 2D
@@ -612,7 +601,6 @@ void Core::FE::boundary_gp_to_parent_gp<2>(Core::LinAlg::SerialDenseMatrix& pqxg
   derivtrafo.clear();
 
   Core::FE::line_gp_to_parent_gp(pqxg, derivtrafo, intpoints, pdistype, distype, surfaceid);
-  return;
 }
 
 

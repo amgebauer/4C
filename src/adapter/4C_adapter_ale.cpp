@@ -252,8 +252,6 @@ void Adapter::AleBaseAlgorithm::setup_ale(
     default:
       FOUR_C_THROW("ALE type not implemented yet!!");
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

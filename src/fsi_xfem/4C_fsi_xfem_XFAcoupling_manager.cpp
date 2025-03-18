@@ -103,8 +103,6 @@ void XFEM::XfaCouplingManager::set_coupling_states()
 
   // update also ALE vectors w.r.t. current state
   xfluid_->update_ale_state_vectors();
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------*
@@ -139,7 +137,6 @@ void XFEM::XfaCouplingManager::add_coupling_matrix(
   //  //////////////////////////////////////////////
 
   // TODO: THIS IS STILL MISSING, BUT USUALLY DOES NOT HAVE A BIG INFLUENCE ON THE CONVERGENCE!!!
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------*
@@ -150,8 +147,7 @@ void XFEM::XfaCouplingManager::add_coupling_rhs(std::shared_ptr<Core::LinAlg::Ve
 {
   std::shared_ptr<const Core::LinAlg::Vector<double>> av = ale_->rhs();
   std::shared_ptr<Core::LinAlg::Vector<double>> aov = ale_->interface()->extract_other_vector(*av);
-  me.insert_vector(*aov, idx_[1], *rhs);  // add ALE contributions to 'rhs'
-  return;
+  me.insert_vector(*aov, idx_[1], *rhs);
 }
 
 FOUR_C_NAMESPACE_CLOSE

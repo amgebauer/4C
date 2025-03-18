@@ -20,9 +20,6 @@ void Solid::TimIntOneStepTheta::verify_coeff()
 {
   // check value of theta
   if ((theta_ <= 0.0) or (theta_ > 1.0)) FOUR_C_THROW("theta out of range (0.0,1.0]");
-
-  // done
-  return;
 }
 
 /*======================================================================*/
@@ -52,7 +49,6 @@ Solid::TimIntOneStepTheta::TimIntOneStepTheta(const Teuchos::ParameterList& time
   // redistribution of elements. Only then call the setup to this class. This will call the setup to
   // all classes in the inheritance hierarchy. This way, this class may also override a method that
   // is called during setup() in a base class.
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -76,7 +72,6 @@ void Solid::TimIntOneStepTheta::init(const Teuchos::ParameterList& timeparams,
   }
 
   // have a nice day
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -159,8 +154,6 @@ void Solid::TimIntOneStepTheta::setup()
 
     nonlinear_mass_sanity_check(fext_, (*dis_)(0), (*vel_)(0), (*acc_)(0), &sdynparams_);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -186,9 +179,6 @@ void Solid::TimIntOneStepTheta::predict_const_dis_consist_vel_acc()
 
   // reset the residual displacement
   disi_->put_scalar(0.0);
-
-  // watch out
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -215,9 +205,6 @@ void Solid::TimIntOneStepTheta::predict_const_vel_consist_acc()
 
   // reset the residual displacement
   disi_->put_scalar(0.0);
-
-  // That's it!
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -245,9 +232,6 @@ void Solid::TimIntOneStepTheta::predict_const_acc()
 
   // reset the residual displacement
   disi_->put_scalar(0.0);
-
-  // That's it!
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -398,8 +382,6 @@ void Solid::TimIntOneStepTheta::evaluate_force_stiff_residual(Teuchos::Parameter
 
   // close stiffness matrix
   stiff_->complete();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -480,8 +462,6 @@ void Solid::TimIntOneStepTheta::evaluate_force_residual()
     fres_->update(1.0, *fvisct_, 1.0);
   }
   fres_->update(1.0, *finertt_, 1.0);
-
-  return;
 }
 
 
@@ -491,7 +471,6 @@ void Solid::TimIntOneStepTheta::determine_mass()
 {
   // F_{inert;1+theta} := theta * F_{inert;n+1} + (1-theta) * F_{inert;n}
   finertt_->update(theta_, *finertn_, (1.0 - theta_), *finert_, 0.0);
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -509,9 +488,6 @@ void Solid::TimIntOneStepTheta::evaluate_mid_state()
   // mid-accelerations A_{n+1-alpha_m} (accm)
   //    A_{n+theta} := theta * A_{n+1} + (1-theta) * A_{n}
   acct_->update(theta_, *accn_, 1.0 - theta_, *(*acc_)(0), 0.0);
-
-  // jump
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -584,9 +560,6 @@ void Solid::TimIntOneStepTheta::update_iter_iteratively()
 
   // new end-point accelerations
   accn_->update(1.0 / ((*dt_)[0] * (*dt_)[0] * theta_ * theta_), *disi_, 1.0);
-
-  // bye
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -630,9 +603,6 @@ void Solid::TimIntOneStepTheta::update_step_state()
 
   // update beam contact
   update_step_beam_contact();
-
-  // look out
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -697,8 +667,6 @@ void Solid::TimIntOneStepTheta::read_restart_force()
   reader.read_vector(fext_, "fexternal");
   reader.read_vector(fint_, "fint");
   reader.read_vector(finert_, "finert");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -711,7 +679,6 @@ void Solid::TimIntOneStepTheta::write_restart_force(
   output->write_vector("fexternal", fext_);
   output->write_vector("fint", fint_);
   output->write_vector("finert", finert_);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

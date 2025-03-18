@@ -24,7 +24,6 @@ FLD::TimIntRedModelsStat::TimIntRedModelsStat(
       TimIntStationary(actdis, solver, params, output, alefluid),
       TimIntRedModels(actdis, solver, params, output, alefluid)
 {
-  return;
 }
 
 
@@ -37,8 +36,6 @@ void FLD::TimIntRedModelsStat::init()
   // note: this order is important
   TimIntStationary::init();
   TimIntRedModels::init();
-
-  return;
 }
 
 
@@ -50,8 +47,6 @@ void FLD::TimIntRedModelsStat::read_restart(int step)
   // call of base classes
   TimIntStationary::read_restart(step);
   TimIntRedModels::read_restart(step);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

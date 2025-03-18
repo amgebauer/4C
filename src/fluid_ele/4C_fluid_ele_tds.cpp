@@ -35,8 +35,6 @@ void FLD::TDSEleData::pack(Core::Communication::PackBuffer& data) const
   add_to_pack(data, saccn_.values(), size);
   add_to_pack(data, svelnp_.values(), size);
   add_to_pack(data, sveln_.values(), size);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -67,9 +65,6 @@ void FLD::TDSEleData::unpack(Core::Communication::UnpackBuffer& buffer)
     extract_from_pack(buffer, svelnp_.values(), size);
     extract_from_pack(buffer, sveln_.values(), size);
   }
-
-
-  return;
 }
 
 
@@ -118,8 +113,6 @@ void FLD::TDSEleData::update_svelnp_in_one_direction(const double fac1, const do
 
   */
   svelaf = alphaF * svelnp_(dim, iquad) + (1.0 - alphaF) * sveln_(dim, iquad);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -132,8 +125,6 @@ void FLD::TDSEleData::update_svelnp_in_one_direction(const double fac1, const do
   update_svelnp_in_one_direction(fac1, fac2, fac3, resM, alphaF, dim, iquad, svelaf);
 
   svelnp = svelnp_(dim, iquad);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -178,8 +169,6 @@ void FLD::TDSEleData::update(const double dt, const double gamma)
       sveln_(rr, mm) = svelnp_(rr, mm);
     }
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

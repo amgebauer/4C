@@ -36,7 +36,6 @@ Solid::TimIntCentrDiff::TimIntCentrDiff(const Teuchos::ParameterList& timeparams
   // redistribution of elements. Only then call the setup to this class. This will call the setup to
   // all classes in the inheritance hierarchy. This way, this class may also override a method that
   // is called during setup() in a base class.
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -56,7 +55,6 @@ void Solid::TimIntCentrDiff::init(const Teuchos::ParameterList& timeparams,
   }
 
   // let it rain
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -79,9 +77,6 @@ void Solid::TimIntCentrDiff::setup()
   fviscn_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
   fcmtn_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
   frimpn_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -89,7 +84,6 @@ void Solid::TimIntCentrDiff::setup()
 void Solid::TimIntCentrDiff::resize_m_step()
 {
   // nothing to do, because CentrDiff is a 1-step method
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -256,9 +250,6 @@ void Solid::TimIntCentrDiff::update_step_state()
 
   // update contact and meshtying
   update_step_contact_meshtying();
-
-  // bye
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -286,7 +277,6 @@ void Solid::TimIntCentrDiff::update_step_element()
 void Solid::TimIntCentrDiff::read_restart_force()
 {
   FOUR_C_THROW("No restart ability for central differences time integrator!");
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -294,7 +284,6 @@ void Solid::TimIntCentrDiff::read_restart_force()
 void Solid::TimIntCentrDiff::write_restart_force(
     std::shared_ptr<Core::IO::DiscretizationWriter> output)
 {
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

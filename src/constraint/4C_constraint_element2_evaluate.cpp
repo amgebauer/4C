@@ -124,7 +124,6 @@ void Discret::Elements::ConstraintElement2::compute_normal(
 {
   elenorm(0, 0) = xc(0, 1) - xc(1, 1);
   elenorm(1, 0) = -xc(0, 0) + xc(1, 0);
-  return;
 }
 
 
@@ -179,7 +178,6 @@ void Discret::Elements::ConstraintElement2::compute_first_deriv_dist(
 
   elevector[5] = normal(1, 0) / normal.norm2();
   elevector.scale(-1.0);
-  return;
 }
 
 /*----------------------------------------------------------------------*

@@ -8866,8 +8866,6 @@ void Utils::CardiovascularRespiratory0DSysPulPeriphCirculation::evaluate_respira
                                 q_vencer_sys_np + q_vencor_sys_np) *
                             dcb_c_o2_dpp_o2(ppCO2_ven_sys_np, ppO2_ven_sys_np)));
   }
-
-  return;
 }
 
 // cbO2 and its derivatives
@@ -9297,7 +9295,6 @@ void Utils::CardiovascularRespiratory0DSysPulPeriphCirculation::initialize(
       break;
     }
   }
-  return;
 }  // end of Initialize Cardiovascular0D
 
 FOUR_C_NAMESPACE_CLOSE

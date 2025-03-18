@@ -108,7 +108,6 @@ void Mat::ScatraMatPoroECM::unpack(Core::Communication::UnpackBuffer& buffer)
 void Mat::ScatraMatPoroECM::compute_reac_coeff(double chempot)
 {
   reaccoeff_ = params_->reaccoeff_ * exp(params_->reacscale_ * chempot);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

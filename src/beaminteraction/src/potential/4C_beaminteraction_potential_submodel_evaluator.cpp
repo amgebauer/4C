@@ -483,8 +483,6 @@ bool BeamInteraction::SUBMODELEVALUATOR::BeamPotential::evaluate_force_stiff()
 void BeamInteraction::SUBMODELEVALUATOR::BeamPotential::update_step_state(const double& timefac_n)
 {
   check_init_setup();
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -528,8 +526,6 @@ void BeamInteraction::SUBMODELEVALUATOR::BeamPotential::update_step_element(
 void BeamInteraction::SUBMODELEVALUATOR::BeamPotential::post_update_step_element()
 {
   check_init_setup();
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*

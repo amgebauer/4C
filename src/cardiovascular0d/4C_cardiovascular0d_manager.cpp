@@ -330,8 +330,6 @@ Utils::Cardiovascular0DManager::Cardiovascular0DManager(
     // Resulttest for 0D problem
     Global::Problem::instance()->add_field_test(resulttest);
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -429,8 +427,6 @@ void Utils::Cardiovascular0DManager::evaluate_force_stiff(const double time,
   // time-integrator!
   // Core::LinAlg::export_to(*cv0ddof_np_,*cv0ddof_np_red);
   evaluate_neumann_cardiovascular0_d_coupling(p, *cv0ddof_np_red, fint, stiff);
-
-  return;
 }
 
 void Utils::Cardiovascular0DManager::update_time_step()
@@ -455,8 +451,6 @@ void Utils::Cardiovascular0DManager::update_time_step()
     if (Core::Communication::my_mpi_rank(actdisc_->get_comm()) == 0)
       std::cout << "============ PERIODIC STATE REACHED ! ============" << std::endl;
   }
-
-  return;
 }
 
 void Utils::Cardiovascular0DManager::check_periodic()  // not yet thoroughly tested!
@@ -483,8 +477,6 @@ void Utils::Cardiovascular0DManager::check_periodic()  // not yet thoroughly tes
     is_periodic_ = true;
   else
     is_periodic_ = false;
-
-  return;
 }
 
 
@@ -515,8 +507,6 @@ void Utils::Cardiovascular0DManager::reset_step()
 
   cardvasc0d_df_np_->update(1.0, *cardvasc0d_df_n_, 0.0);
   cardvasc0d_f_np_->update(1.0, *cardvasc0d_f_n_, 0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -527,8 +517,6 @@ void Utils::Cardiovascular0DManager::update_cv0_d_dof(
   // new end-point solution
   // cv0ddof_{n+1}^{i+1} := cv0ddof_{n+1}^{i} + Inccv0ddof_{n+1}^{i}
   cv0ddof_np_->update(1.0, cv0ddofincrement, 1.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -562,8 +550,6 @@ void Utils::Cardiovascular0DManager::read_restart(
   totaltime_ = time;
 
   if (restartwithcardiovascular0d) print_pres_flux(true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -684,8 +670,6 @@ void Utils::Cardiovascular0DManager::evaluate_neumann_cardiovascular0_d_coupling
       if (assmat) systemmatrix->assemble(curr->second->id(), lmstride, elematrix, lm, lmowner);
     }
   }
-
-  return;
 }
 
 
@@ -887,8 +871,6 @@ void Utils::Cardiovascular0DManager::print_pres_flux(bool init) const
     }
     printf("total time: %10.16e \n", totaltime_);
   }
-
-  return;
 }
 
 
@@ -908,8 +890,6 @@ void Utils::Cardiovascular0DManager::solver_setup(
   adaptolbetter_ = params.get<double>("ADAPTCONV_BETTER", 0.01);
 
   counter_ = 0;
-
-  return;
 }
 
 

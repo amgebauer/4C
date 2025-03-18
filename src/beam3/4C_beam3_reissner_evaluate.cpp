@@ -2200,8 +2200,6 @@ void Discret::Elements::Beam3r::evaluate_ptc(
       elemat1(node * 6 + k, node * 6 + k) +=
           params.get<double>("ctransptc", 0.0) * 0.5 * 0.5 * reflength_;
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------------------*

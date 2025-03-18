@@ -128,7 +128,6 @@ void CONSTRAINTS::Constraint::initialize(
   }
   // start computing
   initialize_constraint(params, systemvector3);
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -184,7 +183,6 @@ void CONSTRAINTS::Constraint::evaluate(Teuchos::ParameterList& params,
   }
   evaluate_constraint(
       params, systemmatrix1, systemmatrix2, systemvector1, *systemvector2, systemvector3);
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -337,7 +335,6 @@ void CONSTRAINTS::Constraint::evaluate_constraint(Teuchos::ParameterList& params
       }
     }
   }
-  return;
 }  // end of evaluate_condition
 
 /*-----------------------------------------------------------------------*

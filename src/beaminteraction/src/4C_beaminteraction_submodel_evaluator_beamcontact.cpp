@@ -359,8 +359,6 @@ void BeamInteraction::SUBMODELEVALUATOR::BeamContact::pre_evaluate()
 void BeamInteraction::SUBMODELEVALUATOR::BeamContact::update_step_state(const double& timefac_n)
 {
   check_init_setup();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -417,8 +415,6 @@ void BeamInteraction::SUBMODELEVALUATOR::BeamContact::update_step_element(bool r
 void BeamInteraction::SUBMODELEVALUATOR::BeamContact::post_update_step_element()
 {
   check_init_setup();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

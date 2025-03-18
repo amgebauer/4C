@@ -75,7 +75,6 @@ Core::LinAlg::SerialDenseMatrix Discret::Elements::Nurbs::Ale3NurbsType::compute
 Discret::Elements::Nurbs::Ale3Nurbs::Ale3Nurbs(int id, int owner)
     : Discret::Elements::Ale3::Ale3(id, owner)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -83,7 +82,6 @@ Discret::Elements::Nurbs::Ale3Nurbs::Ale3Nurbs(int id, int owner)
 Discret::Elements::Nurbs::Ale3Nurbs::Ale3Nurbs(const Discret::Elements::Nurbs::Ale3Nurbs& old)
     : Discret::Elements::Ale3::Ale3(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -92,7 +90,6 @@ void Discret::Elements::Nurbs::Ale3Nurbs::print(std::ostream& os) const
 {
   os << "Ale3Nurbs ";
   Element::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

@@ -137,7 +137,6 @@ void PostVtkWriter::write_vtk_footer()
 
     currentmasterout_ << std::flush;
   }
-  return;
 }
 
 
@@ -222,7 +221,6 @@ void PostVtkWriter::write_solution_vector(const std::vector<double>& solution,
     if (ncomponents > 1) masterfile << " NumberOfComponents=\"" << ncomponents << "\"";
     masterfile << " format=\"ascii\"/>\n";
   }
-  return;
 }
 
 

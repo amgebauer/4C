@@ -49,10 +49,6 @@ void Mortar::STRATEGY::Factory::setup(const int dim)
 
   // get the problem dimension
   dim_ = dim;
-
-  // Note: Since this is an abstract class, the setup flag stays false.
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -137,8 +133,6 @@ void Mortar::STRATEGY::Factory::prepare_nurbs_element(const Core::FE::Discretiza
   cele.zero_sized() = zero_size;
   cele.knots() = mortarknots;
   cele.normal_fac() = normalfac;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -150,8 +144,6 @@ void Mortar::STRATEGY::Factory::prepare_nurbs_node(
       dynamic_cast<const Core::FE::Nurbs::ControlPoint*>(node);
 
   mnode.nurbs_w() = cp->w();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -160,8 +152,6 @@ void Mortar::STRATEGY::Factory::build_search_tree(
     const std::vector<std::shared_ptr<Mortar::Interface>>& interfaces) const
 {
   for (unsigned i = 0; i < interfaces.size(); ++i) interfaces[i]->create_search_tree();
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

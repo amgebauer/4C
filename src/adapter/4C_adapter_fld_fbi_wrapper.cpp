@@ -26,7 +26,6 @@ Adapter::FluidFBI::FluidFBI(std::shared_ptr<Fluid> fluid,
   // make sure
   if (std::dynamic_pointer_cast<FLD::FluidImplicitTimeInt>(fluid_) == nullptr)
     FOUR_C_THROW("Failed to create the correct underlying fluid adapter");
-  return;
 }
 
 /*----------------------------------------------------------------------*/

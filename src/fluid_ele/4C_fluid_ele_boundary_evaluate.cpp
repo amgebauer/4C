@@ -150,7 +150,6 @@ void Discret::Elements::FluidBoundary::location_vector(const Core::FE::Discretiz
       Core::Elements::Element::location_vector(dis, la, doDirichlet);
       break;
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -410,8 +410,6 @@ void Arteries::ArtNetImplStationary::apply_neumann_bc(Core::LinAlg::Vector<doubl
   // evaluate Neumann boundary conditions
   discret_->evaluate_neumann(condparams, neumann_loads);
   discret_->clear_state();
-
-  return;
 }  // ArtNetImplStationary::apply_neumann_bc
 
 /*----------------------------------------------------------------------*
@@ -420,7 +418,6 @@ void Arteries::ArtNetImplStationary::apply_neumann_bc(Core::LinAlg::Vector<doubl
 void Arteries::ArtNetImplStationary::add_neumann_to_residual()
 {
   rhs_->update(1.0, *neumann_loads_, 1.0);
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -444,7 +441,6 @@ void Arteries::ArtNetImplStationary::time_update()
     scatra_->scatra_field()->evaluate_error_compared_to_analytical_sol();
   }
 
-  return;
 }  // ArtNetExplicitTimeInt::TimeUpdate
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -469,8 +465,6 @@ void Arteries::ArtNetImplStationary::prepare_time_loop()
     // write out initial state
     output(false, nullptr);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

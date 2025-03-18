@@ -78,7 +78,6 @@ Discret::Elements::Membrane<distype>::Membrane(int id, int owner)
       break;
   }
   cur_thickness_.resize(intpoints_.nquad, thickness_);
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -94,7 +93,6 @@ Discret::Elements::Membrane<distype>::Membrane(const Discret::Elements::Membrane
       intpoints_(old.intpoints_)
 {
   cur_thickness_.resize(intpoints_.nquad, thickness_);
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -148,8 +146,6 @@ void Discret::Elements::Membrane<distype>::pack(Core::Communication::PackBuffer&
 
   // current thickness_
   add_to_pack(data, cur_thickness_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -167,9 +163,6 @@ void Discret::Elements::Membrane<distype>::unpack(Core::Communication::UnpackBuf
   extract_from_pack(buffer, thickness_);
   // current thickness_
   extract_from_pack(buffer, cur_thickness_);
-
-
-  return;
 }
 
 
@@ -222,7 +215,6 @@ void Discret::Elements::Membrane<distype>::print(std::ostream& os) const
   os << " discretization type: " << Core::FE::cell_type_to_string(distype).c_str();
   Element::print(os);
   std::cout << std::endl;
-  return;
 }
 
 /*----------------------------------------------------------------------*

@@ -149,8 +149,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::setup_system()
 
   // if there are inclined structural Dirichlet BC, get the structural LocSysManager
   if (locsysconditions.size()) locsysman_ = structure_field()->locsys_manager();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -172,8 +170,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::setup_maps()
 
   // full Poromultiphase-elasticity-blockmap
   blockrowdofmap_->setup(*fullmap_, vecSpaces);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -224,8 +220,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::time_step()
 
   // Error-Check
   newton_error_check();
-
-  return;
 }
 
 /*-----------------------------------------------------------------------/
@@ -240,8 +234,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::build_combined_dbc_map()
       fluid_field()->get_dbc_map_extractor()->cond_map();
   // merge them
   combinedDBCMap_ = Core::LinAlg::merge_map(scondmap, fcondmap, false);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -267,9 +259,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::evaluate(
 
   // *********** time measurement ***********
   dtele_ = timernewton_.wallTime() - dtcpu;
-  // *********** time measurement ***********
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | Evaluate (build global Matrix and RHS, public --> allows access      |
@@ -488,8 +477,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::apply_fluid_coupl_matrix(
   if (solve_structure_) fluid_field()->assemble_fluid_struct_coupling_mat(k_fs);
   k_fs->complete(
       structure_field()->system_matrix()->range_map(), fluid_field()->system_matrix()->range_map());
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -503,8 +490,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::update_fields_after_converg
   extract_field_vectors(iterinc_, sx, fx);
 
   update_fields_after_convergence(sx, fx);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -523,8 +508,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::update_fields_after_converg
 
   // (4) Set structure solution on fluid field
   set_struct_solution(structure_field()->dispnp(), structure_field()->velnp());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -577,8 +560,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::apply_str_coupl_matrix(
     // scale with time integration factor
     k_sf->scale(1.0 - structure_field()->tim_int_param());
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | setup solver for monolithic problem                kremheller 03/17  |
@@ -709,10 +690,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::setup_newton()
     zeros_ = Core::LinAlg::create_vector(*dof_row_map(), true);
   else
     zeros_->put_scalar(0.0);
-
-  // AitkenReset();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -784,8 +761,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::build_convergence_norms()
   // build the maximum value of the residuals and increments
   maxinc_ = std::max({normincart_, normincfluid_, normincstruct_});
   maxres_ = std::max({normrhs_, normrhsart_, normrhsfluid_, normrhsstruct_});
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -814,8 +789,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::newton_output()
         "+--------------+--------------+--------------+--------------+--------------+"
         "-----------------+\n");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -872,9 +845,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::newton_error_check()
     }
     FOUR_C_THROW("The monolithic solver did not converge in ITEMAX steps!");
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -922,9 +892,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::linear_solve()
 
   // *********** time measurement ***********
   dtsolve_ = timernewton_.wallTime() - dtcpu;
-  // *********** time measurement ***********
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1273,8 +1240,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWay::poro_fd_check()
   }
   else
     FOUR_C_THROW("PoroFDCheck failed in step: {}, iter: {}", step(), itnum_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1286,8 +1251,6 @@ POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWayArteryCoupling::
     : PoroMultiPhaseMonolithicTwoWay(comm, globaltimeparams)
 {
   blockrowdofmap_artporo_ = std::make_shared<Core::LinAlg::MultiMapExtractor>();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1318,8 +1281,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWayArteryCoupling::setup_maps()
 
   // full artery-poromulti-blockmap
   blockrowdofmap_artporo_->setup(*fullmap_artporo_, {vecSpaces[1], vecSpaces[2]});
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1341,8 +1302,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWayArteryCoupling::build_converg
 
   // call base class
   PoroMultiPhaseMonolithicTwoWay::build_convergence_norms();
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | extract field vectors for calling evaluate() of the  kremheller 04/18|
@@ -1371,8 +1330,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWayArteryCoupling::extract_field
   blockrowdofmap_artporo_->insert_vector(*artery, 1, *dummy);
 
   fx = dummy;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1390,8 +1347,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWayArteryCoupling::setup_system_
   mat.assign(2, 1, Core::LinAlg::View, artery_porofluid_sysmat()->matrix(1, 0));
   // porofluid-artery part
   mat.assign(1, 2, Core::LinAlg::View, artery_porofluid_sysmat()->matrix(0, 1));
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1414,8 +1369,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWayArteryCoupling::setup_rhs()
   extractor()->insert_vector(
       *(blockrowdofmap_artporo_->extract_vector(*fluid_field()->artery_porofluid_rhs(), 1)), 2,
       *rhs_);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------/
@@ -1430,8 +1383,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWayArteryCoupling::build_combine
 
   // merge them
   combinedDBCMap_ = Core::LinAlg::merge_map(combinedDBCMap_, artcondmap, false);
-
-  return;
 }
 /*----------------------------------------------------------------------------*
  | build null space for artery block of global system matrix kremheller 05/18 |
@@ -1453,8 +1404,6 @@ void POROMULTIPHASE::PoroMultiPhaseMonolithicTwoWayArteryCoupling::build_artery_
   Core::LinearSolver::Parameters::fix_null_space("Artery",
       *(fluid_field()->art_net_tim_int()->discretization()->dof_row_map(0)),
       *(fluid_field()->artery_dof_row_map()), blocksmootherparams3);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

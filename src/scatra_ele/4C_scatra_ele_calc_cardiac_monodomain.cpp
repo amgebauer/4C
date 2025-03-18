@@ -82,8 +82,6 @@ void Discret::Elements::ScaTraEleCalcCardiacMonodomain<distype, probdim>::materi
     actmat->resize_internal_state_variables();
   }
   mat_myocard(material, k, densn, densnp, densam, visc, iquad);
-
-  return;
 }
 
 
@@ -145,7 +143,6 @@ void Discret::Elements::ScaTraEleCalcCardiacMonodomain<distype, probdim>::mat_my
         -actmat->rea_coeff_deriv(phinp, my::scatraparatimint_->dt(), iquad), k, k);
   }
 
-  return;
 }  // ScaTraEleCalcCardiacMonodomain<distype>::MatMyocard
 
 
@@ -297,8 +294,6 @@ void Discret::Elements::ScaTraEleCalcCardiacMonodomain<distype, probdim>::sysmat
 
     }  // end loop all scalars
   }  // end loop Gauss points
-
-  return;
 }
 
 

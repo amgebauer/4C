@@ -95,8 +95,6 @@ void tsi_dyn_drt()
   Global::Problem::instance()->add_field_test(tsi->structure_field()->create_field_test());
   Global::Problem::instance()->add_field_test(tsi->thermo_field()->create_field_test());
   Global::Problem::instance()->test_all(comm);
-
-  return;
 }  // tsi_dyn_drt()
 
 

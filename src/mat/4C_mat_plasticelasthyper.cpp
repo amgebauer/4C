@@ -200,8 +200,6 @@ void Mat::PlasticElastHyper::pack(Core::Communication::PackBuffer& data) const
   add_to_pack(data, s());
 
   anisotropy_.pack_anisotropy(data);
-
-  return;
 }
 
 
@@ -566,8 +564,6 @@ void Mat::PlasticElastHyper::evaluate_elast(const Core::LinAlg::Matrix<3, 3>* de
     evaluate_isotropic_princ_elast(*pk2, *cmat, dPI, ddPII);
   else
     FOUR_C_THROW("only isotropic hyperelastic materials");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -663,8 +659,6 @@ void Mat::PlasticElastHyper::evaluate_thermal_stress(const Core::LinAlg::Matrix<
       *cmat, -3. * cte() * deltaT * modinv(2) * ddPmodII(2), invRCG, invRCG, 1.);
   Core::LinAlg::Tensor::add_kronecker_tensor_product(
       *cmat, +6. * cte() * deltaT * modinv(2) * ddPmodII(2), invRCG, invRCG, 1.);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -720,8 +714,6 @@ void Mat::PlasticElastHyper::evaluate_c_tvol(const Core::LinAlg::Matrix<3, 3>* d
       *dCTvoldE, -3. * cte() * modinv(2) * ddPmodII(2), invRCG, invRCG, 1.);
   Core::LinAlg::Tensor::add_kronecker_tensor_product(
       *dCTvoldE, +6. * cte() * modinv(2) * ddPmodII(2), invRCG, invRCG, 1.);
-
-  return;
 }
 
 
@@ -750,7 +742,6 @@ void Mat::PlasticElastHyper::evaluate_gough_joule(
 
   he_fac = -3. * cte() * ddPmodII(2);
   he_fac_deriv = -3. * cte() * dddPmodIII;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -812,8 +803,6 @@ void Mat::PlasticElastHyper::evaluate_plast(const Core::LinAlg::Matrix<3, 3>* de
   evaluate_ncp(&mStr, &dMdC, &dMdFpinv, &dPK2dFpinv, deltaDp, gp, temp, NCP, dNCPdC, dNCPdDp,
       dNCPdT, dPK2dDp, active, elast, as_converged, dHdC, dHdDp, params, dt, &d_cauchy_dFpi,
       d_cauchy_ddp);
-
-  return;
 }
 
 
@@ -1277,8 +1266,6 @@ void Mat::PlasticElastHyper::evaluate_ncp(const Core::LinAlg::Matrix<3, 3>* mStr
   {
     *elast = true;
   }
-
-  return;
 }
 
 
@@ -1341,8 +1328,6 @@ void Mat::PlasticElastHyper::evaluate_plast(const Core::LinAlg::Matrix<3, 3>* de
 
   evaluate_nc_pand_spin(&mStr, &dMdC, &dMdFpinv, &dPK2dFpinv, deltaLp, gp, NCP, dNCPdC, dNCPdLp,
       dPK2dLp, active, elast, as_converged, dt, &d_cauchy_dFpi, d_cauchy_ddp);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1741,8 +1726,6 @@ void Mat::PlasticElastHyper::evaluate_nc_pand_spin(const Core::LinAlg::Matrix<3,
   {
     *elast = true;
   }
-
-  return;
 }
 
 void Mat::PlasticElastHyper::evaluate_cauchy_plast(const Core::LinAlg::Matrix<3, 1>& dPI,
@@ -1969,8 +1952,6 @@ void Mat::PlasticElastHyper::update_gp(const int gp, const Core::LinAlg::Matrix<
     last_alpha_kinematic_[gp].update(-.5, *deltaDp, 1.);
     last_alpha_kinematic_[gp].update_t(-.5, *deltaDp, 1.);
   }
-
-  return;
 }
 
 
@@ -2029,8 +2010,6 @@ void Mat::PlasticElastHyper::evaluate_kin_quant_elast(const Core::LinAlg::Matrix
 
   // principal invariants of elastic Cauchy-Green strain
   Core::LinAlg::Voigt::Strains::invariants_principal(prinv_, elasticRCGv);
-
-  return;
 }
 
 
@@ -2208,8 +2187,6 @@ void Mat::PlasticElastHyper::evaluate_isotropic_princ_elast(
   cmatisoprinc.multiply_nt(delta(5), ircg_, ircg_, 1.);
   Core::LinAlg::Tensor::add_holzapfel_product(cmatisoprinc, ircg_, delta(6));
   Core::LinAlg::Tensor::add_holzapfel_product(cmatisoprinc, Cpi_, delta(7));
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -2281,8 +2258,6 @@ void Mat::PlasticElastHyper::evaluate_isotropic_princ_plast(
   dMdFpinvIsoprinc.multiply_nt(delta(4), Ce2_, CFpiCei_, 1.);
   dMdFpinvIsoprinc.multiply_nt(delta(4), id2V_, CFpiCe_, 1.);
   dMdFpinvIsoprinc.multiply_nt(delta(5), id2V_, CFpiCei_, 1.);
-
-  return;
 }
 
 /*---------------------------------------------------------------------*

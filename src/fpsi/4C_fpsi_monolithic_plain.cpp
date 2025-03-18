@@ -213,7 +213,6 @@ void FPSI::MonolithicPlain::set_dof_row_maps(
 void FPSI::Monolithic::set_default_parameters(const Teuchos::ParameterList& fpsidynparams)
 {
   // to do
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -630,7 +629,6 @@ void FPSI::MonolithicPlain::setup_rhs_lambda(Core::LinAlg::Vector<double>& f)
     // add Lagrange multiplier
     extractor().add_vector(*lambdafull, structure_block_, f);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -848,7 +846,6 @@ void FPSI::MonolithicPlain::setup_rhs_first_iter(Core::LinAlg::Vector<double>& f
   solgprev_ = nullptr;
   fgicur_ = nullptr;
   fggcur_ = nullptr;
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1125,7 +1122,6 @@ void FPSI::MonolithicPlain::recover_lagrange_multiplier()
     // Finally, the Lagrange multiplier 'lambda_' is recovered here.
     // It represents nodal forces acting onto the structure.
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

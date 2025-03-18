@@ -258,7 +258,6 @@ void Discret::Elements::ScaTraEleCalcChemo<distype, probdim>::get_material_param
   {
     my::materials(material, 0, densn[0], densnp[0], densam[0], visc, iquad);
   }
-  return;
 }  // ScaTraEleCalc::get_material_params
 
 /*-----------------------------------------------------------------------------------*
@@ -356,8 +355,6 @@ void Discret::Elements::ScaTraEleCalcChemo<distype, probdim>::calc_strong_residu
 
   // Add to residual
   scatrares += chemo_phi;
-
-  return;
 }
 
 // template classes

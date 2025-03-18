@@ -32,7 +32,6 @@ FLD::TimIntGenAlpha::TimIntGenAlpha(const std::shared_ptr<Core::FE::Discretizati
 // af-generalized-alpha parameters: gamma_ = 0.5 + alphaM_ - alphaF_
 // (may be reset below when starting algorithm is used)
 {
-  return;
 }
 
 
@@ -60,8 +59,6 @@ void FLD::TimIntGenAlpha::init()
   set_element_time_parameter();
 
   complete_general_init();
-
-  return;
 }
 
 
@@ -92,7 +89,6 @@ void FLD::TimIntGenAlpha::print_time_step_info()
         break;
     } /* end of switch(timealgo) */
   }
-  return;
 }
 
 
@@ -136,8 +132,6 @@ void FLD::TimIntGenAlpha::set_theta()
 
   // compute "pseudo-theta" for af-generalized-alpha scheme
   theta_ = alphaF_ * gamma_ / alphaM_;
-
-  return;
 }
 
 
@@ -158,8 +152,6 @@ void FLD::TimIntGenAlpha::set_old_part_of_righthandside()
   */
 
   hist_->put_scalar(0.0);
-
-  return;
 }
 
 
@@ -298,8 +290,6 @@ void FLD::TimIntGenAlpha::gen_alpha_intermediate_values(
   // store computed intermediate values in given vectors
   vecnp = vecaf;
   vecn = vecam;
-
-  return;
 }  // TimIntGenAlpha::gen_alpha_intermediate_values
 
 
@@ -311,8 +301,6 @@ void FLD::TimIntGenAlpha::set_state_tim_int()
   discret_->set_state("velaf", velaf_);
   discret_->set_state("velam", velam_);
   if (timealgo_ == Inpar::FLUID::timeint_npgenalpha) discret_->set_state("velnp", velnp_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*|
@@ -324,7 +312,6 @@ void FLD::TimIntGenAlpha::treat_turbulence_models(Teuchos::ParameterList& elepar
   if (reconstructder_)
     FLD::Utils::project_gradient_and_set_param(
         *discret_, eleparams, velaf_, "velafgrad", alefluid_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -344,8 +331,6 @@ void FLD::TimIntGenAlpha::calculate_acceleration(
     const std::shared_ptr<Core::LinAlg::Vector<double>> accnp)
 {
   // do nothing: new acceleration is calculated at beginning of next time step
-
-  return;
 }
 
 
@@ -355,18 +340,13 @@ void FLD::TimIntGenAlpha::calculate_acceleration(
 void FLD::TimIntGenAlpha::set_gamma(Teuchos::ParameterList& eleparams)
 {
   eleparams.set("gamma", gamma_);
-  return;
 }
 
 
 /*----------------------------------------------------------------------*
 | scale separation                                             bk 12/13 |
 *-----------------------------------------------------------------------*/
-void FLD::TimIntGenAlpha::sep_multiply()
-{
-  Sep_->multiply(false, *velaf_, *fsvelaf_);
-  return;
-}
+void FLD::TimIntGenAlpha::sep_multiply() { Sep_->multiply(false, *velaf_, *fsvelaf_); }
 
 
 /*----------------------------------------------------------------------*
@@ -375,7 +355,6 @@ void FLD::TimIntGenAlpha::sep_multiply()
 void FLD::TimIntGenAlpha::update_velaf_gen_alpha()
 {
   velaf_->update((alphaF_), *velnp_, (1.0 - alphaF_), *veln_, 0.0);
-  return;
 }
 
 
@@ -400,8 +379,6 @@ void FLD::TimIntGenAlpha::outputof_filtered_vel(
   outvec->update(1.0, *velaf_, -1.0, *row_finescaleveltmp, 0.0);
 
   fsoutvec->update(1.0, *row_finescaleveltmp, 0.0);
-
-  return;
 }
 
 
@@ -437,7 +414,6 @@ void FLD::TimIntGenAlpha::set_element_time_parameter()
 
   // call standard loop over elements
   discret_->evaluate(eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-  return;
 }
 
 /*----------------------------------------------------------------------*

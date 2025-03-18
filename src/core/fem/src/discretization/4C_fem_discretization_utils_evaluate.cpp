@@ -136,8 +136,6 @@ void Core::FE::Utils::evaluate(Core::FE::Discretization& discret, Teuchos::Param
     }
 
   }  // loop over all considered elements
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

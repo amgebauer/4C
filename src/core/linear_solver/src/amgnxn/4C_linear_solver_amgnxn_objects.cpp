@@ -162,9 +162,6 @@ void Core::LinearSolver::AMGNxN::BlockedMatrix::apply(
       Yi->Update(1.0, Yitmp, 1.0);
     }
   }
-
-
-  return;
 }
 
 /*------------------------------------------------------------------------------*/
@@ -297,9 +294,6 @@ void Core::LinearSolver::AMGNxN::DiagonalBlockedMatrix::apply(
     Teuchos::RCP<Core::LinAlg::MultiVector<double>> Xi = in.get_vector(i);
     get_matrix(i, i)->Apply(*Xi, *Yi);
   }
-
-
-  return;
 }
 
 
@@ -398,8 +392,6 @@ void Core::LinearSolver::AMGNxN::BlockedMatrix::parse_blocks(const std::string& 
   for (unsigned iblock = 0; iblock < blocks_processed.size(); ++iblock)
     if (not blocks_processed[iblock])
       FOUR_C_THROW("Matrix block {} has not been specified in the *.xml file!", blocks[iblock]);
-
-  return;
 }
 
 /*------------------------------------------------------------------------------*/

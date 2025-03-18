@@ -45,8 +45,6 @@ void XFEM::Utils::get_std_average_weights(
     default:
       FOUR_C_THROW("XFEM::Utils::GetAverageWeights: AveragingStrategy not implemented here!");
   }
-
-  return;
 }
 
 /*--------------------------------------------------------------------------------
@@ -131,7 +129,6 @@ void XFEM::Utils::nit_compute_visc_penalty_stabfac(
     FOUR_C_THROW(
         "unknown trace-inequality-estimate type for viscous part of Nitsche's penalty term");
   }
-  return;
 }
 
 /*--------------------------------------------------------------------------------
@@ -370,16 +367,6 @@ void XFEM::Utils::get_navier_slip_stabilization_parameters(
   // ----------------------------------------------------------------------
   //  stabadj = [ gamma*h_E  /(epsilon + gamma*h_E)  ]
   stabadj = NIT_robin_denominator_no_mu * NIT_visc_stab_fac_inv;
-
-#ifdef ENFORCE_URQUIZA_GNBC
-  // In tangential direction stabilization:
-  stabnit = (dynvisc / sliplength);  // Appears in NIT-penalty stabilization
-  stabadj = 0.0;
-  stabepsnit = 0.0;
-  stabepsadj = 0.0;
-#endif
-
-  return;
 }
 
 /*--------------------------------------------------------------------------------
@@ -413,8 +400,6 @@ void XFEM::Utils::compute_surface_transformation(double& drs,  ///< surface tran
     default:
       FOUR_C_THROW("unsupported integration cell type");
   }
-
-  return;
 }
 
 /*--------------------------------------------------------------------------------
@@ -987,8 +972,6 @@ void XFEM::Utils::nit_compute_full_penalty_stabfac(
   }
   else
     FOUR_C_THROW("Unknown combination type in calculation of Nitsche's penalty parameter.");
-
-  return;
 }
 
 double XFEM::Utils::evaluate_full_traction(const double& pres_m,

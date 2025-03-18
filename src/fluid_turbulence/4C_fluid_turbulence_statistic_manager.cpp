@@ -390,8 +390,6 @@ namespace FLD
     }
     else
       statistics_general_mean_ = nullptr;
-
-    return;
   }
 
 
@@ -494,8 +492,6 @@ namespace FLD
         std::cout << std::endl;
       }
     }
-
-    return;
   }
 
 
@@ -535,8 +531,6 @@ namespace FLD
         }
       }
     }
-
-    return;
   }
 
   /*----------------------------------------------------------------------
@@ -1033,8 +1027,6 @@ namespace FLD
         std::cout << "\n\n";
       }
     }
-
-    return;
   }
 
 
@@ -1077,8 +1069,6 @@ namespace FLD
       }
 
     }  // end step in sampling period
-
-    return;
   }
 
 
@@ -1091,7 +1081,6 @@ namespace FLD
       std::shared_ptr<Core::LinAlg::Vector<double>> velnp)
   {
     myvelnp_ = velnp;
-    return;
   }
 
   /*----------------------------------------------------------------------
@@ -1460,7 +1449,6 @@ namespace FLD
       fvreman.close();
     }
 
-    return;
   }  // DoOutput
 
 
@@ -1529,8 +1517,6 @@ namespace FLD
       statistics_hit_->store_scatra_discret(scatradis_);
 
     withscatra_ = true;
-
-    return;
   }
 
 
@@ -1556,7 +1542,6 @@ namespace FLD
       if ((step % upres == 0 || step % uprestart == 0) && (statistics_general_mean_ != nullptr))
         statistics_general_mean_->do_output_for_scatra(output, step);
     }
-    return;
   }
 
 
@@ -1596,7 +1581,6 @@ namespace FLD
       }
     }
 
-    return;
   }  // Restart
 
 
@@ -1626,7 +1610,6 @@ namespace FLD
       }
     }
 
-    return;
   }  // RestartScaTra
 
 

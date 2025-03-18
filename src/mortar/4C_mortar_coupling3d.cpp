@@ -37,7 +37,6 @@ Mortar::Coupling3d::Coupling3d(Core::FE::Discretization& idiscret, int dim, bool
       lauxn_(-1.0)
 {
   // empty constructor body
-  return;
 }
 
 
@@ -1485,8 +1484,6 @@ void Mortar::Coupling3d::polygon_clipping(std::vector<Vertex>& poly1, std::vecto
     fprintf(fp, "%s", gmshfilecontent.str().c_str());
     fclose(fp);
   }
-
-  return;
 }
 
 
@@ -3529,8 +3526,6 @@ void Mortar::Coupling3d::gmsh_output_cells(int lid) const
 
   // increase static variable
   count += 1;
-
-  return;
 }
 
 
@@ -3880,8 +3875,6 @@ Mortar::Coupling3dQuad::Coupling3dQuad(Core::FE::Discretization& idiscret, int d
 {
   //  3D quadratic coupling only for quadratic ansatz type
   if (!Coupling3dQuad::quad()) FOUR_C_THROW("Coupling3dQuad called for non-quadratic ansatz!");
-
-  return;
 }
 
 
@@ -3907,7 +3900,6 @@ Mortar::Coupling3dManager::Coupling3dManager(Core::FE::Discretization& idiscret,
       sele_(sele),
       mele_(mele)
 {
-  return;
 }
 
 
@@ -3919,7 +3911,6 @@ Mortar::Coupling3dQuadManager::Coupling3dQuadManager(Core::FE::Discretization& i
     std::vector<Mortar::Element*> mele)
     : Coupling3dManager(idiscret, dim, quad, params, sele, mele)
 {
-  return;
 }
 
 
@@ -4068,8 +4059,6 @@ void Mortar::Coupling3dManager::integrate_coupling(
   // free memory of consistent dual shape function coefficient matrix
   slave_element().mo_data().reset_dual_shape();
   slave_element().mo_data().reset_deriv_dual_shape();
-
-  return;
 }
 
 
@@ -4185,8 +4174,6 @@ void Mortar::Coupling3dQuadManager::integrate_coupling(
   // free memory of consistent dual shape function coefficient matrix
   slave_element().mo_data().reset_dual_shape();
   slave_element().mo_data().reset_deriv_dual_shape();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4410,8 +4397,6 @@ void Mortar::Coupling3dManager::consist_dual_shape()
 
   // store ae matrix in slave element data container
   slave_element().mo_data().dual_shape() = std::make_shared<Core::LinAlg::SerialDenseMatrix>(ae);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

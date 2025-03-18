@@ -198,7 +198,6 @@ template <unsigned int numnodes, unsigned int numnodalvalues>
 void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::pre_evaluate()
 {
   // do nothing
-  return;
 }
 /*----------------------------------------------------------------------------*
  *----------------------------------------------------------------------------*/
@@ -1658,8 +1657,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::calc_pena
   variables.setfp(fp);
   variables.setdfp(dfp);
   variables.set_energy(e);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Calculate scalar contact force
@@ -1726,8 +1723,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::calc_perp
   // set class variable
   cpvariables.set_p_pfac(ppfac);
   cpvariables.set_dp_pfac(dppfac);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Calculate angle-dependent perp-penalty scale factor
@@ -1783,8 +1778,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::calc_par_
   // set class variable
   gpvariables.set_p_pfac(ppfac);
   gpvariables.set_dp_pfac(dppfac);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Calculate angle-dependent par-penalty scale factor
@@ -2111,8 +2104,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::get_close
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3017,8 +3008,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
 
   eta1_min = eta1_closestpoint;
   eta2_min = eta2_closestpoint;
-
-  return;
 }
 /*------------------------------------------------------------------------------------------*
 |  end: Determine minimal distance and contact angle for unconverged segment pair
@@ -3636,8 +3625,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::evaluate_
     }
 #endif
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate contact stiffness
@@ -3913,8 +3900,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::compute_l
     delta_xi(i) = D(0, i);
     delta_eta(i) = D(1, i);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Linearizations of contact point
@@ -3970,8 +3955,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::compute_l
   {
     delta_eta(i) = 1.0 / L * B(0, i);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Lin. of contact point coordinate eta with fixed xi
@@ -4024,8 +4007,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::compute_l
   {
     delta_xi(i) = 1.0 / L * B(0, i);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Lin. of contact point coordinate xi with fixed eta
@@ -4113,8 +4094,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::compute_l
     delta_xi_bound(i) = B(1, i) / a_21;
   }
 #endif
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Compute linearization of integration interval bounds
@@ -4173,8 +4152,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::compute_l
       delta_gap(j) += delta_r(i) * auxiliary_matrix1(i, j) / norm_delta_r;
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute linearization of gap
@@ -4251,8 +4228,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::
   {
     delta_coscontactangle(j) = modulus_factor * (v1_delta_r1_xi(j) + v2_delta_r2_xi(j));
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute linearization of cosine of contact angle
@@ -4324,8 +4299,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::compute_l
     for (unsigned int j = 0; j < 3; j++)
       for (unsigned int k = 0; k < dim1 + dim2; k++)
         delta_normal(i, k) += auxiliary_matrix2(i, j) * auxiliary_matrix1(j, k);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute linearization of normal vector
@@ -4395,8 +4368,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::get_shape
       TYPE>(N1_i, N1_i_xi, N1_i_xixi, N1, N1_xi, N1_xixi);
   Discret::Utils::Beam::assemble_shape_functions_and_derivs_and2nd_derivs<numnodes, numnodalvalues,
       TYPE>(N2_i, N2_i_xi, N2_i_xixi, N2, N2_xi, N2_xixi);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: evaluate shape functions and derivatives
@@ -4472,8 +4443,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::get_shape
   // Assemble the individual shape functions in matrices, such that: r1=N1*d1, r1_xi=N1_xi*d1,
   // r1_xixi=N1_xixi*d1, r2=N2*d2, r2_xi=N2_xi*d2, r2_xixi=N2_xixi*d2
   Discret::Utils::Beam::assemble_shape_functions<numnodes, numnodalvalues, TYPE>(N_i, N);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: evaluate shape functions and derivatives
@@ -4604,8 +4573,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::compute_c
       r2_xixi(i) += N2_xixi(i, j) * ele2pos_(j);
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: compute contact point coordinates and their derivatives         |
@@ -4629,8 +4596,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
     f(0) += delta_r(i) * r1_xi(i) / norm_delta_r;
     f(1) += -delta_r(i) * r2_xi(i) / norm_delta_r;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate function f in CPP
@@ -4695,8 +4660,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
     dfinv(1, 0) = -df(1, 0) / det_df;
     dfinv(1, 1) = df(0, 0) / det_df;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate Jacobian df in CPP
@@ -4730,9 +4693,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
       f += -delta_r(i) * r1_xi(i) / norm_delta_r;
     }
   }
-
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate orthogonality cond. of point to line projection
@@ -4819,8 +4779,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::compute_n
     FOUR_C_THROW(
         "Gap too small, danger of penetration. Choose smaller time step or higher penalty!");
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Compute normal vector in contact point
@@ -4941,8 +4899,6 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::reset_sta
       ele2pos_(3 * numnodalvalues * j + i) = centerline_dofvec_ele2[3 * numnodalvalues * j + i];
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

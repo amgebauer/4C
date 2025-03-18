@@ -341,8 +341,6 @@ namespace FLD
     //-------------------------------------------------------------------------
     if (type_ == decaying_homogeneous_isotropic_turbulence)
       calculate_resolved_energy_decaying_turbulence();
-
-    return;
   }
 
 
@@ -687,8 +685,6 @@ namespace FLD
     // for forced case only, since there is not any statistic-stationary state
     // for the decaying case (merely averaging in space)
     if (type_ == forced_homogeneous_isotropic_turbulence) numsamp_++;
-
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif
@@ -1101,8 +1097,6 @@ namespace FLD
     //----------------------------------------------------------------------
 
     numsamp_++;
-
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif
@@ -1117,7 +1111,6 @@ namespace FLD
       std::map<std::string, std::shared_ptr<Core::LinAlg::Vector<double>>> statevecs)
   {
     FOUR_C_THROW("EvaluateResiduals() not yet implemented for hit!");
-    return;
   }
 
 
@@ -1297,8 +1290,6 @@ namespace FLD
         log_t->flush();
       }
     }
-
-    return;
   }
 
 
@@ -1387,8 +1378,6 @@ namespace FLD
 
       log_k->flush();
     }
-
-    return;
   }
 
 
@@ -1411,8 +1400,6 @@ namespace FLD
     }
 
     numsamp_ = 0;
-
-    return;
   }
 
 
@@ -1435,8 +1422,6 @@ namespace FLD
     }
 
     numsamp_ = 0;
-
-    return;
   }
 
 
@@ -1689,8 +1674,6 @@ namespace FLD
       (*log) << "\n\n\n";
       log->flush();
     }
-
-    return;
   }
 
   /*--------------------------------------------------------------*
@@ -1803,8 +1786,6 @@ namespace FLD
 
       log_2->flush();
     }
-
-    return;
   }
 
   /*--------------------------------------------------------------*
@@ -2109,7 +2090,6 @@ namespace FLD
     // for the decaying case (merely averaging in space)
     if (type_ == forced_homogeneous_isotropic_turbulence) numsamp_++;
     discret_->clear_state(true);
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif

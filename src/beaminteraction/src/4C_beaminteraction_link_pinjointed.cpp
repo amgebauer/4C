@@ -35,7 +35,6 @@ BeamInteraction::BeamLinkPinJointed::BeamLinkPinJointed(
     const BeamInteraction::BeamLinkPinJointed& old)
     : BeamInteraction::BeamLink(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -71,8 +70,6 @@ void BeamInteraction::BeamLinkPinJointed::pack(Core::Communication::PackBuffer& 
   add_to_pack(data, type);
   // add base class Element
   BeamLink::pack(data);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -83,10 +80,6 @@ void BeamInteraction::BeamLinkPinJointed::unpack(Core::Communication::UnpackBuff
 
   // extract base class Element
   BeamLink::unpack(buffer);
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

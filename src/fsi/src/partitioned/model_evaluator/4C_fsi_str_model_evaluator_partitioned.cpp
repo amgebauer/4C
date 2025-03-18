@@ -39,8 +39,6 @@ void Solid::ModelEvaluator::PartitionedFSI::setup()
 
   // set flag
   issetup_ = true;
-
-  return;
 }
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
@@ -99,7 +97,6 @@ void Solid::ModelEvaluator::PartitionedFSI::update_step_state(const double& time
   {
     // do nothing
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*

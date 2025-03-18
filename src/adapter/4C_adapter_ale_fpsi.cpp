@@ -17,9 +17,7 @@ Adapter::AleFpsiWrapper::AleFpsiWrapper(std::shared_ptr<Ale> ale) : AleWrapper(a
 {
   // create the FSI interface
   interface_ = std::make_shared<ALE::Utils::MapExtractor>();
-  interface_->setup(*discretization(), true);  // create overlapping maps for fpsi problem
-
-  return;
+  interface_->setup(*discretization(), true);
 }
 
 

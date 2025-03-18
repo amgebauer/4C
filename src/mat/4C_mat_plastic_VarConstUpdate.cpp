@@ -102,8 +102,6 @@ void Mat::PlasticElastHyperVCU::pack(Core::Communication::PackBuffer& data) cons
   // plastic history data
   add_to_pack(data, last_plastic_defgrd_inverse_);
   add_to_pack(data, last_alpha_isotropic_);
-
-  return;
 }
 
 
@@ -166,12 +164,6 @@ void Mat::PlasticElastHyperVCU::unpack(Core::Communication::UnpackBuffer& buffer
   // no need to pack this
   delta_alpha_i_.resize(last_alpha_isotropic_.size(), 0.);
   plastic_defgrd_inverse_.resize(last_plastic_defgrd_inverse_.size());
-
-  // in the postprocessing mode, we do not unpack everything we have packed
-  // -> position check cannot be done in this case
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -183,8 +175,6 @@ void Mat::PlasticElastHyperVCU::setup(int numgp, const Core::IO::InputParameterC
 
   // setup history
   plastic_defgrd_inverse_.resize(numgp);
-
-  return;
 }
 
 // MAIN
@@ -452,8 +442,6 @@ void Mat::PlasticElastHyperVCU::evaluate(const Core::LinAlg::Matrix<3, 3>* defgr
 
     cmat->update(cmat_summand1, cmat_summand2);
   }
-
-  return;
 }
 
 
@@ -467,8 +455,6 @@ void Mat::PlasticElastHyperVCU::update()
     last_plastic_defgrd_inverse_[gp] = plastic_defgrd_inverse_[gp];
     last_alpha_isotropic_[gp] += delta_alpha_i_[gp];
   }
-
-  return;
 };
 
 
@@ -565,8 +551,6 @@ void Mat::PlasticElastHyperVCU::yield_function(const double last_ai,
   double yf = 0.0;
   yf = NormDevMandelStr + Qi - Qeq;
   *yieldFunc = yf;
-
-  return;
 }
 
 
@@ -599,8 +583,6 @@ void Mat::PlasticElastHyperVCU::comp_elast_quant(const Core::LinAlg::Matrix<3, 3
   next_ee(5) = 2. * next_ee3x3(0, 2);
 
   *Ee = next_ee;
-
-  return;
 }
 
 /*---------------------------------------------------------------------*
@@ -716,8 +698,6 @@ void Mat::PlasticElastHyperVCU::evaluate_rhs(const int gp, const Core::LinAlg::M
   // Outputs
   rhs.multiply_tn(1., dAlphadBeta, rhs6, 0.);
   rhsElast.multiply_tn(1., dAlphadBeta, rhs6Elast, 0.);
-
-  return;
 }
 void Mat::PlasticElastHyperVCU::evaluate_plast(Core::LinAlg::Matrix<6, 9>& dPK2dFpinvIsoprinc,
     const Core::LinAlg::Matrix<3, 1>& gamma, const Core::LinAlg::Matrix<8, 1>& delta,

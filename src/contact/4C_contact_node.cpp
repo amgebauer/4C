@@ -52,7 +52,6 @@ CONTACT::NodeDataContainer::NodeDataContainer()
   }
   get_deriv_gltl().resize(3);
   get_deriv_jumpltl().resize(3);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -73,11 +72,6 @@ void CONTACT::NodeDataContainer::pack(Core::Communication::PackBuffer& data) con
   add_to_pack(data, activeold_);
   // add n_old_
   add_to_pack(data, n_old_, 3 * sizeof(double));
-
-  // no need to pack derivs_
-  // (these will evaluated anew anyway)
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -98,8 +92,6 @@ void CONTACT::NodeDataContainer::unpack(Core::Communication::UnpackBuffer& buffe
   extract_from_pack(buffer, activeold_);
   // n_old_
   extract_from_pack(buffer, n_old_, 3 * sizeof(double));
-
-  return;
 }
 
 
@@ -116,7 +108,6 @@ CONTACT::NodePoroDataContainer::NodePoroDataContainer()
     poro_lm()[i] = 0.0;
   }
   *fpres() = 0.0;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -135,7 +126,6 @@ void CONTACT::NodePoroDataContainer::pack(Core::Communication::PackBuffer& data)
   add_to_pack(data, porolm_, 3 * sizeof(double));
   // add ncoup
   add_to_pack(data, ncouprow_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -154,7 +144,6 @@ void CONTACT::NodePoroDataContainer::unpack(Core::Communication::UnpackBuffer& b
   extract_from_pack(buffer, porolm_, 3 * sizeof(double));
   // ncoup
   extract_from_pack(buffer, ncouprow_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -163,7 +152,6 @@ void CONTACT::NodePoroDataContainer::unpack(Core::Communication::UnpackBuffer& b
 CONTACT::NodeTSIDataContainer::NodeTSIDataContainer(double t_ref, double t_dam)
     : temp_(-1.e12), t_ref_(t_ref), t_dam_(t_dam), thermo_lm_(0.), temp_master_(-1.e12)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -177,7 +165,6 @@ void CONTACT::NodeTSIDataContainer::pack(Core::Communication::PackBuffer& data) 
   add_to_pack(data, t_dam_);
   add_to_pack(data, derivTempMasterDisp_);
   add_to_pack(data, derivTempMasterTemp_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -191,7 +178,6 @@ void CONTACT::NodeTSIDataContainer::unpack(Core::Communication::UnpackBuffer& bu
   extract_from_pack(buffer, t_dam_);
   extract_from_pack(buffer, derivTempMasterDisp_);
   extract_from_pack(buffer, derivTempMasterTemp_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -203,7 +189,6 @@ void CONTACT::NodeTSIDataContainer::clear()
   temp_master_ = -1.e12;
   derivTempMasterDisp_.clear();
   derivTempMasterTemp_.clear();
-  return;
 }
 
 
@@ -238,8 +223,6 @@ CONTACT::Node::Node(const CONTACT::Node& old)
 {
   // not yet used and thus not necessarily consistent
   FOUR_C_THROW("Node copy-ctor not yet implemented");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -271,7 +254,6 @@ void CONTACT::Node::print(std::ostream& os) const
   Mortar::Node::print(os);
   if (is_slave())
     if (is_init_active()) os << " InitActive ";
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -309,8 +291,6 @@ void CONTACT::Node::pack(Core::Communication::PackBuffer& data) const
   bool hasTSIdata = (cTSIdata_ != nullptr);
   add_to_pack(data, hasTSIdata);
   if (hasTSIdata) cTSIdata_->pack(data);
-
-  return;
 }
 
 
@@ -370,9 +350,6 @@ void CONTACT::Node::unpack(Core::Communication::UnpackBuffer& buffer)
   }
   else
     cTSIdata_ = nullptr;
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -527,8 +504,6 @@ void CONTACT::Node::initialize_data_container()
     codata_ = std::make_shared<CONTACT::NodeDataContainer>();
     modata_ = std::make_shared<Mortar::NodeDataContainer>();
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -542,8 +517,6 @@ void CONTACT::Node::initialize_poro_data_container()
   {
     coporodata_ = std::make_shared<CONTACT::NodePoroDataContainer>();
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -557,8 +530,6 @@ void CONTACT::Node::initialize_ehl_data_container()
   {
     cEHLdata_ = std::make_shared<CONTACT::NodeEhlDataContainer>();
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -570,8 +541,6 @@ void CONTACT::Node::initialize_tsi_data_container(double t_ref, double t_dam)
 
   if (cTSIdata_ == nullptr)
     cTSIdata_ = std::make_shared<CONTACT::NodeTSIDataContainer>(t_ref, t_dam);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -583,8 +552,6 @@ void CONTACT::Node::reset_data_container()
   codata_ = nullptr;
   modata_ = nullptr;
   coporodata_ = nullptr;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -808,12 +775,6 @@ void CONTACT::Node::build_averaged_edge_tangent()
     data().get_deriv_tangent()[1][p->first] -= p->second;
   for (_CI p = Lin3[2].begin(); p != Lin3[2].end(); ++p)
     data().get_deriv_tangent()[2][p->first] -= p->second;
-
-  // std::cout << "tangent = " << MoData().EdgeTangent()[0] << "  " << MoData().EdgeTangent()[1] <<
-  // "  " << MoData().EdgeTangent()[2] << std::endl;
-
-  // bye bye
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -951,8 +912,6 @@ void CONTACT::Node::build_averaged_normal()
 
   // build linearization of averaged nodal normal and tangents
   deriv_averaged_normal(elens, length, ltxi);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1222,8 +1181,6 @@ void CONTACT::Node::deriv_averaged_normal(
     }
   }
 #endif  // #ifdef CONTACTPSEUDO2D
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1247,8 +1204,6 @@ void CONTACT::Node::store_old_normal()
 {
   // write entries to old ones
   for (int j = 0; j < 3; ++j) data().normal_old()[j] = mo_data().n()[j];
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

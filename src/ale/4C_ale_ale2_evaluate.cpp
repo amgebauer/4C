@@ -556,8 +556,6 @@ void Discret::Elements::Ale2::static_ke_spring(Core::LinAlg::SerialDenseMatrix* 
   residual.putScalar(0.0);
   for (int i = 0; i < 2 * iel; ++i)
     for (int j = 0; j < 2 * iel; ++j) residual[i] += (*sys_mat)(i, j) * displacements[j];
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -693,8 +691,6 @@ void Discret::Elements::Ale2::static_ke_nonlinear(const std::vector<int>& lm,
 
     Core::LinAlg::multiply(*force, *stiffmatrix, displacements);
   }
-
-  return;
 }
 
 ///*----------------------------------------------------------------------------*/
@@ -888,8 +884,6 @@ void Discret::Elements::Ale2::static_ke_laplace(Core::FE::Discretization& dis, s
   residual.putScalar(0.0);
   for (int i = 0; i < 2 * iel; ++i)
     for (int j = 0; j < 2 * iel; ++j) residual[i] += (*sys_mat)(i, j) * displacements[j];
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -924,7 +918,6 @@ void Discret::Elements::Ale2::calc_b_op_lin(Core::LinAlg::SerialDenseMatrix& bop
     boplin(2, dnode + 0) = boplin(1, dnode + 1);
     boplin(3, dnode + 1) = boplin(0, dnode + 0);
   } /* end of loop over nodes */
-  return;
 }
 
 
@@ -948,9 +941,6 @@ void Discret::Elements::Ale2::jacobian_matrix(const Core::LinAlg::SerialDenseMat
   *det = xjm[0][0] * xjm[1][1] - xjm[1][0] * xjm[0][1];
 
   if (*det < 0.0) FOUR_C_THROW("NEGATIVE JACOBIAN DETERMINANT {:8.5f} in ELEMENT {}\n", *det, id());
-  /*----------------------------------------------------------------------*/
-
-  return;
 }
 
 
@@ -986,9 +976,7 @@ void Discret::Elements::Ale2::def_grad(Core::LinAlg::SerialDenseVector& F,
   strain[0] = 0.5 * (F[0] * F[0] + F[3] * F[3] - 1.0);  // E_11
   strain[1] = 0.5 * (F[2] * F[2] + F[1] * F[1] - 1.0);  // E_22
   strain[2] = 0.5 * (F[0] * F[2] + F[3] * F[1]);        // E_12
-  strain[3] = strain[2];                                // E_21
-
-  return;
+  strain[3] = strain[2];
 }
 
 /*----------------------------------------------------------------------*
@@ -1003,8 +991,6 @@ void Discret::Elements::Ale2::kg(Core::LinAlg::SerialDenseMatrix& estif,
       for (int r = 0; r < numeps; r++)
         for (int m = 0; m < numeps; m++)
           estif(i, j) += boplin(r, i) * stress(r, m) * boplin(m, j) * fac;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1018,8 +1004,6 @@ void Discret::Elements::Ale2::keu(Core::LinAlg::SerialDenseMatrix& estif,
     for (int j = 0; j < nd; j++)
       for (int k = 0; k < numeps; k++)
         for (int m = 0; m < numeps; m++) estif(i, j) += b_cure(k, i) * C(k, m) * b_cure(m, j) * fac;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1039,8 +1023,6 @@ void Discret::Elements::Ale2::fint(const Core::LinAlg::SerialDenseMatrix& stress
 
   for (int i = 0; i < nd; i++)
     for (int j = 0; j < 4; j++) intforce[i] += b_cure(j, i) * st[j];
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1128,8 +1110,6 @@ void Discret::Elements::Ale2::call_mat_geo_nonl(
       break;
     }
   }  // switch(material->material_type())
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1174,10 +1154,7 @@ void Discret::Elements::Ale2::material_response3d_plane(Core::LinAlg::SerialDens
   C(3, 0) = cmat(3, 0);  // C_{2111} = C_{1211}
   C(3, 1) = cmat(3, 1);  // C_{2122} = C_{1222}
   C(3, 2) = cmat(3, 3);  // C_{2112} = C_{1212}
-  C(3, 3) = cmat(3, 3);  // C_{2121} = C_{1212}
-
-  // leave this dump
-  return;
+  C(3, 3) = cmat(3, 3);
 }
 
 /*----------------------------------------------------------------------*/
@@ -1191,8 +1168,6 @@ void Discret::Elements::Ale2::material_response3d(Core::LinAlg::Matrix<6, 1>* st
   if (so3mat == nullptr) FOUR_C_THROW("cast to So3Material failed!");
 
   so3mat->evaluate(nullptr, glstrain, params, stress, cmat, gp, id());
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -1205,9 +1180,7 @@ void Discret::Elements::Ale2::green_lagrange_plane3d(
   gl3d(2) = 0.0;                      // E_{33}
   gl3d(3) = glplane(2) + glplane(3);  // 2*E_{12}=E_{12}+E_{21}
   gl3d(4) = 0.0;                      // 2*E_{23}
-  gl3d(5) = 0.0;                      // 2*E_{31}
-
-  return;
+  gl3d(5) = 0.0;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -1240,9 +1213,6 @@ void Discret::Elements::Ale2::b_op_lin_cure(Core::LinAlg::SerialDenseMatrix& b_c
   for (int i = 0; i < numeps; i++)
     for (int j = 0; j < nd; j++)
       for (int k = 0; k < numeps; k++) b_cure(i, j) += Fmatrix(k, i) * boplin(k, j);
-  /*----------------------------------------------------------------*/
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -1328,8 +1298,6 @@ void Discret::Elements::Ale2::compute_det_jac(Core::LinAlg::SerialDenseVector& e
 
   elevec1[0] = mindetjac;
   elevec1[1] = minqm;
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*

@@ -515,8 +515,6 @@ FLD::TurbulenceStatisticsLdc::TurbulenceStatisticsLdc(
 
   // clear statistics
   clear_statistics();
-
-  return;
 }  // TurbulenceStatisticsLdc::TurbulenceStatisticsLdc
 
 
@@ -791,7 +789,6 @@ void FLD::TurbulenceStatisticsLdc::do_time_sample(Core::LinAlg::Vector<double>& 
     x3nodnum++;
   }
 
-  return;
 }  // TurbulenceStatisticsLdc::DoTimeSample
 
 /*----------------------------------------------------------------------*
@@ -1107,7 +1104,6 @@ void FLD::TurbulenceStatisticsLdc::do_loma_time_sample(Core::LinAlg::Vector<doub
     x3nodnum++;
   }
 
-  return;
 }  // TurbulenceStatisticsLdc::DoLomaTimeSample
 
 /*----------------------------------------------------------------------*
@@ -1272,7 +1268,6 @@ void FLD::TurbulenceStatisticsLdc::dump_statistics(int step)
     log->flush();
   }
 
-  return;
 
 }  // TurbulenceStatisticsLdc::DumpStatistics
 
@@ -1497,7 +1492,6 @@ void FLD::TurbulenceStatisticsLdc::dump_loma_statistics(int step)
     log->flush();
   }
 
-  return;
 
 }  // TurbulenceStatisticsLdc::DumpLomaStatistics
 
@@ -1581,7 +1575,6 @@ void FLD::TurbulenceStatisticsLdc::clear_statistics()
     (*x3sumw_t_)[i] = 0.0;
   }
 
-  return;
 }  // TurbulenceStatisticsLdc::ClearStatistics
 
 /*----------------------------------------------------------------------*

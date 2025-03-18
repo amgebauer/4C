@@ -190,8 +190,6 @@ void Discret::Elements::FluidEleParameterIntFace::set_face_general_fluid_paramet
     if (EOS_whichtau_ == Inpar::FLUID::EOS_tau_schott_massing_burman_dangelo_zunino)
       EOS_whichtau_ = Inpar::FLUID::EOS_tau_schott_massing_burman_dangelo_zunino_wo_dt;
   }
-
-  return;
 }
 
 
@@ -227,8 +225,6 @@ void Discret::Elements::FluidEleParameterIntFace::set_face_general_xfem_paramete
 
   ghost_penalty_u_p_2nd_ = stablist_xfem.get<bool>("GHOST_PENALTY_2nd_STAB");
   ghost_penalty_u_p_2nd_normal_ = stablist_xfem.get<bool>("GHOST_PENALTY_2nd_STAB_NORMAL");
-
-  return;
 }
 
 //----------------------------------------------------------------------*

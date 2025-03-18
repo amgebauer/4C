@@ -161,8 +161,6 @@ void NOX::Nln::Problem::create_status_tests(Teuchos::RCP<::NOX::StatusTest::Gene
     innerTest = NOX::Nln::Inner::StatusTest::build_inner_status_tests(
         iParams, noxNlnGlobalData_->get_nox_utils());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -173,8 +171,6 @@ void NOX::Nln::Problem::check_final_status(const ::NOX::StatusTest::StatusType& 
   {
     FOUR_C_THROW("The nonlinear solver did not converge!");
   }
-
-  return;
 }
 
 #endif

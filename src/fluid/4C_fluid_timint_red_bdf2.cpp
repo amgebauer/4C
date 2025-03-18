@@ -24,7 +24,6 @@ FLD::TimIntRedModelsBDF2::TimIntRedModelsBDF2(
       TimIntBDF2(actdis, solver, params, output, alefluid),
       TimIntRedModels(actdis, solver, params, output, alefluid)
 {
-  return;
 }
 
 
@@ -37,8 +36,6 @@ void FLD::TimIntRedModelsBDF2::init()
   // note: this order is important
   TimIntBDF2::init();
   TimIntRedModels::init();
-
-  return;
 }
 
 
@@ -50,8 +47,6 @@ void FLD::TimIntRedModelsBDF2::read_restart(int step)
   // call of base classes
   TimIntBDF2::read_restart(step);
   TimIntRedModels::read_restart(step);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

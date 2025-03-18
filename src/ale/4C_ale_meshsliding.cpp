@@ -288,8 +288,6 @@ void ALE::Meshsliding::condensation_operation_block_matrix(
   Core::LinAlg::Vector<double> g_exp(*dofrowmap_);
   Core::LinAlg::export_to(*gap, g_exp);
   residual->update(1.0, g_exp, 1.0);
-
-  return;
 }
 
 /*-------------------------------------------------------*/

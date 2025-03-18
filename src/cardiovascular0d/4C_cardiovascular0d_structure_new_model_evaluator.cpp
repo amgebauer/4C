@@ -81,8 +81,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::reset(const Core::LinAlg::Vector<d
 
   fstructcardio_np_ptr_->put_scalar(0.0);
   stiff_cardio_ptr_->zero();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -213,8 +211,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::write_restart(
 
   iowriter.write_vector("cv0d_dof_np", cardvasc0dman_->get0_d_dof_np());
   iowriter.write_vector("vol_np", cardvasc0dman_->get0_d_vol_np());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -223,8 +219,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::read_restart(Core::IO::Discretizat
 {
   double time_n = global_state().get_time_n();
   cardvasc0dman_->read_restart(ioreader, time_n);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -239,8 +233,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::run_post_compute_x(
       global_state().extract_model_entries(Inpar::Solid::model_cardiovascular0d, dir);
 
   cardvasc0dman_->update_cv0_d_dof(*cv0d_incr);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -264,8 +256,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::update_step_state(const double& ti
         global_state().get_fstructure_old();
     fstructold_ptr->update(timefac_n, *fstructcardio_np_ptr_, 1.0);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -273,7 +263,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::update_step_state(const double& ti
 void Solid::ModelEvaluator::Cardiovascular0D::update_step_element()
 {
   // nothing to do
-  return;
 }
 
 
@@ -282,7 +271,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::update_step_element()
 void Solid::ModelEvaluator::Cardiovascular0D::determine_stress_strain()
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -290,7 +278,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::determine_stress_strain()
 void Solid::ModelEvaluator::Cardiovascular0D::determine_energy()
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -298,7 +285,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::determine_energy()
 void Solid::ModelEvaluator::Cardiovascular0D::determine_optional_quantity()
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -307,7 +293,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::output_step_state(
     Core::IO::DiscretizationWriter& iowriter) const
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -317,8 +302,6 @@ void Solid::ModelEvaluator::Cardiovascular0D::reset_step_state()
   check_init_setup();
 
   FOUR_C_THROW("Not yet implemented");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -354,9 +337,6 @@ Solid::ModelEvaluator::Cardiovascular0D::get_last_time_step_solution_ptr() const
 void Solid::ModelEvaluator::Cardiovascular0D::post_output()
 {
   check_init_setup();
-  // empty
-
-  return;
 }  // post_output()
 
 FOUR_C_NAMESPACE_CLOSE

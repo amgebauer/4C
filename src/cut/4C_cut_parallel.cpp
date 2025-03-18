@@ -31,7 +31,6 @@ Cut::Parallel::Parallel(const std::shared_ptr<Core::FE::Discretization>& discret
       mesh_(mesh),
       parentintersection_(parentintersection)
 {
-  return;
 }  // end constructor
 
 
@@ -110,17 +109,6 @@ void Cut::Parallel::communicate_node_positions()
 #endif
 
   Core::Communication::barrier(discret_->get_comm());
-
-  //----------------------------------------------------------
-
-  //  const double t_diff = Teuchos::Time::wallTime()-t_start;
-  //  if ( myrank_ == 0 )
-  //  {
-  //    std::cout << " ... Success (" << t_diff  <<  " secs)";
-  //  }
-
-
-  return;
 }
 
 
@@ -168,7 +156,6 @@ void Cut::Parallel::export_communication_finished(bool& procDone)
   }
 
 
-  return;
 }  // end exportFinishedData
 
 
@@ -406,8 +393,6 @@ void Cut::Parallel::distribute_my_received_node_position_data()
           " this shadow node should be available on its original proc that asked other procs for "
           "nodepositions");
   }
-
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -436,8 +421,6 @@ void Cut::Parallel::set_position_for_node(const Node* n, const Point::PointPosit
       f->position(pos);
     }
   }
-
-  return;
 }
 
 
@@ -474,15 +457,6 @@ void Cut::Parallel::communicate_node_dof_set_numbers(bool include_inner)
   distribute_dof_set_data();
 
   Core::Communication::barrier(discret_->get_comm());
-
-  //  const double t_diff = Teuchos::Time::wallTime()-t_start;
-  //  if ( myrank_ == 0 )
-  //  {
-  //    std::cout << " ... Success (" << t_diff  <<  " secs)\n";
-  //  }
-
-
-  return;
 }
 
 
@@ -731,7 +705,6 @@ void Cut::Parallel::export_dof_set_data(bool include_inner)
 
   }  // end loop over procs
 
-  return;
 }  // end export_node_position_data
 
 
@@ -803,9 +776,6 @@ void Cut::Parallel::distribute_dof_set_data()
       }
     }
   }
-
-
-  return;
 }
 
 /*------------------------------------------------------------------------------------------------*
@@ -1104,8 +1074,6 @@ void Cut::Parallel::replace_nds_vectors(ElementHandle* e,
   }
 
   nodaldofset_vc_sets[set_index] = nds_new;
-
-  return;
 }
 
 

@@ -19,7 +19,6 @@ FOUR_C_NAMESPACE_OPEN
 Mat::PAR::Soret::Soret(const Core::Mat::PAR::Parameter::Data& matdata)
     : Fourier(matdata), soretcoefficient_(matdata.parameters.get<double>("SORET"))
 {
-  return;
 }
 
 
@@ -44,13 +43,13 @@ Core::Communication::ParObject* Mat::SoretType::create(Core::Communication::Unpa
 /*------------------------------------------------------------------*
  | construct empty Soret material                        fang 06/15 |
  *------------------------------------------------------------------*/
-Mat::Soret::Soret() : params_(nullptr) { return; }
+Mat::Soret::Soret() : params_(nullptr) {}
 
 
 /*-------------------------------------------------------------------------*
  | construct Soret material with specific material parameters   fang 06/15 |
  *-------------------------------------------------------------------------*/
-Mat::Soret::Soret(Mat::PAR::Soret* params) : Fourier(params), params_(params) { return; }
+Mat::Soret::Soret(Mat::PAR::Soret* params) : Fourier(params), params_(params) {}
 
 
 /*----------------------------------------------------------------------*

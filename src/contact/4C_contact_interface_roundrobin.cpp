@@ -67,8 +67,6 @@ void CONTACT::Interface::round_robin_extend_ghosting(bool firstevaluation)
         Core::LinAlg::merge_map(eextendedghosting_, currently_ghosted_elements, true);
     nextendedghosting_ = Core::LinAlg::merge_map(nextendedghosting_, currently_ghosted_nodes, true);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -369,8 +367,6 @@ void CONTACT::Interface::round_robin_change_ownership()
       Global::Problem::instance()->binning_strategy_params(),
       Global::Problem::instance()->output_control_file(),
       Global::Problem::instance()->spatial_approximation_type(), true);
-
-  return;
 }
 
 
@@ -471,8 +467,6 @@ void CONTACT::Interface::round_robin_detect_ghosting()
   // final output for loop
   if (Core::Communication::my_mpi_rank(get_comm()) == 0)
     std::cout << " Round-Robin loop done!" << std::endl;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

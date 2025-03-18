@@ -31,7 +31,6 @@ FLD::TimIntLoma::TimIntLoma(const std::shared_ptr<Core::FE::Discretization>& act
       thermpressdtaf_(0.0),
       thermpressdtam_(0.0)
 {
-  return;
 }
 
 
@@ -71,7 +70,6 @@ void FLD::TimIntLoma::init()
 
   // set some Loma-specific parameters
   set_element_custom_parameter();
-  return;
 }
 
 
@@ -166,8 +164,6 @@ void FLD::TimIntLoma::set_loma_iter_scalar_fields(
   thermpressam_ = thermpressam;
   thermpressdtaf_ = thermpressdtaf;
   thermpressdtam_ = thermpressdtam;
-
-  return;
 }  // TimIntLoma::set_loma_iter_scalar_fields
 
 
@@ -185,9 +181,6 @@ void FLD::TimIntLoma::set_scalar_fields(
   // get thermodynamic pressure at n+1
   //--------------------------------------------------------------------------
   thermpressaf_ = thermpressnp;
-
-
-  return;
 
 }  // TimIntLoma::SetScalarFields
 
@@ -210,7 +203,6 @@ void FLD::TimIntLoma::set_element_custom_parameter()
 
   // call standard loop over elements
   discret_->evaluate(eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -237,7 +229,6 @@ void FLD::TimIntLoma::print_turbulence_model()
 
     std::cout << &std::endl;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -249,7 +240,6 @@ void FLD::TimIntLoma::set_custom_ele_params_assemble_mat_and_rhs(Teuchos::Parame
   eleparams.set("thermpress at n+alpha_M/n", thermpressam_);
   eleparams.set("thermpressderiv at n+alpha_F/n+1", thermpressdtaf_);
   eleparams.set("thermpressderiv at n+alpha_M/n+1", thermpressdtam_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -259,7 +249,6 @@ void FLD::TimIntLoma::set_custom_ele_params_apply_nonlinear_boundary_conditions(
     Teuchos::ParameterList& eleparams)
 {
   eleparams.set("thermpress at n+alpha_F/n+1", thermpressaf_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -272,7 +261,6 @@ void FLD::TimIntLoma::set_custom_ele_params_linear_relaxation_solve(
   eleparams.set("thermpress at n+alpha_M/n", thermpressam_);
   eleparams.set("thermpressderiv at n+alpha_F/n+1", thermpressdtaf_);
   eleparams.set("thermpressderiv at n+alpha_M/n+1", thermpressdtam_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -287,7 +275,6 @@ void FLD::TimIntLoma::call_statistics_manager()
   const double eosfac = thermpressaf_ / gasconstant_;
   statisticsmanager_->do_time_sample(
       step_, eosfac, thermpressaf_, thermpressam_, thermpressdtaf_, thermpressdtam_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -324,7 +311,6 @@ void FLD::TimIntLoma::avm3_preparation()
     sep_multiply();
   }
 
-  return;
 }  // TimIntLoma::avm3_preparation
 
 FOUR_C_NAMESPACE_CLOSE

@@ -26,7 +26,6 @@ FLD::TimIntStationary::TimIntStationary(const std::shared_ptr<Core::FE::Discreti
     const std::shared_ptr<Core::IO::DiscretizationWriter>& output, bool alefluid /*= false*/)
     : FluidImplicitTimeInt(actdis, solver, params, output, alefluid)
 {
-  return;
 }
 
 
@@ -46,7 +45,6 @@ void FLD::TimIntStationary::init()
   set_element_time_parameter();
 
   complete_general_init();
-  return;
 }
 
 
@@ -54,11 +52,7 @@ void FLD::TimIntStationary::init()
 /*----------------------------------------------------------------------*
  | use TimeLoop() to start stationary problem                  bk 12/13 |
  *----------------------------------------------------------------------*/
-void FLD::TimIntStationary::time_loop()
-{
-  solve_stationary_problem();
-  return;
-}
+void FLD::TimIntStationary::time_loop() { solve_stationary_problem(); }
 
 
 /*----------------------------------------------------------------------*
@@ -74,8 +68,6 @@ void FLD::TimIntStationary::set_old_part_of_righthandside()
   */
 
   hist_->put_scalar(0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -155,11 +147,7 @@ void FLD::TimIntStationary::solve_stationary_problem()
 /*----------------------------------------------------------------------*
 | set integration-scheme-specific state                        bk 12/13 |
 *-----------------------------------------------------------------------*/
-void FLD::TimIntStationary::set_state_tim_int()
-{
-  discret_->set_state("velaf", velnp_);
-  return;
-}
+void FLD::TimIntStationary::set_state_tim_int() { discret_->set_state("velaf", velnp_); }
 
 /*----------------------------------------------------------------------*
 | calculate acceleration                                       bk 12/13 |
@@ -172,8 +160,6 @@ void FLD::TimIntStationary::calculate_acceleration(
     const std::shared_ptr<Core::LinAlg::Vector<double>> accnp)
 {
   accnp->put_scalar(0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -182,17 +168,12 @@ void FLD::TimIntStationary::calculate_acceleration(
 void FLD::TimIntStationary::set_gamma(Teuchos::ParameterList& eleparams)
 {
   // do nothing
-  return;
 }
 
 /*----------------------------------------------------------------------*
 | scale separation                                             bk 12/13 |
 *-----------------------------------------------------------------------*/
-void FLD::TimIntStationary::sep_multiply()
-{
-  Sep_->multiply(false, *velnp_, *fsvelaf_);
-  return;
-}
+void FLD::TimIntStationary::sep_multiply() { Sep_->multiply(false, *velnp_, *fsvelaf_); }
 
 /*----------------------------------------------------------------------*
  | paraview output of filtered velocity                  rasthofer 02/11|
@@ -202,7 +183,6 @@ void FLD::TimIntStationary::outputof_filtered_vel(
     std::shared_ptr<Core::LinAlg::Vector<double>> fsoutvec)
 {
   // no output since subgrid-scale modeling does not make sense for stationary problems!!!
-  return;
 }
 
 // -------------------------------------------------------------------
@@ -228,7 +208,6 @@ void FLD::TimIntStationary::set_element_time_parameter()
 
   // call standard loop over elements
   discret_->evaluate(eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -251,7 +230,6 @@ void FLD::TimIntStationary::treat_turbulence_models(Teuchos::ParameterList& elep
   if (reconstructder_)
     FLD::Utils::project_gradient_and_set_param(
         *discret_, eleparams, velnp_, "velafgrad", alefluid_);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

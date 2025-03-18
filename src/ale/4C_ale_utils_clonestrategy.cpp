@@ -96,8 +96,6 @@ void ALE::Utils::AleCloneStrategy::set_element_data(std::shared_ptr<Core::Elemen
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

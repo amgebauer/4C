@@ -19,9 +19,6 @@ void Thermo::TimIntOneStepTheta::verify_coeff()
   // theta
   if ((theta_ <= 0.0) or (theta_ > 1.0)) FOUR_C_THROW("theta out of range (0.0,1.0]");
 
-  // done
-  return;
-
 }  // VerifyCoeff()
 
 
@@ -83,9 +80,6 @@ Thermo::TimIntOneStepTheta::TimIntOneStepTheta(const Teuchos::ParameterList& iop
   // conditions
   apply_force_external_conv((*time_)[0], (*temp_)(0), (*temp_)(0), fext_, tang_);
 
-  // have a nice day
-  return;
-
 }  // TimIntOneStepTheta()
 
 
@@ -105,9 +99,6 @@ void Thermo::TimIntOneStepTheta::predict_const_temp_consist_rate()
   // R_{n+1}^{i+1} = -(1 - theta)/theta . R_n + 1/(theta . dt) . (T_{n+1}^{i+1} - T_n)
   raten_->update(1.0, *tempn_, -1.0, *(*temp_)(0), 0.0);
   raten_->update(-(1.0 - theta_) / theta_, *(*rate_)(0), 1.0 / (theta_ * dt));
-
-  // watch out
-  return;
 
 }  // predict_const_temp_consist_rate()
 
@@ -162,11 +153,7 @@ void Thermo::TimIntOneStepTheta::evaluate_rhs_tang_residual()
 
   // no further modification on tang_ required
   // tang_ is already effective dynamic tangent matrix
-  tang_->complete();  // close tangent matrix
-
-  // hallelujah
-  return;
-
+  tang_->complete();
 }  // evaluate_rhs_tang_residual()
 
 
@@ -179,9 +166,6 @@ void Thermo::TimIntOneStepTheta::evaluate_mid_state()
   // mid-temperatures T_{n+1-alpha_f} (tempm)
   //    T_{n+theta} := theta * T_{n+1} + (1-theta) * T_{n}
   tempt_->update(theta_, *tempn_, 1.0 - theta_, *(*temp_)(0), 0.0);
-
-  // jump
-  return;
 
 }  // EvaluateMidState()
 
@@ -265,9 +249,6 @@ void Thermo::TimIntOneStepTheta::update_iter_incrementally()
   // put only to free/non-DBC DOFs
   dbcmaps_->insert_other_vector(*dbcmaps_->extract_other_vector(*aux), *raten_);
 
-  // bye
-  return;
-
 }  // update_iter_incrementally()
 
 
@@ -283,9 +264,6 @@ void Thermo::TimIntOneStepTheta::update_iter_iteratively()
   // new end-point temperature rates
   // R_{n+1}^{<k+1>} := R_{n+1}^{<k>} + 1/(theta . dt)IncT_{n+1}^{<k>}
   raten_->update(1.0 / (theta_ * (*dt_)[0]), *tempi_, 1.0);
-
-  // bye
-  return;
 
 }  // update_iter_iteratively()
 
@@ -314,10 +292,6 @@ void Thermo::TimIntOneStepTheta::update_step_state()
   // update new stored transient force
   //    F_{cap;n} := F_{cap;n+1}
   fcap_->update(1.0, *fcapn_, 0.0);
-
-
-  // look out
-  return;
 
 }  // update_step_state()
 
@@ -353,8 +327,6 @@ void Thermo::TimIntOneStepTheta::read_restart_force()
   reader.read_vector(fint_, "fint");
   reader.read_vector(fcap_, "fcap");
 
-  return;
-
 }  // ReadRestartForce()
 
 
@@ -367,8 +339,6 @@ void Thermo::TimIntOneStepTheta::write_restart_force(
   output->write_vector("fexternal", fext_);
   output->write_vector("fint", fint_);
   output->write_vector("fcap", fcap_);
-
-  return;
 
 }  // WriteRestartForce()
 
@@ -393,8 +363,6 @@ void Thermo::TimIntOneStepTheta::apply_force_tang_internal(const double time,  /
   p.set<bool>("lump capa matrix", lumpcapa_);
   // call the base function
   TimInt::apply_force_tang_internal(p, time, dt, temp, tempi, fcap, fint, tang);
-  // finish
-  return;
 
 }  // apply_force_tang_internal()
 
@@ -415,8 +383,6 @@ void Thermo::TimIntOneStepTheta::apply_force_internal(const double time,  //!< e
   p.set("theta", theta_);
   // call the base function
   TimInt::apply_force_internal(p, time, dt, temp, tempi, fint);
-  // finish
-  return;
 
 }  // apply_force_tang_internal()
 
@@ -437,8 +403,6 @@ void Thermo::TimIntOneStepTheta::apply_force_external_conv(const double time,  /
   p.set<double>("theta", theta_);
   // call the base function
   TimInt::apply_force_external_conv(p, time, tempn, temp, fext, tang);
-  // finish
-  return;
 
 }  // apply_force_external_conv()
 

@@ -234,8 +234,6 @@ void Mat::StructPoroReactionECM::chem_potential(
 
   pot = 1.0 / density() * psi - 1.0 / mat_->density() * dpsidphiref - chempot_init_[gp];
   chempot_[gp] = pot;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

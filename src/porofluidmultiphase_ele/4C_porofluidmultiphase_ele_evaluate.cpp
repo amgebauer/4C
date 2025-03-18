@@ -124,8 +124,6 @@ void Discret::Elements::PoroFluidMultiPhaseType::pre_evaluate(Core::FE::Discreti
       // do nothing in all other cases
       break;
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

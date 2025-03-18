@@ -36,7 +36,6 @@ Solid::TimIntStatics::TimIntStatics(const Teuchos::ParameterList& timeparams,
   // redistribution of elements. Only then call the setup to this class. This will call the setup to
   // all classes in the inheritance hierarchy. This way, this class may also override a method that
   // is called during setup() in a base class.
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -71,7 +70,6 @@ void Solid::TimIntStatics::init(const Teuchos::ParameterList& timeparams,
   }
 
   // have a nice day
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -95,8 +93,6 @@ void Solid::TimIntStatics::setup()
 
   // external force vector F_{n} at new time
   fext_ = Core::LinAlg::create_vector(*dof_row_map_view(), true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -115,9 +111,6 @@ void Solid::TimIntStatics::predict_const_dis_consist_vel_acc()
 
   // reset the residual displacement
   disi_->put_scalar(0.0);
-
-  // watch out
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -255,8 +248,6 @@ void Solid::TimIntStatics::evaluate_force_stiff_residual(Teuchos::ParameterList&
 
   // close stiffness matrix
   stiff_->complete();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -312,8 +303,6 @@ void Solid::TimIntStatics::evaluate_force_residual()
     fresn_str_->update(-1., *fextn_, 1.);
     Core::LinAlg::apply_dirichlet_to_system(*fresn_str_, *zeros_, *(dbcmaps_->cond_map()));
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -358,9 +347,6 @@ void Solid::TimIntStatics::update_iter_iteratively()
   // new end-point displacements
   // D_{n+1}^{<k+1>} := D_{n+1}^{<k>} + IncD_{n+1}^{<k>}
   disn_->update(1.0, *disi_, 1.0);
-
-  // bye
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -409,9 +395,6 @@ void Solid::TimIntStatics::update_step_state()
   // update new internal force
   //    F_{int;n} := F_{int;n+1}
   fint_->update(1.0, *fintn_, 0.0);
-
-  // look out
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -437,7 +420,7 @@ void Solid::TimIntStatics::update_step_element()
 
 /*----------------------------------------------------------------------*/
 /* read restart forces */
-void Solid::TimIntStatics::read_restart_force() { return; }
+void Solid::TimIntStatics::read_restart_force() {}
 
 /*----------------------------------------------------------------------*/
 /* write internal and external forces for restart */
@@ -465,8 +448,6 @@ void Solid::TimIntStatics::apply_dirichlet_bc(const double time,
   // statics: set velocities and accelerations to zero
   if (vel != nullptr) vel->put_scalar(0.0);
   if (acc != nullptr) acc->put_scalar(0.0);
-
-  return;
 }
 
 

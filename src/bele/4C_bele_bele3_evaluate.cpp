@@ -350,7 +350,6 @@ void Discret::Elements::Bele3::compute_vol_deriv(const Core::LinAlg::SerialDense
     }
   }
   V *= invnumind;
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -205,8 +205,6 @@ CONTACT::Beam3contact<numnodes, numnodalvalues>::Beam3contact(
   // TODO!!!!
   if ((deltal1 > r1_ / sin(parshiftangle2)) and !beamsdebug)
     FOUR_C_THROW("Not enough Gauss points crossing of beams possible!!!");
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: constructor
@@ -1611,8 +1609,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::calc_penalty_law(
   variables.setfp(fp);
   variables.setdfp(dfp);
   variables.set_energy(e);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Calculate scalar contact force
@@ -1679,8 +1675,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::calc_perp_penalty_scale_fa
   // set class variable
   cpvariables.set_p_pfac(ppfac);
   cpvariables.set_dp_pfac(dppfac);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Calculate angle-dependent perp-penalty scale factor
@@ -1736,8 +1730,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::calc_par_penalty_scale_fac
   // set class variable
   gpvariables.set_p_pfac(ppfac);
   gpvariables.set_dp_pfac(dppfac);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Calculate angle-dependent par-penalty scale factor
@@ -2056,8 +2048,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::get_close_segments(
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2961,8 +2951,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::check_unconverged_segment_
 
   eta1_min = eta1_closestpoint;
   eta2_min = eta2_closestpoint;
-
-  return;
 }
 /*------------------------------------------------------------------------------------------*
 |  end: Determine minimal distance and contact angle for unconverged segment pair
@@ -3196,8 +3184,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::evaluate_fc_contact(
     Core::LinAlg::assemble(*fint, fcontact1, lm1, lmowner1);
     Core::LinAlg::assemble(*fint, fcontact2, lm2, lmowner2);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Compute contact forces
@@ -3683,8 +3669,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::evaluate_stiffc_contact(
     stiffmatrix.assemble(0, stiffcontact1, lmrow1, lmrowowner1, lmcol1);
     stiffmatrix.assemble(0, stiffcontact2, lmrow2, lmrowowner2, lmcol2);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate contact stiffness
@@ -3869,8 +3853,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::evaluate_stiffc_contact_in
     stiffmatrix.assemble(0, stiffcontact1, lmrow1, lmrowowner1, lmcol1);
     stiffmatrix.assemble(0, stiffcontact2, lmrow2, lmrowowner2, lmcol2);
   }
-
-  return;
 }
 /*------------------------------------------------------------------------------------------*
  |  end: FAD-based Evaluation of contact stiffness in case of ENDPOINTSEGMENTATION
@@ -3958,8 +3940,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::compute_lin_xi_and_lin_eta
     delta_xi(i) = D(0, i);
     delta_eta(i) = D(1, i);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Linearizations of contact point
@@ -4015,8 +3995,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::compute_lin_eta_fix_xi(
   {
     delta_eta(i) = 1.0 / L * B(0, i);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Lin. of contact point coordinate eta with fixed xi
@@ -4069,8 +4047,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::compute_lin_xi_fix_eta(
   {
     delta_xi(i) = 1.0 / L * B(0, i);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Lin. of contact point coordinate xi with fixed eta
@@ -4158,8 +4134,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::compute_lin_xi_bound(
     delta_xi_bound(i) = B(1, i) / a_21;
   }
 #endif
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Compute linearization of integration interval bounds
@@ -4218,8 +4192,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::compute_lin_gap(
       delta_gap(j) += delta_r(i) * auxiliary_matrix1(i, j) / norm_delta_r;
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute linearization of gap
@@ -4294,8 +4266,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::compute_lin_cos_contact_an
   {
     delta_coscontactangle(j) = modulus_factor * (v1_delta_r1_xi(j) + v2_delta_r2_xi(j));
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute linearization of cosine of contact angle
@@ -4367,8 +4337,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::compute_lin_normal(
     for (int j = 0; j < 3; j++)
       for (int k = 0; k < dim1 + dim2; k++)
         delta_normal(i, k) += auxiliary_matrix2(i, j) * auxiliary_matrix1(j, k);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute linearization of normal vector
@@ -4436,8 +4404,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::get_shape_functions(
   // r1_xixi=N1_xixi*d1, r2=N2*d2, r2_xi=N2_xi*d2, r2_xixi=N2_xixi*d2
   assemble_shapefunctions(N1_i, N1_i_xi, N1_i_xixi, N1, N1_xi, N1_xixi);
   assemble_shapefunctions(N2_i, N2_i_xi, N2_i_xixi, N2, N2_xi, N2_xixi);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: evaluate shape functions and derivatives
@@ -4513,8 +4479,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::get_shape_functions(
   // Assemble the individual shape functions in matrices, such that: r1=N1*d1, r1_xi=N1_xi*d1,
   // r1_xixi=N1_xixi*d1, r2=N2*d2, r2_xi=N2_xi*d2, r2_xixi=N2_xixi*d2
   assemble_shapefunctions(N_i, N);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: evaluate shape functions and derivatives
@@ -4567,8 +4531,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::assemble_shapefunctions(
       }
     }
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------------------*
@@ -4626,8 +4588,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::assemble_shapefunctions(
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4753,8 +4713,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::compute_coords_and_derivs(
       r2_xixi(i) += N2_xixi(i, j) * ele2pos_(j);
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: compute contact point coordinates and their derivatives         |
@@ -4796,9 +4754,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::evaluate_orthogonality_con
       f(1) += -delta_r(i) * t2(i) / norm_delta_r;
     }
   }
-
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate function f in CPP
@@ -4877,8 +4832,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::evaluate_lin_orthogonality
     dfinv(1, 0) = -df(1, 0) / det_df;
     dfinv(1, 1) = df(0, 0) / det_df;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate Jacobian df in CPP
@@ -4911,9 +4864,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::evaluate_ptl_orthogonality
       f += -delta_r(i) * r1_xi(i) / norm_delta_r;
     }
   }
-
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate orthogonality cond. of point to line projection
@@ -5004,8 +4954,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::compute_normal(
   variables->set_angle(
       BeamInteraction::calc_angle(Core::FADUtils::cast_to_double<TYPE, 3, 1>(r1_xi),
           Core::FADUtils::cast_to_double<TYPE, 3, 1>(r2_xi)));
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Compute normal vector in contact point
@@ -5202,8 +5150,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::update_ele_pos(
       ele2pos_(3 * numnodalvalues * j + i) = newele2pos(i, j);
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Update nodal coordinates (public)
@@ -5280,10 +5226,6 @@ void CONTACT::Beam3contact<numnodes, numnodalvalues>::print() const
       this->element2_->id());
   std::cout << "\nele1pos_: " << ele1pos_;
   std::cout << "\nele2pos_: " << ele2pos_;
-  // Todo add more relevant information here, e.g. num cp gp and ep pairs, contact states, angles
-  // ...
-
-  return;
 }
 
 #ifdef FADCHECKS

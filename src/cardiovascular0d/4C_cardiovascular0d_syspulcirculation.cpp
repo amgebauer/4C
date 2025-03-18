@@ -686,7 +686,6 @@ void Utils::Cardiovascular0DSysPulCirculation::evaluate(Teuchos::ParameterList& 
     evaluate_d_struct_dp(params, *sysmat3);
   }
 
-  return;
 }  // end of evaluate_condition
 
 
@@ -824,7 +823,6 @@ void Utils::Cardiovascular0DSysPulCirculation::initialize(Teuchos::ParameterList
                  "piecewise-linear valve laws ===========\n"
               << std::endl;
   }
-  return;
 }  // end of Initialize Cardiovascular0D
 
 FOUR_C_NAMESPACE_CLOSE

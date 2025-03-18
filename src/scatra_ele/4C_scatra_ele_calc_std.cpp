@@ -41,7 +41,6 @@ Discret::Elements::ScaTraEleCalcStd<distype, probdim>::ScaTraEleCalcStd(
     : Discret::Elements::ScaTraEleCalc<distype, probdim>::ScaTraEleCalc(
           numdofpernode, numscal, disname)
 {
-  return;
 }
 
 

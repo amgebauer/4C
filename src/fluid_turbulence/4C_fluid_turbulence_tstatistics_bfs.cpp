@@ -568,7 +568,6 @@ FLD::TurbulenceStatisticsBfs::TurbulenceStatisticsBfs(
     log->flush();
   }
 
-  return;
 }  // TurbulenceStatisticsBfs::TurbulenceStatisticsBfs
 
 
@@ -808,7 +807,6 @@ void FLD::TurbulenceStatisticsBfs::do_time_sample(
     }
   }
 
-  return;
 }  // TurbulenceStatisticsBfs::DoTimeSample
 
 
@@ -1117,7 +1115,6 @@ void FLD::TurbulenceStatisticsBfs::do_loma_time_sample(
     }
   }
 
-  return;
 }  // TurbulenceStatisticsBfc::DoLomaTimeSample
 
 
@@ -1382,7 +1379,6 @@ void FLD::TurbulenceStatisticsBfs::do_scatra_time_sample(
     }
   }
 
-  return;
 }  // TurbulenceStatisticsBfc::DoScatraTimeSample
 
 
@@ -1523,7 +1519,6 @@ void FLD::TurbulenceStatisticsBfs::dump_statistics(int step)
     log->flush();
   }
 
-  return;
 
 }  // TurbulenceStatisticsBfs::DumpStatistics
 
@@ -1718,7 +1713,6 @@ void FLD::TurbulenceStatisticsBfs::dump_loma_statistics(int step)
     log->flush();
   }
 
-  return;
 
 }  // TurbulenceStatisticsBfs::DumpLomaStatistics
 
@@ -1886,7 +1880,6 @@ void FLD::TurbulenceStatisticsBfs::dump_scatra_statistics(int step)
     log->flush();
   }
 
-  return;
 
 }  // TurbulenceStatisticsBfs::dump_scatra_statistics
 
@@ -1907,7 +1900,6 @@ void FLD::TurbulenceStatisticsBfs::convert_string_to_geo_type(const std::string&
     geotype_ = TurbulenceStatisticsBfs::geometry_EXP_vogel_eaton;
   else
     FOUR_C_THROW("({}) geometry for backward facing step", geotype.c_str());
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

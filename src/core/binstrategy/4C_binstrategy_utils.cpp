@@ -52,15 +52,6 @@ namespace Core::Binstrategy::Utils
 
     // fillcomplete discret with extended ghosting
     discret.fill_complete(assigndegreesoffreedom, initelements, doboundaryconditions);
-
-#ifdef FOUR_C_ENABLE_ASSERTIONS
-    // print distribution after standard ghosting
-    if (Core::Communication::my_mpi_rank(discret.get_comm()) == 0)
-      std::cout << "parallel distribution with extended ghosting" << std::endl;
-    Core::Rebalance::Utils::print_parallel_distribution(discret);
-#endif
-
-    return;
   }
 
   /*-----------------------------------------------------------------------------*

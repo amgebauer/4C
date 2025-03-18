@@ -52,8 +52,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::check_elch_element_paramet
     FOUR_C_THROW(
         "Only SUPG-type stabilization available for electrochemistry problems governed by "
         "Nernst-Planck formulation!");
-
-  return;
 }
 
 
@@ -152,7 +150,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::evaluate_elch_boundary_kin
     }
   }  // switch(myelch::elchparams_->EquPot())
 
-  return;
 }  // Discret::Elements::ScaTraEleCalcElchNP<distype>::evaluate_elch_boundary_kinetics_point
 
 
@@ -190,7 +187,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::get_conductivity(
     }
   }
 
-  return;
 }  // Discret::Elements::ScaTraEleCalcElchNP<distype>::get_conductivity
 
 
@@ -241,7 +237,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calculate_flux(
     }
   };
 
-  return;
 }  // ScaTraCalc::calculate_flux
 
 /*---------------------------------------------------------------------*
@@ -494,7 +489,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::cal_error_compared_to_anal
       break;
   }  // switch(errortype)
 
-  return;
 }  // cal_error_compared_to_analyt_solution
 
 
@@ -507,8 +501,6 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::set_internal_variables_for
   // set internal variables
   var_manager()->set_internal_variables_elch_np(
       my::funct_, my::derxy_, my::ephinp_, my::ephin_, my::econvelnp_, my::ehist_);
-
-  return;
 }
 
 

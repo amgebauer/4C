@@ -144,9 +144,6 @@ void Adapter::CouplingEhlMortar::integrate(
 
   // save that state as the last evaluated one
   evaluated_state_ = std::make_shared<Core::LinAlg::Vector<double>>(*disp);
-
-  // all done
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -570,8 +567,6 @@ void Adapter::CouplingEhlMortar::condense_contact(
 
   // we need to return the rhs, not the residual
   combined_RHS->scale(-1.);
-
-  return;
 }
 
 
@@ -641,8 +636,6 @@ void Adapter::CouplingEhlMortar::recover_coupled(std::shared_ptr<Core::LinAlg::V
     for (int dof = 0; dof < interface_->n_dim(); ++dof)
       cnode->mo_data().lm()[dof] = z_->operator[](z_->get_map().LID(cnode->dofs()[dof]));
   }
-
-  return;
 }
 
 
@@ -687,8 +680,6 @@ void Adapter::CouplingEhlMortar::store_dirichlet_status(const Core::LinAlg::MapE
   Core::LinAlg::Vector<double> temp(*(dbcmaps.cond_map()));
   temp.put_scalar(1.0);
   Core::LinAlg::export_to(temp, *sdirichtoggle_);
-
-  return;
 }
 
 

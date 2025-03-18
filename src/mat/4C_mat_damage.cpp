@@ -212,7 +212,6 @@ void Mat::Damage::setup(int numgp, const Core::IO::InputParameterContainer& cont
       FOUR_C_THROW("yield stress values have to be in ascending order!");
   }
   isinit_ = true;
-  return;
 
 }  // setup()
 
@@ -264,7 +263,6 @@ void Mat::Damage::update()
     failedcurr_.at(i) = false;
   }
 
-  return;
 }  // update()
 
 
@@ -812,8 +810,6 @@ void Mat::Damage::evaluate_simplified_lemaitre(const Core::LinAlg::Matrix<3, 3>*
 
   // ------------------------------- return plastic strains for post-processing
   params.set<Core::LinAlg::Matrix<Mat::NUM_STRESS_3D, 1>>("plglstrain", strainplcurr_.at(gp));
-
-  return;
 
 }  // EvaluateSimplifiedLemaitre()
 
@@ -1913,18 +1909,6 @@ void Mat::Damage::evaluate_full_lemaitre(const Core::LinAlg::Matrix<3, 3>* defgr
   setup_cmat_elasto_plastic_full_lemaitre(*cmat, N_tilde, *stress, active_plasticity, Dgamma, s_N,
       g, h_alg, G, Hiso, bulk, Hkin, Hkin_rec, Nbetaold, gp, qbar_tilde, y, dy_dsigma_tilde,
       b_NbetaoldN);
-
-#ifdef DEBUGMATERIAL
-  std::cout << "Nach Setup Cep\n" << std::endl;
-  std::cout << " Dgamma " << Dgamma << std::endl;
-  std::cout << " G " << G << std::endl;
-  std::cout << " q " << q << std::endl;
-  std::cout << " flow vector " << Nbar << std::endl;
-  std::cout << " active_plasticity " << active_plasticity << std::endl;
-  std::cout << "--> cmat " << cmat << std::endl;
-#endif  // #ifdef DEBUGMATERIAL
-
-  return;
 
 }  // evaluate_full_lemaitre()
 

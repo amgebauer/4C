@@ -80,8 +80,6 @@ Wear::LagrangeStrategyWear::LagrangeStrategyWear(
 
   // different wear timescales?
   if (wtime == Inpar::Wear::wear_time_different) weartimescales_ = true;
-
-  return;
 }
 
 
@@ -319,8 +317,6 @@ void Wear::LagrangeStrategyWear::setup_wear(bool redistributed, bool init)
   // output wear ... this is for the unweighted wear*n vector
   wearoutput_ = std::make_shared<Core::LinAlg::Vector<double>>(*gsdofrowmap_);
   wearoutput2_ = std::make_shared<Core::LinAlg::Vector<double>>(*gmdofrowmap_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -379,8 +375,6 @@ void Wear::LagrangeStrategyWear::initialize_mortar()
     // setup of dmatrixmod_
     dmatrixmod_ = std::make_shared<Core::LinAlg::SparseMatrix>(*gsdofrowmap_, 10);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -454,8 +448,6 @@ void Wear::LagrangeStrategyWear::assemble_mortar()
   // fill_complete() matrix for both-sided wear *
   //********************************************
   d2matrix_->complete(*gmdofrowmap_, *gmdofrowmap_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -549,8 +541,6 @@ void Wear::LagrangeStrategyWear::initialize()
       wear_cond_rhs_m_ = std::make_shared<Epetra_FEVector>(*gmslipn_);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1553,8 +1543,6 @@ void Wear::LagrangeStrategyWear::condense_wear_impl_expl(
   // finally do the replacement
   kteff = kteffnew;
   feff = feffnew;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2644,8 +2632,6 @@ void Wear::LagrangeStrategyWear::condense_wear_discr(
   // finally do the replacement
   kteff = kteffnew;
   feff = feffnew;
-
-  return;
 }
 
 
@@ -3050,8 +3036,6 @@ void Wear::LagrangeStrategyWear::evaluate_friction(
   // ematrix_->UnComplete();
   std::cout << " -- CONTACTFDMORTART_MASTER -----------------------------------" << std::endl;
 #endif  // #ifdef CONTACTFDMORTARD
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3153,8 +3137,6 @@ void Wear::LagrangeStrategyWear::prepare_saddle_point_system(
     Core::LinAlg::export_to(fmold, fmoldexp);
     feff.update(alphaf_, fmoldexp, 1.0);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3966,8 +3948,6 @@ void Wear::LagrangeStrategyWear::build_saddle_point_system(
   //**********************************************************************
   else
     FOUR_C_THROW("Invalid system type in BuildSaddlePointProblem");
-
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -4053,7 +4033,6 @@ void Wear::LagrangeStrategyWear::update_displacements_and_l_mincrements(
       }
     }
   }
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -4262,8 +4241,6 @@ void Wear::LagrangeStrategyWear::output_wear()
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4326,8 +4303,6 @@ void Wear::LagrangeStrategyWear::do_write_restart(
   }
 
   if (friction_ and weightedwear_) realwear = wearoutput_;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4569,8 +4544,6 @@ void Wear::LagrangeStrategyWear::recover(std::shared_ptr<Core::LinAlg::Vector<do
   {
     store_nodal_quantities(Mortar::StrategyBase::wmupdate);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4913,8 +4886,6 @@ void Wear::LagrangeStrategyWear::do_read_restart(
   // (during restart the interface has been evaluated once)
   unbalanceEvaluationTime_.resize(0);
   unbalanceNumSlaveElements_.resize(0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4973,8 +4944,6 @@ void Wear::LagrangeStrategyWear::update_active_set_semi_smooth(const bool firstS
 
     if (wearbothpv_) gwminact_ = Core::LinAlg::split_map(*gmdofnrowmap_, *gmslipn_);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5024,8 +4993,6 @@ void Wear::LagrangeStrategyWear::update_wear_discret_iterate(bool store)
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5034,8 +5001,6 @@ void Wear::LagrangeStrategyWear::update_wear_discret_iterate(bool store)
 void Wear::LagrangeStrategyWear::update_wear_discret_accumulation()
 {
   if (weartimescales_) store_nodal_quantities(Mortar::StrategyBase::wupdateT);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5048,8 +5013,6 @@ void Wear::LagrangeStrategyWear::update(std::shared_ptr<const Core::LinAlg::Vect
 
   // wear: store history values
   if (weightedwear_) store_nodal_quantities(Mortar::StrategyBase::weightedwear);
-
-  return;
 }
 
 
@@ -5264,8 +5227,6 @@ void Wear::LagrangeStrategyWear::store_nodal_quantities(Mortar::StrategyBase::Qu
       }  // end slave loop
     }
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

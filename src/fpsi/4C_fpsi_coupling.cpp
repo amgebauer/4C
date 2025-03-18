@@ -56,7 +56,6 @@ FPSI::FpsiCoupling::FpsiCoupling(std::shared_ptr<PoroElast::Monolithic> poro,
   setup_interface_coupling();
   init_coupling_matrixes_rhs();
   re_init_coupling_matrix_transform();
-  return;
 }
 /*----------------------------------------------------------------------/
 | Initialize Coupling Matrixes and Coupling RHS              ager 12/14 |
@@ -91,8 +90,6 @@ void FPSI::FpsiCoupling::init_coupling_matrixes_rhs()
   c_rhs_pf_ =
       std::make_shared<Core::LinAlg::Vector<double>>(*poro_->fluid_field()->dof_row_map(), true);
   c_rhs_f_ = std::make_shared<Core::LinAlg::Vector<double>>(*fluid_->dof_row_map(), true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------/
@@ -189,8 +186,6 @@ void FPSI::FpsiCoupling::setup_interface_coupling()
   icoup_ps_a_->setup_condition_coupling(*porostructdis, porostruct_extractor_->cond_map(),
       *ale_field()->discretization(), ale_field()->interface()->fpsi_cond_map(), "fpsi_coupling",
       ndim, false);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------/

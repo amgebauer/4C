@@ -43,21 +43,13 @@ FOUR_C_NAMESPACE_OPEN
 FS3I::PartFpS3I1Wc::PartFpS3I1Wc(MPI_Comm comm) : PartFPS3I(comm)
 {
   // keep constructor empty
-  return;
 }
 
 
 /*----------------------------------------------------------------------*
  |  Init                                                    rauch 09/16 |
  *----------------------------------------------------------------------*/
-void FS3I::PartFpS3I1Wc::init()
-{
-  FS3I::PartFPS3I::init();
-
-
-
-  return;
-}
+void FS3I::PartFpS3I1Wc::init() { FS3I::PartFPS3I::init(); }
 
 
 /*----------------------------------------------------------------------*
@@ -80,15 +72,6 @@ void FS3I::PartFpS3I1Wc::setup()
   if (scatravec_[1]->scatra_field()->discretization()->add_dof_set(
           fpsi_->poro_field()->fluid_field()->discretization()->get_dof_set_proxy()) != 2)
     FOUR_C_THROW("unexpected dof sets in structure field");
-
-  // Note: in the scatra fields we have now the following dof-sets:
-  // fluidscatra dofset 0: fluidscatra dofset
-  // fluidscatra dofset 1: fluid dofset
-  // structscatra dofset 0: structscatra dofset
-  // structscatra dofset 1: structure dofset
-  // structscatra dofset 2: porofluid dofset
-
-  return;
 }
 
 

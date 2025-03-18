@@ -71,7 +71,6 @@ Core::LinAlg::SerialDenseMatrix Discret::Elements::ConstraintElement2Type::compu
 Discret::Elements::ConstraintElement2::ConstraintElement2(int id, int owner)
     : Core::Elements::Element(id, owner)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -80,7 +79,6 @@ Discret::Elements::ConstraintElement2::ConstraintElement2(
     const Discret::Elements::ConstraintElement2& old)
     : Core::Elements::Element(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -101,8 +99,6 @@ void Discret::Elements::ConstraintElement2::pack(Core::Communication::PackBuffer
   add_to_pack(data, type);
   // add base class Element
   Element::pack(data);
-
-  return;
 }
 
 
@@ -114,9 +110,6 @@ void Discret::Elements::ConstraintElement2::unpack(Core::Communication::UnpackBu
 
   // extract base class Element
   Element::unpack(buffer);
-
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

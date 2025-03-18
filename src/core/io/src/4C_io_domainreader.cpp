@@ -102,8 +102,6 @@ namespace Core::IO
       Core::IO::cout << "............................................... " << std::setw(10)
                      << std::setprecision(5) << std::scientific << time.totalElapsedTime(true)
                      << " secs" << Core::IO::endl;
-
-    return;
   }
 
   /*----------------------------------------------------------------------*/

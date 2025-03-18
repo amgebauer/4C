@@ -57,7 +57,6 @@ Discret::Elements::PoroFluidMultiPhaseEleBoundaryCalc<distype>::PoroFluidMultiPh
       velint_(true),
       metrictensor_(true)
 {
-  return;
 }
 
 

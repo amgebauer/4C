@@ -223,7 +223,6 @@ void XFEM::XfsCouplingManager::update(double scaling)
   // get the coupling rhs from the xfluid, this vector is based on the boundary dis which is part of
   // the structure dis
   lambda_->update(scaling, *xfluid_->rhs_s_vec(cond_name_), 0.0);
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -239,7 +238,6 @@ void XFEM::XfsCouplingManager::output(Core::IO::DiscretizationWriter& writer)
       std::make_shared<Core::LinAlg::Vector<double>>(*get_map_extractor(0)->full_map(), true);
   insert_vector(0, lambda_, 0, lambdafull, CouplingCommManager::partial_to_full);
   writer.write_vector("fsilambda", lambdafull);
-  return;
 }
 /*----------------------------------------------------------------------*/
 /* Read Restart on the interface                            ager 06/2016 |
@@ -250,7 +248,6 @@ void XFEM::XfsCouplingManager::read_restart(Core::IO::DiscretizationReader& read
       std::make_shared<Core::LinAlg::Vector<double>>(*get_map_extractor(0)->full_map(), true);
   reader.read_vector(lambdafull, "fsilambda");
   insert_vector(0, lambdafull, 0, lambda_, CouplingCommManager::full_to_partial);
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------*

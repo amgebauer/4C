@@ -139,8 +139,6 @@ void ScaTra::LevelSet::Intersection::get_zero_level_set(const Core::LinAlg::Vect
     if (boundary_int_cells_per_ele<T>().size() > 0)
       elementBoundaryIntCells[ele->id()] = boundary_int_cells_per_ele<T>();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

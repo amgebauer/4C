@@ -151,8 +151,6 @@ void Core::FE::Discretization::initialize_elements()
   if (!filled()) FOUR_C_THROW("fill_complete was not called");
 
   Core::Communication::ParObjectFactory::instance().initialize_elements(*this);
-
-  return;
 }
 
 
@@ -180,7 +178,6 @@ void Core::FE::Discretization::build_node_row_map()
   if (count != nummynodes) FOUR_C_THROW("Mismatch in no. of nodes");
   noderowmap_ = std::make_shared<Epetra_Map>(
       -1, nummynodes, nodeids.data(), 0, Core::Communication::as_epetra_comm(get_comm()));
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -204,7 +201,6 @@ void Core::FE::Discretization::build_node_col_map()
   if (count != nummynodes) FOUR_C_THROW("Mismatch in no. of nodes");
   nodecolmap_ = std::make_shared<Epetra_Map>(
       -1, nummynodes, nodeids.data(), 0, Core::Communication::as_epetra_comm(get_comm()));
-  return;
 }
 
 
@@ -231,7 +227,6 @@ void Core::FE::Discretization::build_element_row_map()
   if (count != nummyeles) FOUR_C_THROW("Mismatch in no. of elements");
   elerowmap_ = std::make_shared<Epetra_Map>(
       -1, nummyeles, eleids.data(), 0, Core::Communication::as_epetra_comm(get_comm()));
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -254,7 +249,6 @@ void Core::FE::Discretization::build_element_col_map()
   if (count != nummyeles) FOUR_C_THROW("Mismatch in no. of elements");
   elecolmap_ = std::make_shared<Epetra_Map>(
       -1, nummyeles, eleids.data(), 0, Core::Communication::as_epetra_comm(get_comm()));
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -268,7 +262,6 @@ void Core::FE::Discretization::build_element_to_node_pointers()
     bool success = elecurr->second->build_nodal_pointers(node_);
     if (!success) FOUR_C_THROW("Building element <-> node topology failed");
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -282,7 +275,6 @@ void Core::FE::Discretization::build_element_to_element_pointers()
     bool success = elecurr->second->build_element_pointers(element_);
     if (!success) FOUR_C_THROW("Building element <-> element topology failed");
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -309,7 +301,6 @@ void Core::FE::Discretization::build_node_to_element_pointers()
         node->add_element_ptr(elecurr->second.get());
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*

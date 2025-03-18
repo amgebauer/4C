@@ -23,7 +23,6 @@ FLD::TimIntLomaGenAlpha::TimIntLomaGenAlpha(const std::shared_ptr<Core::FE::Disc
       TimIntGenAlpha(actdis, solver, params, output, alefluid),
       TimIntLoma(actdis, solver, params, output, alefluid)
 {
-  return;
 }
 
 
@@ -36,8 +35,6 @@ void FLD::TimIntLomaGenAlpha::init()
   // note: this order is important
   TimIntGenAlpha::init();
   TimIntLoma::init();
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

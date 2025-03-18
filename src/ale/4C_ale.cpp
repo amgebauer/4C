@@ -173,8 +173,6 @@ void ALE::Ale::set_initial_displacement(const ALE::InitialDisp init, const int s
       FOUR_C_THROW("Unknown option for initial displacement: {}", init);
       break;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
@@ -272,8 +270,6 @@ void ALE::Ale::evaluate(std::shared_ptr<const Core::LinAlg::Vector<double>> step
    * We make this negative and store it in rhs_ for use in Newton-type methods.
    */
   rhs_->update(-1.0, *residual_, 0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -454,8 +450,6 @@ void ALE::Ale::output()
 
   // write domain decomposition for visualization
   if ((step_ == writeresultsevery_ or step_ == 0)) output_->write_element_data(true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -471,8 +465,6 @@ void ALE::Ale::output_state(bool& datawritten)
     output_->write_vector("det_j", eledetjac_, Core::IO::elementvector);
     output_->write_vector("element_quality", elequality_, Core::IO::elementvector);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -495,8 +487,6 @@ void ALE::Ale::output_restart(bool& datawritten)
     if (Core::Communication::my_mpi_rank(discret_->get_comm()) == 0)
       Core::IO::cout << "====== Restart written in step " << step_ << Core::IO::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -541,8 +531,6 @@ void ALE::Ale::prepare_time_step()
 
   // Apply Dirichlet boundary conditions on provided state vector
   ALE::Ale::apply_dirichlet_bc(eleparams, dispnp_, nullptr, nullptr, false);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -671,8 +659,6 @@ void ALE::Ale::setup_dbc_map_ex(ALE::Utils::MapExtractor::AleDBCSetType dbc_type
       FOUR_C_THROW("Undefined type of ALE Dirichlet sets.");
       break;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -721,8 +707,6 @@ void ALE::Ale::apply_dirichlet_bc(Teuchos::ParameterList& params,
     if (systemvectord != nullptr) locsysman_->rotate_local_to_global(*systemvectord);
     if (systemvectordd != nullptr) locsysman_->rotate_local_to_global(*systemvectordd);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -733,18 +717,11 @@ void ALE::Ale::reset()
 
   dispnp_ = Core::LinAlg::create_vector(*dofrowmap, true);
   dispn_ = Core::LinAlg::create_vector(*dofrowmap, true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-void ALE::Ale::reset_step()
-{
-  dispnp_->update(1.0, *dispn_, 0.0);
-
-  return;
-}
+void ALE::Ale::reset_step() { dispnp_->update(1.0, *dispn_, 0.0); }
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
@@ -752,18 +729,11 @@ void ALE::Ale::reset_time(const double dtold)
 {
   time_ = time_ - dtold;
   step_ = step_ - 1;
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-void ALE::Ale::set_dt(const double dtnew)
-{
-  dt_ = dtnew;
-
-  return;
-}
+void ALE::Ale::set_dt(const double dtnew) { dt_ = dtnew; }
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
@@ -867,8 +837,6 @@ void ALE::AleLinear::prepare_time_step()
   Ale::prepare_time_step();
 
   if (updateeverystep_) validsysmat_ = false;
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -877,8 +845,6 @@ void ALE::AleLinear::time_step(ALE::Utils::MapExtractor::AleDBCSetType dbc_type)
   evaluate(nullptr, dbc_type);
   solve();
   update_iter();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -896,8 +862,6 @@ void ALE::AleLinear::evaluate_elements()
     block_system_matrix()->Apply(*dispnp(), *write_access_residual());
   else
     FOUR_C_THROW("Can't compute residual for linear ALE.");
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

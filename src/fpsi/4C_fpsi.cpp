@@ -52,8 +52,6 @@ void FPSI::FpsiBase::redistribute_interface()
     PoroElast::Utils::set_material_pointers_matching_grid(
         *problem->get_dis("structure"), *problem->get_dis("porofluid"));
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

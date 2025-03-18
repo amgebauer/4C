@@ -55,7 +55,6 @@ Discret::Elements::FluidIntFace::FluidIntFace(int id,  ///< element id
   set_local_trafo_map(localtrafomap);
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -64,7 +63,6 @@ Discret::Elements::FluidIntFace::FluidIntFace(int id,  ///< element id
 Discret::Elements::FluidIntFace::FluidIntFace(const Discret::Elements::FluidIntFace& old)
     : Core::Elements::FaceElement(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -94,7 +92,6 @@ Core::FE::CellType Discret::Elements::FluidIntFace::shape() const
 void Discret::Elements::FluidIntFace::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("this FluidIntFace element does not support communication");
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -104,7 +101,6 @@ void Discret::Elements::FluidIntFace::pack(Core::Communication::PackBuffer& data
 void Discret::Elements::FluidIntFace::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("this FluidIntFace element does not support communication");
-  return;
 }
 
 
@@ -314,8 +310,6 @@ void Discret::Elements::FluidIntFace::patch_location_vector(
     else
       FOUR_C_THROW("face's nodes not contained in masternodes_offset map");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -554,9 +548,6 @@ void Discret::Elements::FluidIntFace::patch_location_vector(
     else
       FOUR_C_THROW("face's nodes not contained in masternodes_offset map");
   }
-
-
-  return;
 }
 
 
@@ -568,7 +559,6 @@ void Discret::Elements::FluidIntFace::print(std::ostream& os) const
 {
   os << "FluidIntFace ";
   Element::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------*

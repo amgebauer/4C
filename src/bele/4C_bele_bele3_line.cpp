@@ -30,7 +30,6 @@ Discret::Elements::Bele3Line::Bele3Line(int id, int owner, int nnode, const int*
   build_nodal_pointers(nodes);
   set_parent_master_element(parent, lline);
   set_num_dof_per_node(parent->num_dof_per_node(*nodes[0]));
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -39,7 +38,6 @@ Discret::Elements::Bele3Line::Bele3Line(int id, int owner, int nnode, const int*
 Discret::Elements::Bele3Line::Bele3Line(const Discret::Elements::Bele3Line& old)
     : Core::Elements::FaceElement(old), numdofpernode_(old.numdofpernode_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -77,8 +75,6 @@ Core::FE::CellType Discret::Elements::Bele3Line::shape() const
 void Discret::Elements::Bele3Line::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("this Bele3Line element does not support communication");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -88,7 +84,6 @@ void Discret::Elements::Bele3Line::pack(Core::Communication::PackBuffer& data) c
 void Discret::Elements::Bele3Line::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("this Bele3Line element does not support communication");
-  return;
 }
 
 
@@ -100,7 +95,6 @@ void Discret::Elements::Bele3Line::print(std::ostream& os) const
 {
   os << "Bele3_" << numdofpernode_ << "Line ";
   Element::print(os);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

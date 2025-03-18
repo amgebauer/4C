@@ -16,7 +16,6 @@ Core::DOFSets::TransparentDofSet::TransparentDofSet(
     std::shared_ptr<Core::FE::Discretization> sourcedis, bool parallel)
     : Core::DOFSets::DofSet(), sourcedis_(sourcedis), parallel_(parallel)
 {
-  return;
 }
 
 int Core::DOFSets::TransparentDofSet::assign_degrees_of_freedom(
@@ -320,9 +319,6 @@ void Core::DOFSets::TransparentDofSet::parallel_transfer_degrees_of_freedom(
 
   dofcolmap_ = std::make_shared<Epetra_Map>(-1, dofcolvec.size(), dofcolvec.data(), 0,
       Core::Communication::as_epetra_comm(newdis.get_comm()));
-
-
-  return;
 }
 
 
@@ -367,7 +363,6 @@ void Core::DOFSets::TransparentDofSet::set_source_dofs_available_on_this_proc(
       }
     }
   }
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -401,8 +396,6 @@ void Core::DOFSets::TransparentDofSet::pack_local_source_dofs(
       add_to_pack(sblock, mydofs[ll]);
     }
   }
-
-  return;
 }
 
 
@@ -446,7 +439,6 @@ void Core::DOFSets::TransparentDofSet::unpack_local_source_dofs(
   }
 
   rblock.clear();
-  return;
 }
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -486,8 +478,6 @@ void Core::DOFSets::TransparentDofSet::receive_block(int numproc, int myrank,
 
   // for safety
   Core::Communication::barrier(exporter.get_comm());
-
-  return;
 }  // receive_block
 
 
@@ -513,8 +503,6 @@ void Core::DOFSets::TransparentDofSet::send_block(int numproc, int myrank,
 
   // for safety
   Core::Communication::barrier(exporter.get_comm());
-
-  return;
 }  // send_block
 
 FOUR_C_NAMESPACE_CLOSE

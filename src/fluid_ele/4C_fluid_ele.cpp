@@ -190,7 +190,6 @@ Discret::Elements::Fluid::Fluid(int id, int owner)
 {
   distype_ = Core::FE::CellType::dis_none;
   tds_ = nullptr;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -202,7 +201,6 @@ Discret::Elements::Fluid::Fluid(const Discret::Elements::Fluid& old)
   tds_ = nullptr;
   if (old.tds_ != nullptr)
     FOUR_C_THROW("clone() method for deep copying tds_ not yet implemented!");
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -282,8 +280,6 @@ void Discret::Elements::Fluid::print(std::ostream& os) const
 {
   os << "Fluid ";
   Element::print(os);
-  // cout << endl;
-  return;
 }
 
 

@@ -578,8 +578,6 @@ void XFEM::XfemEdgeStab::evaluate_edge_stab_ghost_penalty(
   }
 
   //--------------------------------------------------------------------------------------------
-
-  return;
 }
 
 
@@ -616,9 +614,6 @@ void XFEM::XfemEdgeStab::assemble_edge_stab_ghost_penalty(
   Discret::Elements::FluidIntFaceImplInterface::impl(intface)
       ->assemble_internal_faces_using_neighbor_data(intface, material_m, nds_master, nds_slave,
           face_type, eleparams, xdiscret, systemmatrix, systemvector);
-
-
-  return;
 }
 
 
@@ -701,10 +696,6 @@ void XFEM::XfemEdgeStab::evaluate_edge_stab_std(
   // call evaluate and assemble routine
   assemble_edge_stab_ghost_penalty(eleparams, Inpar::XFEM::face_type_std, faceele, matptr_m,
       matptr_s, nds_master, nds_slave, *xdiscret, systemmatrix, systemvector);
-
-  //--------------------------------------------------------------------------------------------
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -774,10 +765,6 @@ void XFEM::XfemEdgeStab::evaluate_edge_stab_boundary_gp(
   // call evaluate and assemble routine
   assemble_edge_stab_ghost_penalty(eleparams, Inpar::XFEM::face_type_boundary_ghost_penalty,
       faceele, matptr_m, matptr_s, nds_master, nds_slave, *xdiscret, systemmatrix, systemvector);
-
-  //--------------------------------------------------------------------------------------------
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

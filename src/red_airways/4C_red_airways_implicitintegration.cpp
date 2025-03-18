@@ -392,7 +392,6 @@ void Airway::RedAirwayImplicitTimeInt::integrate(
     Teuchos::TimeMonitor::summarize();
   }
 
-  return;
 }  // RedAirwayImplicitTimeInt::Integrate
 
 
@@ -1216,8 +1215,6 @@ void Airway::RedAirwayImplicitTimeInt::time_update()
 
   elemVolumenm_->update(1.0, *elemVolumen_, 0.0);
   elemVolumen_->update(1.0, *elemVolumenp_, 0.0);
-
-  return;
 }  // RedAirwayImplicitTimeInt::TimeUpdate
 
 
@@ -1308,8 +1305,6 @@ void Airway::RedAirwayImplicitTimeInt::save_state()
   saved_elemVolumenm_->update(1.0, *elemVolumenm_, 0.0);
   saved_elemVolumen_->update(1.0, *elemVolumen_, 0.0);
   saved_elemVolumenp_->update(1.0, *elemVolumenp_, 0.0);
-
-  return;
 }  // RedAirwayImplicitTimeInt::SaveState
 
 
@@ -1353,8 +1348,6 @@ void Airway::RedAirwayImplicitTimeInt::load_state()
   elemVolumenm_->update(1.0, *saved_elemVolumenm_, 0.0);
   elemVolumen_->update(1.0, *saved_elemVolumen_, 0.0);
   elemVolumenp_->update(1.0, *saved_elemVolumenp_, 0.0);
-
-  return;
 }  // RedAirwayImplicitTimeInt::LoadState
 
 
@@ -1557,7 +1550,6 @@ void Airway::RedAirwayImplicitTimeInt::output(
     uprestart_ = uprestart;
     time_ = time_backup;
   }
-  return;
 }  // RedAirwayImplicitTimeInt::Output
 
 /*----------------------------------------------------------------------*

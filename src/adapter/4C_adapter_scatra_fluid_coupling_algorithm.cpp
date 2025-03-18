@@ -41,7 +41,6 @@ Adapter::ScaTraFluidCouplingAlgorithm::ScaTraFluidCouplingAlgorithm(MPI_Comm com
       isinit_(false)
 {
   // keep constructor empty
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -157,7 +156,6 @@ void Adapter::ScaTraFluidCouplingAlgorithm::setup()
     FOUR_C_THROW("Something went terrible wrong. Sorry about this!");
 
   set_is_setup(true);
-  return;
 }
 
 /*----------------------------------------------------------------------*/

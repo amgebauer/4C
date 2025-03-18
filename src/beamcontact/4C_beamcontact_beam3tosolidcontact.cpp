@@ -59,8 +59,6 @@ CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::Beam3tosoli
 
   normalsets_old_.clear();
   normalsets_old_.resize(0);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: constructor                                                     |
@@ -75,7 +73,6 @@ CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::Beam3tosoli
     : pdiscret_(old.pdiscret_), cdiscret_(old.cdiscret_), dofoffsetmap_(old.dofoffsetmap_)
 {
   FOUR_C_THROW("ERROR: Copy constructor incomplete");
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: copy-constructor                                                |
@@ -598,8 +595,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::evalua
   }
   // -----------------------------------------------------------------
   // End: Evaluate contact force and stiffness at each Gauss point
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Evaluate contact interval                                       |
@@ -779,11 +774,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::evalua
   for (int i = 0; i < dim2; i++)
     for (int j = 0; j < 3; j++)
       fc2(i) += -jacobi * w_gp * fp * N2(j, i) * n2(j) * 0.5 * (eta_b - eta_a);
-
-  // -----------------------------------------------------------------
-  // end: Evaluate contact forces acting on solid element
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Compute contact forces                                          |
@@ -1023,8 +1013,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::evalua
     }
   }
 #endif
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Evaluate contact stiffness
@@ -1189,8 +1177,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::comput
   xi1_d = par_d[0];
   xi2_d = par_d[1];
   eta_d = par_d[2];
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Compute directional derivatives of element parameters           |
@@ -1256,9 +1242,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::comput
   gap_d.clear();
   for (int i = 0; i < 3; i++)
     for (int j = 0; j < dim1 + dim2; j++) gap_d(j) += n2(i) * rD_d(i, j);
-  // std::cout << "gap_d (new linearization): " << gap_d << std::endl;
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Compute directional derivative of gap                           |
@@ -1363,9 +1346,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::comput
   for (int i = 0; i < 3; i++)
     for (int j = 0; j < 3; j++)
       for (int k = 0; k < dim1 + dim2; k++) n2_d(i, k) += auxiliary_matrix(i, j) * a2_d(j, k);
-  // std::cout << "n2_d (new linearization): " << n2_d << std::endl;
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute directional derivative of surface unit normal vector    |
@@ -1536,8 +1516,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::
     std::cout << "lmcol2: " << std::endl;
     for (int i = 0; i < dim1 + dim2; i++) std::cout << lmcol2[i] << std::endl;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Assemble contact force and stiffness                            |
@@ -1814,8 +1792,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::
 
   // -----------------------------------------------------------------
   // End: Sort contact interval borders to identify contact intervals
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Get contact interval borders                                    |
@@ -2152,8 +2128,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::projec
       }
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Projection                                                      |
@@ -2207,8 +2181,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::get_be
   // Assemble the individual shape functions in matrices, such that: r = N * d, r_eta = N_eta * d,
   // r_etaeta = N_etaeta * d
   assemble_beam_shapefunctions(N_i, N_i_eta, N_i_etaeta, N, N_eta, N_etaeta);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Evaluate beam shape functions and derivatives                   |
@@ -2250,8 +2222,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::get_su
   // r_xi1xi1 = N_xi1xi1 * d, ...
   assemble_surf_shapefunctions(
       N_i, N_i_xi, N_i_xixi, N, N_xi1, N_xi2, N_xi1xi1, N_xi2xi2, N_xi1xi2, N_xi2xi1);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Evaluate solid surface shape functions and derivatives          |
@@ -2313,7 +2283,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes,
       }
     }
   }
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Assemble beam shape functions                                   |
@@ -2380,8 +2349,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::
       }
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Assemble solid surface shape functions                          |
@@ -2413,8 +2380,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes,
       r_etaeta(i) += N_etaeta(i, j) * ele1pos_(j);
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Compute beam contact point coordinates and their derivative     |
@@ -2460,8 +2425,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes,
       r_xi2xi1(i) += N_xi2xi1(i, j) * ele2pos_(j);
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Compute solid surface point coordinates and their derivatives   |
@@ -2501,8 +2464,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::comput
   {
     nD(i) = rD(i) / norm_rD;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Compute distance vector                                         |
@@ -2541,8 +2502,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::comput
   {
     n2(i) = a2(i) / norm_a2;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Compute surface normal vector                                   |
@@ -2562,37 +2521,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::check_
     contactflag = true;
   else
     contactflag = false;
-#endif
-
-#ifdef QUADPENALTY
-  // Linear penalty force law
-  if (gap < 0)
-    contactflag = true;
-  else
-    contactflag = false;
-#endif
-
-#ifdef ARBITPENALTY
-  const double g0 = G0;
-
-  // Linear penalty force law
-  if (ARBITPENALTY == 1 or ARBITPENALTY == 3 or ARBITPENALTY == 4 or ARBITPENALTY == 5)
-  {
-    if (gap < g0)
-      contactflag = true;
-    else
-      contactflag = false;
-  }
-  else if (ARBITPENALTY == 2)
-  {
-    if (gap < 0)
-      contactflag = true;
-    else
-      contactflag = false;
-  }
-#endif
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Check if contact is active or inactive                           |
@@ -2712,8 +2640,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::update
   for (int i = 0; i < 3; i++)              // Loop over nodal dofs
     for (int j = 0; j < numnodessol; j++)  // Loop over nodes
       ele2pos_(3 * j + i) = newele2pos(i, j);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Update nodal coordinates (public)                               |
@@ -2790,7 +2716,6 @@ void CONTACT::Beam3tosolidcontact<numnodessol, numnodes, numnodalvalues>::shift_
   //  {
   //    FOUR_C_THROW("The parameter numnodalvalues can only have the values 1 or 2!!!");
   //  }
-  return;
 }
 /*----------------------------------------------------------------------*
  | End: Shift Nodal positions (public)                                  |

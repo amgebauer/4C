@@ -20,7 +20,6 @@ POROFLUIDMULTIPHASE::MeshtyingStrategyStd::MeshtyingStrategyStd(
     const Teuchos::ParameterList& poroparams)
     : MeshtyingStrategyBase(porofluidmultitimint, probparams, poroparams)
 {
-  return;
 }
 
 
@@ -28,18 +27,18 @@ POROFLUIDMULTIPHASE::MeshtyingStrategyStd::MeshtyingStrategyStd(
 /*----------------------------------------------------------------------*
  | prepare time loop                                   kremheller 04/18 |
  *----------------------------------------------------------------------*/
-void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::prepare_time_loop() { return; }
+void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::prepare_time_loop() {}
 
 /*----------------------------------------------------------------------*
  | setup the variables to do a new time step  (public) kremheller 04/18 |
  *----------------------------------------------------------------------*/
-void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::prepare_time_step() { return; }
+void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::prepare_time_step() {}
 
 /*----------------------------------------------------------------------*
  | current solution becomes most recent solution of next timestep       |
  |                                                     kremheller 04/18 |
  *----------------------------------------------------------------------*/
-void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::update() { return; }
+void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::update() {}
 
 /*--------------------------------------------------------------------------*
  | initialize the linear solver                            kremheller 07/20 |
@@ -63,8 +62,6 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::linear_solve(
   solver_params.refactor = true;
   solver_params.reset = true;
   solver->solve(sysmat->epetra_operator(), increment, residual, solver_params);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -81,29 +78,27 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::calculate_norms(std::vector<doub
   preresnorm[0] = Utils::calculate_vector_norm(vectornormfres_, *porofluidmultitimint_->rhs());
   incprenorm[0] = Utils::calculate_vector_norm(vectornorminc_, *increment);
   prenorm[0] = Utils::calculate_vector_norm(vectornorminc_, *porofluidmultitimint_->phinp());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
  | create result test for this field                   kremheller 04/18 |
  *----------------------------------------------------------------------*/
-void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::create_field_test() { return; }
+void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::create_field_test() {}
 
 /*----------------------------------------------------------------------*
  |  read restart data                                  kremheller 04/18 |
  -----------------------------------------------------------------------*/
-void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::read_restart(const int step) { return; }
+void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::read_restart(const int step) {}
 
 /*----------------------------------------------------------------------*
  | output of solution vector to BINIO                  kremheller 04/18 |
  *----------------------------------------------------------------------*/
-void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::output() { return; }
+void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::output() {}
 
 /*----------------------------------------------------------------------*
  | evaluate matrix and rhs                             kremheller 04/18 |
  *----------------------------------------------------------------------*/
-void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::evaluate() { return; }
+void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::evaluate() {}
 
 /*----------------------------------------------------------------------*
  | extract and update                                  kremheller 04/18 |
@@ -131,7 +126,6 @@ POROFLUIDMULTIPHASE::MeshtyingStrategyStd::combined_increment(
 void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::check_initial_fields(
     std::shared_ptr<const Core::LinAlg::Vector<double>> vec_cont) const
 {
-  return;
 }
 
 /*-------------------------------------------------------------------------*
@@ -140,17 +134,16 @@ void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::check_initial_fields(
 void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::set_nearby_ele_pairs(
     const std::map<int, std::set<int>>* nearbyelepairs)
 {
-  return;
 }
 
 /*-------------------------------------------------------------------------*
  | setup the strategy                                     kremheller 03/19 |
  *------------------------------------------------------------------------ */
-void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::setup() { return; }
+void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::setup() {}
 
 /*----------------------------------------------------------------------*
  | apply mesh movement                                 kremheller 06/18 |
  *----------------------------------------------------------------------*/
-void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::apply_mesh_movement() const { return; }
+void POROFLUIDMULTIPHASE::MeshtyingStrategyStd::apply_mesh_movement() const {}
 
 FOUR_C_NAMESPACE_CLOSE

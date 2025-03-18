@@ -198,7 +198,6 @@ void scatra_cardiac_monodomain_dyn(int restart)
     }
   }
 
-  return;
 
 }  // end of scatra_cardiac_monodomain_dyn()
 

@@ -102,9 +102,6 @@ void POROMULTIPHASE::PoroMultiPhaseBase::init(const Teuchos::ParameterList& glob
   fluid_ = std::make_shared<Adapter::PoroFluidMultiphaseWrapper>(porofluid);
   // initialize it
   fluid_->init(isale, nds_disp, nds_vel, nds_solidpressure, ndsporofluid_scatra, nearbyelepairs);
-
-  // done.
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -123,9 +120,6 @@ void POROMULTIPHASE::PoroMultiPhaseBase::read_restart(int restart)
     // reset time and step for the global algorithm
     set_time_step(structure_->time_old(), restart);
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -145,8 +139,6 @@ void POROMULTIPHASE::PoroMultiPhaseBase::timeloop()
 
     update_and_output();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -170,8 +162,6 @@ void POROMULTIPHASE::PoroMultiPhaseBase::prepare_time_loop()
     set_struct_solution(struct_zeros_, struct_zeros_);
   }
   fluid_field()->prepare_time_loop();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

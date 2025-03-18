@@ -38,7 +38,6 @@ ScaTra::TimIntLomaGenAlpha::TimIntLomaGenAlpha(std::shared_ptr<Core::FE::Discret
   // DO NOT DEFINE ANY STATE VECTORS HERE (i.e., vectors based on row or column maps)
   // this is important since we have problems which require an extended ghosting
   // this has to be done before all state vectors are initialized
-  return;
 }
 
 
@@ -51,8 +50,6 @@ void ScaTra::TimIntLomaGenAlpha::init()
   // note: this order is important
   TimIntGenAlpha::init();
   ScaTraTimIntLoma::init();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -64,8 +61,6 @@ void ScaTra::TimIntLomaGenAlpha::setup()
   // note: this order is important
   TimIntGenAlpha::setup();
   ScaTraTimIntLoma::setup();
-
-  return;
 }
 
 
@@ -81,14 +76,6 @@ void ScaTra::TimIntLomaGenAlpha::predict_therm_pressure()
   // prediction of time derivative:
   double fact = (gamma_ - 1.0) / gamma_;
   thermpressdtnp_ = fact * thermpressdtn_;
-
-  // same-thermodynamic-pressure-derivative predictor (currently not used)
-  // thermpressnp_ += dta_*thermpressdtn_;
-  // prediction of time derivative not required (would also not be required
-  // to be performed, since we just updated the time derivatives of density,
-  // and thus, thermpressdtnp_ = thermpressdtn_)
-
-  return;
 }
 
 
@@ -110,8 +97,6 @@ void ScaTra::TimIntLomaGenAlpha::compute_therm_pressure_intermediate_values()
   // time derivative of thermodyn. press. at n+alpha_M for low-Mach-number case
   // -> required for transfer to flow solver and use in continuity equation
   thermpressdtam_ = alphaM_ * thermpressdtnp_ + (1.0 - alphaM_) * thermpressdtn_;
-
-  return;
 }
 
 
@@ -215,8 +200,6 @@ void ScaTra::TimIntLomaGenAlpha::compute_therm_pressure()
 
   // compute values at intermediate time steps
   compute_therm_pressure_intermediate_values();
-
-  return;
 }
 
 
@@ -230,8 +213,6 @@ void ScaTra::TimIntLomaGenAlpha::compute_therm_pressure_time_derivative()
   const double fact1 = 1.0 / (gamma_ * dta_);
   const double fact2 = 1.0 - (1.0 / gamma_);
   thermpressdtnp_ = fact1 * (thermpressnp_ - thermpressn_) + fact2 * thermpressdtn_;
-
-  return;
 }
 
 
@@ -242,8 +223,6 @@ void ScaTra::TimIntLomaGenAlpha::update_therm_pressure()
 {
   thermpressn_ = thermpressnp_;
   thermpressdtn_ = thermpressdtnp_;
-
-  return;
 }
 
 
@@ -275,8 +254,6 @@ void ScaTra::TimIntLomaGenAlpha::write_restart() const
   output_->write_double("thermpressdtam", thermpressdtam_);
   // as well as initial mass
   output_->write_double("initialmass", initialmass_);
-
-  return;
 }
 
 
@@ -317,8 +294,6 @@ void ScaTra::TimIntLomaGenAlpha::read_restart(
   thermpressdtam_ = reader->read_double("thermpressdtam");
   // as well as initial mass
   initialmass_ = reader->read_double("initialmass");
-
-  return;
 }
 
 
@@ -335,8 +310,6 @@ void ScaTra::TimIntLomaGenAlpha::dynamic_computation_of_cs()
     DynSmag_->apply_filter_for_dynamic_computation_of_prt(
         phiaf_, thermpressaf_, dirichtoggle, *extraparams_, nds_vel());
   }
-
-  return;
 }
 
 
@@ -351,8 +324,6 @@ void ScaTra::TimIntLomaGenAlpha::dynamic_computation_of_cv()
     Vrem_->apply_filter_for_dynamic_computation_of_dt(
         phiaf_, thermpressaf_, dirichtoggle, *extraparams_, nds_vel());
   }
-
-  return;
 }
 
 
@@ -367,7 +338,6 @@ void ScaTra::TimIntLomaGenAlpha::add_therm_press_to_parameter_list(
   params.set("thermodynamic pressure at n+alpha_M", thermpressam_);
   params.set("time derivative of thermodynamic pressure", thermpressdtaf_);
   discret_->set_state("phiam", phiam_);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

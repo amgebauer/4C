@@ -52,7 +52,6 @@ CONTACT::LagrangeStrategy::LagrangeStrategy(
       fconservation_(nullptr)
 {
   // empty constructor body
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -136,7 +135,6 @@ void CONTACT::LagrangeStrategy::initialize()
       linslipRHS_ = Core::LinAlg::create_vector(*gslipt_, true);
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1388,8 +1386,6 @@ void CONTACT::LagrangeStrategy::evaluate_friction(
     }
   }
 #endif  // #ifdef CONTACTFDSLIP
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1501,8 +1497,6 @@ void CONTACT::LagrangeStrategy::compute_contact_stresses()
   }
 
   step++;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1691,7 +1685,6 @@ void CONTACT::LagrangeStrategy::save_reference_state(
       }
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1742,9 +1735,6 @@ void CONTACT::LagrangeStrategy::add_master_contributions(Core::LinAlg::SparseOpe
   kteff.un_complete();
   kteff.add(*kc, false, fac, 1.);
   kteff.complete();
-
-  // bye bye
-  return;
 }
 
 
@@ -1797,9 +1787,6 @@ void CONTACT::LagrangeStrategy::add_line_to_lin_contributions(Core::LinAlg::Spar
   kteff.un_complete();
   kteff.add(*kc, false, fac, 1.);
   kteff.complete();
-
-  // bye bye
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1868,9 +1855,6 @@ void CONTACT::LagrangeStrategy::add_line_to_lin_contributions_friction(
   kteff.un_complete();
   kteff.add(*kc, false, fac, 1.);
   kteff.complete();
-
-  // bye bye
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2942,8 +2926,6 @@ void CONTACT::LagrangeStrategy::evaluate_contact(
     interface_[i]->FDCheckTangLMDeriv();
   }
 #endif  // #ifdef CONTACTFDTANGLM
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3195,8 +3177,6 @@ void CONTACT::LagrangeStrategy::build_saddle_point_system(
     blocksol = mergedsol;
     blockrhs = mergedrhs;
   }
-
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -3247,8 +3227,6 @@ void CONTACT::LagrangeStrategy::update_displacements_and_l_mincrements(
     zincr_->update(1.0, *sollm, 0.0);
     z_->update(1.0, *zincr_, 1.0);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3341,8 +3319,6 @@ void CONTACT::LagrangeStrategy::evaluate_constr_rhs()
   }
   else
     constrrhs_ = constrrhs;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3417,7 +3393,6 @@ void CONTACT::LagrangeStrategy::evaluate_force(CONTACT::ParamsInterface& cparams
   }
 
   // bye bye
-  return;
 }
 
 
@@ -3458,7 +3433,6 @@ void CONTACT::LagrangeStrategy::assemble_all_contact_terms()
     assemble_all_contact_terms_friction();
   else
     assemble_all_contact_terms_frictionless();
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4568,8 +4542,6 @@ void CONTACT::LagrangeStrategy::recover(std::shared_ptr<Core::LinAlg::Vector<dou
 
   // store updated LM into nodes
   store_nodal_quantities(Mortar::StrategyBase::lmupdate);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4869,8 +4841,6 @@ void CONTACT::LagrangeStrategy::update_active_set()
   }
   else
     isincontact_ = false;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5088,8 +5058,6 @@ void CONTACT::LagrangeStrategy::update_active_set_semi_smooth(const bool firstSt
   }
   else
     isincontact_ = false;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5108,82 +5076,6 @@ void CONTACT::LagrangeStrategy::update(std::shared_ptr<const Core::LinAlg::Vecto
   CONTACT::AbstractStrategy::update(dis);
 
   if (fconservation_ == nullptr) return;
-
-  // *****************************************************************
-  // This is output functionality for conservation properties of LTL
-  // penalty contact
-  // *****************************************************************
-
-  //  std::shared_ptr<Core::LinAlg::Vector<double>> fconservationS =
-  //      Teuchos::rcp(new Core::LinAlg::Vector<double>(slave_dof_row_map(true)),true);
-  //  std::shared_ptr<Core::LinAlg::Vector<double>> fconservationM =
-  //      Teuchos::rcp(new Core::LinAlg::Vector<double>(master_dof_row_map(true)),true);
-  //
-  //  Core::LinAlg::export_to(*fconservation_,*fconservationS);
-  //  Core::LinAlg::export_to(*fconservation_,*fconservationM);
-  ////  fconservationM->Scale(-1.0);
-  //  // check conservation properties:
-  //  interface_[0]->EvalResultantMoment(*fconservationS, *fconservationM);
-  //
-  //
-  //  double lssum = 0.0;   // local slave sum
-  //  double gssum = 0.0;   // global slave sum
-  //  double lmsum = 0.0;   // local master sum
-  //  double gmsum = 0.0;   // global master sum
-  //  double gcsum = 0.0;   // global complete sum
-  //  // slave
-  ////  for (int i=0;i<fconservationS->MyLength();++i)
-  ////  {
-  ////    lssum+=(*fconservationS)[i];
-  ////  }
-  ////  Core::Communication::sum_all(&lssum,&gssum,1, Comm());
-  ////  // master
-  ////  for (int i=0;i<fconservationM->MyLength();++i)
-  ////  {
-  ////    lmsum+=(*fconservationM)[i];
-  ////  }
-  ////  Core::Communication::sum_all(&lmsum,&gmsum,1, Comm());
-  //
-  //
-  //
-  //  // complete balance check
-  //  gcsum = gssum+gmsum;
-  //  if (abs(gcsum)>1.0e-11)
-  //    FOUR_C_THROW("Conservation of linear momentum is not fulfilled!");
-  //  if (Core::Communication::my_mpi_rank(Comm())==0)
-  //  {
-  //    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<" << std::endl;
-  //    std::cout << ">>      Linear Momentum Conservation      <<" << std::endl;
-  //    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<" << std::endl;
-  //    std::cout << ">>      Standard terms (lm)               <<" << std::endl;
-  //    std::cout << "SLAVE:   " << std::setw(14) << gssum<< std::endl;
-  //    std::cout << "MASTER:  " << std::setw(14) << gmsum << std::endl;
-  //    std::cout << "Balance: " << std::setw(14) << gcsum << std::endl;
-  //    std::cout << "--------------------------------------------" << std::endl;
-  //  }
-  //
-  //
-  //  FILE* MyFile = nullptr;
-  //  std::ostringstream filename;
-  //  const std::string filebase = "xxx";
-  //  filename << filebase <<".lmom";
-  //  MyFile = fopen(filename.str().c_str(), "at+");
-  //
-  //  // store data
-  //  if (MyFile)
-  //  {
-  //    fprintf(MyFile, "%d\t", step);
-  //    fprintf(MyFile, "%g\t", gssum);
-  //    fprintf(MyFile, "%g\t", gmsum);
-  //    fprintf(MyFile, "%g\n", gcsum);
-  //    fclose(MyFile);
-  //  }
-  //  else
-  //    FOUR_C_THROW("File could not be opened.");
-  //
-  //  ++step;
-
-  return;
 }
 
 void CONTACT::LagrangeStrategy::condense_friction(
@@ -6023,7 +5915,6 @@ void CONTACT::LagrangeStrategy::condense_friction(
 #endif  // #ifdef CONTACTFDSLIP
 
   feff->scale(-1.);
-  return;
 }
 
 void CONTACT::LagrangeStrategy::condense_frictionless(
@@ -6642,8 +6533,6 @@ void CONTACT::LagrangeStrategy::run_pre_apply_jacobian_inverse(
     condense_friction(kteff, rhs);
   else
     condense_frictionless(kteff, rhs);
-
-  return;
 }
 
 void CONTACT::LagrangeStrategy::run_post_apply_jacobian_inverse(

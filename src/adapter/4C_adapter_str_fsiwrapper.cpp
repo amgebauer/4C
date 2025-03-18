@@ -197,7 +197,6 @@ void Adapter::FSIStructureWrapper::apply_interface_forces(
 {
   fsi_model_evaluator()->get_interface_force_np_ptr()->put_scalar(0.0);
   interface_->add_fsi_cond_vector(*iforce, *fsi_model_evaluator()->get_interface_force_np_ptr());
-  return;
 }
 
 
@@ -215,8 +214,6 @@ void Adapter::FSIStructureWrapper::apply_interface_forces_temporary_deprecated(
   set_force_interface(fifc);
 
   prepare_partition_step();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

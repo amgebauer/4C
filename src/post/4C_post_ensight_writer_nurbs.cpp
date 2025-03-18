@@ -1389,8 +1389,6 @@ void EnsightWriter::write_coordinates_for_nurbs_shapefunctions(
       write(geofile, static_cast<float>(coords[i]));
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------
@@ -1683,7 +1681,6 @@ void EnsightWriter::write_nurbs_cell(const Core::FE::CellType distype, const int
       break;
     }
   }  // end switch distype
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -3327,8 +3324,6 @@ void EnsightWriter::interpolate_nurbs_result_to_viz_points(Core::LinAlg::MultiVe
     default:
       FOUR_C_THROW("unable to visualise this as a nurbs discretisation\n");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

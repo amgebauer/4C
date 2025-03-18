@@ -201,7 +201,6 @@ void loma_dyn(int restart)
       break;
   }
 
-  return;
 
 }  // loma_dyn()
 

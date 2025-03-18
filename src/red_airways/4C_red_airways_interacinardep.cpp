@@ -173,15 +173,13 @@ void Discret::Elements::RedInterAcinarDep::print(std::ostream& os) const
 {
   os << "RedInterAcinarDep ";
   Element::print(os);
-
-  return;
 }
 
 
 /*----------------------------------------------------------------------*
  |  Return names of visualization data                     ismail 01/10 |
  *----------------------------------------------------------------------*/
-void Discret::Elements::RedInterAcinarDep::vis_names(std::map<std::string, int>& names) { return; }
+void Discret::Elements::RedInterAcinarDep::vis_names(std::map<std::string, int>& names) {}
 
 /*----------------------------------------------------------------------*
  |  Return visualization data (public)                     ismail 02/10 |

@@ -74,8 +74,6 @@ void Core::FE::DiscretizationFaces::create_internal_faces_extension(const bool v
     if (Core::Communication::my_mpi_rank(comm_) == 0)
       std::cout << "number of created faces:   " << summall << "\n" << std::endl;
   }
-
-  return;
 }
 
 
@@ -930,7 +928,6 @@ void Core::FE::DiscretizationFaces::build_faces(const bool verbose)
     std::cout << "... done!" << std::endl;
   }
 
-  return;
 }  // Core::FE::DiscretizationFaces::BuildInternalFaces
 
 
@@ -958,7 +955,6 @@ void Core::FE::DiscretizationFaces::build_face_row_map()
   if (count != nummyeles) FOUR_C_THROW("Mismatch in no. of internal faces");
   facerowmap_ = std::make_shared<Epetra_Map>(
       -1, nummyeles, eleids.data(), 0, Core::Communication::as_epetra_comm(get_comm()));
-  return;
 }
 
 
@@ -982,7 +978,6 @@ void Core::FE::DiscretizationFaces::build_face_col_map()
   if (count != nummyeles) FOUR_C_THROW("Mismatch in no. of elements");
   facecolmap_ = std::make_shared<Epetra_Map>(
       -1, nummyeles, eleids.data(), 0, Core::Communication::as_epetra_comm(get_comm()));
-  return;
 }
 
 
@@ -1103,8 +1098,6 @@ void Core::FE::DiscretizationFaces::print_faces(std::ostream& os) const
     }
     Core::Communication::barrier(get_comm());
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

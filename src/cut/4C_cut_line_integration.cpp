@@ -2616,8 +2616,6 @@ void LineIntegration::transform(const Core::LinAlg::Matrix<2, 2>& xyze, const do
       xyze, deriv, metrictensor, drs, &normal);
 
   x_gp_lin.multiply(xyze, funct);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

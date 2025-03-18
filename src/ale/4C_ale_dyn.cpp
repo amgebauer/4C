@@ -49,8 +49,6 @@ void dyn_ale_drt()
   // test results
   Global::Problem::instance()->add_field_test(aletimint->create_field_test());
   Global::Problem::instance()->test_all(actdis->get_comm());
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

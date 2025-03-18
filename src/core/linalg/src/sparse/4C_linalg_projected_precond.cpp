@@ -23,8 +23,6 @@ Core::LinAlg::LinalgPrecondOperator::LinalgPrecondOperator(std::shared_ptr<Epetr
 {
   if (project_ && (projector == nullptr))
     FOUR_C_THROW("Kernel projection enabled but got no projector object");
-
-  return;
 }  // Core::LinAlg::LinalgPrecondOperator::LinalgPrecondOperator
 
 

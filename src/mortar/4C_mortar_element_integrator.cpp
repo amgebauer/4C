@@ -77,8 +77,6 @@ Mortar::ElementIntegrator::ElementIntegrator(Core::FE::CellType eletype)
       weights_[i] = rule2d->qwgt[i];
     }
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

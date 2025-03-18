@@ -122,8 +122,6 @@ void Discret::Elements::ScaTraEleCalcLS<distype>::cal_error_compared_to_analyt_s
       FOUR_C_THROW("Unknown analytical solution!");
       break;
   }  // switch(errortype)
-
-  return;
 }
 
 
@@ -143,8 +141,6 @@ void Discret::Elements::ScaTraEleCalcLS<distype>::smooth_heaviside_function(
     smoothH = 1.0;
   else
     smoothH = 0.5 * (1.0 + phi / epsilon + sin(phi * M_PI / epsilon) / M_PI);
-
-  return;
 }
 
 

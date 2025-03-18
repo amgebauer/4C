@@ -62,7 +62,6 @@ Discret::Elements::ScaTraEleParameterTurbulence::ScaTraEleParameterTurbulence(
       turbinflow_(false),
       timintparams_(Discret::Elements::ScaTraEleParameterTimInt::instance(disname))
 {
-  return;
 }
 
 
@@ -203,8 +202,6 @@ void Discret::Elements::ScaTraEleParameterTurbulence::set_parameters(
   }
 
   turbinflow_ = parameters.get<bool>("turbulent inflow");
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

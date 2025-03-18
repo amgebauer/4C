@@ -31,7 +31,6 @@ Solid::TimIntPrestress::TimIntPrestress(const Teuchos::ParameterList& timeparams
   // redistribution of elements. Only then call the setup to this class. This will call the setup to
   // all classes in the inheritance hierarchy. This way, this class may also override a method that
   // is called during setup() in a base class.
-  return;
 }
 
 void Solid::TimIntPrestress::setup()

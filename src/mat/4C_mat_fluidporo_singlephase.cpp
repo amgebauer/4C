@@ -89,7 +89,6 @@ void Mat::PAR::FluidPoroSinglePhase::initialize()
     phasedof_->initialize();
     isinit_ = true;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -165,11 +164,7 @@ void Mat::FluidPoroSinglePhase::unpack(Core::Communication::UnpackBuffer& buffer
 /*----------------------------------------------------------------------*
  *  initialize                                              vuong 08/16 |
  *----------------------------------------------------------------------*/
-void Mat::FluidPoroSinglePhase::initialize()
-{
-  params_->initialize();
-  return;
-}
+void Mat::FluidPoroSinglePhase::initialize() { params_->initialize(); }
 
 /*----------------------------------------------------------------------*
  *  return dof type                                         vuong 08/16 |
@@ -194,7 +189,6 @@ void Mat::FluidPoroSinglePhase::fill_do_f_matrix(
     Core::LinAlg::SerialDenseMatrix& dofmat, int numphase) const
 {
   params_->phasedof_->fill_do_f_matrix(dofmat, numphase);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -307,11 +301,7 @@ std::shared_ptr<Core::Mat::Material> Mat::PAR::FluidPoroSingleVolFrac::create_ma
 /*----------------------------------------------------------------------*
  *  Create Material (public)                           kremheller 10/17 |
  *----------------------------------------------------------------------*/
-void Mat::PAR::FluidPoroSingleVolFrac::initialize()
-{
-  isinit_ = true;
-  return;
-}
+void Mat::PAR::FluidPoroSingleVolFrac::initialize() { isinit_ = true; }
 
 /*----------------------------------------------------------------------*
   global instance of parameter class                   kremheller 10/17 |
@@ -386,11 +376,7 @@ void Mat::FluidPoroSingleVolFrac::unpack(Core::Communication::UnpackBuffer& buff
 /*----------------------------------------------------------------------*
  *  initialize                                         kremheller 10/17 |
  *----------------------------------------------------------------------*/
-void Mat::FluidPoroSingleVolFrac::initialize()
-{
-  params_->initialize();
-  return;
-}
+void Mat::FluidPoroSingleVolFrac::initialize() { params_->initialize(); }
 
 /*----------------------------------------------------------------------*
  *  constructor (public)                               kremheller 02/18 |
@@ -428,11 +414,7 @@ std::shared_ptr<Core::Mat::Material> Mat::PAR::FluidPoroVolFracPressure::create_
 /*----------------------------------------------------------------------*
  *  Create Material (public)                           kremheller 02/18 |
  *----------------------------------------------------------------------*/
-void Mat::PAR::FluidPoroVolFracPressure::initialize()
-{
-  isinit_ = true;
-  return;
-}
+void Mat::PAR::FluidPoroVolFracPressure::initialize() { isinit_ = true; }
 
 /*----------------------------------------------------------------------*
   global instance of parameter class                   kremheller 02/18 |
@@ -507,10 +489,6 @@ void Mat::FluidPoroVolFracPressure::unpack(Core::Communication::UnpackBuffer& bu
 /*----------------------------------------------------------------------*
  *  initialize                                         kremheller 02/18 |
  *----------------------------------------------------------------------*/
-void Mat::FluidPoroVolFracPressure::initialize()
-{
-  params_->initialize();
-  return;
-}
+void Mat::FluidPoroVolFracPressure::initialize() { params_->initialize(); }
 
 FOUR_C_NAMESPACE_CLOSE

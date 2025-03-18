@@ -397,8 +397,6 @@ void Mat::ViscoElastHyper::setup(int numgp, const Core::IO::InputParameterContai
   }
 
   isinitvis_ = true;
-
-  return;
 }
 
 
@@ -478,8 +476,6 @@ void Mat::ViscoElastHyper::update()
         std::make_shared<std::vector<std::vector<Core::LinAlg::Matrix<NUM_STRESS_3D, 1>>>>(
             numgp, emptybigvec);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -636,7 +632,6 @@ void Mat::ViscoElastHyper::evaluate(const Core::LinAlg::Matrix<3, 3>* defgrd,
     elast_hyper_add_anisotropic_mod(
         *stress, *cmat, C_strain, iC_strain, prinv, gp, eleGID, params, potsum_);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -757,8 +752,6 @@ void Mat::ViscoElastHyper::evaluate_iso_visco_principal(Core::LinAlg::Matrix<6, 
 
   // contribution: id4sharp_{ijkl} = 1/2 (\delta_{ik}\delta_{jl} + \delta_{il}\delta_{jk})
   cmat.update(xi(2), id4sharp, 1.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -820,11 +813,6 @@ void Mat::ViscoElastHyper::evaluate_iso_visco_modified(
   // contribution: -2/3 (Cinv \otimes S_iso^v + S_iso^v \otimes Cinv)
   cmatisomodisovisco.multiply_nt(-2. / 3., icg, stressisomodisovisco, 1.0);
   cmatisomodisovisco.multiply_nt(-2. / 3., stressisomodisovisco, icg, 1.0);
-
-  // volumetric contribution:
-  // with visco_isoratedep: no volumetric part added --> always 0
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -934,7 +922,6 @@ void Mat::ViscoElastHyper::evaluate_visco_gen_max(Core::LinAlg::Matrix<6, 1>* st
   }
   else
     FOUR_C_THROW("Invalid input. Try valid input OST or CONVOL");
-  return;
 }  // end evaluate_visco_gen_max
 
 /*----------------------------------------------------------------------*/
@@ -1220,9 +1207,6 @@ void Mat::ViscoElastHyper::evaluate_visco_fract(Core::LinAlg::Matrix<6, 1> stres
   // viscos constitutive tensor
   cmatq.update(lambdascalar1 * beta, cmat, 0.);  // contribution of Q
   cmatq.update(beta, cmat, -1.);
-
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

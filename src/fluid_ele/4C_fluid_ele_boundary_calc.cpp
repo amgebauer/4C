@@ -48,8 +48,6 @@ Discret::Elements::FluidBoundaryImpl<distype>::FluidBoundaryImpl()
   fldparatimint_ = Discret::Elements::FluidEleParameterTimInt::instance();
   // initialize also general parameter list, also it will be overwritten in derived subclasses
   fldpara_ = Discret::Elements::FluidEleParameterStd::instance();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -733,7 +731,6 @@ void Discret::Elements::FluidBoundaryImpl<distype>::neumann_inflow(
     }
   }
 
-  return;
 }  // Discret::Elements::FluidSurface::neumann_inflow
 
 
@@ -794,7 +791,6 @@ void Discret::Elements::FluidBoundaryImpl<distype>::integrate_shape_function(
   } /* end of loop over integration points gpid */
 
 
-  return;
 }  // Discret::Elements::FluidSurface::integrate_shape_function
 
 
@@ -1694,7 +1690,6 @@ void Discret::Elements::FluidBoundaryImpl<distype>::impedance_integration(
             fac_facrhs_pres * funct_(inode) * (-unitnormal_(idim));
   }
 
-  return;
 }  // Discret::Elements::FluidSurface::impedance_integration
 
 
@@ -1872,10 +1867,6 @@ void Discret::Elements::FluidBoundaryImpl<distype>::get_density(
 
   //  // check whether there is zero or negative density
   if (densaf_ < 1e-15) FOUR_C_THROW("zero or negative density!");
-
-
-
-  return;
 }  // FluidBoundaryImpl::GetDensity
 
 /*----------------------------------------------------------------------*
@@ -2031,7 +2022,6 @@ void Discret::Elements::FluidBoundaryImpl<distype>::calc_traction_velocity_compo
       //      cout<<"n_vel("<<n_vel<<") vel: "<<n_vel<<" rad: "<<radius<<endl;
     }
   }
-  return;
 }
 
 template <Core::FE::CellType distype>

@@ -314,8 +314,6 @@ void Core::LinearSolver::AMGNxN::Hierarchies::setup()
 
 
   }  // loop in blocks
-
-  return;
 }
 
 /*------------------------------------------------------------------------------*/
@@ -743,8 +741,6 @@ void Core::LinearSolver::AMGNxN::MonolithicHierarchy::setup()
   //  std::cout << "AMGnxn preconditioner: debug info  (end)" << std::endl;
   //  std::cout << "===============================================" << std::endl;
   //}
-
-  return;
 }
 
 /*------------------------------------------------------------------------------*/

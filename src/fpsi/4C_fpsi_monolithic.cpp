@@ -273,7 +273,6 @@ void FPSI::Monolithic::setup_system()
   fpsi_coupl() = std::make_shared<FPSI::FpsiCoupling>(poroelast_subproblem_, fluid_subproblem_,
       ale_, Fluid_PoroFluid_InterfaceMap, PoroFluid_Fluid_InterfaceMap);
   fpsi_coupl()->set_conductivity(conductivity_);
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -314,8 +313,6 @@ void FPSI::Monolithic::setup_system_fsi()
   // operator from the interface map to the full field map.
   if (not coupsf_fsi.master_dof_map()->SameAs(*coupsa_fsi.master_dof_map()))
     FOUR_C_THROW("fsi structure interface dof maps do not match");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -342,8 +339,6 @@ void FPSI::Monolithic::prepare_timeloop()
 {
   // check if maps were destroyed before entring the timeloop
   extractor().check_for_valid_map_extractor();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -568,8 +563,6 @@ void FPSI::Monolithic::setup_solver()
         "experimental 4C this was solved by performing an evaluate with the negative increment.\n"
         "However this has not yet been committed.\n");
   linesearch_counter = 0.;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1198,8 +1191,6 @@ void FPSI::Monolithic::build_convergence_norms()
   norm1_fv_ += 1e-10;
   norm1_fp_ += 1e-10;
   norm1_a_ += 1e-10;
-
-  return;
 }  // build_convergence_norms
 
 /*----------------------------------------------------------------------*/
@@ -1320,9 +1311,6 @@ void FPSI::Monolithic::print_newton_iter_header(FILE* ofile)
 
   // print it, now
   fflush(ofile);
-
-  // nice to have met you
-  return;
 }  // print_newton_iter_header()
 
 
@@ -1447,9 +1435,6 @@ void FPSI::Monolithic::print_newton_iter_text(FILE* ofile)
 
   // print it, now
   fflush(ofile);
-
-  // nice to have met you
-  return;
 
 }  // PrintN
 
@@ -1787,7 +1772,6 @@ void FPSI::Monolithic::fpsifd_check()
   fluid_field()->discretization()->clear_state();
 
   active_FD_check_ = false;
-  return;
 }
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -1813,7 +1797,6 @@ void FPSI::Monolithic::extract_columnsfrom_sparse(
       }
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*/

@@ -19,7 +19,7 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*
  |  ctor (public)                                             ukue 04/07|
  *----------------------------------------------------------------------*/
-Utils::Cardiovascular0DDofSet::Cardiovascular0DDofSet() : Core::DOFSets::DofSet() { return; }
+Utils::Cardiovascular0DDofSet::Cardiovascular0DDofSet() : Core::DOFSets::DofSet() {}
 
 
 

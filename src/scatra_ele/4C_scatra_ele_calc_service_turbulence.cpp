@@ -164,8 +164,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::scatra_apply_box_filter
   dens_hat = densnp * volume;
   dens_temp_hat = densnp * phinp * volume;
   temp_hat = phinp * volume;
-
-  return;
 }  // ScaTraEleCalc::scatra_apply_box_filter
 
 
@@ -351,7 +349,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::scatra_calc_smag_const_
     MkMk += M_k(rr, 0) * M_k(rr, 0);
   }
 
-  return;
 }  // ScaTraEleCalc::scatra_calc_smag_const_lk_mk_and_mk_mk
 
 
@@ -465,8 +462,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::scatra_calc_vreman_dt(
     //    phi2_hat << std::endl; std::cout << "scatra_ele_impl_turb_service.cpp  alpha2  " << alpha2
     //    << std::endl;
   }
-
-  return;
 }
 
 
@@ -617,7 +612,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::get_mean_prt_of_homogen
     }
   }
 
-  return;
 }  // ScaTraEleCalc::GetMeanOfHomogeneousDirection
 
 
@@ -766,8 +760,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_subgr_diff(
 
   // update diffusivity
   diffmanager_->set_isotropic_sub_grid_diff(sgdiff, k);
-
-  return;
 }  // ScaTraEleCalc::calc_subgr_diff
 
 
@@ -866,7 +858,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_fine_scale_subgr_d
     }
   }
 
-  return;
 }  // ScaTraEleCalcCalc::FineScaleSubgrDiff
 
 
@@ -1158,8 +1149,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_b_and_d_for_multif
   //    std::cout << "CsgsB  " << std::setprecision(10) << Csgs_vel_nw << "  " << Csgs_sgvel << " "
   //    << Cai_phi << std::endl;
   //  }
-
-  return;
 }
 
 
@@ -1390,8 +1379,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::store_model_parameters_
       }
     }
   }
-
-  return;
 }
 
 
@@ -2028,8 +2015,6 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_dissipation(
   (*incr_eps_supg)[nlayer] += eps_supg;
   (*incr_eps_cross)[nlayer] += eps_cross;
   (*incr_eps_rey)[nlayer] += eps_rey;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

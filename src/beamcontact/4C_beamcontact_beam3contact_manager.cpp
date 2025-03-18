@@ -382,8 +382,6 @@ CONTACT::Beam3cmanager::Beam3cmanager(Core::FE::Discretization& discret, double 
     potbtsph_ = sbeampotential_.get<bool>("BEAMPOT_BTSPH");
 
   }  // end: at least one beam potential line charge condition applied
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -395,8 +393,6 @@ void CONTACT::Beam3cmanager::print(std::ostream& os) const
     os << "Beam3 Contact discretization:" << std::endl;
 
   problem_discret().print(os);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -595,8 +591,6 @@ void CONTACT::Beam3cmanager::evaluate(Core::LinAlg::SparseMatrix& stiffmatrix,
   if (!Core::Communication::my_mpi_rank(pdiscret_.get_comm()))
     Core::IO::cout(Core::IO::debug)
         << "      Post-manage Pairs: " << t_end << " seconds. " << Core::IO::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -617,8 +611,6 @@ void CONTACT::Beam3cmanager::shift_dis_map(
     discrow.replace_global_value(btsolcontact_gid, 0, disp);
   }
   Core::LinAlg::export_to(discrow, disccol);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -974,8 +966,6 @@ void CONTACT::Beam3cmanager::init_beam_contact_discret()
       dofoffsetmap_[btsolnodedofids[j]] = originalnodedofids[j];
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1015,8 +1005,6 @@ void CONTACT::Beam3cmanager::set_current_positions(
     // store into currentpositions
     currentpositions[node->id()] = currpos;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1215,8 +1203,6 @@ void CONTACT::Beam3cmanager::set_state(std::map<int, Core::LinAlg::Matrix<3, 1>>
     // finally update nodal positions in contact pair objects
     btsolpairs_[i]->update_ele_pos(ele1pos, ele2pos);
   }
-
-  return;
 }
 
 /*---------------------------------------------------------------------*
@@ -1304,8 +1290,6 @@ void CONTACT::Beam3cmanager::evaluate_all_pairs(Teuchos::ParameterList timeintpa
       btsolpairs_[i]->evaluate(*stiffc_, *fc_, btspp_);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1905,8 +1889,6 @@ void CONTACT::Beam3cmanager::compute_search_radius()
     std::cout << "Maximum element length = " << maxelelength << std::endl;
     std::cout << "Search radius          = " << searchradius_ << std::endl << std::endl;
   }
-
-  return;
 }
 
 /*-------------------------------------------------------------------- -*
@@ -1949,8 +1931,6 @@ void CONTACT::Beam3cmanager::set_min_max_ele_radius()
       if (eleradius < mineleradius_) mineleradius_ = eleradius;
     }
   }
-
-  return;
 }
 
 /*-------------------------------------------------------------------- -*
@@ -2001,8 +1981,6 @@ void CONTACT::Beam3cmanager::get_max_ele_length(double& maxelelength)
     // if current length is larger than maximum length -> update
     if (elelength > maxelelength) maxelelength = elelength;
   }
-
-  return;
 }
 
 /*-------------------------------------------------------------------- -*
@@ -2123,8 +2101,6 @@ void CONTACT::Beam3cmanager::update(
 
   btsolpairs_.clear();
   btsolpairs_.resize(0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2967,117 +2943,6 @@ void CONTACT::Beam3cmanager::gmsh_output(const Core::LinAlg::Vector<double>& dis
     fclose(fp);
   }
   Core::Communication::barrier(get_comm());
-
-//*************************begin: gmsh output of contact forces for
-// solids************************************
-#ifdef GMSHFORCE
-  // Draw contact forces acting on solid element using an extra Gmsh output file
-  FILE* fp_fc2 = nullptr;
-
-  // Create filename
-  std::ostringstream filename_fc2;
-  filename_fc2 << "o/gmsh_output/";
-  if (timestep < 1000000)
-    filename_fc2 << "fc2_t" << std::setw(6) << std::setfill('0') << timestep;
-  else
-    FOUR_C_THROW("ERROR: Gmsh output implemented for max 999.999 time steps");
-
-  if (!endoftimestep)
-  {
-    // Newton index is always needed, of course
-    if (newtonstep < 10)
-      filename_fc2 << "_n0";
-    else if (newtonstep < 100)
-      filename_fc2 << "_n";
-    else
-      FOUR_C_THROW("ERROR: Gmsh output implemented for max 99 Newton steps");
-    filename_fc2 << newtonstep;
-  }
-
-  // Finish filename
-  filename_fc2 << ".pos";
-
-  fp_fc2 = fopen(filename_fc2.str().c_str(), "w");
-
-  std::stringstream fc2filecontent;
-
-  // General settings for 3D vector visualization
-  fc2filecontent << "General.ArrowHeadRadius=0.08;" << std::endl;  // Arrow head radius
-  fc2filecontent << "General.ArrowStemLength=0.6;" << std::endl;   // Arrow stem length
-  fc2filecontent << "View.CenterGlyphs=2;" << std::endl;    // Locate with position of arrow head
-  fc2filecontent << "View.ArrowSizeMax=100;" << std::endl;  // Arrow maximal size
-
-  // Draw solid surface elements with different colors for contact status
-  fc2filecontent << "View \"StepT" << timestep << "_Solid\"{" << std::endl;
-
-  // Loop over all column elements on this processor
-  for (int i = 0; i < ProblemDiscret().NumMyColElements(); ++i)
-  {
-    // Get pointer onto current beam element
-    Core::Elements::Element* element = ProblemDiscret().lColElement(i);
-
-    if (!BeamContact::Utils::is_beam_element(*element))
-    {
-      gmsh_solid(element, disrow, fc2filecontent);
-    }
-  }
-  fc2filecontent << "};" << std::endl;
-
-  // General view settings for color table: Set predefined color range (for contact status)
-  fc2filecontent << "View.RangeType=2;" << std::endl;      // Custom value scale range type
-  fc2filecontent << "View.CustomMin=0;" << std::endl;      // Minimum value to be displayed
-  fc2filecontent << "View.CustomMax=1;" << std::endl;      // Maximum value to be displayed
-  fc2filecontent << "View.IntervalsType=3;" << std::endl;  // Use discrete interval type
-  fc2filecontent << "View.NbIso=1;" << std::endl;          // Use one color range
-  fc2filecontent << "View.ColorTable={{180,180,180}};" << std::endl;  // Define color
-
-  // Draw contact forces acting on solid element
-  fc2filecontent << "View \"StepT" << timestep << "_fc2\"{" << std::endl;
-
-  // Loop over all beam to solid contact pairs
-  for (int i_pair = 0; i_pair < (int)btsolpairs_.size(); i_pair++)
-  {
-    std::vector<Beam3tosolidcontactinterface::gmshDebugPoint> gmshDebugPoints =
-        btsolpairs_[i_pair]->GetGmshDebugPoints();
-
-    // Loop over all Gauss points
-    for (int i = 0; i < (int)gmshDebugPoints.size(); i++)
-    {
-      Beam3tosolidcontactinterface::gmshDebugPoint gmshDebugPoint = gmshDebugPoints[i];
-
-      // Draw only information at Gauss points
-      if (gmshDebugPoint.type == 0)  // 0: Gauss point
-      {
-        double gap = gmshDebugPoint.gap;
-        if (gap < 0)
-        {
-          double r2[3];
-          double n2[3];
-          double fc2[3];
-          for (int j = 0; j < 3; j++)
-          {
-            r2[j] = gmshDebugPoint.x2(j);
-            n2[j] = gmshDebugPoint.n2(j);
-            fc2[j] = -gmshDebugPoint.fp * n2[j];
-          }
-
-          // Draw 3D vector for contact force
-          fc2filecontent << "VP(" << std::scientific << r2[0] << "," << r2[1] << "," << r2[2]
-                         << "){" << fc2[0] << "," << fc2[1] << "," << fc2[2] << "};" << std::endl;
-        }
-      }
-    }
-  }
-  fc2filecontent << "};" << std::endl;
-
-  // Write content into file and close
-  fprintf(fp_fc2, fc2filecontent.str().c_str());
-  fclose(fp_fc2);
-#endif
-  //*************************end: gmsh output of contact forces for
-  // solids************************************
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3109,8 +2974,6 @@ void CONTACT::Beam3cmanager::transform_angle_to_triad(
     for (int j = 0; j < 3; j++)
       R(i, j) = identity(i, j) + spin(i, j) * (sin(theta_abs)) / theta_abs +
                 (1 - (cos(theta_abs))) / (pow(theta_abs, 2))*spin2(i, j);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3137,8 +3000,6 @@ void CONTACT::Beam3cmanager::compute_spin(
   spin(2, 0) = -rotationangle[1];
   spin(2, 1) = rotationangle[0];
   spin(2, 2) = 0;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3336,8 +3197,6 @@ void CONTACT::Beam3cmanager::update_constr_norm()
         << "      **************************************************************************"
         << Core::IO::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3675,7 +3534,6 @@ void CONTACT::Beam3cmanager::console_output()
     if (Core::Communication::my_mpi_rank(get_comm()) == 0)
       Core::IO::cout(Core::IO::standard) << Core::IO::endl;
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4017,8 +3875,6 @@ void CONTACT::Beam3cmanager::gmsh_3_noded(const int& n,
                       << std::endl;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4220,8 +4076,6 @@ void CONTACT::Beam3cmanager::gmsh_4_noded(const int& n,
                       << std::endl;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4433,8 +4287,6 @@ void CONTACT::Beam3cmanager::gmsh_n_noded(const int& n, int& n_axial,
                       << std::endl;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4491,8 +4343,6 @@ void CONTACT::Beam3cmanager::gmsh_n_noded_line(const int& n, const int& n_axial,
     gmshfilecontent << "){" << std::scientific;
     gmshfilecontent << color << "," << color << "};" << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4659,11 +4509,6 @@ void CONTACT::Beam3cmanager::gmsh_sphere(const Core::LinAlg::SerialDenseMatrix& 
   for (unsigned int i = 0; i < facelist.size(); ++i)
     print_gmsh_triangle_to_stream(gmshfilecontent, vertexlist, facelist[i][0], facelist[i][1],
         facelist[i][2], color, centercoord);
-
-  // ********************* end: visualization as an icosphere
-  // ***************************************
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4683,8 +4528,6 @@ void CONTACT::Beam3cmanager::print_gmsh_triangle_to_stream(std::stringstream& gm
                   << "," << centercoord[2] + vertexlist[k][2];
   gmshfilecontent << "){" << std::scientific;
   gmshfilecontent << color << "," << color << "," << color << "};" << std::endl << std::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4747,8 +4590,6 @@ void CONTACT::Beam3cmanager::gmsh_refine_icosphere(std::vector<std::vector<doubl
 
   // erase the old faces
   facelist.erase(facelist.begin(), facelist.begin() + num_faces_old);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4899,8 +4740,6 @@ void CONTACT::Beam3cmanager::gmsh_solid_surface_element_numbers(
   gmshfilecontent << "T3(" << std::scientific << center[0] << "," << center[1] << "," << center[2]
                   << "," << 17 << ")";
   gmshfilecontent << "{\"" << element->id() << "\"};" << std::endl;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5039,8 +4878,6 @@ void CONTACT::Beam3cmanager::set_element_type_and_distype(Core::Elements::Elemen
 
   numnodes_ = ele->num_centerline_nodes();
   numnodalvalues_ = ele->hermite_centerline_interpolation() ? 2 : 1;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5121,8 +4958,6 @@ void CONTACT::Beam3cmanager::read_restart(Core::IO::DiscretizationReader& reader
   mintotalsimunconvgap_ = reader.read_double("mintotalsimunconvgap");
 
   outputcounter_ = reader.read_int("outputcounter");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5146,9 +4981,7 @@ void CONTACT::Beam3cmanager::write_restart(Core::IO::DiscretizationWriter& outpu
   output.write_double("mintotalsimrelgap", mintotalsimrelgap_);
   output.write_double("mintotalsimunconvgap", mintotalsimunconvgap_);
 
-  output.write_int("outputcounter", outputcounter_);  // ToDo needed?
-
-  return;
+  output.write_int("outputcounter", outputcounter_);
 }
 
 FOUR_C_NAMESPACE_CLOSE

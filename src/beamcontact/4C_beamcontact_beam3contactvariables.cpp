@@ -36,7 +36,6 @@ CONTACT::Beam3contactvariables<numnodes, numnodalvalues>::Beam3contactvariables(
       integratedenergy_(0.0),
       angle_(0.0)
 {
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: constructor

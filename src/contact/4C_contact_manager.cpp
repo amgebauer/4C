@@ -653,8 +653,6 @@ CONTACT::Manager::Manager(Core::FE::Discretization& discret, double alphaf)
 
   // create binary search tree
   for (auto& interface : interfaces) interface->create_search_tree();
-
-  return;
 }
 
 
@@ -1183,8 +1181,6 @@ void CONTACT::Manager::write_restart(Core::IO::DiscretizationWriter& output, boo
            restart_vectors.begin();
       p != restart_vectors.end(); ++p)
     output.write_vector(p->first, p->second);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1218,8 +1214,6 @@ void CONTACT::Manager::read_restart(Core::IO::DiscretizationReader& reader,
   // this is contact, thus we need the displacement state for restart
   // let strategy object do all the work
   get_strategy().do_read_restart(reader, dis);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1500,7 +1494,6 @@ void CONTACT::Manager::set_poro_parent_element(int& slavetype, int& mastertype,
   // store information about parent for porous contact (required for calculation of deformation
   // gradient!) in every contact element although only really needed for phystype poro
   cele.set_parent_master_element(faceele->parent_element(), faceele->face_parent_number());
-  return;
 }
 
 /*----------------------------------------------------------------------*

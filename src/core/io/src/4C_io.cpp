@@ -188,8 +188,6 @@ void Core::IO::DiscretizationReader::read_mesh(int step)
   dis_->setup_ghosting(true, false, false);
 
   dis_->fill_complete();
-
-  return;
 }
 
 
@@ -204,7 +202,6 @@ void Core::IO::DiscretizationReader::read_nodes_only(int step)
 
   // unpack nodes; fill_complete() has to be called manually
   dis_->unpack_my_nodes(*nodedata);
-  return;
 }
 
 
@@ -240,7 +237,6 @@ void Core::IO::DiscretizationReader::read_history_data(int step)
   dis_->unpack_my_nodes(*nodedata);
   dis_->unpack_my_elements(*elementdata);
   dis_->redistribute(noderowmap, nodecolmap, elerowmap, elecolmap);
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -253,8 +249,6 @@ void Core::IO::DiscretizationReader::read_char_vector(
   std::string value_path = map_read_string(result, "values");
 
   charvec = reader_->read_char_vector(value_path, dis_->get_comm());
-
-  return;
 }
 
 
@@ -284,7 +278,6 @@ void Core::IO::DiscretizationReader::read_redundant_double_vector(
 
   // now distribute information to all procs
   Core::Communication::broadcast(doublevec->data(), length, 0, get_comm());
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -313,7 +306,6 @@ void Core::IO::DiscretizationReader::read_redundant_int_vector(
 
   // now distribute information to all procs
   Core::Communication::broadcast(intvec->data(), length, 0, get_comm());
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1454,8 +1446,6 @@ void Core::IO::DiscretizationWriter::write_knotvector() const
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

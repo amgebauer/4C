@@ -99,8 +99,6 @@ void Core::FE::Utils::Dbc::operator()(const Core::FE::Discretization& discret,
   // create DBC and free map and build their common extractor
   // --------------------------------------------------------------------------
   build_dbc_map_extractor(discret, dbcgids[set_row], dbcmapextractor);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

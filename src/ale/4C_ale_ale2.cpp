@@ -186,7 +186,6 @@ void Discret::Elements::Ale2::print(std::ostream& os) const
   os << "Ale2 ";
   Element::print(os);
   std::cout << std::endl;
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

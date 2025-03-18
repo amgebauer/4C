@@ -86,8 +86,6 @@ Discret::Elements::FluidIntFaceImpl<distype>::FluidIntFaceImpl()
   fldparatimint_ = Discret::Elements::FluidEleParameterTimInt::instance();
   // pointer to class FluidEleParameterIntFace (access to the faces specific parameter)
   fldpara_intface_ = Discret::Elements::FluidEleParameterIntFace::instance();
-
-  return;
 }
 
 
@@ -330,8 +328,6 @@ void Discret::Elements::FluidIntFaceImpl<distype>::assemble_internal_faces_using
           *systemvector, elevec_blocks[i], patch_components_lm[i], patch_components_lmowner[i]);
     }
   }
-
-  return;
 }
 
 

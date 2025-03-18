@@ -23,7 +23,6 @@ Adapter::FluidFPSI::FluidFPSI(std::shared_ptr<Fluid> fluid,
     : FluidFSI(fluid, dis, solver, params, output, isale, dirichletcond),
       fpsiinterface_(std::make_shared<FLD::Utils::MapExtractor>())
 {
-  return;
 }  // constructor
 
 
@@ -33,9 +32,7 @@ void Adapter::FluidFPSI::init()
   // call base class init
   FluidFSI::init();
 
-  fpsiinterface_->setup(*dis_, true, true);  // Always Create overlapping FPSI Interface
-
-  return;
+  fpsiinterface_->setup(*dis_, true, true);
 }
 
 

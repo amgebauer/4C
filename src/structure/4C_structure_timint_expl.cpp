@@ -40,7 +40,6 @@ Solid::TimIntExpl::TimIntExpl(const Teuchos::ParameterList& timeparams,  //! tim
   // redistribution of elements. Only then call the setup to this class. This will call the setup to
   // all classes in the inheritance hierarchy. This way, this class may also override a method that
   // is called during setup() in a base class.
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -52,9 +51,6 @@ void Solid::TimIntExpl::init(const Teuchos::ParameterList& timeparams,
 {
   // call init() in base class
   Solid::TimInt::init(timeparams, sdynparams, xparams, actdis, solver);
-
-  // get away
-  return;
 }
 
 /*----------------------------------------------------------------------------------------------*
@@ -89,8 +85,6 @@ void Solid::TimIntExpl::setup()
   if (have_nonlinear_mass() != Inpar::Solid::MassLin::ml_none)
     FOUR_C_THROW(
         "Explicit time integration schemes cannot handle nonlinear inertia forces (flag: MASSLIN)");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -113,9 +107,6 @@ void Solid::TimIntExpl::apply_force_external(const double time,  //!< evaluation
   if (damping_ == Inpar::Solid::damp_material) discret_->set_state(0, "velocity", vel);
   // get load vector
   discret_->evaluate_neumann(p, fext);
-
-  // go away
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -153,9 +144,6 @@ void Solid::TimIntExpl::print_step_text(FILE* ofile)
       "------------------\n");
   // do it, print now!
   fflush(ofile);
-
-  // fall asleep
-  return;
 }
 
 /*----------------------------------------------------------------------*/

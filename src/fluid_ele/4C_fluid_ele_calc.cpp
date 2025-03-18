@@ -1384,8 +1384,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::sysmat(
         estif(numdofpernode_ * vi + nsd_, numdof_ui_jdim) += estif_q_u_(vi, nsd_ui_jdim);
     }
   }
-
-  return;
 }
 
 
@@ -1624,9 +1622,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::add_surface_tension_forc
       gradphin.multiply(derxy_, escaam);
     }
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1641,8 +1636,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::eval_shape_func_and_deri
 
   eval_shape_func_and_derivs_at_int_point(
       (intpoints_stab.ip().qxg)[0], intpoints_stab.ip().qwgt[0]);
-
-  return;
 }
 
 
@@ -1721,8 +1714,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::eval_shape_func_and_deri
   }
   else
     derxy2_.clear();
-
-  return;
 }
 
 /*---------------------------------------------------------------------------*
@@ -2306,8 +2297,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::get_material_params(
 
   // check whether there is zero or negative (physical) viscosity
   if (visc < 1e-15) FOUR_C_THROW("zero or negative (physical) diffusivity");
-
-  return;
 }  // FluidEleCalc::get_material_params
 
 /*----------------------------------------------------------------------*
@@ -3356,8 +3345,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::calc_stab_parameter(cons
     }  // Switch TauType
 
   }  // end Fluid::subscales_time_dependent
-
-  return;
 }
 
 
@@ -3490,8 +3477,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::calc_char_ele_length(
       FOUR_C_THROW("unknown characteristic element length for tau_Mu and tau_C\n");
       break;
   }  // switch (charelelengthpc_)
-
-  return;
 }
 
 
@@ -3667,8 +3652,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::calc_div_eps(
     else
       FOUR_C_THROW("Epsilon(N) is not implemented for the 1D case");
   }
-
-  return;
 }
 
 
@@ -3989,8 +3972,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::lin_gal_mom_res_u(
       }
     }
   }
-
-  return;
 }
 
 
@@ -4164,8 +4145,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::lin_gal_mom_res_u_subsca
     else
       resM_Du(idim) += fac_ * (-densaf_ * sgvelint_(idim) / tau_(1) - momres_old_(idim));
   }
-
-  return;
 }
 
 
@@ -4283,8 +4262,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::stab_lin_gal_mom_res_u(
       }
     }
   }
-
-  return;
 }
 
 
@@ -4407,7 +4384,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::inertia_convection_react
       velforce(idim, vi) -= resM_Du(idim) * funct_(vi);
     }
   }
-  return;
 }
 
 
@@ -4475,9 +4451,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::viscous_gal_part(
   static Core::LinAlg::Matrix<nsd_, nen_> tmp;
   tmp.multiply(viscstress, derxy_);
   velforce.update(-1.0, tmp, 1.0);
-
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -4560,8 +4533,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::cont_stab(
       velforce(idim, vi) += conti_stab_and_vol_visc_rhs * derxy_(idim, vi);
     }
   }
-
-  return;
 }
 
 
@@ -4594,8 +4565,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::pressure_gal_part(
 
   // pressure term on right-hand side
   velforce.update(press * rhsfac, derxy_, 1.0);
-
-  return;
 }
 
 
@@ -4629,8 +4598,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::continuity_gal_part(
 
   // continuity term on right-hand side
   preforce.update(-rhsfac * vdiv_, funct_, 1.0);
-
-  return;
 }
 
 
@@ -4692,8 +4659,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::body_force_rhs_term(
       velforce(idim, vi) += scaled_rhsmom * funct_(vi);
     }
   }  // end for(idim)
-
-  return;
 }
 
 
@@ -4822,8 +4787,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::conservative_formulation
       for (int vi = 0; vi < nen_; ++vi) velforce(idim, vi) += v * funct_(vi);
     }
   }  // end for(idim)
-
-  return;
 }
 
 
@@ -4969,8 +4932,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::pspg(
       preforce(vi) += temp * derxy_(idim, vi);
     }
   }  // end for(idim)
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -5234,8 +5195,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::supg(
       }
     }
   }  // loma
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -5378,8 +5337,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::reac_stab(
       velforce(idim, vi) += v * funct_(vi);
     }
   }  // end for(idim)
-
-  return;
 }
 
 
@@ -5497,8 +5454,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::visc_stab(
       }
     }
   }  // end for(idim)
-
-  return;
 }
 
 
@@ -5544,9 +5499,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::conv_div_stab(
       velforce(idim, vi) -= rhs_divergencefac * funct_(vi);
     }
   }  // end for(idim)
-
-
-  return;
 }
 
 
@@ -5687,9 +5639,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::cross_stress_stab(
       velforce(idim, vi) -= temp(idim) * funct_(vi);
     }
   }  // end for(idim)
-
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -5809,8 +5758,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::reynolds_stress_stab(
       }
     }  // end for(idim)
   }  // vi
-
-  return;
 }
 
 
@@ -8468,8 +8415,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::f_dcheck(
       }
     }
   }
-
-  return;
 }
 
 
@@ -8488,8 +8433,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::inflow_element(Core::Ele
   if (myinflowcond.size() > 1) FOUR_C_THROW("More than one inflow condition on one node!");
 
   if (myinflowcond.size() == 1) is_inflow_ele_ = true;
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*
@@ -9653,9 +9596,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::lin_mesh_motion_2d(
       emesh(tvipp, tui + 1) -= v * (deriv_(0, ui) * vderiv_0_1 - deriv_(1, ui) * vderiv_0_0);
     }
   }
-
-
-  return;
 }
 
 
@@ -10364,8 +10304,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::lin_mesh_motion_3d(
                   vderiv_1_1 * derxjm_(2, 1, 1, ui) + vderiv_1_2 * derxjm_(2, 2, 1, ui));
     }
   }
-
-  return;
 }
 
 
@@ -10450,8 +10388,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::compute_gal_rhs_cont_eq(
           fldparatimint_->theta();
     }
   }
-
-  return;
 }
 
 
@@ -10535,8 +10471,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::compute_gal_rhs_cont_eq_
   {
     convvelint_.clear();
   }
-
-  return;
 }
 
 
@@ -10586,8 +10520,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::compute_gal_rhs_cont_eq_
       rhscon_ = -scadtfac_ * (scaaf_ - scan_) / (fldparatimint_->dt() * fldparatimint_->theta());
     }
   }
-
-  return;
 }
 
 
@@ -10648,8 +10580,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::compute_subgrid_scale_sc
   //  respectively, close to one.)
   //----------------------------------------------------------------------
   sgscaint_ = -tau_(0) * scares_old;
-
-  return;
 }
 
 
@@ -10811,8 +10741,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::update_material_params(
   }
   else
     FOUR_C_THROW("Update of material parameters not required for this material type!");
-
-  return;
 }  // FluidEleCalc::update_material_params
 
 
@@ -10883,8 +10811,6 @@ void Discret::Elements::FluidEleCalc<distype,
                    sgvelint_.dot(grad_scan_);
     }
   }
-
-  return;
 }
 
 
@@ -10973,8 +10899,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::loma_gal_part(
       preforce(vi) += rhsfac_rhscon * funct_(vi);
     }
   }
-
-  return;
 }
 
 
@@ -11026,8 +10950,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::
       }
     }
   }
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -11085,8 +11007,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::weak_comp_pressure_inert
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -11851,8 +11771,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::sysmat_ost_new(
         estif(numdofpernode_ * vi + nsd_, numdof_ui_jdim) += estif_q_u_(vi, nsd_ui_jdim);
     }
   }
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -12084,8 +12002,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::calc_div_eps(
     else
       FOUR_C_THROW("Epsilon(N) is not implemented for the 1D case");
   }
-
-  return;
 }
 
 
@@ -12466,8 +12382,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::lin_gal_mom_res_uost_new
       }
     }
   }
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -12617,7 +12531,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::inertia_convection_react
       velforce(idim, vi) -= resM_Du(idim) * funct_(vi);
     }
   }
-  return;
 }
 
 
@@ -12700,8 +12613,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::viscous_gal_part(
     tmp.multiply(viscstress, derxy_);
 
   velforce.update(-1.0, tmp, 1.0);
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -12798,8 +12709,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::cont_stab(
       velforce(idim, vi) += conti_stab_and_vol_visc_rhs * derxy_(idim, vi);
     }
   }
-
-  return;
 }
 
 
@@ -12853,7 +12762,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::pressure_gal_part(
     //     Full impl pressure weighted with \Delta t.
     velforce.update(fac_ * fldparatimint_->dt() * press, derxy_, 1.0);
   }
-  return;
 }
 
 
@@ -12910,7 +12818,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::continuity_gal_part(
     //     Full impl pressure weighted with \Delta t.
     preforce.update(-fac_ * fldparatimint_->dt() * vdiv_, funct_, 1.0);
   }
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -12943,8 +12850,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::body_force_rhs_term(
       velforce(idim, vi) += scaled_rhsmom * funct_(vi);
     }
   }  // end for(idim)
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -13094,8 +12999,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::pspgost_new(
       preforce(vi) += temp * derxy_(idim, vi);
     }
   }  // end for(idim)
-
-  return;
 }
 
 template <Core::FE::CellType distype, Discret::Elements::Fluid::EnrichmentType enrtype>
@@ -13367,8 +13270,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::supgost_new(
       }
     }
   }  // loma
-
-  return;
 }
 
 /*---------------------------------------------------------------------------*
@@ -13662,7 +13563,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::get_turbulence_params(
     }
   }
 
-  return;
 }  // FluidEleCalc::get_turbulence_params
 
 
@@ -13964,7 +13864,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::calc_subgr_visc(
         q_sq_ = 0.0;
     }
   }
-  return;
 }
 
 
@@ -14026,8 +13925,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::calc_fine_scale_subgr_vi
 
     fssgvisc_ = densaf_ * fldpara_->cs() * fldpara_->cs() * hk * hk * fsrateofstrain;
   }
-
-  return;
 }
 
 
@@ -14474,8 +14371,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::calc_multi_frac_subgrid_
   //    B_mfs(2,0) << "  " << std::endl; std::cout << "CsgsB  " << std::setprecision(10) << Csgs <<
   //    std::endl;
   //  }
-
-  return;
 }
 
 
@@ -14550,8 +14445,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::calc_multi_frac_subgrid_
   //    std::cout << "D  " << std::setprecision(10) << D_mfs << std::endl;
   //    std::cout << "CsgsD  " << std::setprecision(10) << Csgs << std::endl;
   //  }
-
-  return;
 }
 
 
@@ -14607,8 +14500,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::fine_scale_sub_grid_visc
   }
   else
     FOUR_C_THROW("fine-scale subgrid viscosity not implemented for 1-D problems!");
-
-  return;
 }
 
 
@@ -14762,8 +14653,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::multfrac_sub_grid_scales
       }
     }
   }
-
-  return;
 }
 
 
@@ -14827,13 +14716,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::multfrac_sub_grid_scales
   }
   else
     FOUR_C_THROW("Multifractal subgrid-scale modeling for 3D-problems only!");
-
-  //--------------------------------------------------------------------
-  // lhs contribution
-  //--------------------------------------------------------------------
-  // no contribution, due to necessary linearization of filter
-
-  return;
 }
 
 
@@ -14899,7 +14781,6 @@ void Discret::Elements::FluidEleCalc<distype,
       momres_old_(rr) += velforce(rr);
     }
   }
-  return;
 }
 
 //----------------------------------------------------------------------
@@ -14957,8 +14838,6 @@ void Discret::Elements::FluidEleCalc<distype, enrtype>::store_model_parameters_f
       }
     }
   }
-
-  return;
 }
 
 // template classes

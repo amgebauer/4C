@@ -54,7 +54,6 @@ std::shared_ptr<Core::Elements::Element> Discret::Elements::Nurbs::Ale2NurbsType
 Discret::Elements::Nurbs::Ale2Nurbs::Ale2Nurbs(int id, int owner)
     : Discret::Elements::Ale2::Ale2(id, owner)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -62,7 +61,6 @@ Discret::Elements::Nurbs::Ale2Nurbs::Ale2Nurbs(int id, int owner)
 Discret::Elements::Nurbs::Ale2Nurbs::Ale2Nurbs(const Discret::Elements::Nurbs::Ale2Nurbs& old)
     : Discret::Elements::Ale2::Ale2(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -71,7 +69,6 @@ void Discret::Elements::Nurbs::Ale2Nurbs::print(std::ostream& os) const
 {
   os << "Ale2Nurbs ";
   Element::print(os);
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

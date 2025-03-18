@@ -73,8 +73,6 @@ XFEM::XFluidTimeInt::XFluidTimeInt(
   numproc_ = Core::Communication::num_mpi_ranks(dis->get_comm());
 
   permutation_map_ = std::make_shared<std::map<int, int>>();
-
-  return;
 }  // end constructor
 
 
@@ -141,8 +139,6 @@ void XFEM::XFluidTimeInt::set_and_print_status(const bool screenout)
     Core::IO::cout << "\n+-------------------------------------------------------+\n"
                    << Core::IO::endl;
   }
-
-  return;
 }
 
 
@@ -841,8 +837,6 @@ void XFEM::XFluidTimeInt::transfer_nodal_dofs_to_new_map(
 
     }  // loop new dofsets
   }  // end case D (node handles at t^n and t^(n+1))
-
-  return;
 }
 
 // -------------------------------------------------------------------
@@ -1066,7 +1060,6 @@ void XFEM::XFluidTimeInt::copy_dofs(const Core::Nodes::Node* node,  /// drt node
       permutation_map_->insert(std::pair<int, int>(dof_gid_old, dof_gid_new));
     }
   }
-  return;
 }
 
 
@@ -1166,8 +1159,6 @@ void XFEM::XFluidTimeInt::mark_dofs(const Core::Nodes::Node* node,  /// drt node
       }
     }  // dofs
   }  // state vectors
-
-  return;
 }
 
 // -------------------------------------------------------------------
@@ -2182,7 +2173,6 @@ void XFEM::XFluidTimeInt::export_methods(
 
   }  // end loop over procs
 
-  return;
 }  // end export_methods
 
 

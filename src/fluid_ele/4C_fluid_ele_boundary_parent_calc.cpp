@@ -119,8 +119,6 @@ Discret::Elements::FluidBoundaryParent<distype>::FluidBoundaryParent()
   // pointer to class FluidParentParameter (access to the general parameter)
   fldpara_ = Discret::Elements::FluidEleParameterStd::instance();
   fldparatimint_ = Discret::Elements::FluidEleParameterTimInt::instance();
-
-  return;
 }
 
 
@@ -1558,7 +1556,6 @@ void Discret::Elements::FluidBoundaryParent<distype>::slip_supp_bc(
     }
   }  // end of integration loop
 
-  return;
 }  // Discret::Elements::FluidBoundaryParent<distype>::SlipSuppBC
 
 
@@ -1814,7 +1811,6 @@ void Discret::Elements::FluidBoundaryParent<distype>::navier_slip_bc(
     }
   }  // end of integration loop
 
-  return;
 }  // Discret::Elements::FluidBoundaryParent<distype>::NavierSlipBC
 
 /*----------------------------------------------------------------------*
@@ -3697,8 +3693,6 @@ void Discret::Elements::FluidBoundaryParent<distype>::evaluate_weak_dbc(
     else
       FOUR_C_THROW("incorrect number of spatial dimensions for parent element!");
   }  // end integration loop
-
-  return;
 }
 
 
@@ -4239,8 +4233,6 @@ void Discret::Elements::FluidBoundaryParent<distype>::estimate_nitsche_trace_max
   // fill the map: every side id has it's own parameter beta
   (*params.get<std::shared_ptr<std::map<int, double>>>(
       "trace_estimate_max_eigenvalue_map"))[surfele->id()] = maxeigenvalue;
-
-  return;
 }
 
 
@@ -5709,7 +5701,6 @@ void Discret::Elements::FluidBoundaryParent<distype>::mix_hyb_dirichlet(
     }
   }
 
-  return;
 }  // Discret::Elements::FluidBoundaryParent<distype>::MixHybDirichlet
 
 
@@ -5825,8 +5816,6 @@ void Discret::Elements::FluidBoundaryParent<distype>::get_density_and_viscosity(
 
   // check whether there is zero or negative (physical) viscosity
   if (visc_ < 1e-15) FOUR_C_THROW("zero or negative (physical) diffusivity!");
-
-  return;
 }  // FluidBoundaryParent::get_density_and_viscosity
 
 FOUR_C_NAMESPACE_CLOSE

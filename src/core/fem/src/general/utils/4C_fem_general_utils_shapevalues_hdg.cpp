@@ -529,8 +529,6 @@ void Core::FE::ShapeValuesFace<distype>::compute_face_reference_system(
     // Normalizing the rest of the reference system
     for (unsigned int d = 0; d < nsd_; ++d) tangent(d, 1) /= sqrt(norm(1));
   }
-
-  return;
 }
 
 

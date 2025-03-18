@@ -813,9 +813,6 @@ void PoroElastScaTra::PoroScatraMono::print_newton_iter_header(FILE* ofile)
 
   // print it, now
   fflush(ofile);
-
-  // nice to have met you
-  return;
 }  // print_newton_iter_header()
 
 
@@ -907,9 +904,6 @@ void PoroElastScaTra::PoroScatraMono::print_newton_iter_text(FILE* ofile)
   // print it, now
   fflush(ofile);
 
-  // nice to have met you
-  return;
-
 }  // print_newton_iter_text
 
 /*----------------------------------------------------------------------*
@@ -919,7 +913,6 @@ void PoroElastScaTra::PoroScatraMono::print_newton_iter_text(FILE* ofile)
 void PoroElastScaTra::PoroScatraMono::print_newton_conv()
 {
   // somebody did the door
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1008,8 +1001,6 @@ void PoroElastScaTra::PoroScatraMono::build_convergence_norms()
   normincfluidpres_ = PoroElast::Utils::calculate_vector_norm(vectornorminc_, *interincfpres);
 
   normincscalar_ = PoroElast::Utils::calculate_vector_norm(vectornorminc_, *interincscalar);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1136,8 +1127,6 @@ void PoroElastScaTra::PoroScatraMono::evaluate_od_block_mat_poro()
       sparams, structuralstrategy, "PoroCoupling");
   // structure_field()->discretization()->evaluate( sparams, structuralstrategy);
   poro_field()->structure_field()->discretization()->clear_state(true);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1206,8 +1195,6 @@ void PoroElastScaTra::PoroScatraMono::evaluate_od_block_mat_scatra()
       sparams_fluid, scatrastrategy_fluid, "PoroCoupling");
   // structure_field()->discretization()->evaluate( sparams, structuralstrategy);
   scatra_field()->discretization()->clear_state();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1455,8 +1442,6 @@ void PoroElastScaTra::PoroScatraMono::fd_check()
   }
   else
     FOUR_C_THROW("PoroFDCheck failed");
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

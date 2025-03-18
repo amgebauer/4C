@@ -86,8 +86,6 @@ void StructureFilter::post_stress(const std::string groupname, const std::string
   {
     FOUR_C_THROW("Unknown stress/strain type");
   }
-
-  return;
 }
 
 

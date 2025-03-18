@@ -34,7 +34,6 @@ FS3I::PartFS3I2Wc::PartFS3I2Wc(MPI_Comm comm)
           Global::Problem::instance()->f_s3_i_dynamic_params().get<std::string>("CONSTHERMPRESS"))
 {
   // constructor is supposed to stay empty
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -43,8 +42,6 @@ void FS3I::PartFS3I2Wc::init()
 {
   // call init() in base class
   FS3I::PartFS3I::init();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -53,8 +50,6 @@ void FS3I::PartFS3I2Wc::setup()
 {
   // call setup() in base class
   FS3I::PartFS3I::setup();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -130,8 +125,6 @@ void FS3I::PartFS3I2Wc::initial_calculations()
       std::dynamic_pointer_cast<ScaTra::ScaTraTimIntLoma>(scatravec_[0]->scatra_field())
           ->therm_press_np(),
       nullptr, scatravec_[0]->scatra_field()->discretization());
-
-  return;
 }
 
 
@@ -157,8 +150,6 @@ void FS3I::PartFS3I2Wc::prepare_time_step()
 
   // prepare time step for fluid, structure and ALE fields
   fsi_->prepare_time_step();
-
-  return;
 }
 
 
@@ -230,8 +221,6 @@ void FS3I::PartFS3I2Wc::outer_loop()
     // convergence is achieved overall
     stopnonliniter = convergence_check(itnum);
   }
-
-  return;
 }
 
 
@@ -420,8 +409,6 @@ void FS3I::PartFS3I2Wc::time_update_and_output()
 
   // output of fluid- and structure-based scalar transport
   scatra_output();
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

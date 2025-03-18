@@ -204,9 +204,6 @@ namespace Discret
 
         // Traction Standard Consistency term
         mh_traction_consistency_term(funct_s_timefacfac_km, itraction_jump);
-
-
-        return;
       }
 
 

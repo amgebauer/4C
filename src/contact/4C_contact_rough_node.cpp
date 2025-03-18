@@ -106,8 +106,6 @@ void CONTACT::RoughNode::pack(Core::Communication::PackBuffer& data) const
   add_to_pack(data, initialTopologyStdDeviation_);
   add_to_pack(data, topology_);
   add_to_pack(data, maxTopologyHeight_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -131,10 +129,6 @@ void CONTACT::RoughNode::unpack(Core::Communication::UnpackBuffer& buffer)
   extract_from_pack(buffer, initialTopologyStdDeviation_);
   extract_from_pack(buffer, topology_);
   extract_from_pack(buffer, maxTopologyHeight_);
-
-  // Check
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

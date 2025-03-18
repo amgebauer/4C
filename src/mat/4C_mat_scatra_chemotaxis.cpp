@@ -44,8 +44,6 @@ Mat::PAR::ScatraChemotaxisMat::ScatraChemotaxisMat(const Core::Mat::PAR::Paramet
     FOUR_C_THROW(
         "Each PAIR vector must contain exactly one '-1' (i.e. chemotractant) and exactly one '1' "
         "(i.e. attractant)!");
-
-  return;
 }
 
 

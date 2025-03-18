@@ -81,7 +81,6 @@ Lubrication::TimIntImpl::TimIntImpl(std::shared_ptr<Core::FE::Discretization> ac
   // DO NOT DEFINE ANY STATE VECTORS HERE (i.e., vectors based on row or column maps)
   // this is important since we have problems which require an extended ghosting
   // this has to be done before all state vectors are initialized
-  return;
 }
 
 
@@ -155,8 +154,6 @@ void Lubrication::TimIntImpl::init()
   // iterative pressure increments Incp_{n+1}
   // also known as residual pressures
   prei_ = Core::LinAlg::create_vector(*dofrowmap, true);
-
-  return;
 }  // TimIntImpl::init()
 
 
@@ -186,8 +183,6 @@ void Lubrication::TimIntImpl::set_element_general_parameters() const
 
   // call standard loop over elements
   discret_->evaluate(eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-
-  return;
 }
 
 
@@ -212,7 +207,6 @@ void Lubrication::TimIntImpl::prepare_time_loop()
     evaluate_error_compared_to_analytical_sol();
   }
 
-  return;
 }  // Lubrication::TimIntImpl::prepare_time_loop
 
 
@@ -250,17 +244,13 @@ void Lubrication::TimIntImpl::prepare_time_step()
   // Neumann(n + alpha_f)
   apply_dirichlet_bc(time_, prenp_, nullptr);
   apply_neumann_bc(*neumann_loads_);
-
-  return;
 }  // TimIntImpl::prepare_time_step
 
 
 /*------------------------------------------------------------------------------*
  | initialization procedure prior to evaluation of first time step  wirtz 11/15 |
  *------------------------------------------------------------------------------*/
-void Lubrication::TimIntImpl::prepare_first_time_step()
-{
-  return;
+void Lubrication::TimIntImpl::prepare_first_time_step() {
 }  // Lubrication::TimIntImpl::prepare_first_time_step
 
 
@@ -403,8 +393,6 @@ void Lubrication::TimIntImpl::time_loop()
 
   // print the results of time measurements
   Teuchos::TimeMonitor::summarize();
-
-  return;
 }  // TimIntImpl::TimeLoop
 
 
@@ -417,9 +405,6 @@ void Lubrication::TimIntImpl::solve()
   //                    always solve nonlinear equation
   // -----------------------------------------------------------------
   nonlinear_solve();
-  // that's all
-
-  return;
 }
 
 
@@ -446,7 +431,6 @@ void Lubrication::TimIntImpl::apply_mesh_movement(
     discret_->set_state(nds_disp_, "dispnp", dispnp);
   }  // if (isale_)
 
-  return;
 }  // TimIntImpl::ApplyMeshMovement
 
 
@@ -497,7 +481,6 @@ void Lubrication::TimIntImpl::output(const int num)
   // NOTE:
   // statistics output for normal fluxes at boundaries was already done during update()
 
-  return;
 }  // TimIntImpl::Output
 
 
@@ -534,8 +517,6 @@ void Lubrication::TimIntImpl::apply_dirichlet_bc(const double time,
   discret_->clear_state();
   discret_->evaluate_dirichlet(p, prenp, predt, nullptr, nullptr, dbcmaps_);
   discret_->clear_state();
-
-  return;
 }  // Lubrication::TimIntImpl::apply_dirichlet_bc
 
 
@@ -551,8 +532,6 @@ void Lubrication::TimIntImpl::scaling_and_neumann()
 
   // add Neumann b.c. scaled with a factor due to time discretization
   add_neumann_to_residual();
-
-  return;
 }  // TimIntImpl::scaling_and_neumann
 
 
@@ -583,8 +562,6 @@ void Lubrication::TimIntImpl::apply_neumann_bc(
   // (otherwise)
   discret_->evaluate_neumann(condparams, neumann_loads);
   discret_->clear_state();
-
-  return;
 }  // Lubrication::TimIntImpl::apply_neumann_bc
 
 /*----------------------------------------------------------------------*
@@ -659,8 +636,6 @@ void Lubrication::TimIntImpl::assemble_mat_and_rhs()
 
   // end time measurement for element
   dtele_ = Teuchos::Time::wallTime() - tcpuele;
-
-  return;
 }  // TimIntImpl::assemble_mat_and_rhs
 
 
@@ -754,7 +729,6 @@ void Lubrication::TimIntImpl::nonlinear_solve()
 
   }  // nonlinear iteration
 
-  return;
 }  // TimIntImpl::nonlinear_solve
 
 
@@ -853,8 +827,6 @@ void Lubrication::TimIntImpl::set_height_field(
 {
   if (gap == nullptr) FOUR_C_THROW("Gap vector is empty.");
   discret_->set_state(nds, "height", gap);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -866,8 +838,6 @@ void Lubrication::TimIntImpl::set_height_dot_field(
 {
   if (heightdot == nullptr) FOUR_C_THROW("hdot vector is empty.");
   discret_->set_state(nds, "heightdot", heightdot);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -905,8 +875,6 @@ void Lubrication::TimIntImpl::calc_problem_specific_norm(
   increment_->norm_2(&incprenorm_L2);
   prenp_->norm_2(&prenorm_L2);
   residual_->norm_inf(&preresnorminf);
-
-  return;
 }
 
 
@@ -920,8 +888,6 @@ inline void Lubrication::TimIntImpl::print_convergence_header()
         << "+------------+-------------------+--------------+--------------+------------------+\n"
         << "|- step/max -|- tol      [norm] -|-- pre-res ---|-- pre-inc ---|-- pre-res-inf ---|"
         << std::endl;
-
-  return;
 }  // Lubrication::TimIntImpl::print_convergence_header
 
 
@@ -943,8 +909,6 @@ inline void Lubrication::TimIntImpl::print_convergence_values_first_iter(
               << "   |      --      | " << std::setw(10) << std::setprecision(3) << std::scientific
               << preresnorminf << "       | (      --     ,te=" << std::setw(10)
               << std::setprecision(3) << std::scientific << dtele_ << ")" << std::endl;
-
-  return;
 }  // Lubrication::TimIntImpl::print_convergence_values_first_iter
 
 
@@ -970,8 +934,6 @@ inline void Lubrication::TimIntImpl::print_convergence_values(
               << std::scientific << preresnorminf << "       | (ts=" << std::setw(10)
               << std::setprecision(3) << std::scientific << dtsolve_ << ",te=" << std::setw(10)
               << std::setprecision(3) << std::scientific << dtele_ << ")" << std::endl;
-
-  return;
 }  // Lubrication::TimIntImpl::print_convergence_values
 
 
@@ -985,8 +947,6 @@ inline void Lubrication::TimIntImpl::print_convergence_finish_line()
         << "+------------+-------------------+--------------+--------------+------------------+"
         << std::endl
         << std::endl;
-
-  return;
 }  // Lubrication::TimIntImpl::print_convergence_finish_line
 
 
@@ -1018,7 +978,6 @@ void Lubrication::TimIntImpl::output_state()
     output_->write_multi_vector("dispnp", dispnp_multi, Core::IO::nodevector);
   }
 
-  return;
 }  // TimIntImpl::output_state
 
 
@@ -1270,9 +1229,6 @@ void Lubrication::TimIntImpl::update_iter_incrementally(
 
   // Update using #prei_
   update_iter_incrementally();
-
-  // leave this place
-  return;
 }  // update_iter_incrementally()
 
 /*----------------------------------------------------------------------*
@@ -1287,7 +1243,6 @@ void Lubrication::TimIntImpl::update_newton(
   // the sum of increments we get from NOX and apply the latest
   // increment only.
   update_iter_incrementally(prei);
-  return;
 
 }  // UpdateNewton()
 

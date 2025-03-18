@@ -171,8 +171,6 @@ namespace ScaTra
         coordinates_->push_back(*coord1);
       }
     }
-
-    return;
   }
 
 
@@ -437,8 +435,6 @@ namespace ScaTra
 
     // initialize phin_ as well
     phin_->update(1.0, *phinp_, 0.0);
-
-    return;
 #else
     FOUR_C_THROW("FFTW required");
 #endif

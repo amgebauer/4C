@@ -187,7 +187,6 @@ FLD::TransferTurbulentInflowCondition::TransferTurbulentInflowCondition(
       }
     }
   }
-  return;
 }  // TransferTurbulentInflowCondition::TransferTurbulentInflowCondition
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -303,7 +302,6 @@ void FLD::TransferTurbulentInflowCondition::transfer(
       }
     }
   }
-  return;
 }  // Transfer
 
 
@@ -391,8 +389,6 @@ void FLD::TransferTurbulentInflowCondition::receive_block(
 
   // for safety
   Core::Communication::barrier(exporter.get_comm());
-
-  return;
 }  // TransferTurbulentInflowCondition::receive_block
 
 
@@ -423,8 +419,6 @@ void FLD::TransferTurbulentInflowCondition::send_block(
 
   // for safety
   Core::Communication::barrier(exporter.get_comm());
-
-  return;
 }  // TransferTurbulentInflowCondition::send_block
 
 
@@ -528,7 +522,6 @@ void FLD::TransferTurbulentInflowCondition::unpack_local_master_values(std::vect
   }
 
   rblock.clear();
-  return;
 }  // unpack_local_master_values
 
 
@@ -602,7 +595,6 @@ void FLD::TransferTurbulentInflowCondition::pack_local_master_values(std::vector
     }
   }
 
-  return;
 }  // pack_local_master_values
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -670,7 +662,6 @@ void FLD::TransferTurbulentInflowCondition::set_values_available_on_this_proc(
     }
   }
 
-  return;
 }  // set_values_available_on_this_proc
 
 
@@ -822,7 +813,6 @@ void FLD::TransferTurbulentInflowConditionXW::transfer(
       }
     }
   }
-  return;
 }  // Transfer (XW)
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -907,7 +897,6 @@ void FLD::TransferTurbulentInflowConditionXW::set_values_available_on_this_proc(
     }
   }
 
-  return;
 }  // set_values_available_on_this_proc (XW)
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -1013,7 +1002,6 @@ void FLD::TransferTurbulentInflowConditionNodal::transfer(
       }
     }
   }
-  return;
 }  // Transfer (Nodal)
 
 //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>//
@@ -1047,7 +1035,6 @@ void FLD::TransferTurbulentInflowConditionNodal::set_values_available_on_this_pr
     }
   }
 
-  return;
 }  // set_values_available_on_this_proc (Nodal)
 
 FOUR_C_NAMESPACE_CLOSE

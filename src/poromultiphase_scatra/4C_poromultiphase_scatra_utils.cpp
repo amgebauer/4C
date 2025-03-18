@@ -332,8 +332,6 @@ void PoroMultiPhaseScaTra::print_logo()
   std::cout << "/ /-\\     /-\\ \\         / /-\\     /-\\ \\" << std::endl;
   std::cout << " / /-`---'-\\ \\           / /-`---'-\\ \\" << std::endl;
   std::cout << "  /         \\             /         \\" << std::endl;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

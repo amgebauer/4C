@@ -31,7 +31,6 @@ namespace Discret
       {
         std::vector<double> mymatrix(lm.size());
         add_slave_ele_disp(slavedis, lm, mymatrix);
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -73,8 +72,6 @@ namespace Discret
           slave_xyze_(1, inode) += slave_disp_(1, inode);
           slave_xyze_(2, inode) += slave_disp_(2, inode);
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -106,8 +103,6 @@ namespace Discret
           if (slave_numdof == nsd_ + 1)
             (slave_pres_)(inode, 0) = mymatrix[nsd_ + (inode * slave_numdof)];
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -139,8 +134,6 @@ namespace Discret
           if (slave_numdof == nsd_ + 1)
             (slave_presn_)(inode, 0) = mymatrix[nsd_ + (inode * slave_numdof)];
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -255,8 +248,6 @@ namespace Discret
             // no pressure jump required
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -288,8 +279,6 @@ namespace Discret
             // no pressure jump required
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -379,8 +368,6 @@ namespace Discret
         slave_vderxy_.multiply_nt(slave_vel_, slave_derxy_);
         // previous time step
         slave_vderxyn_.multiply_nt(slave_veln_, slave_derxy_);
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -404,8 +391,6 @@ namespace Discret
             iforce[idim + inode * nsd_] += tmp * traction(idim);
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*

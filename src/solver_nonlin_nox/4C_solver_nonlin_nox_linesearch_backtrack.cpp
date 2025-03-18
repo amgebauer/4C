@@ -82,8 +82,6 @@ void NOX::Nln::LineSearch::Backtrack::reset()
   search_direction_ptr_ = Teuchos::null;
 
   status_ = NOX::Nln::Inner::StatusTest::status_unevaluated;
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

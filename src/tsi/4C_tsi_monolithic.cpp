@@ -210,9 +210,6 @@ void TSI::Monolithic::read_restart(int step)
   p.set<std::shared_ptr<Core::Elements::ParamsInterface>>("interface", EvalData);
   p.set<std::string>("action", "calc_struct_reset_istep");
   structure_field()->discretization()->evaluate(p);
-
-
-  return;
 }  // read_restart()
 
 
@@ -334,7 +331,6 @@ void TSI::Monolithic::solve()
       break;
   }  // end switch (soltechnique_)
 
-  return;
 }  // Solve()
 
 
@@ -1649,9 +1645,6 @@ void TSI::Monolithic::print_newton_iter_header(FILE* ofile)
   // print it, now
   fflush(ofile);
 
-  // nice to have met you
-  return;
-
 }  // print_newton_iter_header()
 
 
@@ -1823,9 +1816,6 @@ void TSI::Monolithic::print_newton_iter_text(FILE* ofile)
   // print it, now
   fflush(ofile);
 
-  // nice to have met you
-  return;
-
 }  // print_newton_iter_text
 
 
@@ -1836,7 +1826,6 @@ void TSI::Monolithic::print_newton_iter_text(FILE* ofile)
 void TSI::Monolithic::print_newton_conv()
 {
   // somebody did the door
-  return;
 }  // print_newton_conv()
 
 
@@ -2161,8 +2150,6 @@ void TSI::Monolithic::recover_struct_therm_lm()
   extract_field_vectors(iterinc_, sx, tx);
 
   contact_strategy_lagrange_->recover_coupled(sx, tx, coupST_);
-
-  return;
 }
 
 
@@ -2472,8 +2459,6 @@ void TSI::Monolithic::set_default_parameters()
   normtempi_ = 0.0;
   normthrrhs_ = 0.0;
   normthrrhsiter0_ = 0.0;
-
-  return;
 
 }  // SetDefaultParameter()
 

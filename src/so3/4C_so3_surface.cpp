@@ -66,7 +66,6 @@ Discret::Elements::StructuralSurface::StructuralSurface(int id, int owner, int n
 
   set_distype();
   set_gaussrule();
-  return;
 }
 
 /*------------------------------------------------------------------------*
@@ -78,7 +77,6 @@ Discret::Elements::StructuralSurface::StructuralSurface(int id, int owner)
       numdofpernode_(-1),
       gaussrule_(Core::FE::GaussRule2D::undefined)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -91,7 +89,6 @@ Discret::Elements::StructuralSurface::StructuralSurface(
       numdofpernode_(old.numdofpernode_),
       gaussrule_(old.gaussrule_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -127,7 +124,6 @@ void Discret::Elements::StructuralSurface::pack(Core::Communication::PackBuffer&
   add_to_pack(data, numdofpernode_);
   // add gaussrule_
   add_to_pack(data, gaussrule_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -157,7 +153,6 @@ void Discret::Elements::StructuralSurface::print(std::ostream& os) const
 {
   os << "StructuralSurface ";
   Element::print(os);
-  return;
 }
 
 std::vector<std::shared_ptr<Core::Elements::Element>> Discret::Elements::StructuralSurface::lines()

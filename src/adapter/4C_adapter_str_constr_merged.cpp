@@ -267,8 +267,6 @@ void Adapter::StructureConstrMerged::apply_interface_forces_temporary_deprecated
   set_force_interface(fifcdisp);
 
   prepare_partition_step();
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -59,7 +59,6 @@ void FS3I::FS3IBase::init()
   fbitransform_ = std::make_shared<Coupling::Adapter::MatrixRowTransform>();
 
   set_is_init(true);
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -69,7 +68,6 @@ void FS3I::FS3IBase::setup()
   check_is_init();
 
   set_is_setup(true);
-  return;
 }
 
 

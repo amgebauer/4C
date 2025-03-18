@@ -34,7 +34,6 @@ ScaTra::LevelSetTimIntOneStepTheta::LevelSetTimIntOneStepTheta(
   // DO NOT DEFINE ANY STATE VECTORS HERE (i.e., vectors based on row or column maps)
   // this is important since we have problems which require an extended ghosting
   // this has to be done before all state vectors are initialized
-  return;
 }
 
 
@@ -47,8 +46,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::init()
   // note: this order is important
   TimIntOneStepTheta::init();
   LevelSetAlgorithm::init();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -60,8 +57,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::setup()
   // note: this order is important
   TimIntOneStepTheta::setup();
   LevelSetAlgorithm::setup();
-
-  return;
 }
 
 
@@ -83,7 +78,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::print_time_step_info()
         printf("\nREINIT ELLIPTIC:\n");
     }
   }
-  return;
 }
 
 
@@ -111,8 +105,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::calc_initial_time_derivative()
     // eventually, undo changes in general parameter list
     set_reinitialization_element_parameters();
   }
-
-  return;
 }
 
 
@@ -127,8 +119,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::set_old_part_of_righthandside()
   else
     // hist_ = phin_ + dt*(1-Theta)*phidtn_
     hist_->update(1.0, *phin_, dtau_ * (1.0 - thetareinit_), *phidtn_, 0.0);
-
-  return;
 }
 
 
@@ -149,8 +139,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::update()
   //        current solution becomes old solution of next time step
   // -------------------------------------------------------------------
   update_state();
-
-  return;
 }
 
 
@@ -193,8 +181,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::update_state()
     // reset element time-integration parameters
     set_element_time_parameter();
   }
-
-  return;
 }
 
 
@@ -219,8 +205,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::update_reinit()
   // time deriv. of this step becomes most recent time derivative of
   // last step
   phidtn_->update(1.0, *phidtnp_, 0.0);
-
-  return;
 }
 
 
@@ -243,8 +227,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::redistribute(Core::LinAlg::Graph& nodeg
     fsphinp_ = Core::LinAlg::create_vector(*newdofrowmap, true);
     Core::LinAlg::export_to(*old, *fsphinp_);
   }
-
-  return;
 }
 
 
@@ -256,8 +238,6 @@ void ScaTra::LevelSetTimIntOneStepTheta::read_restart(
 {
   // do basic restart
   TimIntOneStepTheta::read_restart(step, input);
-
-  return;
 }
 
 

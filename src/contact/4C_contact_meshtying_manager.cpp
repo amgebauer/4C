@@ -357,8 +357,6 @@ CONTACT::MtManager::MtManager(Core::FE::Discretization& discret, double alphaf)
 
   // create binary search tree
   for (auto& interface : interfaces) interface->create_search_tree();
-
-  return;
 }
 
 
@@ -634,8 +632,6 @@ bool CONTACT::MtManager::read_and_check_input(
 void CONTACT::MtManager::write_restart(Core::IO::DiscretizationWriter& output, bool forcedrestart)
 {
   output.write_vector("mt_lagrmultold", get_strategy().lagrange_multiplier_old());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -648,8 +644,6 @@ void CONTACT::MtManager::read_restart(Core::IO::DiscretizationReader& reader,
   // this is meshtying, thus we need zeros for restart
   // let strategy object do all the work
   get_strategy().do_read_restart(reader, zero);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -683,8 +677,6 @@ void CONTACT::MtManager::postprocess_quantities(Core::IO::DiscretizationWriter& 
   output.write_vector("interfacetraction", tractionexp);
   output.write_vector("slaveforces", fcslaveexp);
   output.write_vector("masterforces", fcmasterexp);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------*

@@ -116,8 +116,6 @@ void Core::DOFSets::PBCDofSet::set_coupled_nodes(
 
   /// Build the connectivity between slave node and its master node
   build_slave_to_master_node_connectivity();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

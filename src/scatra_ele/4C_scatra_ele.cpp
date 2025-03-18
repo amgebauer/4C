@@ -518,8 +518,6 @@ void Discret::Elements::Transport::set_material(
   }
   else
     FOUR_C_THROW("Transport element got unsupported material type {}", mat->material_type());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -722,7 +720,6 @@ Discret::Elements::TransportBoundary::TransportBoundary(int id, int owner, int n
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
   set_parent_master_element(parent, lsurface);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -732,7 +729,6 @@ Discret::Elements::TransportBoundary::TransportBoundary(
     const Discret::Elements::TransportBoundary& old)
     : Core::Elements::FaceElement(old)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -759,8 +755,6 @@ Core::FE::CellType Discret::Elements::TransportBoundary::shape() const
 void Discret::Elements::TransportBoundary::pack(Core::Communication::PackBuffer& data) const
 {
   FOUR_C_THROW("This TransportBoundary element does not support communication");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -769,7 +763,6 @@ void Discret::Elements::TransportBoundary::pack(Core::Communication::PackBuffer&
 void Discret::Elements::TransportBoundary::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("This TransportBoundary element does not support communication");
-  return;
 }
 
 
@@ -784,7 +777,6 @@ void Discret::Elements::TransportBoundary::print(std::ostream& os) const
   std::cout << std::endl;
   std::cout << "DiscretizationType:  " << Core::FE::cell_type_to_string(shape()) << std::endl;
   std::cout << std::endl;
-  return;
 }
 
 /*----------------------------------------------------------------------*

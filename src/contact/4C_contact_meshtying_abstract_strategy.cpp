@@ -55,8 +55,6 @@ CONTACT::MtAbstractStrategy::MtAbstractStrategy(const Epetra_Map* dof_row_map,
 
   // build the NOX::Nln::CONSTRAINT::Interface::Required object
   noxinterface_ptr_ = std::make_shared<CONTACT::MtNoxInterface>();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -120,8 +118,6 @@ void CONTACT::MtAbstractStrategy::redistribute_meshtying()
     // No parallel redistribution to be performed. Just print the current distribution to screen.
     for (int i = 0; i < (int)interface_.size(); ++i) interface_[i]->print_parallel_distribution();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -252,8 +248,6 @@ void CONTACT::MtAbstractStrategy::setup(bool redistributed)
     trafo_->complete();
     invtrafo_->complete();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -270,8 +264,6 @@ void CONTACT::MtAbstractStrategy::apply_force_stiff_cmt(
 
   // apply meshtying forces and stiffness
   evaluate(kt, f, dis);
-
-  return;
 }
 
 
@@ -296,8 +288,6 @@ void CONTACT::MtAbstractStrategy::set_state(
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -352,8 +342,6 @@ void CONTACT::MtAbstractStrategy::mortar_coupling(
   mmatrix_->multiply(false, *xm, Mxm);
   g_->update(1.0, Dxs, 1.0);
   g_->update(-1.0, Mxm, 1.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -457,8 +445,6 @@ void CONTACT::MtAbstractStrategy::restrict_meshtying_zone()
   {
     gdisprowmap_ = Core::LinAlg::merge_map(*gndofrowmap_, *gsmdofrowmap_, false);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -594,7 +580,6 @@ void CONTACT::MtAbstractStrategy::evaluate(std::shared_ptr<Core::LinAlg::SparseO
 {
   // trivial (no choice as for contact)
   evaluate_meshtying(kteff, feff, dis);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -703,8 +688,6 @@ void CONTACT::MtAbstractStrategy::store_nodal_quantities(Mortar::StrategyBase::Q
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -749,8 +732,6 @@ void CONTACT::MtAbstractStrategy::store_dirichlet_status(
   Core::LinAlg::Vector<double> temp(*(dbcmaps->cond_map()));
   temp.put_scalar(1.0);
   Core::LinAlg::export_to(temp, *non_redist_gsdirichtoggle_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -818,14 +799,12 @@ void CONTACT::MtAbstractStrategy::print(std::ostream& os) const
     std::cout << *(interface_[i]);
   }
   Core::Communication::barrier(get_comm());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
  | print active set information                               popp 06/08|
  *----------------------------------------------------------------------*/
-void CONTACT::MtAbstractStrategy::print_active_set() const { return; }
+void CONTACT::MtAbstractStrategy::print_active_set() const {}
 
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
@@ -888,8 +867,6 @@ void CONTACT::MtAbstractStrategy::assemble_coords(
     // do assembly
     Core::LinAlg::assemble(vec, val, lm, lmowner);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -917,8 +894,6 @@ void CONTACT::MtAbstractStrategy::collect_maps_for_preconditioner(
     MasterDofMap = non_redist_gmdofrowmap_;
   else
     MasterDofMap = gmdofrowmap_;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -972,8 +947,6 @@ void CONTACT::MtAbstractStrategy::fill_maps_for_preconditioner(
   }
   // (2) innerDofMap
   maps[2] = Teuchos::rcp(gndofrowmap_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

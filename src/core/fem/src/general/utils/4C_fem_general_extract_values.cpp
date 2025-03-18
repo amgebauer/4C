@@ -34,7 +34,6 @@ void Core::FE::extract_my_values(const Core::LinAlg::Vector<double>& global,
           Core::Communication::my_mpi_rank(global.get_comm()), lm[i]);
     local[i] = global[lid];
   }
-  return;
 }
 
 
@@ -62,7 +61,6 @@ void Core::FE::extract_my_node_based_values(const Core::Elements::Element* ele,
       local[col + (numcol * i)] = global(col)[lid];
     }
   }
-  return;
 }
 
 
@@ -91,7 +89,6 @@ void Core::FE::extract_my_node_based_values(const Core::Elements::Element* ele,
       local(i + (nsd * j)) = global(i)[lid];
     }
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

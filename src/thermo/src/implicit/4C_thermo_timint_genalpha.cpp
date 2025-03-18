@@ -54,9 +54,6 @@ void Thermo::TimIntGenAlpha::verify_coeff()
   if (midavg_ != Thermo::midavg_trlike)
     FOUR_C_THROW("mid-averaging of internal forces only implemented TR-like");
 
-  // done
-  return;
-
 }  // VerifyCoeff()
 
 
@@ -143,9 +140,6 @@ Thermo::TimIntGenAlpha::TimIntGenAlpha(const Teuchos::ParameterList& ioparams,
   // conditions
   apply_force_external_conv((*time_)[0], (*temp_)(0), (*temp_)(0), fext_, tang_);
 
-  // have a nice day
-  return;
-
 }  // TimIntGenAlpha()
 
 
@@ -165,9 +159,6 @@ void Thermo::TimIntGenAlpha::predict_const_temp_consist_rate()
   // R_{n+1}^{i+1} = (gamma - 1)/gamma . R_n + 1/(gamma . dt) . (T_{n+1}^{i+1} - T_n)
   raten_->update(1.0, *tempn_, -1.0, *(*temp_)(0), 0.0);
   raten_->update(-(1 - gamma_) / gamma_, *(*rate_)(0), (1 / (gamma_ * dt)));
-
-  // watch out
-  return;
 
 }  // predict_const_temp_consist_rate()
 
@@ -234,11 +225,7 @@ void Thermo::TimIntGenAlpha::evaluate_rhs_tang_residual()
 
   // no further modification on tang_ required
   // tang_ is already effective dynamic tangent matrix
-  tang_->complete();  // close tangent matrix
-
-  // hallelujah
-  return;
-
+  tang_->complete();
 }  // evaluate_rhs_tang_residual()
 
 
@@ -258,9 +245,6 @@ void Thermo::TimIntGenAlpha::evaluate_mid_state()
   // R_{n+alpha_m} := alpham * R_{n+1} + (1.-alpham) * R_{n}
   // pass ratem_ to the element to calculate fcapm_
   ratem_->update(alpham_, *raten_, (1. - alpham_), (*rate_)[0], 0.0);
-
-  // jump
-  return;
 
 }  // EvaluateMidState()
 
@@ -348,9 +332,6 @@ void Thermo::TimIntGenAlpha::update_iter_incrementally()
   // put only to free/non-DBC DOFs
   dbcmaps_->insert_other_vector(*dbcmaps_->extract_other_vector(*aux), *raten_);
 
-  // bye
-  return;
-
 }  // update_iter_incrementally()
 
 
@@ -366,9 +347,6 @@ void Thermo::TimIntGenAlpha::update_iter_iteratively()
   // new end-point temperature rates
   // R_{n+1}^{i+1} := R_{n+1}^{i} + 1/(gamma . dt) IncT_{n+1}^{i+1}
   raten_->update(1.0 / (gamma_ * (*dt_)[0]), *tempi_, 1.0);
-
-  // bye
-  return;
 
 }  // update_iter_iteratively()
 
@@ -398,9 +376,6 @@ void Thermo::TimIntGenAlpha::update_step_state()
   // update new stored transient force
   //    F_{cap;n} := F_{cap;n+1}
   fcap_->update(1.0, *fcapn_, 0.0);
-
-  // look out
-  return;
 
 }  // update_step_state()
 
@@ -436,9 +411,6 @@ void Thermo::TimIntGenAlpha::read_restart_force()
   reader.read_vector(fint_, "fint");
   reader.read_vector(fcap_, "fcap");
 
-  // bye
-  return;
-
 }  // ReadRestartForce()
 
 
@@ -454,7 +426,6 @@ void Thermo::TimIntGenAlpha::write_restart_force(
   output->write_vector("fexternal", fext_);
   output->write_vector("fint", fint_);
   output->write_vector("fcap", fcap_);
-  return;
 
 }  // WriteRestartForce()
 
@@ -483,8 +454,6 @@ void Thermo::TimIntGenAlpha::apply_force_tang_internal(const double time,  //!< 
 
   //! call the base function
   TimInt::apply_force_tang_internal(p, time, dt, temp, tempi, fcap, fint, tang);
-  //! finish
-  return;
 
 }  // apply_force_tang_internal()
 
@@ -507,8 +476,6 @@ void Thermo::TimIntGenAlpha::apply_force_internal(const double time,  //!< evalu
   p.set<double>("gamma", gamma_);
   //! call the base function
   TimInt::apply_force_internal(p, time, dt, temp, tempi, fint);
-  //! finish
-  return;
 
 }  // apply_force_internal()
 
@@ -530,8 +497,6 @@ void Thermo::TimIntGenAlpha::apply_force_external_conv(const double time,  //!< 
 
   // call the base function
   TimInt::apply_force_external_conv(p, time, tempn, temp, fext, tang);
-  // finish
-  return;
 
 }  // apply_force_external_conv()
 

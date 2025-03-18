@@ -135,9 +135,6 @@ void XFEM::CouplingBase::init()
   // set isInit flag
   // ---------------------------------------------------------------------------
   isinit_ = true;
-
-  // good bye
-  return;
 }
 
 
@@ -248,7 +245,6 @@ void XFEM::CouplingBase::init_configuration_map()
   configuration_map_[Inpar::XFEM::X_LB_Rhs] = std::pair<bool, double>(false, 0.0);
   configuration_map_[Inpar::XFEM::F_TJ_Rhs] = std::pair<bool, double>(false, 0.0);
   configuration_map_[Inpar::XFEM::X_TJ_Rhs] = std::pair<bool, double>(false, 0.0);
-  return;
 }
 
 
@@ -738,7 +734,6 @@ void XFEM::CouplingBase::get_visc_penalty_stabfac(Core::Elements::Element* xfele
 
   XFEM::Utils::nit_compute_visc_penalty_stabfac(xfele->shape(), penscaling, NITStabScalingTang,
       IsPseudo2D, ViscStab_TraceEstimate, NIT_visc_stab_fac_tang);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

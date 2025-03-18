@@ -434,8 +434,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorBase<nsd, nen>::saturation_
       }
     }
   }
-
-  return;
 }
 /*-----------------------------------------------------------------------------------*
  | linearization of a term scaled with porosity after fluid dofs    kremheller 03/18 |
@@ -462,8 +460,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorBase<nsd, nen>::porosity_li
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -587,8 +583,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorBase<nsd, nen>::calc_div_ve
   }
   else
     FOUR_C_THROW("shapederivatives not implemented for 1D!");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -623,8 +617,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorBase<nsd, nen>::calc_lin_fa
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -811,8 +803,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorBase<nsd, nen>::calc_diff_o
   }
   else
     FOUR_C_THROW("shapederivatives not implemented for 1D!");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -862,7 +852,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorConv<nsd, nen>::evaluate_ma
         mymat(fvi, fui) += v * conv(ui) * phasemanager.saturation_deriv(curphase, idof);
       }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -894,8 +883,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorConv<nsd, nen>::evaluate_ve
 
     myvec[fvi] -= conv_sat * funct(vi);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -913,7 +900,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorConv<nsd,
     double fac, double det)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -930,7 +916,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorConv<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -949,7 +934,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDivVel<nsd, nen>::evaluate_
     double fac, bool inittimederiv)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -975,8 +959,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDivVel<nsd, nen>::evaluate_
 
     myvec[fvi] -= vrhs * funct(vi);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1002,8 +984,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDivVel<nsd,
   // OD mesh - div vel term
   EvaluatorBase<nsd, nen>::calc_div_vel_od_mesh(mymat, funct, deriv, derxy, xjm, gridvelderiv,
       timefacfac, fac, det, numdofpernode, phasetoadd);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1020,7 +1000,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDivVel<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1055,8 +1034,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorSatDivVel<nsd,
     EvaluatorBase<nsd, nen>::saturation_linearization_fluid(
         mymat, funct, consfac, numdofpernode, numfluidphases, curphase, phasetoadd, phasemanager);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1076,8 +1053,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorSatDivVel<nsd,
       phasetoadd, numdofpernode, phasemanager, variablemanager,
       phasemanager.saturation(curphase) * rhsfac, phasemanager.saturation(curphase) * fac,
       inittimederiv);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1098,8 +1073,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorSatDivVel<nsd,
   EvaluatorDivVel<nsd, nen>::evaluate_matrix_od_struct_and_assemble(elemat, funct, deriv, derxy,
       xjm, curphase, phasetoadd, numdofpernode, phasemanager, variablemanager,
       phasemanager.saturation(curphase) * timefacfac, phasemanager.saturation(curphase) * fac, det);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1116,7 +1089,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorSatDivVel<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1135,7 +1107,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorBiotStab<nsd,
     double fac, bool inittimederiv)
 {
   FOUR_C_THROW("Biot stabilization is still missing");
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1151,8 +1122,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorBiotStab<nsd,
     double fac, bool inittimederiv)
 {
   FOUR_C_THROW("Biot stabilization is still missing");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1170,7 +1139,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorBiotStab<nsd,
     double fac, double det)
 {
   FOUR_C_THROW("Biot stabilization is still missing");
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1187,7 +1155,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorBiotStab<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1319,8 +1286,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDiff<nsd, nen>::evaluate_ma
       }
     }
   }  // !inittimederiv
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1372,8 +1337,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDiff<nsd, nen>::evaluate_ve
     for (int j = 0; j < nsd; j++) laplawf += derxy(j, vi) * diffflux(j);
     myvec[fvi] -= rhsfac * laplawf;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1439,8 +1402,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDiff<nsd,
   // OD mesh - diffusive term
   EvaluatorBase<nsd, nen>::calc_diff_od_mesh(mymat, deriv, derxy, xjm, diffflux, refgradpres,
       gradpres, timefacfac, v, numdofpernode, phasetoadd);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1457,7 +1418,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDiff<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1505,8 +1465,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorReac<nsd, nen>::evaluate_ma
       }
     }
   }  // !inittimederiv
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1537,7 +1495,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorReac<nsd, nen>::evaluate_ve
     // rhs ---> +
     myvec[fvi] += vrhs * funct(vi);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1581,8 +1538,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorReac<nsd,
   // rhs ---> -
   EvaluatorBase<nsd, nen>::calc_lin_fac_od_mesh(
       mymat, funct, derxy, -1.0 * vrhs, numdofpernode, phasetoadd);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1624,8 +1579,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorReac<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1736,8 +1689,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassPressure<nsd,
           mymat, funct, facfacmass, numdofpernode, phasetoadd, phasemanager);
     }
   }  // !inittimederiv
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1771,7 +1722,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassPressure<nsd,
       myvec[fvi] -= vtrans * funct(vi);
     }
   }  // !inittimederiv
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1813,8 +1763,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassPressure<nsd,
   // 2) possible linearization w.r.t porosity
   EvaluatorBase<nsd, nen>::calc_lin_fac_od_mesh(
       mymat, funct, derxy, vtrans, numdofpernode, phasetoadd);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1831,7 +1779,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassPressure<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2018,7 +1965,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSolidPressure<nsd,
       }
     }
   }  // !inittimederiv
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2052,8 +1998,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSolidPressure<nsd,
       myvec[fvi] -= vtrans * funct(vi);
     }
   }  // !inittimederiv
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2095,8 +2039,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSolidPressure<nsd,
   // 2) possible linearization w.r.t porosity
   EvaluatorBase<nsd, nen>::calc_lin_fac_od_mesh(
       mymat, funct, derxy, vtrans, numdofpernode, phasetoadd);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2113,7 +2055,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSolidPressure<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2214,8 +2155,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSolidPressureSat<nsd,
           numdofpernode, numfluidphases, curphase, phasetoadd, phasemanager);
     }
   }  // !inittimederiv
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2235,8 +2174,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSolidPressureSat<nsd,
       curphase, phasetoadd, numdofpernode, phasemanager, variablemanager,
       phasemanager.saturation(curphase) * rhsfac, phasemanager.saturation(curphase) * fac,
       inittimederiv);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2257,8 +2194,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSolidPressureSat<nsd,
   EvaluatorMassSolidPressure<nsd, nen>::evaluate_matrix_od_struct_and_assemble(elemat, funct, deriv,
       derxy, xjm, curphase, phasetoadd, numdofpernode, phasemanager, variablemanager,
       phasemanager.saturation(curphase) * timefacfac, phasemanager.saturation(curphase) * fac, det);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2275,7 +2210,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSolidPressureSat<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2397,8 +2331,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSaturation<nsd,
       }
     }
   }  // !inittimederiv
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2429,8 +2361,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSaturation<nsd,
       myvec[fvi] -= vtrans * funct(vi);
     }
   }  // !inittimederiv
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2469,8 +2399,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSaturation<nsd,
   // 2) possible linearization w.r.t porosity
   EvaluatorBase<nsd, nen>::calc_lin_fac_od_mesh(
       mymat, funct, derxy, vtrans, numdofpernode, phasetoadd);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2487,7 +2415,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorMassSaturation<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2541,7 +2468,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorPressureAndSaturation<nsd,
     double fac, bool inittimederiv)
 {
   // do nothing
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2633,7 +2559,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorPressureAndSaturation<nsd,
     double fac, double det)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2650,7 +2575,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorPressureAndSaturation<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2669,7 +2593,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorSolidPressure<nsd,
     double fac, bool inittimederiv)
 {
   // do nothing
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2712,7 +2635,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorSolidPressure<nsd,
     double fac, double det)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2729,7 +2651,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorSolidPressure<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2748,7 +2669,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorValidVolFracPressures<nsd,
     double fac, bool inittimederiv)
 {
   // do nothing
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2785,8 +2705,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorValidVolFracPressures<nsd,
       if (evaluatevolfracspec) valid_volfracspec[fvi] = 1.0;
     }
   }
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -2804,7 +2722,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorValidVolFracPressures<nsd,
     double fac, double det)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2821,7 +2738,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorValidVolFracPressures<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2840,7 +2756,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorPorosity<nsd,
     double fac, bool inittimederiv)
 {
   // do nothing
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2883,7 +2798,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorPorosity<nsd,
     double fac, double det)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2900,7 +2814,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorPorosity<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2919,7 +2832,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDomainIntegrals<nsd,
     double fac, bool inittimederiv)
 {
   // do nothing
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3037,7 +2949,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDomainIntegrals<nsd,
     double fac, double det)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3054,7 +2965,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorDomainIntegrals<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3083,7 +2993,6 @@ void Discret::Elements::PoroFluidEvaluator::ReconstructFluxLinearization<nsd,
       linearization(vi, ui) += v * funct(ui);
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3096,10 +3005,8 @@ void Discret::Elements::PoroFluidEvaluator::ReconstructFluxLinearization<nsd,
     const Core::LinAlg::Matrix<nsd, nen>& xyze, int curphase, int phasetoadd, int numdofpernode,
     const PoroFluidManager::PhaseManagerInterface& phasemanager,
     const PoroFluidManager::VariableManagerInterface<nsd, nen>& variablemanager, double rhsfac,
-    double fac, bool inittimederiv)
-{
+    double fac, bool inittimederiv) {
   // nothing to do
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -3117,7 +3024,6 @@ void Discret::Elements::PoroFluidEvaluator::ReconstructFluxLinearization<nsd,
     double fac, double det)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3134,7 +3040,6 @@ void Discret::Elements::PoroFluidEvaluator::ReconstructFluxLinearization<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3189,7 +3094,6 @@ void Discret::Elements::PoroFluidEvaluator::ReconstructFluxRHS<nsd,
       rhs(node_i, nsd * curphase + j) += funct(node_i) * fac * diffflux(j);
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3202,10 +3106,8 @@ void Discret::Elements::PoroFluidEvaluator::ReconstructFluxRHS<nsd,
     const Core::LinAlg::Matrix<nsd, nen>& xyze, int curphase, int phasetoadd, int numdofpernode,
     const PoroFluidManager::PhaseManagerInterface& phasemanager,
     const PoroFluidManager::VariableManagerInterface<nsd, nen>& variablemanager, double rhsfac,
-    double fac, bool inittimederiv)
-{
+    double fac, bool inittimederiv) {
   // nothing to do
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -3223,7 +3125,6 @@ void Discret::Elements::PoroFluidEvaluator::ReconstructFluxRHS<nsd,
     double fac, double det)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3240,7 +3141,6 @@ void Discret::Elements::PoroFluidEvaluator::ReconstructFluxRHS<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3507,8 +3407,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddInstatTerms<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3539,8 +3437,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddInstatTerms<nsd,
       myvec[fvi] -= vrhs * funct(vi);
     }
   }
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -3566,8 +3462,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddInstatTerms<nsd,
   // linearization of mesh motion (Jacobian)
   EvaluatorBase<nsd, nen>::calc_lin_fac_od_mesh(
       mymat, funct, derxy, vrhs, numdofpernode, phasetoadd);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3584,7 +3478,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddInstatTerms<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3685,8 +3578,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddDivVelTerm<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3712,8 +3603,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddDivVelTerm<nsd,
 
     myvec[fvi] -= vrhs * funct(vi);
   }
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -3742,8 +3631,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddDivVelTerm<nsd,
   EvaluatorBase<nsd, nen>::calc_div_vel_od_mesh(mymat, funct, deriv, derxy, xjm, gridvelderiv,
       timefacfac * sumaddvolfrac * (-1.0), fac * sumaddvolfrac * (-1.0), det, numdofpernode,
       phasetoadd);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3760,7 +3647,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddDivVelTerm<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3803,8 +3689,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddInstatTermsSat<ns
     EvaluatorBase<nsd, nen>::saturation_linearization_fluid(
         mymat, funct, vrhs, numdofpernode, numfluidphases, curphase, phasetoadd, phasemanager);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3824,8 +3708,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddInstatTermsSat<ns
       curphase, phasetoadd, numdofpernode, phasemanager, variablemanager,
       phasemanager.saturation(curphase) * rhsfac, phasemanager.saturation(curphase) * fac,
       inittimederiv);
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -3846,8 +3728,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddInstatTermsSat<ns
   EvaluatorVolFracAddInstatTerms<nsd, nen>::evaluate_matrix_od_struct_and_assemble(elemat, funct,
       deriv, derxy, xjm, curphase, phasetoadd, numdofpernode, phasemanager, variablemanager,
       phasemanager.saturation(curphase) * timefacfac, phasemanager.saturation(curphase) * fac, det);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3864,7 +3744,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddInstatTermsSat<ns
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3902,8 +3781,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddDivVelTermSat<nsd
     EvaluatorBase<nsd, nen>::saturation_linearization_fluid(
         mymat, funct, vrhs, numdofpernode, numfluidphases, curphase, phasetoadd, phasemanager);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3923,8 +3800,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddDivVelTermSat<nsd
       curphase, phasetoadd, numdofpernode, phasemanager, variablemanager,
       phasemanager.saturation(curphase) * rhsfac, phasemanager.saturation(curphase) * fac,
       inittimederiv);
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -3945,8 +3820,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddDivVelTermSat<nsd
   EvaluatorVolFracAddDivVelTerm<nsd, nen>::evaluate_matrix_od_struct_and_assemble(elemat, funct,
       deriv, derxy, xjm, curphase, phasetoadd, numdofpernode, phasemanager, variablemanager,
       phasemanager.saturation(curphase) * timefacfac, phasemanager.saturation(curphase) * fac, det);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3963,7 +3836,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddDivVelTermSat<nsd
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4011,9 +3883,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracInstat<nsd,
       }
     }
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4057,8 +3926,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracInstat<nsd,
       }
     }
   }
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -4117,8 +3984,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracInstat<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4135,7 +4000,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracInstat<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4184,9 +4048,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracDivVel<nsd,
       }
     }
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4226,7 +4087,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracDivVel<nsd,
       if (evaluatevolfracpress) myvec[fvi_volfracpress] -= v * funct(vi);
     }
   }
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -4372,7 +4232,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracDivVel<nsd,
     else
       FOUR_C_THROW("shapederivatives not implemented for 1D!");
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4389,7 +4248,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracDivVel<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4442,9 +4300,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracDiff<nsd,
       }
     }
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4487,8 +4342,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracDiff<nsd,
       myvec[fvi] -= rhsfac * laplawf;
     }
   }
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -4534,7 +4387,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracDiff<nsd,
     EvaluatorBase<nsd, nen>::calc_diff_od_mesh(mymat, deriv, derxy, xjm, diffflux, refgradphi,
         gradphi[ivolfrac], timefacfac, v, numdofpernode, ivolfrac);
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4551,7 +4403,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracDiff<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4608,8 +4459,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracReac<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4647,8 +4496,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracReac<nsd,
       }
     }
   }
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -4702,7 +4549,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracReac<nsd,
           mymat, funct, derxy, -1.0 * vrhs, numdofpernode, ivolfrac);
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4751,8 +4597,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracReac<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4885,8 +4729,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddFlux<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -4961,7 +4803,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddFlux<nsd,
       }
     }
   }
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -5112,8 +4953,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddFlux<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5220,7 +5059,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracAddFlux<nsd,
       }
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5289,9 +5127,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracPressureDiff<nsd,
       }
     }
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5350,8 +5185,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracPressureDiff<nsd,
       }
     }
   }
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -5408,7 +5241,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracPressureDiff<nsd,
           gradphi[ivolfracpress], timefacfac, v, numdofpernode, ivolfracpress);
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5425,7 +5257,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracPressureDiff<nsd,
     double fac)
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5487,8 +5318,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracPressureReac<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5532,8 +5361,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracPressureReac<nsd,
       }
     }
   }
-
-  return;
 };
 
 /*----------------------------------------------------------------------*
@@ -5593,7 +5420,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracPressureReac<nsd,
           mymat, funct, derxy, -1.0 * vrhs, numdofpernode, ivolfracpress);
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -5648,8 +5474,6 @@ void Discret::Elements::PoroFluidEvaluator::EvaluatorVolFracPressureReac<nsd,
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

@@ -100,7 +100,6 @@ Discret::Elements::ScaTraHDGBoundaryImpl<distype>::ScaTraHDGBoundaryImpl()
       drs_(0.0),
       fac_(0.0)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*

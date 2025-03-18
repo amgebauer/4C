@@ -20,7 +20,6 @@ Adapter::FluidFSIMsht::FluidFSIMsht(std::shared_ptr<Fluid> fluid,
     : FluidFSI(fluid, dis, solver, params, output, isale, dirichletcond),
       fsiinterface_(std::make_shared<FLD::Utils::FsiMapExtractor>())
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*/

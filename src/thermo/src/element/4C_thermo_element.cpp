@@ -212,7 +212,6 @@ Thermo::Element::Element(int id, int owner)
 {
   // default: geometrically linear, also including purely thermal problem
   kintype_ = Inpar::Solid::KinemType::linear;
-  return;
 }  // ctor
 
 
@@ -256,8 +255,6 @@ void Thermo::Element::pack(Core::Communication::PackBuffer& data) const
   add_to_pack(data, kintype_);
   // distype
   add_to_pack(data, distype_);
-
-  return;
 }  // pack()
 
 
@@ -274,9 +271,6 @@ void Thermo::Element::unpack(Core::Communication::UnpackBuffer& buffer)
   extract_from_pack(buffer, kintype_);
   // distype
   extract_from_pack(buffer, distype_);
-
-
-  return;
 }  // unpack()
 
 
@@ -293,7 +287,6 @@ void Thermo::Element::print(std::ostream& os) const
   std::cout << std::endl;
   std::cout << "Number DOF per Node: " << numdofpernode_ << std::endl;
   std::cout << std::endl;
-  return;
 }  // print()
 
 
@@ -326,7 +319,6 @@ void Thermo::Element::vis_names(std::map<std::string, int>& names)
     temp << k;
   }  // loop over temperatures
 
-  return;
 }  // vis_names()
 
 
@@ -356,17 +348,14 @@ Thermo::FaceElement::FaceElement(int id, int owner, int nnode, const int* nodeid
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
   set_parent_master_element(parent, lsurface);
-  return;
 }  // ctor
 
 
 /*----------------------------------------------------------------------*
  | copy-ctor (public)                                        dano 09/09 |
  *----------------------------------------------------------------------*/
-Thermo::FaceElement::FaceElement(const FaceElement& old) : Core::Elements::FaceElement(old)
-{
-  return;
-}  // copy-ctor
+Thermo::FaceElement::FaceElement(const FaceElement& old)
+    : Core::Elements::FaceElement(old) {}  // copy-ctor
 
 
 /*----------------------------------------------------------------------*
@@ -425,8 +414,6 @@ Core::FE::CellType Thermo::FaceElement::shape() const
 void Thermo::FaceElement::pack(std::vector<char>& data) const
 {
   FOUR_C_THROW("This FaceElement element does not support communication");
-
-  return;
 }  // pack()
 
 
@@ -436,7 +423,6 @@ void Thermo::FaceElement::pack(std::vector<char>& data) const
 void Thermo::FaceElement::unpack(Core::Communication::UnpackBuffer& buffer)
 {
   FOUR_C_THROW("This FaceElement element does not support communication");
-  return;
 }  // unpack()
 
 
@@ -448,7 +434,6 @@ void Thermo::FaceElement::print(std::ostream& os) const
 {
   os << "FaceElement ";
   Element::print(os);
-  return;
 }  // print()
 
 

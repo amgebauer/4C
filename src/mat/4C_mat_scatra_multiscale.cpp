@@ -21,7 +21,6 @@ Mat::PAR::ScatraMultiScale::ScatraMultiScale(const Core::Mat::PAR::Parameter::Da
       porosity_(matdata.parameters.get<double>("POROSITY")),
       tortuosity_(matdata.parameters.get<double>("TORTUOSITY"))
 {
-  return;
 }
 
 
@@ -47,7 +46,7 @@ Core::Communication::ParObject* Mat::ScatraMultiScaleType::create(
 
 /*--------------------------------------------------------------------*
  *--------------------------------------------------------------------*/
-Mat::ScatraMultiScale::ScatraMultiScale() : params_(nullptr) { return; }
+Mat::ScatraMultiScale::ScatraMultiScale() : params_(nullptr) {}
 
 
 /*--------------------------------------------------------------------*
@@ -55,7 +54,6 @@ Mat::ScatraMultiScale::ScatraMultiScale() : params_(nullptr) { return; }
 Mat::ScatraMultiScale::ScatraMultiScale(Mat::PAR::ScatraMultiScale* params)
     : ScatraMat(params), params_(params)
 {
-  return;
 }
 
 
@@ -73,8 +71,6 @@ void Mat::ScatraMultiScale::pack(Core::Communication::PackBuffer& data) const
 
   // pack base class material
   ScatraMat::pack(data);
-
-  return;
 }
 
 

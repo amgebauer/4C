@@ -111,7 +111,6 @@ void Discret::Elements::ScaTraEleCalcLoma<distype>::calculate_domain_and_bodyfor
 
   }  // loop over integration points
 
-  return;
 }  // ScaTraEleCalcLoma::CalculateDomain
 
 
@@ -140,8 +139,6 @@ void Discret::Elements::ScaTraEleCalcLoma<distype>::extract_element_and_node_val
 
   // call base class routine
   my::extract_element_and_node_values(ele, params, discretization, la);
-
-  return;
 }
 
 
@@ -225,8 +222,6 @@ void Discret::Elements::ScaTraEleCalcLoma<distype>::calc_subgr_velocity_visc(
     FOUR_C_THROW("Epsilon(u) is not implemented for the 1D case!");
 
   my::derxy2_.scale(1.0 / prefac);
-
-  return;
 }  // Discret::Elements::ScaTraEleCalcLoma<distype>::calc_subgr_velocity_visc
 
 

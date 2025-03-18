@@ -30,7 +30,6 @@ Mat::PAR::MembraneActiveStrain::MembraneActiveStrain(const Core::Mat::PAR::Param
       alpha1_(matdata.parameters.get<double>("ALPHA1")),
       alpha2_(matdata.parameters.get<double>("ALPHA2"))
 {
-  return;
 }  // Mat::PAR::MembraneActiveStrain::MembraneActiveStrain
 
 /*----------------------------------------------------------------------*
@@ -63,7 +62,6 @@ Mat::MembraneActiveStrain::MembraneActiveStrain()
       isinit_(false),
       fibervecs_(false)
 {
-  return;
 }  // Mat::MembraneActiveStrain::MembraneActiveStrain()
 
 /*----------------------------------------------------------------------*
@@ -77,7 +75,6 @@ Mat::MembraneActiveStrain::MembraneActiveStrain(Mat::PAR::MembraneActiveStrain* 
       isinit_(false),
       fibervecs_(false)
 {
-  return;
 }  // Mat::MembraneActiveStrain::MembraneActiveStrain()
 
 /*----------------------------------------------------------------------*
@@ -129,7 +126,6 @@ void Mat::MembraneActiveStrain::pack(Core::Communication::PackBuffer& data) cons
     add_to_pack(data, activation_->at(gp));
   }
 
-  return;
 }  // Mat::MembraneActiveStrain::pack()
 
 /*----------------------------------------------------------------------*
@@ -342,8 +338,6 @@ void Mat::MembraneActiveStrain::evaluate_membrane(const Core::LinAlg::Matrix<3, 
 
   // pullback of the linearization
   pullback4th_tensor_voigt(defgrd_active_inv_loc_red, cmatpassive_loc, cmat);
-
-  return;
 }  // Mat::MembraneActiveStrain::Evaluate
 
 /*----------------------------------------------------------------------*
@@ -488,8 +482,6 @@ void Mat::MembraneActiveStrain::read_dir(const Core::IO::InputParameterContainer
 
   // fill final normalized vector
   for (int i = 0; i < 3; ++i) dir(i) = fiber[i] / fnorm;
-
-  return;
 }  // Mat::MembraneActiveStrain::read_dir
 
 void Mat::MembraneActiveStrain::setup_normal_direction()

@@ -30,125 +30,12 @@ CONTACT::TSIInterface::TSIInterface(
     MPI_Comm comm, const int dim, const Teuchos::ParameterList& icontact, bool selfcontact)
     : CONTACT::Interface(interfaceData_ptr, id, comm, dim, icontact, selfcontact)
 {
-  return;
 }
 void CONTACT::TSIInterface::assemble_lin_stick(Core::LinAlg::SparseMatrix& linstickLMglobal,
     Core::LinAlg::SparseMatrix& linstickDISglobal, Core::LinAlg::SparseMatrix& linstickTEMPglobal,
     Core::LinAlg::Vector<double>& linstickRHSglobal)
 {
   CONTACT::Interface::assemble_lin_stick(linstickLMglobal, linstickDISglobal, linstickRHSglobal);
-
-#ifdef CONSISTENTSTICK
-
-  // do the additional thermal linearizations
-  // be aware, that there is another contribution to the linDIS part, since the temperature used
-  // in the calculation of the friction coefficient may be the master side temperature, which has
-  // a displacement derivative due to the projection
-
-
-  // create map of stick nodes
-  std::shared_ptr<Epetra_Map> sticknodes = Core::LinAlg::split_map(*activenodes_, *slipnodes_);
-  std::shared_ptr<Epetra_Map> stickt = Core::LinAlg::split_map(*activet_, *slipt_);
-
-  // nothing to do if no stick nodes
-  if (sticknodes->NumMyElements() == 0) return;
-
-  // information from interface contact parameter list
-  auto ftype = Teuchos::getIntegralValue<CONTACT::FrictionType>(interface_params(), "FRICTION");
-  if (ftype != CONTACT::FrictionType::coulomb) FOUR_C_THROW("only coulomb friction for CTSI");
-
-  double frcoeff_in =
-      interface_params().get<double>("FRCOEFF");  // the friction coefficient from the input
-  double cn = interface_params().get<double>("SEMI_SMOOTH_CN");
-
-  // some things that are not implemented
-  bool gp_slip = interface_params().get<bool>("GP_SLIP_INCR");
-  bool frilessfirst = interface_params().get<bool>("FRLESS_FIRST");
-  if (gp_slip || frilessfirst)
-    FOUR_C_THROW("this fancy option for the contact algorithm is not implemented for TSI");
-
-  // consistent equation is:
-  // mu(d,T)*(z_n-c_n*g)ut = 0
-
-  typedef std::map<int, double>::const_iterator _CI;
-  // loop over all stick nodes of the interface
-  for (int i = 0; i < sticknodes->NumMyElements(); ++i)
-  {
-    int gid = sticknodes->GID(i);
-    Core::Nodes::Node* node = idiscret_->gNode(gid);
-    if (!node) FOUR_C_THROW("Cannot find node with gid %", gid);
-    FriNode* cnode = dynamic_cast<FriNode*>(node);
-
-    if (cnode->Owner() != Core::Communication::my_mpi_rank(Comm()))
-      FOUR_C_THROW("AssembleLinStick: Node ownership inconsistency!");
-
-    const Core::LinAlg::Matrix<3, 1> n(cnode->MoData().n(), true);
-    const Core::LinAlg::Matrix<3, 1> lm(cnode->MoData().lm(), true);
-    const double lm_n = n.Dot(lm);
-    const double wgap = cnode->Data().Getg();
-    Core::LinAlg::Matrix<3, 1> txi(cnode->Data().txi(), true);
-    Core::LinAlg::Matrix<3, 1> teta(cnode->Data().teta(), true);
-    Core::LinAlg::Matrix<3, 1> jump(cnode->FriData().jump(), true);
-    double jump_txi = jump.Dot(txi);
-    double jump_teta = jump.Dot(teta);
-
-    // row number of entries
-    std::vector<int> row(Dim() - 1);
-    if (Dim() == 2)
-      FOUR_C_THROW(
-          "2-Dimensional thermo-contact not implemented 'cause there's no 2-D thermo element");
-    else if (Dim() == 3)
-    {
-      row[0] = stickt->GID(2 * i);
-      row[1] = stickt->GID(2 * i) + 1;
-    }
-    else
-      FOUR_C_THROW("AssemblelinStick: Dimension not correct");
-
-    std::map<int, double> dfrdT, dfrdD;
-    cnode->derivFrCoeffTemp(frcoeff_in, dfrdT, dfrdD);
-
-    double fac = lm_n - cn * wgap;
-    for (_CI p = dfrdT.begin(); p != dfrdT.end(); ++p)
-    {
-      if (constr_direction_ == CONTACT::ConstraintDirection::xyz)
-        for (int j = 0; j < Dim(); j++)
-        {
-          linstickTEMPglobal.Assemble(
-              fac * jump_txi * p->second * txi(j), cnode->Dofs()[j], p->first);
-          linstickTEMPglobal.Assemble(
-              fac * jump_teta * p->second * teta(j), cnode->Dofs()[j], p->first);
-        }
-      else
-      {
-        linstickTEMPglobal.Assemble(fac * jump_txi * p->second, row[0], p->first);
-        linstickTEMPglobal.Assemble(fac * jump_teta * p->second, row[1], p->first);
-      }
-    }
-    for (_CI p = dfrdD.begin(); p != dfrdD.end(); ++p)
-    {
-      if (constr_direction_ == CONTACT::ConstraintDirection::xyz)
-        for (int j = 0; j < Dim(); j++)
-        {
-          linstickDISglobal.Assemble(
-              fac * jump_txi * p->second * txi(j), cnode->Dofs()[j], p->first);
-          linstickDISglobal.Assemble(
-              fac * jump_teta * p->second * teta(j), cnode->Dofs()[j], p->first);
-        }
-      else
-      {
-        linstickDISglobal.Assemble(fac * jump_txi * p->second, row[0], p->first);
-        linstickDISglobal.Assemble(fac * jump_teta * p->second, row[1], p->first);
-      }
-    }
-  }
-#else
-  // if we don't do the inconsistent stick linearization, it reduces to a mesh-tying
-  // problem and hence it is independent of the friction coefficient and therefore
-  // independent of the temperature. So do nothing here.
-#endif
-
-  return;
 }
 void CONTACT::TSIInterface::assemble_lin_slip(Core::LinAlg::SparseMatrix& linslipLMglobal,
     Core::LinAlg::SparseMatrix& linslipDISglobal, Core::LinAlg::SparseMatrix& linslipTEMPglobal,
@@ -272,8 +159,6 @@ void CONTACT::TSIInterface::assemble_lin_slip(Core::LinAlg::SparseMatrix& linsli
       }
     }
   }
-
-  return;
 }
 
 
@@ -299,8 +184,6 @@ void CONTACT::TSIInterface::assemble_lin_conduct(Core::LinAlg::SparseMatrix& lin
 
   assemble_dm_l_mn(-beta_bar, &linConductTEMPglobal);
   assemble_lin_l_mn_dm_temp(-beta_bar, &linConductDISglobal, &linConductContactLMglobal);
-
-  return;
 }
 
 
@@ -377,7 +260,6 @@ void CONTACT::TSIInterface::assemble_dual_mass_lumped(
         linDualMassGlobal.fe_assemble(p->second * thermo_lm, conode->dofs()[0], p->first);
     }
   }
-  return;
 }
 
 void CONTACT::TSIInterface::assemble_lin_dm_x(Core::LinAlg::SparseMatrix* linD_X,
@@ -538,8 +420,6 @@ void CONTACT::TSIInterface::assemble_lin_dm_x(Core::LinAlg::SparseMatrix* linD_X
         FOUR_C_THROW("AssembleLinDM: Not all master entries of DerivM considered!");
     } /******************************** Finished with LinMMatrix **********/
   }
-
-  return;
 }
 
 void CONTACT::TSIInterface::assemble_dm_lin_diss(Core::LinAlg::SparseMatrix* d_LinDissDISP,
@@ -747,8 +627,6 @@ void CONTACT::TSIInterface::assemble_lin_l_mn_dm_temp(
         lin_lm->fe_assemble(-n(d) * temp_k * fac * k->second, cnode->dofs()[0], cnode->dofs()[d]);
     }
   }
-
-  return;
 }
 
 void CONTACT::TSIInterface::assemble_dm_l_mn(const double fac, Core::LinAlg::SparseMatrix* DM_LMn)
@@ -789,7 +667,6 @@ void CONTACT::TSIInterface::assemble_dm_l_mn(const double fac, Core::LinAlg::Spa
         DM_LMn->fe_assemble(-fac * lm_n * k->second, cnode->dofs()[0], kcnode->dofs()[0]);
       }
   }
-  return;
 }
 
 
@@ -832,7 +709,6 @@ void CONTACT::TSIInterface::initialize()
         imortar_.get<double>("TEMP_REF"), imortar_.get<double>("TEMP_DAMAGE"));
     node->tsi_data().clear();
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

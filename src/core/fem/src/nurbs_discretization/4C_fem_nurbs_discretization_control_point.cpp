@@ -32,7 +32,6 @@ Core::FE::Nurbs::ControlPoint::ControlPoint(
     int id, const std::vector<double>& coords, const double weight, const int owner)
     : Core::Nodes::Node(id, coords, owner), w_(weight)
 {
-  return;
 }
 
 /*
@@ -44,7 +43,6 @@ Core::FE::Nurbs::ControlPoint::ControlPoint(
 Core::FE::Nurbs::ControlPoint::ControlPoint(const Core::FE::Nurbs::ControlPoint& old)
     : Core::Nodes::Node(old), w_(old.w())
 {
-  return;
 }
 
 /*
@@ -74,8 +72,6 @@ void Core::FE::Nurbs::ControlPoint::pack(Core::Communication::PackBuffer& data) 
   Core::Nodes::Node::pack(data);
   // add weight
   add_to_pack(data, &w_, sizeof(double));
-
-  return;
 }
 
 /*
@@ -91,8 +87,6 @@ void Core::FE::Nurbs::ControlPoint::unpack(Core::Communication::UnpackBuffer& bu
   Core::Nodes::Node::unpack(buffer);
   // extract weight
   extract_from_pack(buffer, w_);
-
-  return;
 }
 
 /*
@@ -104,7 +98,6 @@ void Core::FE::Nurbs::ControlPoint::print(std::ostream& os) const
   Core::Nodes::Node::print(os);
   os << "\n+ additional weight ";
   os << w_ << "\n";
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

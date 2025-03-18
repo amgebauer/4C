@@ -22,7 +22,6 @@ FOUR_C_NAMESPACE_OPEN
 ScaTra::MeshtyingStrategyFluid::MeshtyingStrategyFluid(ScaTra::ScaTraTimIntImpl* scatratimint)
     : MeshtyingStrategyBase(scatratimint), meshtying_(nullptr), type_(Inpar::FLUID::no_meshtying)
 {
-  return;
 }  // ScaTra::MeshtyingStrategyFluid::MeshtyingStrategyFluid
 
 
@@ -46,8 +45,6 @@ void ScaTra::MeshtyingStrategyFluid::evaluate_meshtying()
   // evaluate fluid-fluid meshtying
   meshtying_->prepare_meshtying_system(
       scatratimint_->system_matrix_operator(), *scatratimint_->residual(), *scatratimint_->phinp());
-
-  return;
 }  // ScaTra::MeshtyingStrategyFluid::evaluate_meshtying
 
 
@@ -57,8 +54,6 @@ void ScaTra::MeshtyingStrategyFluid::evaluate_meshtying()
 void ScaTra::MeshtyingStrategyFluid::include_dirichlet_in_condensation() const
 {
   meshtying_->include_dirichlet_in_condensation(*scatratimint_->phinp(), *scatratimint_->phin());
-
-  return;
 }  // ScaTra::MeshtyingStrategyFluid::include_dirichlet_in_condensation()
 
 
@@ -100,8 +95,6 @@ void ScaTra::MeshtyingStrategyFluid::init_meshtying()
   // setup meshtying
   meshtying_ = std::make_shared<FLD::Meshtying>(scatratimint_->discretization(),
       *(scatratimint_->solver()), type_, Global::Problem::instance()->n_dim());
-
-  return;
 }  // ScaTra::MeshtyingStrategyFluid::InitMeshtying
 
 
@@ -129,8 +122,6 @@ void ScaTra::MeshtyingStrategyFluid::solve(
 {
   meshtying_->solve_meshtying(
       *solver, systemmatrix, increment, residual, *phinp, iteration, solver_params);
-
-  return;
 }  // ScaTra::MeshtyingStrategyFluid::Solve
 
 
@@ -151,8 +142,6 @@ void ScaTra::MeshtyingStrategyFluid::init_conv_check_strategy()
 {
   convcheckstrategy_ = std::make_shared<ScaTra::ConvCheckStrategyStd>(
       scatratimint_->scatra_parameter_list()->sublist("NONLINEAR"));
-
-  return;
 }  // ScaTra::MeshtyingStrategyFluid::init_conv_check_strategy
 
 FOUR_C_NAMESPACE_CLOSE

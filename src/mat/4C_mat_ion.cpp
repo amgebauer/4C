@@ -66,22 +66,6 @@ void Mat::Ion::pack(Core::Communication::PackBuffer& data) const
   int matid = -1;
   if (params_ != nullptr) matid = params_->id();  // in case we are in post-process mode
   add_to_pack(data, matid);
-
-  /*
-  for (unsigned i=0;i<data().size();i++)
-  std::cout<<"Pack ION: pb["<<i<<"] = "<<(data())[i]<<std::endl;
-*/
-  /*
-  // extract type
-  std::vector<char>::size_type posit = 0;
-  std::vector<char> pbtest;
-  int typio = 0;
-  extract_from_pack(posit,data(),typio);
-  std::cout<<"ION Pack: Type will be "<<typio<<std::endl;
-*/
-  // std::cout<<"Ion Pack: "<<data().size()<<std::endl;
-
-  return;
 }
 
 
@@ -107,10 +91,6 @@ void Mat::Ion::unpack(Core::Communication::UnpackBuffer& buffer)
         FOUR_C_THROW("Type of parameter material {} does not fit to calling type {}", mat->type(),
             material_type());
     }
-
-
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

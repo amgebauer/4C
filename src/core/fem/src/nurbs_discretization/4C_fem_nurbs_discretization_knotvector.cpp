@@ -37,7 +37,6 @@ Core::FE::Nurbs::Knotvector::Knotvector()
       offsets_(0),
       knot_values_(0)
 {
-  return;
 }  // Core::FE::Nurbs::Knotvector::Knotvector (empty)
 
 /*----------------------------------------------------------------------*
@@ -76,7 +75,6 @@ Core::FE::Nurbs::Knotvector::Knotvector(const int dim, const int npatches)
     for (int mm = 0; mm < dim_; ++mm) (interpolation_[rr])[mm] = knotvector_is_not_defined;
   }
 
-  return;
 }  // Core::FE::Nurbs::Knotvector::Knotvector (standard)
 
 /*----------------------------------------------------------------------*
@@ -105,7 +103,6 @@ Core::FE::Nurbs::Knotvector::Knotvector(const Core::FE::Nurbs::Knotvector& old)
       *((knot_values_[np])[rr]) = *((old.knot_values_[np])[rr]);
     }
   }
-  return;
 }  // Core::FE::Nurbs::Knotvector::Knotvector (copy)
 
 
@@ -163,7 +160,6 @@ void Core::FE::Nurbs::Knotvector::convert_ele_gid_to_knot_ids(
     FOUR_C_THROW("dim_ not available\n");
   }
 
-  return;
 }  // convert_ele_gid_to_knot_ids
 
 
@@ -562,8 +558,6 @@ void Core::FE::Nurbs::Knotvector::set_knots(const int& direction, const int& npa
 
   // set the actual values
   (knot_values_[npatch])[direction] = directions_knots;
-
-  return;
 }  // Core::FE::Nurbs::Knotvector::SetKnots
 
 /*----------------------------------------------------------------------*
@@ -720,8 +714,6 @@ void Core::FE::Nurbs::Knotvector::finish_knots(const int smallest_gid_in_dis)
   //--------------------------------------------------
   // the knotvector is OK
   filled_ = true;
-
-  return;
 }  // Core::FE::Nurbs::Knotvector::FinishKnots
 
 /*----------------------------------------------------------------------*
@@ -783,7 +775,6 @@ void Core::FE::Nurbs::Knotvector::pack(Core::Communication::PackBuffer& data) co
     }
   }
 
-  return;
 }  // Core::FE::Nurbs::Knotvector::Pack
 
 /*----------------------------------------------------------------------*
@@ -860,7 +851,6 @@ void Core::FE::Nurbs::Knotvector::unpack(Core::Communication::UnpackBuffer& buff
     }
   }
 
-  return;
 }  // Core::FE::Nurbs::Knotvector::Unpack
 
 

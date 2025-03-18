@@ -878,8 +878,6 @@ FLD::TurbulenceStatisticsSqc::TurbulenceStatisticsSqc(
 
   // clear statistics
   this->clear_statistics();
-
-  return;
 }  // TurbulenceStatisticsSqc::TurbulenceStatisticsSqc
 
 
@@ -897,8 +895,6 @@ void FLD::TurbulenceStatisticsSqc::do_lift_drag_time_sample(double dragforce, do
   // TODO: passen rms-Werte?
   dragsq_ += cdrag * cdrag;
   liftsq_ += clift * clift;
-
-  return;
 }  // TurbulenceStatisticsSqc::do_lift_drag_time_sample
 
 
@@ -1845,7 +1841,6 @@ void FLD::TurbulenceStatisticsSqc::do_time_sample(Core::LinAlg::Vector<double>& 
     ctbnodnum++;
   }
 
-  return;
 }  // TurbulenceStatisticsSqc::DoTimeSample
 
 /*----------------------------------------------------------------------*
@@ -2276,7 +2271,6 @@ void FLD::TurbulenceStatisticsSqc::dump_statistics(int step)
     log->flush();
   }
 
-  return;
 
 }  // TurbulenceStatisticsSqc::time_average_means_and_output_of_statistics
 
@@ -2412,7 +2406,6 @@ void FLD::TurbulenceStatisticsSqc::clear_statistics()
     (*cylbsumsqp_)[i] = 0.0;
   }
 
-  return;
 }  // TurbulenceStatisticsSqc::ClearStatistics
 
 FOUR_C_NAMESPACE_CLOSE

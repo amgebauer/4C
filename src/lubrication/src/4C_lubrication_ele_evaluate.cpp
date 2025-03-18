@@ -111,8 +111,6 @@ void Discret::Elements::LubricationType::pre_evaluate(Core::FE::Discretization& 
       // do nothing in all other cases
       break;
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

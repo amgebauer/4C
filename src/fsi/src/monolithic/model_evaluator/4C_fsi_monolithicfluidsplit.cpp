@@ -159,48 +159,6 @@ FSI::MonolithicFluidSplit::MonolithicFluidSplit(
   fgicur_ = nullptr;
   fggprev_ = nullptr;
   fggcur_ = nullptr;
-
-#ifdef FOUR_C_ENABLE_ASSERTIONS
-  // check whether allocation was successful
-  if (fggtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fggtransform_' failed.");
-  }
-  if (fgitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fgitransform_' failed.");
-  }
-  if (figtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'figtransform_' failed.");
-  }
-  if (aigtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'aigtransform_' failed.");
-  }
-  if (fmiitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fmiitransform_' failed.");
-  }
-  if (fmgitransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fmgitransform_' failed.");
-  }
-  if (fmggtransform_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'fmggtransform_' failed.");
-  }
-  if (lambda_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'lambda_' failed.");
-  }
-  if (lambdaold_ == nullptr)
-  {
-    FOUR_C_THROW("Allocation of 'lambdaold_' failed.");
-  }
-#endif
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -265,8 +223,6 @@ void FSI::MonolithicFluidSplit::create_combined_dof_row_map()
     FOUR_C_THROW("No inner fluid equations. Splitting not possible. Panic.");
 
   set_dof_row_maps(vecSpaces);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -297,8 +253,6 @@ void FSI::MonolithicFluidSplit::setup_dbc_map_extractor()
     FOUR_C_THROW("Creation of FSI Dirichlet map extractor failed.");
   }
   // ---------------------------------------------------------------------------
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -351,8 +305,6 @@ void FSI::MonolithicFluidSplit::setup_rhs_residual(Core::LinAlg::Vector<double>&
 
   // add additional ale residual
   extractor().add_vector(*aleresidual_, 2, f);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -375,8 +327,6 @@ void FSI::MonolithicFluidSplit::setup_rhs_lambda(Core::LinAlg::Vector<double>& f
     // add Lagrange multiplier
     extractor().add_vector(*lambdafull, 0, f);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -577,8 +527,6 @@ void FSI::MonolithicFluidSplit::setup_rhs_firstiter(Core::LinAlg::Vector<double>
   solgprev_ = nullptr;
   fgicur_ = nullptr;
   fggcur_ = nullptr;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1353,8 +1301,6 @@ void FSI::MonolithicFluidSplit::prepare_time_step()
 
   // Note: it's important to first prepare the single fields and than the fsi problem
   prepare_time_step_fsi();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1504,11 +1450,6 @@ void FSI::MonolithicFluidSplit::recover_lagrange_multiplier()
 
   // Finally, divide by (1.0-ftiparam) which is common to all terms
   lambda_->scale(-1.0 / (1.0 - ftiparam));
-
-  // Finally, the Lagrange multiplier 'lambda_' is recovered here.
-  // It represents nodal forces acting onto the structure.
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -1539,8 +1480,6 @@ void FSI::MonolithicFluidSplit::calculate_interface_energy_increment()
   energysum_ += energy;
 
   write_interface_energy_file(energy, energysum_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/

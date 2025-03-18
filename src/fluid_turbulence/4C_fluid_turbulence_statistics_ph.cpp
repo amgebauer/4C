@@ -467,7 +467,6 @@ FLD::TurbulenceStatisticsPh::TurbulenceStatisticsPh(
     log->flush();
   }
 
-  return;
 }  // TurbulenceStatisticsPh::TurbulenceStatisticsPh
 
 
@@ -821,7 +820,6 @@ void FLD::TurbulenceStatisticsPh::do_time_sample(
     }
   }
 
-  return;
 }  // TurbulenceStatisticsPh::DoTimeSample
 
 
@@ -926,7 +924,6 @@ void FLD::TurbulenceStatisticsPh::dump_statistics(int step)
     log->flush();
   }
 
-  return;
 
 }  // TurbulenceStatisticsPh::DumpStatistics
 

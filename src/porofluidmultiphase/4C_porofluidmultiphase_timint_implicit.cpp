@@ -323,8 +323,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::init(bool isale, int nds_disp, int nds_vel
       Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
           Global::Problem::instance()->io_params(), "VERBOSITY"));
   strategy_->initialize_linear_solver(solver_);
-
-  return;
 }  // TimIntImpl::init()
 
 
@@ -359,8 +357,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::set_element_general_parameters() const
 
   // call standard loop over elements
   discret_->evaluate(eleparams, nullptr, nullptr, nullptr, nullptr, nullptr);
-
-  return;
 }
 
 
@@ -393,8 +389,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::prepare_time_loop()
 
   // do the same also for meshtying
   strategy_->prepare_time_loop();
-
-  return;
 }  // POROFLUIDMULTIPHASE::TimIntImpl::prepare_time_loop
 
 
@@ -443,8 +437,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::prepare_time_step()
 
   // do the same also for meshtying
   strategy_->prepare_time_step();
-
-  return;
 }  // TimIntImpl::prepare_time_step
 
 
@@ -466,7 +458,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::prepare_first_time_step()
     else
       FOUR_C_THROW("Initial velocity field has not been set!");
   }
-  return;
 }  // POROFLUIDMULTIPHASE::TimIntImpl::prepare_first_time_step
 
 
@@ -514,8 +505,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::time_loop()
 
   // print the results of time measurements
   Teuchos::TimeMonitor::summarize();
-
-  return;
 }  // TimIntImpl::TimeLoop
 
 
@@ -534,8 +523,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::solve()
 
   // reconstruct velocities
   reconstruct_flux();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -565,8 +552,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::apply_mesh_movement(
 
   // apply mesh movement also on the strategy
   strategy_->apply_mesh_movement();
-
-  return;
 }  // TimIntImpl::ApplyMeshMovement
 
 
@@ -851,8 +836,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::apply_dirichlet_bc(const double time,
   discret_->clear_state();
   discret_->evaluate_dirichlet(p, prenp, predt, nullptr, nullptr, dbcmaps_);
   discret_->clear_state();
-
-  return;
 }  // POROFLUIDMULTIPHASE::TimIntImpl::apply_dirichlet_bc
 
 
@@ -867,8 +850,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::scaling_and_neumann()
 
   // add Neumann b.c. scaled with a factor due to time discretization
   add_neumann_to_residual();
-
-  return;
 }  // TimIntImpl::scaling_and_neumann
 
 
@@ -897,8 +878,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::apply_neumann_bc(
   // (otherwise)
   discret_->evaluate_neumann(condparams, neumann_loads);
   discret_->clear_state();
-
-  return;
 }  // POROFLUIDMULTIPHASE::TimIntImpl::apply_neumann_bc
 
 
@@ -947,8 +926,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::assemble_mat_and_rhs()
   // end time measurement for element
   double mydtele = Teuchos::Time::wallTime() - tcpuele;
   Core::Communication::max_all(&mydtele, &dtele_, 1, discret_->get_comm());
-
-  return;
 }  // TimIntImpl::assemble_mat_and_rhs
 
 /*------------------------------------------------------------------------*
@@ -982,8 +959,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::evaluate_valid_volume_frac_press_and_spec(
 
   // clean up
   discret_->clear_state();
-
-  return;
 }
 
 /*------------------------------------------------------------------------------*
@@ -1059,8 +1034,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::apply_additional_dbc_for_vol_frac_press()
   // combined map
   std::shared_ptr<Epetra_Map> condmerged = Core::LinAlg::MultiMapExtractor::merge_maps(condmaps);
   *dbcmaps_with_volfracpress_ = Core::LinAlg::MapExtractor(*(discret_->dof_row_map()), condmerged);
-
-  return;
 }
 
 void POROFLUIDMULTIPHASE::TimIntImpl::apply_starting_dbc()
@@ -1162,8 +1135,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::assemble_fluid_struct_coupling_mat(
 
   // end time measurement for element
   dtele_ = Teuchos::Time::wallTime() - tcpuele;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1207,8 +1178,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::assemble_fluid_scatra_coupling_mat(
 
   // end time measurement for element
   dtele_ = Teuchos::Time::wallTime() - tcpuele;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1257,7 +1226,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::nonlinear_solve()
 
   }  // nonlinear iteration
 
-  return;
 }  // TimIntImpl::nonlinear_solve
 
 /*--------------------------------------------------------------------------*
@@ -1289,8 +1257,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::linear_solve(
   // end time measurement for solver
   double mydtsolve = Teuchos::Time::wallTime() - tcpusolve;
   Core::Communication::max_all(&mydtsolve, &dtsolve_, 1, discret_->get_comm());
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1416,7 +1382,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::print_header()
     std::cout << "| PORO MULTIPHASE FLUID SOLVER                                                   "
                  "                                |\n";
   }
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -1462,8 +1427,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::reconstruct_pressures_and_saturations()
 
   // reconstruct also the solid pressures
   if (output_solidpress_) reconstruct_solid_pressures();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -1601,8 +1564,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::reconstruct_porosity()
   {
     (*porosity_)[i] *= 1.0 / (*counter)[i];
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -1666,8 +1627,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::evaluate_domain_integrals()
   }  // if myrank == 0
 
   discret_->clear_state();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1697,7 +1656,6 @@ inline void POROFLUIDMULTIPHASE::TimIntImpl::print_convergence_header()
     }
   }
 
-  return;
 }  // POROFLUIDMULTIPHASE::TimIntImpl::print_convergence_header
 
 
@@ -1729,7 +1687,6 @@ inline void POROFLUIDMULTIPHASE::TimIntImpl::print_convergence_values_first_iter
               << dtele_ << ")" << std::endl;
   }
 
-  return;
 }  // POROFLUIDMULTIPHASE::TimIntImpl::print_convergence_values_first_iter
 
 
@@ -1763,7 +1720,6 @@ inline void POROFLUIDMULTIPHASE::TimIntImpl::print_convergence_values(
               << std::endl;
   }
 
-  return;
 }  // POROFLUIDMULTIPHASE::TimIntImpl::print_convergence_values
 
 
@@ -1788,7 +1744,6 @@ inline void POROFLUIDMULTIPHASE::TimIntImpl::print_convergence_finish_line()
     }
   }
 
-  return;
 }  // POROFLUIDMULTIPHASE::TimIntImpl::print_convergence_finish_line
 
 
@@ -1888,7 +1843,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::evaluate_error_compared_to_analytical_sol(
     }
   }
 
-  return;
 }  // POROFLUIDMULTIPHASE::TimIntImpl::evaluate_error_compared_to_analytical_sol
 
 
@@ -1983,8 +1937,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::set_velocity_field(
 
   // provide discretization with velocity
   set_state(nds_vel_, "velocity field", vel);
-
-  return;
 
 }  // TimIntImpl::set_velocity_field
 
@@ -2092,7 +2044,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::set_initial_field(
       break;
   }  // switch(init)
 
-  return;
 }  // TimIntImpl::SetInitialField
 
 /*----------------------------------------------------------------------*
@@ -2110,7 +2061,6 @@ std::shared_ptr<Core::Utils::ResultTest> POROFLUIDMULTIPHASE::TimIntImpl::create
 void POROFLUIDMULTIPHASE::TimIntImpl::read_restart(const int step)
 {
   strategy_->read_restart(step);
-  return;
 }
 
 /*--------------------------------------------------------------------*
@@ -2196,8 +2146,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::calc_initial_time_derivative()
     std::cout << "done!" << std::endl;
     std::cout << "MAX value: " << maxval << std::endl;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------------------------------*
  | finite difference check for scalar transport system matrix (for debugging only)   vuong 08/16 |
@@ -2391,8 +2339,6 @@ void POROFLUIDMULTIPHASE::TimIntImpl::fd_check()
 
   // recompute system matrix and right-hand side vector based on original state variables
   assemble_mat_and_rhs();
-
-  return;
 }
 
 /*----------------------------------------------------------------*

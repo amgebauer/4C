@@ -237,8 +237,6 @@ void Mat::PAR::FluidPoroSingleReaction::evaluate_function_internal(std::vector<d
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -323,8 +321,6 @@ void Mat::PAR::FluidPoroSingleReaction::check_sizes(std::vector<double>& reacval
       FOUR_C_THROW(
           "Invalid length of vector for scalar derivatives for this fluid poro reaction material!");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -428,11 +424,7 @@ void Mat::FluidPoroSingleReaction::unpack(Core::Communication::UnpackBuffer& buf
 /*----------------------------------------------------------------------*
  *  initialize                                              vuong 08/16 |
  *----------------------------------------------------------------------*/
-void Mat::FluidPoroSingleReaction::initialize()
-{
-  params_->initialize();
-  return;
-}
+void Mat::FluidPoroSingleReaction::initialize() { params_->initialize(); }
 
 /*----------------------------------------------------------------------*
  *  set values in function                                 vuong 08/16 |
@@ -450,8 +442,6 @@ void Mat::FluidPoroSingleReaction::evaluate_reaction(std::vector<double>& reacva
   params_->evaluate_function(reacval, reacderivspressure, reacderivssaturation, reacderivsporosity,
       reacderivsvolfrac, reacderivsvolfracpressure, reacderivsscalar, pressure, saturation,
       porosity, volfracs, volfracpressures, scalar);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

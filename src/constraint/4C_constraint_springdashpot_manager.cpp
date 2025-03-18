@@ -39,8 +39,6 @@ CONSTRAINTS::SpringDashpotManager::SpringDashpotManager(
     for (int i = 0; i < n_conds_; ++i)
       springs_.push_back(std::make_shared<SpringDashpot>(actdisc_, springdashpots[i]));
   }
-
-  return;
 }
 
 void CONSTRAINTS::SpringDashpotManager::stiffness_and_internal_forces(
@@ -62,24 +60,18 @@ void CONSTRAINTS::SpringDashpotManager::stiffness_and_internal_forces(
     if (stype == CONSTRAINTS::SpringDashpot::RobinSpringDashpotType::cursurfnormal)
       springs_[i]->evaluate_force_stiff(*stiff, *fint, disn, *veln, parlist);
   }
-
-  return;
 }
 
 void CONSTRAINTS::SpringDashpotManager::update()
 {
   // update all spring dashpot conditions for each new time step
   for (int i = 0; i < n_conds_; ++i) springs_[i]->update();
-
-  return;
 }
 
 void CONSTRAINTS::SpringDashpotManager::reset_prestress(Core::LinAlg::Vector<double>& dis)
 {
   // loop over all spring dashpot conditions and reset them
   for (int i = 0; i < n_conds_; ++i) springs_[i]->reset_prestress(dis);
-
-  return;
 }
 
 void CONSTRAINTS::SpringDashpotManager::output(Core::IO::DiscretizationWriter& output,
@@ -113,8 +105,6 @@ void CONSTRAINTS::SpringDashpotManager::output(Core::IO::DiscretizationWriter& o
   // write spring stress if defined in io-flag
   if (Global::Problem::instance()->io_params().get<bool>("OUTPUT_SPRING"))
     output.write_multi_vector("springstress", springstress);
-
-  return;
 }
 
 void CONSTRAINTS::SpringDashpotManager::output_restart(
@@ -147,8 +137,6 @@ void CONSTRAINTS::SpringDashpotManager::output_restart(
 
   // normal output as well
   output(*output_restart, discret, disp);
-
-  return;
 }
 
 
@@ -179,8 +167,6 @@ void CONSTRAINTS::SpringDashpotManager::read_restart(
     if (stype == CONSTRAINTS::SpringDashpot::RobinSpringDashpotType::cursurfnormal)
       springs_[i]->set_restart_old(*tempvecold);
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

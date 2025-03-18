@@ -111,7 +111,6 @@ void Mat::ViscoAnisotropic::pack(Core::Communication::PackBuffer& data) const
     add_to_pack(data, histstresslast_->at(var));
     add_to_pack(data, artstresslast_->at(var));
   }
-  return;
 }
 
 
@@ -282,7 +281,6 @@ void Mat::ViscoAnisotropic::setup(int numgp, const Core::IO::InputParameterConta
   }
 
   isinit_ = true;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -344,8 +342,6 @@ void Mat::ViscoAnisotropic::setup(const int numgp, const std::vector<double> thi
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -368,8 +364,6 @@ void Mat::ViscoAnisotropic::update()
     histstresscurr_->at(j) = emptyvec;
     artstresscurr_->at(j) = emptyvec;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -383,10 +377,6 @@ void Mat::ViscoAnisotropic::update_fiber_dirs(const int gp, Core::LinAlg::Matrix
       ca1_->at(gp).data(), defgrad->data(), a1_->at(gp).data());
   Core::LinAlg::DenseFunctions::multiply<double, 3, 3, 1>(
       ca2_->at(gp).data(), defgrad->data(), a2_->at(gp).data());
-  // std::cout << (ca1_->at(gp))[0] << ",  " << (ca1_->at(gp))[1] << ",  " << (ca1_->at(gp))[2] <<
-  // std::endl; std::cout <<  (a1_->at(gp))[0] << ",  " <<  (a1_->at(gp))[1] << ",  " <<
-  // (a1_->at(gp))[2] << std::endl;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -690,8 +680,6 @@ void Mat::ViscoAnisotropic::evaluate(const Core::LinAlg::Matrix<3, 3>* defgrd,
   artstresscurr_->at(numst * gp + 0) = Q_nh;
   artstresscurr_->at(numst * gp + 1) = Q_fib1;
   artstresscurr_->at(numst * gp + 2) = Q_fib2;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

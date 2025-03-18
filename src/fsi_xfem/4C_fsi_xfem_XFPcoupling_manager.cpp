@@ -348,7 +348,6 @@ void XFEM::XfpCouplingManager::update(double scaling)
   const double dt = poro_->fluid_field()->dt();
   lambda_pf_->update(scaling * dt, *xfluid_->rhs_s_vec(cond_name_pf_ps_), 0.0);
   lambda_pf_->update(scaling * dt, *xfluid_->rhs_s_vec(cond_name_pf_pf_), 1.0);
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -369,7 +368,6 @@ void XFEM::XfpCouplingManager::output(Core::IO::DiscretizationWriter& writer)
       std::make_shared<Core::LinAlg::Vector<double>>(*get_map_extractor(0)->full_map(), true);
   insert_vector(0, lambda_pf_, 0, lambdafull, CouplingCommManager::partial_to_full);
   writer.write_vector("fpilambda_pf", lambdafull);
-  return;
 }
 /*----------------------------------------------------------------------*/
 /* Read Restart on the interface                            ager 06/2016 |
@@ -385,7 +383,6 @@ void XFEM::XfpCouplingManager::read_restart(Core::IO::DiscretizationReader& read
       std::make_shared<Core::LinAlg::Vector<double>>(*get_map_extractor(0)->full_map(), true);
   reader.read_vector(lambdafull, "fpilambda_pf");
   insert_vector(0, lambdafull, 0, lambda_pf_, CouplingCommManager::full_to_partial);
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------*

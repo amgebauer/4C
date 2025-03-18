@@ -57,8 +57,6 @@ Wear::WearInterface::WearInterface(
 
   // set wear contact discretization
   if (wside == Inpar::Wear::wear_both) wearboth_ = true;
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -166,8 +164,6 @@ void Wear::WearInterface::assemble_te(
       if (k != colsize) FOUR_C_THROW("AssembleTE: k = {} but colsize = {}", k, colsize);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -275,9 +271,6 @@ void Wear::WearInterface::assemble_te_master(
       if (k != colsize) FOUR_C_THROW("AssembleTE: k = {} but colsize = {}", k, colsize);
     }
   }
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -429,8 +422,6 @@ void Wear::WearInterface::assemble_lin_t_d(Core::LinAlg::SparseMatrix& lintgloba
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -572,8 +563,6 @@ void Wear::WearInterface::assemble_lin_t_d_master(Core::LinAlg::SparseMatrix& li
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -669,8 +658,6 @@ void Wear::WearInterface::assemble_lin_e_d(Core::LinAlg::SparseMatrix& linegloba
       FOUR_C_THROW("AssembleLinE_D: Not all DISP slave entries of DerivE considered!");
     /******************************** Finished with LinTmatrix for delta T **********/
   }
-
-  return;
 }
 
 
@@ -756,8 +743,6 @@ void Wear::WearInterface::assemble_lin_e_d_master(Core::LinAlg::SparseMatrix& li
       FOUR_C_THROW("AssembleLinE_D: Not all DISP slave entries of DerivE considered!");
     /******************************** Finished with LinTmatrix for delta T **********/
   }
-
-  return;
 }
 
 
@@ -824,8 +809,6 @@ void Wear::WearInterface::assemble_lin_t_lm(Core::LinAlg::SparseMatrix& lintglob
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -882,8 +865,6 @@ void Wear::WearInterface::assemble_lin_t_lm_master(Core::LinAlg::SparseMatrix& l
       }
     }
   }
-
-  return;
 }
 
 
@@ -909,8 +890,6 @@ void Wear::WearInterface::evaluate_nodal_normals() const
       mrtrnode->build_averaged_normal();
     }
   }
-
-  return;
 }
 
 
@@ -1148,8 +1127,6 @@ void Wear::WearInterface::export_nodal_normals() const
     teta_y_val.clear();
     teta_z_val.clear();
   }
-
-  return;
 }
 
 
@@ -1199,8 +1176,6 @@ void Wear::WearInterface::assemble_s(Core::LinAlg::SparseMatrix& sglobal)
       }
     }
   }  // for (int i=0;i<activenodes_->NumMyElements();++i)
-
-  return;
 }
 
 
@@ -1237,8 +1212,6 @@ void Wear::WearInterface::assemble_lin_g_w(Core::LinAlg::SparseMatrix& sglobal)
       if (abs(val) > 1.0e-12) sglobal.assemble(val, row, col);
     }
   }  // for (int i=0;i<activenodes_->NumMyElements();++i)
-
-  return;
 }
 
 
@@ -1759,7 +1732,6 @@ void Wear::WearInterface::assemble_lin_stick(Core::LinAlg::SparseMatrix& linstic
       }
     }
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2729,8 +2701,6 @@ void Wear::WearInterface::assemble_lin_slip(Core::LinAlg::SparseMatrix& linslipL
   {
     FOUR_C_THROW("Tresca friction not implemented for wear !!!");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2774,8 +2744,6 @@ void Wear::WearInterface::assemble_lin_w_lm(Core::LinAlg::SparseMatrix& sglobal)
     }
 
   }  // for (int i=0;i<activenodes_->NumMyElements();++i)
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2865,7 +2833,6 @@ void Wear::WearInterface::assemble_lin_w_lm_st(Core::LinAlg::SparseMatrix& sglob
       }
     }
   }
-  return;
 }
 /*----------------------------------------------------------------------*
  |  Assemble matrix W_lmsl containing wear w~ derivatives    farah 07/13|
@@ -2983,7 +2950,6 @@ void Wear::WearInterface::assemble_lin_w_lm_sl(Core::LinAlg::SparseMatrix& sglob
     }
 #endif
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3016,8 +2982,6 @@ void Wear::WearInterface::assemble_wear(Core::LinAlg::Vector<double>& wglobal)
 
     Core::LinAlg::assemble(wglobal, wnode, lm, lmowner);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3086,8 +3050,6 @@ void Wear::WearInterface::assemble_d2(Core::LinAlg::SparseMatrix& dglobal)
       }
     }
   }
-
-  return;
 }
 
 
@@ -3465,8 +3427,6 @@ void Wear::WearInterface::initialize_data_container()
       mnode->initialize_data_container();
     }
   }
-
-  return;
 }
 
 
@@ -3597,9 +3557,6 @@ void Wear::WearInterface::assemble_inactive_wear_rhs_master(Epetra_FEVector& ina
 
   Epetra_Export exp(*allredi, *inactivedofs);
   inactiverhs.Export(*rhs, exp, Add);
-
-
-  return;
 }
 
 
@@ -3700,8 +3657,6 @@ void Wear::WearInterface::assemble_wear_cond_rhs(Core::LinAlg::Vector<double>& r
       }
     }
   }
-
-  return;
 }
 
 
@@ -3796,8 +3751,6 @@ void Wear::WearInterface::assemble_wear_cond_rhs_master(Epetra_FEVector& RHS)
 
   Epetra_Export exp(*slmastern, *slipmn_);
   RHS.Export(*rhs, exp, Add);
-
-  return;
 }
 
 
@@ -4024,8 +3977,6 @@ void Wear::WearInterface::initialize()
   smpairs_ = 0;
   smintpairs_ = 0;
   intcells_ = 0;
-
-  return;
 }
 
 
@@ -4082,8 +4033,6 @@ void Wear::WearInterface::split_slave_dofs()
   // create Nmap and Tmap objects
   sndofmap_ = std::make_shared<Epetra_Map>(
       gcountN, countN, myNgids.data(), 0, Core::Communication::as_epetra_comm(get_comm()));
-
-  return;
 }
 
 
@@ -4140,8 +4089,6 @@ void Wear::WearInterface::split_master_dofs()
   // create Nmap and Tmap objects
   mndofmap_ = std::make_shared<Epetra_Map>(
       gcountN, countN, myNgids.data(), 0, Core::Communication::as_epetra_comm(get_comm()));
-
-  return;
 }
 
 
@@ -4174,8 +4121,6 @@ void Wear::WearInterface::set_element_areas()
     // refer call back to base class version
     Mortar::Interface::set_element_areas();
   }
-
-  return;
 }
 
 
@@ -4248,8 +4193,6 @@ void Wear::WearInterface::update_w_sets(int offset_if, int maxdofwear, bool both
       wmdofmap_ = std::make_shared<Epetra_Map>(
           -1, (int)wmdof.size(), wmdof.data(), 0, Core::Communication::as_epetra_comm(get_comm()));
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

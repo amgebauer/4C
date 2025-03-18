@@ -85,10 +85,7 @@ void Discret::Elements::Torsion3Type::setup_element_definition(
 /*----------------------------------------------------------------------*
  |  ctor (public)                                            cyron 02/10|
  *----------------------------------------------------------------------*/
-Discret::Elements::Torsion3::Torsion3(int id, int owner) : Core::Elements::Element(id, owner)
-{
-  return;
-}
+Discret::Elements::Torsion3::Torsion3(int id, int owner) : Core::Elements::Element(id, owner) {}
 /*----------------------------------------------------------------------*
  |  copy-ctor (public)                                       cyron 02/10|
  *----------------------------------------------------------------------*/
@@ -112,7 +109,7 @@ Core::Elements::Element* Discret::Elements::Torsion3::clone() const
 /*----------------------------------------------------------------------*
  |  print this element (public)                              cyron 02/10|
  *----------------------------------------------------------------------*/
-void Discret::Elements::Torsion3::print(std::ostream& os) const { return; }
+void Discret::Elements::Torsion3::print(std::ostream& os) const {}
 
 
 /*----------------------------------------------------------------------*

@@ -33,8 +33,6 @@ Solid::TimAdaZienXie::TimAdaZienXie(
         " whereas the actual {} is of order {}",
         method_title().c_str(), sti_->method_title().c_str(), sti_->method_order_of_accuracy_dis());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -51,8 +49,6 @@ void Solid::TimAdaZienXie::integrate_step_auxiliary()
   // using the second order (or lower) accurate new accelerations
   locerrdisn_->update(1.0, *dis, stepsize_, *vel, 0.0);
   locerrdisn_->update(stepsize_ * stepsize_ / 3.0, *acc, stepsize_ * stepsize_ / 6.0, *accn, 1.0);
-
-  return;
 }
 
 

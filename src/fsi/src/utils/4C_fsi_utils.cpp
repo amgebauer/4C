@@ -255,8 +255,6 @@ void FSI::Utils::SlideAleUtils::remeshing(Adapter::FSIStructureWrapper& structur
   idispms_->import(iprojdispale, slimpo, Add);
 
   iprojhist_->update(1.0, iprojdispale, 0.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -779,15 +777,11 @@ void FSI::Utils::SlideAleUtils::rotation(
     }
   }
   mtrdis.clear_state();
-
-  return;
 }
 
 void FSI::Utils::SlideAleUtils::output_restart(Core::IO::DiscretizationWriter& output)
 {
   output.write_vector("projhist", iprojhist_);
-
-  return;
 }
 
 void FSI::Utils::SlideAleUtils::read_restart(Core::IO::DiscretizationReader& reader)

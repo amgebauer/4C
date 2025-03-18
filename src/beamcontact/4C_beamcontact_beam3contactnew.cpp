@@ -193,8 +193,6 @@ CONTACT::Beam3contactnew<numnodes, numnodalvalues>::Beam3contactnew(
     FOUR_C_THROW(
         "BEAMS_GAPSHIFTPARAM not implemented for beam3contactnew (input parameter "
         "BEAMS_SEGCON==No)!");
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: constructor
@@ -524,8 +522,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::evaluate_fc_contact(con
     Core::LinAlg::assemble(*fint, fcontact1, lm1, lmowner1);
     Core::LinAlg::assemble(*fint, fcontact2, lm2, lmowner2);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Compute contact forces
@@ -1074,8 +1070,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::evaluate_stiffc_contact
     stiffmatrix.assemble(0, stiffcontact1, lmrow1, lmrowowner1, lmcol1);
     stiffmatrix.assemble(0, stiffcontact2, lmrow2, lmrowowner2, lmcol2);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate contact stiffness
@@ -1289,8 +1283,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::evaluate_algorithmic_fo
     Core::LinAlg::assemble(*fint, fcontact1, lm1, lmowner1);
     Core::LinAlg::assemble(*fint, fcontact2, lm2, lmowner2);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Compute algorithmic forces
@@ -1847,8 +1839,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::evaluate_algorithmic_st
     stiffmatrix.assemble(0, stiffcontact1, lmrow1, lmrowowner1, lmcol1);
     stiffmatrix.assemble(0, stiffcontact2, lmrow2, lmrowowner2, lmcol2);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate algorithmic stiffness
@@ -1936,8 +1926,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::compute_lin_xi_and_lin_
     delta_xi(i) = D(0, i);
     delta_eta(i) = D(1, i);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Linearizations of contact point
@@ -1996,8 +1984,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::compute_lin_gap(
       delta_gap(j) += sgn_ * delta_r(i) * auxiliary_matrix1(i, j) / norm_delta_r;
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute linearization of gap
@@ -2093,8 +2079,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::compute_lin_gapt(
           (vc1(i) - vc2(i)) * delta_n(i, j) + normal_(i) * (delta_vc1(i, j) - delta_vc2(i, j));
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute linearization of time derivative of gap
@@ -2162,8 +2146,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::compute_lin_normal(
     for (int j = 0; j < 3; j++)
       for (int k = 0; k < dim1 + dim2; k++)
         delta_normal(i, k) += auxiliary_matrix2(i, j) * auxiliary_matrix1(j, k);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: Compute linearization of normal vector
@@ -2402,17 +2384,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::closest_point_projectio
   // store and return final result
   xi1_ = eta1;
   xi2_ = eta2;
-
-// Set xi1_ and xi2_ as primary variables for automatic differentiation
-// The dependence between the infinitesimal changes delta xi1_ and delta xi2_ and the
-// the increments of the primary displacement variables delta disp have to be given explicitly,
-// since no explicit relation between the finite quantities xi1_, xi2_ and disp exists. The latter
-// would have been necessary if the full linearization had to be computed directly with Sacado!!!
-#ifdef AUTOMATICDIFF
-  BeamContact::SetFADParCoordDofs<numnodes, numnodalvalues>(xi1_, xi2_);
-#endif
-
-  return;
 }
 /*----------------------------------------------------------------------*
 |  end: Closest point projection
@@ -2629,8 +2600,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::calc_penalty_law()
     // dfp_ = -MAXFORCE / Core::FADUtils::Norm(gap_);     //secant penalty parameter
   }
 #endif
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Calculate scalar contact force
@@ -2733,8 +2702,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::calc_damping_law()
     d_ = 0.0;
     dd_ = 0.0;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  Calculate scalar damping force
@@ -2802,8 +2769,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::get_shape_functions(
   // r1_xixi=N1_xixi*d1, r2=N2*d2, r2_xi=N2_xi*d2, r2_xixi=N2_xixi*d2
   assemble_shapefunctions(N1_i, N1_i_xi, N1_i_xixi, N1, N1_xi, N1_xixi);
   assemble_shapefunctions(N2_i, N2_i_xi, N2_i_xixi, N2, N2_xi, N2_xixi);
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: evaluate shape functions and derivatives
@@ -2866,8 +2831,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::assemble_shapefunctions
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2918,8 +2881,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::compute_coords_and_deri
     r1_xi_(i) = r1_xi(i);
     r2_xi_(i) = r2_xi(i);
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: compute contact point coordinates and their derivatives         |
@@ -2955,8 +2916,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::compute_old_coords_and_
       r2_xi_old(i) += N2_xi(i, j) * ele2pos_old_(j);
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  | end: compute contact point coordinates at last time step             |
@@ -2998,9 +2957,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::evaluate_orthogonality_
       f(1) += -delta_r(i) * t2(i) / norm_delta_r;
     }
   }
-
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate function f in CPP
@@ -3078,8 +3034,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::evaluate_lin_orthogonal
     dfinv(1, 0) = -df(1, 0) / det_df;
     dfinv(1, 1) = df(0, 0) / det_df;
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Evaluate Jacobian df in CPP
@@ -3146,8 +3100,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::compute_normal(
   // for comparison reasons we calculate in each case additionally the original gap function
   // definition, thus gap_original==gap_ if the original gap function definition is applied
   gap_original_ = norm_delta_r - radius1_ - radius2_;
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Compute normal vector in contact point
@@ -3241,8 +3193,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::check_contact_status(co
     FOUR_C_THROW(
         "Contact is not allowed to happen in the first time step a pair was found by the contact "
         "search! Choose larger search radius or smaller time step!");
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Check if contact is active or inactive
@@ -3525,8 +3475,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::update_ele_pos(
       ele2pos_(3 * numnodalvalues * j + i) = newele2pos(i, j);
     }
   }
-
-  return;
 }
 /*----------------------------------------------------------------------*
  |  end: Update nodal coordinates (public)
@@ -3603,8 +3551,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::shift_nodal_positions()
   {
     FOUR_C_THROW("The parameter numnodalvalues can only have the values 1 or 2!!!");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -3809,8 +3755,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::get_neighbor_normal_old
            "|xi2_-xi2_old_|>MAXDELTAXIETA. Choose smaller time step or larger element size!"
         << std::endl;
   }
-
-  return;
 }
 
 template <const int numnodes, const int numnodalvalues>
@@ -3835,8 +3779,6 @@ void CONTACT::Beam3contactnew<numnodes, numnodalvalues>::check_boundary_contact(
   {
     beamendcontactopened_ = true;
   }
-
-  return;
 }
 
 template <const int numnodes, const int numnodalvalues>

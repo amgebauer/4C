@@ -109,11 +109,6 @@ void Discret::Elements::ScaTraEleParameterLsReinit::set_parameters(
   if (projectdiff_ > 0.0 and lumping_ == true) FOUR_C_THROW("Illegal combination!");
   if (projectdiff_ > 0.0 and reinittype_ == Inpar::ScaTra::reinitaction_sussman)
     FOUR_C_THROW("Illegal combination!");
-  // The second FOUR_C_THROW is added here for safety reasons. I think that using a diffusive term
-  // for the reconstruction of the velocity for reinitialization is possible, but I have not yet
-  // further investigated this option. Therefore, you should test it first.
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

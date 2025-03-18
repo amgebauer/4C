@@ -256,8 +256,6 @@ void Discret::Elements::PoroFluidMultiPhase::print(std::ostream& os) const
   std::cout << "DiscretizationType:  " << Core::FE::cell_type_to_string(distype_) << std::endl;
   std::cout << std::endl;
   std::cout << "Number DOF per Node: " << numdofpernode_ << std::endl;
-
-  return;
 }
 
 std::vector<std::shared_ptr<Core::Elements::Element>>
@@ -322,14 +320,12 @@ Discret::Elements::PoroFluidMultiPhaseBoundary::PoroFluidMultiPhaseBoundary(int 
   set_node_ids(nnode, nodeids);
   build_nodal_pointers(nodes);
   set_parent_master_element(parent, lsurface);
-  return;
 }
 
 Discret::Elements::PoroFluidMultiPhaseBoundary::PoroFluidMultiPhaseBoundary(
     const Discret::Elements::PoroFluidMultiPhaseBoundary& old)
     : Core::Elements::FaceElement(old)
 {
-  return;
 }
 
 Core::Elements::Element* Discret::Elements::PoroFluidMultiPhaseBoundary::clone() const
@@ -351,7 +347,6 @@ void Discret::Elements::PoroFluidMultiPhaseBoundary::pack(
   // after redistribution. This way we make sure, that the node ids always match.
   // -> no communication of boundary elements
   FOUR_C_THROW("This PoroFluidMultiPhaseBoundary element does not support communication");
-  return;
 }
 
 void Discret::Elements::PoroFluidMultiPhaseBoundary::unpack(
@@ -361,7 +356,6 @@ void Discret::Elements::PoroFluidMultiPhaseBoundary::unpack(
   // after redistribution. This way we make sure, that the node ids always match.
   // -> no communication of boundary elements
   FOUR_C_THROW("This PoroFluidMultiPhaseBoundary element does not support communication");
-  return;
 }
 
 
@@ -372,7 +366,6 @@ void Discret::Elements::PoroFluidMultiPhaseBoundary::print(std::ostream& os) con
   std::cout << std::endl;
   std::cout << "DiscretizationType:  " << Core::FE::cell_type_to_string(shape()) << std::endl;
   std::cout << std::endl;
-  return;
 }
 
 int Discret::Elements::PoroFluidMultiPhaseBoundary::num_line() const

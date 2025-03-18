@@ -570,8 +570,6 @@ void PostVtuWriter::write_geo_nurbs_ele(const Core::Elements::Element* ele,
       FOUR_C_THROW("VTK output not yet implemented for given NURBS element");
       exit(EXIT_FAILURE);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -740,8 +738,6 @@ void PostVtuWriter::write_dof_result_step_nurbs_ele(const Core::Elements::Elemen
       FOUR_C_THROW("VTK output not yet implemented for given NURBS element");
       break;
   }  // end switch shape
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -930,7 +926,6 @@ void PostVtuWriter::write_nodal_result_step_nurbs_ele(const Core::Elements::Elem
       FOUR_C_THROW("VTK output not yet implemented for given NURBS element");
       break;
   }  // end switch ele shape
-  return;
 }
 
 /*----------------------------------------------------------------------------*

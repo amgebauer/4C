@@ -43,7 +43,6 @@ CONTACT::LagrangeStrategyPoro::LagrangeStrategyPoro(
     FOUR_C_THROW(
         "you called a poroelastic meshtying method without participating poroelastic domains on "
         "your interface");
-  return;
 }
 
 /*----------------------------------------------------------------------*

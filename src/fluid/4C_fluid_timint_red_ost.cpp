@@ -23,7 +23,6 @@ FLD::TimIntRedModelsOst::TimIntRedModelsOst(const std::shared_ptr<Core::FE::Disc
       TimIntOneStepTheta(actdis, solver, params, output, alefluid),
       TimIntRedModels(actdis, solver, params, output, alefluid)
 {
-  return;
 }
 
 
@@ -36,8 +35,6 @@ void FLD::TimIntRedModelsOst::init()
   // note: this order is important
   TimIntOneStepTheta::init();
   TimIntRedModels::init();
-
-  return;
 }
 
 
@@ -49,8 +46,6 @@ void FLD::TimIntRedModelsOst::read_restart(int step)
   // call of base classes
   TimIntOneStepTheta::read_restart(step);
   TimIntRedModels::read_restart(step);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

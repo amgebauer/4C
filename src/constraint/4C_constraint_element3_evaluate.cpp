@@ -176,7 +176,6 @@ void Discret::Elements::ConstraintElement3::compute_normal(
                   xc(1, 2) * xc(2, 0) + xc(0, 0) * xc(2, 2) - xc(1, 0) * xc(2, 2);
   elenorm(2, 0) = -(xc(0, 1) * xc(1, 0)) + xc(0, 0) * xc(1, 1) + xc(0, 1) * xc(2, 0) -
                   xc(1, 1) * xc(2, 0) - xc(0, 0) * xc(2, 1) + xc(1, 0) * xc(2, 1);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -288,8 +287,6 @@ void Discret::Elements::ConstraintElement3::compute_first_deriv(
   elevector[11] = (-(xc(1, 1) * xc(2, 0)) + xc(0, 1) * (-xc(1, 0) + xc(2, 0)) +
                       xc(0, 0) * (xc(1, 1) - xc(2, 1)) + xc(1, 0) * xc(2, 1)) /
                   normal.norm2();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -2849,7 +2846,6 @@ void Discret::Elements::ConstraintElement3::compute_second_deriv(
   elematrix(11, 10) = 0;
 
   elematrix(11, 11) = 0;
-  return;
 }
 
 double Discret::Elements::ConstraintElement3::compute_weighted_distance(
@@ -2893,8 +2889,6 @@ void Discret::Elements::ConstraintElement3::compute_first_deriv_weighted_distanc
     elevector(i) = -direct.at(i) / norm;
     elevector(3 + i) = direct.at(i) / norm;
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

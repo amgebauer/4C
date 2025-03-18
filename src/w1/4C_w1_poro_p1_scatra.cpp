@@ -30,7 +30,6 @@ Discret::Elements::Wall1PoroP1Scatra<distype>::Wall1PoroP1Scatra(
     const Discret::Elements::Wall1PoroP1Scatra<distype>& old)
     : Discret::Elements::Wall1PoroP1<distype>(old), impltype_(old.impltype_)
 {
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -60,8 +59,6 @@ void Discret::Elements::Wall1PoroP1Scatra<distype>::pack(
 
   // add base class Element
   my::pack(data);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -78,10 +75,6 @@ void Discret::Elements::Wall1PoroP1Scatra<distype>::unpack(
 
   // extract base class Element
   my::unpack(buffer);
-
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -134,7 +127,6 @@ void Discret::Elements::Wall1PoroP1Scatra<distype>::print(std::ostream& os) cons
   os << "Wall1_PoroP1Scatra ";
   Core::Elements::Element::print(os);
   std::cout << std::endl;
-  return;
 }
 
 /*----------------------------------------------------------------------*

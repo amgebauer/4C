@@ -109,8 +109,6 @@ void FSI::MonolithicBase::create_structure_time_integrator(
     FOUR_C_THROW(
         "Cast from Adapter::Structure to Adapter::FSIStructureWrapper "
         "failed.");
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -137,8 +135,6 @@ void FSI::MonolithicBase::create_fluid_and_ale_time_integrator(
   ale_ = std::dynamic_pointer_cast<Adapter::AleFsiWrapper>(ale->ale_field());
 
   if (ale_ == nullptr) FOUR_C_THROW("Cast from Adapter::Ale to Adapter::AleFsiWrapper failed");
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -152,8 +148,6 @@ void FSI::MonolithicBase::prepare_time_step()
 
   // Note: it's important to first prepare the single fields and than the fsi problem
   prepare_time_step_fsi();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -163,8 +157,6 @@ void FSI::MonolithicBase::prepare_time_step_fsi()
   ddgpred_ = std::make_shared<Core::LinAlg::Vector<double>>(
       *structure_field()->extract_interface_dispnp());
   ddgpred_->update(-1.0, *structure_field()->extract_interface_dispn(), 1.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -174,8 +166,6 @@ void FSI::MonolithicBase::prepare_time_step_fields()
   structure_field()->prepare_time_step();
   fluid_field()->prepare_time_step();
   ale_field()->prepare_time_step();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -414,8 +404,6 @@ void FSI::Monolithic::setup_system()
       *fluidnodemap, *alenodemap, ndim);
 
   fluid_field()->set_mesh_map(coupfa.master_dof_map());
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -436,8 +424,6 @@ void FSI::Monolithic::timeloop(const std::shared_ptr<::NOX::Epetra::Interface::R
     // call time loop with adaptive time step size
     timeloop_ada_dt(interface);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -456,8 +442,6 @@ void FSI::Monolithic::timeloop_const_dt(
     update();
     output();
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -525,8 +509,6 @@ void FSI::Monolithic::prepare_timeloop()
       Global::Problem::instance()->structural_dynamic_params().get<double>("PRESTRESSTIME");
   if (pstype != Inpar::Solid::PreStress::none && time() + dt() <= pstime + 1.0e-15)
     FOUR_C_THROW("No monolithic FSI in the pre-phase of prestressing, use Aitken!");
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -680,8 +662,6 @@ void FSI::Monolithic::time_step(
 
   // perform the error check to determine the error action to be performed
   non_lin_error_check();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -813,8 +793,6 @@ void FSI::Monolithic::non_lin_error_check()
   {
     FOUR_C_THROW("Unknown ::NOX::StatusTest::StatusType.");
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -1078,8 +1056,6 @@ void FSI::Monolithic::write_interface_energy_file(const double energystep, const
 
     (*logenergy_) << std::endl;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*/

@@ -249,8 +249,6 @@ void Coupling::VolMortar::VolMortarIntegratorEleBased<distype_s>::initialize_gp(
       break;
     }
   }  // switch(eletype)
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -410,7 +408,6 @@ void Coupling::VolMortar::VolMortarIntegratorEleBased<distype_s>::integrate_ele_
         continue;
     }  // beles
   }  // end gp loop
-  return;
 }
 
 
@@ -771,8 +768,6 @@ void Coupling::VolMortar::VolMortarIntegrator<distype_s, distype_m>::initialize_
       break;
     }
   }  // switch(eletype)
-
-  return;
 }
 
 
@@ -932,8 +927,6 @@ void Coupling::VolMortar::VolMortarIntegrator<distype_s, distype_m>::integrate_c
       FOUR_C_THROW("ERROR: Unknown shape function!");
     }
   }  // end gp loop
-
-  return;
 }
 
 
@@ -1070,8 +1063,6 @@ void Coupling::VolMortar::VolMortarIntegrator<distype_s, distype_m>::integrate_c
       }
     }
   }  // end gp loop
-
-  return;
 }
 
 
@@ -1219,8 +1210,6 @@ void Coupling::VolMortar::VolMortarIntegrator<distype_s,
       }
     }
   }  // end gp loop
-
-  return;
 }
 
 
@@ -1345,8 +1334,6 @@ void Coupling::VolMortar::VolMortarIntegrator<distype_s, distype_m>::integrate_e
       break;
     }  // beles
   }  // end gp loop
-
-  return;
 }
 
 
@@ -1470,8 +1457,6 @@ void Coupling::VolMortar::VolMortarIntegrator<distype_s, distype_m>::integrate_e
       break;
     }  // beles
   }  // end gp loop
-
-  return;
 }
 
 
@@ -1618,8 +1603,6 @@ void Coupling::VolMortar::VolMortarIntegrator<distype_s, distype_m>::integrate_e
     }
 
   }  // end gp loop
-
-  return;
 }
 
 
@@ -2074,8 +2057,6 @@ void Coupling::VolMortar::ConsInterpolator::interpolate(Core::Nodes::Node* node,
 
     break;
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

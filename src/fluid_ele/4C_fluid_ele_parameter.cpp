@@ -420,8 +420,6 @@ void Discret::Elements::FluidEleParameter::set_element_general_fluid_parameter(
     mat_gp_ = true;
   else
     mat_gp_ = false;
-
-  return;
 }
 
 //----------------------------------------------------------------------*
@@ -457,8 +455,6 @@ void Discret::Elements::FluidEleParameter::set_element_loma_parameter(
 
   if (turb_mod_action_ == Inpar::FLUID::multifractal_subgrid_scales)
     multifrac_loma_conti_ = turbmodelparamsmfs.get<bool>("LOMA_CONTI");
-
-  return;
 }
 
 //----------------------------------------------------------------------*
@@ -472,8 +468,6 @@ void Discret::Elements::FluidEleParameter::set_element_two_phase_parameter(
   Teuchos::ParameterList& smearedlist = params.sublist("SMEARED");
   interface_thickness_ = smearedlist.get<double>("INTERFACE_THICKNESS");
   enhanced_gaussrule_ = Teuchos::getIntegralValue<int>(smearedlist, "ENHANCED_GAUSSRULE");
-
-  return;
 }
 
 

@@ -127,8 +127,6 @@ void CONTACT::PenaltyStrategy::predict_relative_movement()
 
   // call evaluation method of base class
   evaluate_relative_movement();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -148,8 +146,6 @@ void CONTACT::PenaltyStrategy::initialize()
 
   // (re)setup global matrix containing lagrange multiplier derivatives
   linzmatrix_ = std::make_shared<Core::LinAlg::SparseMatrix>(*gsdofrowmap_, 100);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -387,8 +383,6 @@ void CONTACT::PenaltyStrategy::evaluate_contact(
   std::cout << "-- CONTACTFDGAP -----------------------------" << std::endl;
 
 #endif
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -418,8 +412,6 @@ void CONTACT::PenaltyStrategy::evaluate_friction(
   }
   else
     FOUR_C_THROW("Error in AbstractStrategy::Evaluate: Unknown friction type");
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -437,8 +429,6 @@ void CONTACT::PenaltyStrategy::reset_penalty()
     interface_[i]->interface_params().set<double>("PENALTYPARAM", initial_penalty());
     interface_[i]->interface_params().set<double>("PENALTYPARAMTAN", initial_penalty_tan());
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -460,8 +450,6 @@ void CONTACT::PenaltyStrategy::modify_penalty()
     interface_[i]->interface_params().set<double>("PENALTYPARAM", pennew);
     interface_[i]->interface_params().set<double>("PENALTYPARAMTAN", pennew);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -559,8 +547,6 @@ void CONTACT::PenaltyStrategy::initialize_uzawa(
 
   // complete stiffness matrix
   kteff->complete();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -683,8 +669,6 @@ void CONTACT::PenaltyStrategy::update_constraint_norm(int uzawaiter)
                 << params().get<double>("PENALTYPARAMTAN") << "\n";
     std::cout << "********************************************\n";
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -698,8 +682,6 @@ void CONTACT::PenaltyStrategy::update_uzawa_augmented_lagrange()
   // Lagrange multiplier lambda_0 of the next time step)
   zuzawa_ = std::make_shared<Core::LinAlg::Vector<double>>(*z_);
   store_nodal_quantities(Mortar::StrategyBase::lmuzawa);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -739,9 +721,6 @@ void CONTACT::PenaltyStrategy::evaluate_force(CONTACT::ParamsInterface& cparams)
 
   // assemble force and stiffness
   assemble();
-
-  // bye bye
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -921,9 +900,6 @@ void CONTACT::PenaltyStrategy::assemble()
 
   fc_->scale(-1.);
   kc_->complete();
-
-
-  return;
 }
 
 
@@ -964,9 +940,6 @@ void CONTACT::PenaltyStrategy::evaluate_force_stiff(CONTACT::ParamsInterface& cp
 {
   // call the evaluate force routine if not done before
   if (!evalForceCalled_) evaluate_force(cparams);
-
-  // bye bye
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -995,8 +968,6 @@ void CONTACT::PenaltyStrategy::pre_evaluate(CONTACT::ParamsInterface& cparams)
       break;
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1033,8 +1004,6 @@ void CONTACT::PenaltyStrategy::post_evaluate(CONTACT::ParamsInterface& cparams)
       break;
     }
   }
-
-  return;
 }
 
 

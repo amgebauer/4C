@@ -99,8 +99,6 @@ void Solid::ModelEvaluator::BrownianDyn::setup()
   generate_gaussian_random_numbers();
 
   issetup_ = true;
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -125,8 +123,6 @@ void Solid::ModelEvaluator::BrownianDyn::reset(const Core::LinAlg::Vector<double
   // zero out brownian stiffness contributions
   // -------------------------------------------------------------------------
   stiff_brownian_ptr_->zero();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -417,8 +413,6 @@ void Solid::ModelEvaluator::BrownianDyn::evaluate_neumann_brownian_dyn(
   // -------------------------------------------------------------------------
   //  sm_manager_ptr_->EvaluateNeumannbrownian(interface_ptr,eval_vec,eval_mat);
   discret_ptr()->clear_state();
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -458,8 +452,6 @@ void Solid::ModelEvaluator::BrownianDyn::update_step_state(const double& timefac
       global_state().get_fstructure_old();
   fstructold_ptr->update(timefac_n, *f_brown_np_ptr_, 1.0);
   fstructold_ptr->update(-timefac_n, *f_ext_np_ptr_, 1.0);
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -473,8 +465,6 @@ void Solid::ModelEvaluator::BrownianDyn::update_step_element()
   // (console output at this point is also very unflattering)
   //  sm_manager_ptr_->UpdateTimeAndStepSize((*GStatePtr()->get_delta_time())[0],
   //                                           GStatePtr()->get_time_n());
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -482,7 +472,6 @@ void Solid::ModelEvaluator::BrownianDyn::update_step_element()
 void Solid::ModelEvaluator::BrownianDyn::determine_stress_strain()
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -490,7 +479,6 @@ void Solid::ModelEvaluator::BrownianDyn::determine_stress_strain()
 void Solid::ModelEvaluator::BrownianDyn::determine_energy()
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -498,7 +486,6 @@ void Solid::ModelEvaluator::BrownianDyn::determine_energy()
 void Solid::ModelEvaluator::BrownianDyn::determine_optional_quantity()
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -507,7 +494,6 @@ void Solid::ModelEvaluator::BrownianDyn::output_step_state(
     Core::IO::DiscretizationWriter& iowriter) const
 {
   // nothing to do
-  return;
 }
 
 /*----------------------------------------------------------------------------*
@@ -587,9 +573,6 @@ void Solid::ModelEvaluator::BrownianDyn::reset_step_state()
   global_state_ptr()->get_dis_np()->update(1.0, (*global_state_ptr()->get_dis_n()), 0.0);
   global_state_ptr()->get_vel_np()->update(1.0, (*global_state_ptr()->get_vel_n()), 0.0);
   global_state_ptr()->get_acc_np()->update(1.0, (*global_state_ptr()->get_acc_n()), 0.0);
-
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

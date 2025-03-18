@@ -60,7 +60,6 @@ void CONSTRAINTS::ConstraintSolver::setup(Core::FE::Discretization& discr,
 
 
   counter_ = 0;
-  return;
 }
 
 
@@ -88,7 +87,6 @@ void CONSTRAINTS::ConstraintSolver::solve(Core::LinAlg::SparseMatrix& stiff,
     default:
       FOUR_C_THROW("Unknown constraint solution technique!");
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -239,7 +237,6 @@ void CONSTRAINTS::ConstraintSolver::solve_uzawa(Core::LinAlg::SparseMatrix& stif
               << norm_uzawa << std::endl;
   }
   counter_++;
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -291,7 +288,6 @@ void CONSTRAINTS::ConstraintSolver::solve_direct(Core::LinAlg::SparseMatrix& sti
   mapext.extract_other_vector(*mergedsol, lagrinc);
 
   counter_++;
-  return;
 }
 
 void CONSTRAINTS::ConstraintSolver::solve_simple(Core::LinAlg::SparseMatrix& stiff,
@@ -386,7 +382,6 @@ void CONSTRAINTS::ConstraintSolver::solve_simple(Core::LinAlg::SparseMatrix& sti
   rowmapext.extract_other_vector(*mergedsol, dispinc);
 
   counter_++;
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

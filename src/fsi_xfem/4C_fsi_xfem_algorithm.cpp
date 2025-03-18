@@ -116,7 +116,6 @@ FSI::AlgorithmXFEM::AlgorithmXFEM(MPI_Comm comm, const Teuchos::ParameterList& t
 
   // Do setup of the fields here
   structureporo_->setup();
-  return;
 }
 
 
@@ -140,8 +139,6 @@ void FSI::AlgorithmXFEM::update()
   structure_poro()->update();
   fluid_field()->update();
   if (have_ale()) ale_field()->update();
-
-  return;
 }
 
 

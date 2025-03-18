@@ -750,8 +750,6 @@ namespace Discret
                 configmap.at(Inpar::XFEM::X_Adj_t_Col));
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -819,8 +817,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -904,8 +900,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -972,8 +966,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -1010,8 +1002,6 @@ namespace Discret
         // Call Std Version with the projected quantities!
         nit_solid_adjoint_consistency_slave_terms(funct_m, timefacfac, proj_velint_diff,
             proj_dtraction_vel, s_row, m_col, s_col, only_rhs);
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -1448,8 +1438,6 @@ namespace Discret
           //    derxy_s_timefacfac_km,
           //    LB_proj_matrix);
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -1666,8 +1654,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -1738,8 +1724,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -1849,8 +1833,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -1939,7 +1921,6 @@ namespace Discret
             }
           }
         }
-        return;
       }
 
       template <Core::FE::CellType distype, Core::FE::CellType slave_distype,
@@ -2031,8 +2012,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
 
@@ -2150,7 +2129,6 @@ namespace Discret
                 tmp_val * vderxy_x_normal_transposed_viscx_timefacfac_kx_pmatrix_(ivel);
           }
         }
-        return;
       }
 
 
@@ -2247,7 +2225,6 @@ namespace Discret
             }
           }
         }
-        return;
       }
 
       template <Core::FE::CellType distype, Core::FE::CellType slave_distype,
@@ -2350,7 +2327,6 @@ namespace Discret
             }
           }
         }
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -2474,8 +2450,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
 
@@ -2860,8 +2834,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -2907,7 +2879,6 @@ namespace Discret
             }
           }
         }
-        return;
       }
 
 
@@ -3077,8 +3048,6 @@ namespace Discret
             }
           }
         }
-
-        return;
       }
 
 
@@ -3164,7 +3133,6 @@ namespace Discret
             }
           }
         }
-        return;
       }
 
       /*----------------------------------------------------------------------*
@@ -3254,8 +3222,6 @@ namespace Discret
         }
         //-----------------------------------------------------------------
 #endif
-
-        return;
       }
 
 

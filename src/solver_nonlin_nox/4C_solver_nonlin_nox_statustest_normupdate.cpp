@@ -69,8 +69,6 @@ void NOX::Nln::StatusTest::NormUpdate::compute_norm(
     else if (toleranceType_[i] == NormUpdate::Absolute)
       trueTolerance_[i] = specifiedTolerance_[i];
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------------*

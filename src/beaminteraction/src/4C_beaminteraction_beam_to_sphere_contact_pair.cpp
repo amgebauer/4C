@@ -99,7 +99,6 @@ template <unsigned int numnodes, unsigned int numnodalvalues>
 void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::pre_evaluate()
 {
   // do nothing
-  return;
 }
 /*-----------------------------------------------------------------------------------------------*
  *-----------------------------------------------------------------------------------------------*/
@@ -399,22 +398,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::closest
 
   // store final result and return
   xicontact_ = eta;
-
-#ifdef AUTOMATICDIFF
-  // Set xi1_ as (additional) primary variable for automatic differentiation
-  // The dependence between the infinitesimal changes delta xi1_ and the
-  // the increments of the primary displacement variables delta disp have to be given explicitly,
-  // since no explicit relation between the finite quantities xi1_ and disp exists. The latter would
-  // have been necessary if the full linearization had to be computed directly with Sacado!!!
-
-  // The 3*numnodes*numnodalvalues+3 primary DoFs are the components of the nodal positions /
-  // tangents. The additional degree of freedom (+1) represents the dependency on the beam parameter
-  // coordinate xi, which is necessary in beam contact.
-  xicontact_.diff(
-      (3 * numnodes * numnodalvalues + 3 + 1) - 1, 3 * numnodes * numnodalvalues + 3 + 1);
-#endif
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -435,8 +418,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes,
   {
     f += delta_x(i) * dx1(i) / norm_delta_x;
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -457,8 +438,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes,
   {
     df += (dx1(i) * dx1(i) + delta_x(i) * ddx1(i)) / norm_delta_x;
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -823,8 +802,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::compute
 
   // evaluate scalar gap function
   compute_gap(gap, norm);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -836,8 +813,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::compute
   // compute gap to be returned
   gap = norm - radius1_ - radius2_;
   gap_ = gap;
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -886,8 +861,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::compute
     x1_(i) = x1(i);
     x2_(i) = x2(i);
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -923,8 +896,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::get_sha
     FOUR_C_THROW(
         "Only beam elements with one (nodal positions) or two (nodal positions + nodal tangents) "
         "values are valid!");
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -971,8 +942,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::compute
   {
     delta_xi(i) = B(i) / L;
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -987,8 +956,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::compute
 
   // compute scalar distance
   normdist = norm;
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -1041,8 +1008,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::compute
       delta_gap(j) += (x1(i) - x2(i)) * auxiliary_matrix1(i, j) / normdist;
     }
   }
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -1101,8 +1066,6 @@ void BeamInteraction::BeamToSphereContactPair<numnodes, numnodalvalues>::compute
     for (unsigned int j = 0; j < 3; j++)
       for (unsigned int k = 0; k < dim1 + dim2; k++)
         delta_normal(i, k) += auxiliary_matrix2(i, j) * auxiliary_matrix1(j, k);
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------------*

@@ -84,8 +84,6 @@ void XFEM::XffCouplingManager::set_coupling_states()
   //
   //  insert_vector(0,fluid_->Velnp(),0,mcffi_->IVelnp(),Coupling_Comm_Manager::full_to_partial);
   //
-
-  return;
 }
 
 /*-----------------------------------------------------------------------------------------*
@@ -124,8 +122,6 @@ void XFEM::XffCouplingManager::add_coupling_rhs(std::shared_ptr<Core::LinAlg::Ve
   Core::LinAlg::Vector<double> coup_rhs(*me.Map(idx_[0]), true);
   Core::LinAlg::export_to(coup_rhs_sum, coup_rhs);
   me.add_vector(coup_rhs, idx_[0], *rhs);
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

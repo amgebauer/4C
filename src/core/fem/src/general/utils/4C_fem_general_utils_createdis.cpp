@@ -30,7 +30,6 @@ void Core::FE::DiscretizationCreatorBase::initial_checks(
         targetdis.num_global_elements(), targetdis.num_global_nodes());
   }
   // Ok. Let's go on
-  return;
 }
 
 /*----------------------------------------------------------------------*/
@@ -73,8 +72,6 @@ void Core::FE::DiscretizationCreatorBase::create_nodes(const Core::FE::Discretiz
 
   // ensure reset() is called on targetdis on all procs (including procs without rownodes)
   targetdis.check_filled_globally();
-
-  return;
 }  // Core::FE::DiscretizationCreatorBase::CreateNodes
 
 /*----------------------------------------------------------------------*/

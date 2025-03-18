@@ -30,7 +30,6 @@ ScaTra::HeterogeneousReactionStrategy::HeterogeneousReactionStrategy(
     ScaTra::ScaTraTimIntImpl* scatratimint)
     : MeshtyingStrategyStd(scatratimint), issetup_(false), isinit_(false)
 {
-  return;
 }  // ScaTra::HeterogeneousReactionStrategy::HeterogeneousReactionStrategy
 
 
@@ -78,7 +77,6 @@ void ScaTra::HeterogeneousReactionStrategy::evaluate_meshtying()
   // See the call hierarchy of HeterogeneousReactionStrategy::set_state()
   // to check in which algorithms states are set on discret_ .
   discret_->clear_state();
-  return;
 }  // ScaTra::HeterogeneousReactionStrategy::evaluate_meshtying
 
 
@@ -160,7 +158,6 @@ void ScaTra::HeterogeneousReactionStrategy::setup_meshtying()
   }
 
   set_is_setup(true);
-  return;
 }
 
 
@@ -175,7 +172,6 @@ void ScaTra::HeterogeneousReactionStrategy::init_meshtying()
   ScaTra::MeshtyingStrategyStd::init_meshtying();
 
   set_is_init(true);
-  return;
 }
 
 
@@ -198,8 +194,6 @@ void ScaTra::HeterogeneousReactionStrategy::evaluate_condition(Teuchos::Paramete
   // bound scalars and from the surface-bound scalars.
   discret_->evaluate_condition(params, systemmatrix1, systemmatrix2, systemvector1, systemvector2,
       systemvector3, condstring, condid);
-
-  return;
 }
 
 
@@ -210,7 +204,6 @@ void ScaTra::HeterogeneousReactionStrategy::set_state(unsigned nds, const std::s
     std::shared_ptr<const Core::LinAlg::Vector<double>> state)
 {
   discret_->set_state(nds, name, state);
-  return;
 }
 
 
@@ -277,8 +270,6 @@ void ScaTra::HeterogeneousReactionStrategy::heterogeneous_reaction_sanity_check(
 
   Core::Communication::barrier(com);
   if (Core::Communication::my_mpi_rank(com) == 0) std::cout << " Passed." << std::endl;
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

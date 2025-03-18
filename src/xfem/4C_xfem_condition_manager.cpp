@@ -1011,7 +1011,6 @@ void XFEM::ConditionManager::get_coupling_ele_location_vector(
   int sid = get_cutter_dis_ele_id(coup_sid, mc);
 
   mesh_coupl_[mc]->get_coupling_ele_location_vector(sid, patchlm);
-  return;
 }
 
 // Get the average weights from the coupling objects
@@ -1031,8 +1030,6 @@ void XFEM::ConditionManager::get_average_weights(
 
   get_coupling_by_idx(coup_idx)->get_average_weights(
       xfele, coup_ele, kappa_m, kappa_s, non_xfluid_coupling);
-
-  return;
 }
 
 /*--------------------------------------------------------------------------------
@@ -1055,8 +1052,6 @@ void XFEM::ConditionManager::get_visc_penalty_stabfac(
 
   get_coupling_by_idx(coup_idx)->get_visc_penalty_stabfac(xfele, coup_ele, kappa_m, kappa_s,
       inv_h_k, params, NIT_visc_stab_fac, NIT_visc_stab_fac_tang);
-
-  return;
 }
 
 /*--------------------------------------------------------------------------------

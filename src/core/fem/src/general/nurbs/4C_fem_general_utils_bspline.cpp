@@ -21,7 +21,6 @@ Core::FE::Nurbs::BsplinePolynomial::BsplinePolynomial(
       degree_(degree),
       degree_plus_one_(degree + 1)
 {
-  return;
 }
 
 //--------------------------------------------------
@@ -31,7 +30,6 @@ Core::FE::Nurbs::BsplinePolynomial::BsplinePolynomial(const BsplinePolynomial& o
     : degree_(old.degree_)
 {
   myknotvector_ = old.myknotvector_;
-  return;
 }
 
 

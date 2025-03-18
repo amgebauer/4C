@@ -61,12 +61,12 @@ Core::Communication::ParObject* Mat::NewmanType::create(Core::Communication::Unp
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Mat::Newman::Newman() : params_(nullptr) { return; }
+Mat::Newman::Newman() : params_(nullptr) {}
 
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Mat::Newman::Newman(Mat::PAR::Newman* params) : params_(params) { return; }
+Mat::Newman::Newman(Mat::PAR::Newman* params) : params_(params) {}
 
 
 /*----------------------------------------------------------------------*/
@@ -81,8 +81,6 @@ void Mat::Newman::pack(Core::Communication::PackBuffer& data) const
   int matid = -1;
   if (params_ != nullptr) matid = params_->id();  // in case we are in post-process mode
   add_to_pack(data, matid);
-
-  return;
 }
 
 
@@ -108,10 +106,6 @@ void Mat::Newman::unpack(Core::Communication::UnpackBuffer& buffer)
         FOUR_C_THROW("Type of parameter material {} does not fit to calling type {}", mat->type(),
             material_type());
     }
-
-
-
-  return;
 }
 
 

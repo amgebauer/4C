@@ -122,8 +122,6 @@ FSI::FluidFluidMonolithicStructureSplitNoNOX::FluidFluidMonolithicStructureSplit
   solgpre_ = nullptr;
   ddgpred_ = std::make_shared<Core::LinAlg::Vector<double>>(
       *structure_field()->interface()->fsi_cond_map(), true);
-
-  return;
 }
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -950,11 +948,6 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::recover_lagrange_multiplier()
 
   // finally, divide by -(1.-stiparam) which is common to all terms
   lambda_->scale(1. / (1.0 - stiparam));
-
-  // Finally, the Lagrange multiplier 'lambda_' is recovered here.
-  // It represents nodal forces acting onto the structure.
-
-  return;
 }
 
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::handle_fluid_dof_map_change_in_newton()

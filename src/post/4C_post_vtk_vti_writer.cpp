@@ -124,7 +124,6 @@ void PostVtiWriter::write_geo()
   currentout_ << "<Piece Extent=\"" << localextent_[0] << " " << localextent_[1] << " "
               << localextent_[2] << " " << localextent_[3] << " " << localextent_[4] << " "
               << localextent_[5] << "\">\n";
-  return;
 }
 
 
@@ -219,8 +218,6 @@ void PostVtiWriter::write_dof_result_step(std::ofstream& file,
         "Cannot write point data at this stage. Most likely cell and point data fields are mixed.");
 
   this->write_solution_vector(solution, ncomponents, name, file);
-
-  return;
 }
 
 
@@ -305,8 +302,6 @@ void PostVtiWriter::write_nodal_result_step(std::ofstream& file,
         "Cannot write point data at this stage. Most likely cell and point data fields are mixed.");
 
   this->write_solution_vector(solution, ncomponents, name, file);
-
-  return;
 }
 
 
@@ -382,8 +377,6 @@ void PostVtiWriter::write_element_result_step(std::ofstream& file,
         "Cannot write cell data at this stage. Most likely cell and point data fields are mixed.");
 
   this->write_solution_vector(solution, ncomponents, name, file);
-
-  return;
 }
 
 
@@ -473,7 +466,6 @@ void PostVtiWriter::writer_prep_timestep()
     int k = round((mincoord[2] - lorigin[2]) / spacing_[2]);
     eidmapping_[dis->element_col_map()->GID(e)] = (k * ny + j) * nx + i;
   }
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

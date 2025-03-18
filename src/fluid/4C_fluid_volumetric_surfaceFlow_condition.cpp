@@ -87,7 +87,6 @@ FLD::Utils::FluidVolumetricSurfaceFlowWrapper::FluidVolumetricSurfaceFlowWrapper
     }
   }
 
-  return;
 }  // end FluidVolumetricSurfaceFlowWrapper
 
 
@@ -103,8 +102,6 @@ void FLD::Utils::FluidVolumetricSurfaceFlowWrapper::output(Core::IO::Discretizat
     mapiter->second->FluidVolumetricSurfaceFlowBc::output(
         output, "VolumetricSurfaceFlowCond", mapiter->first);
   }
-
-  return;
 }
 
 
@@ -122,7 +119,6 @@ void FLD::Utils::FluidVolumetricSurfaceFlowWrapper::read_restart(
         reader, "VolumetricSurfaceFlowCond", mapiter->first);
   }
 
-  return;
 }  // FluidVolumetricSurfaceFlowWrapper::read_restart
 
 
@@ -152,8 +148,6 @@ void FLD::Utils::FluidVolumetricSurfaceFlowWrapper::evaluate_velocities(
       mapiter->second->FluidVolumetricSurfaceFlowBc::set_velocities(velocities);
     }
   }
-
-  return;
 }
 
 
@@ -807,7 +801,6 @@ void FLD::Utils::FluidVolumetricSurfaceFlowBc::output(
 
   stream4 << ds_condname << "_traction_vel_component" << condnum;
   output.write_vector(stream4.str(), cond_traction_vel_);
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1656,8 +1649,6 @@ void FLD::Utils::FluidVolumetricSurfaceFlowBc::dft(std::shared_ptr<std::vector<d
       (*F)[k] += std::complex<double>(rl, im);
     }
   }
-
-  return;
 }
 
 
@@ -1844,7 +1835,6 @@ FLD::Utils::TotalTractionCorrector::TotalTractionCorrector(
     }
   }
 
-  return;
 }  // end TotalTractionCorrector
 
 
@@ -1886,8 +1876,6 @@ void FLD::Utils::TotalTractionCorrector::evaluate_velocities(
     mapiter->second->FluidVolumetricSurfaceFlowBc::evaluate_traction_velocity_comp(
         eleparams, "TotalTractionCorrectionCond", flowrate, mapiter->first, time, theta, dta);
   }
-
-  return;
 }
 
 
@@ -1917,8 +1905,6 @@ void FLD::Utils::TotalTractionCorrector::output(Core::IO::DiscretizationWriter& 
     mapiter->second->FluidVolumetricSurfaceFlowBc::output(
         output, "TotalTractionCorrectionCond", mapiter->first);
   }
-
-  return;
 }
 
 
@@ -1935,7 +1921,6 @@ void FLD::Utils::TotalTractionCorrector::read_restart(Core::IO::DiscretizationRe
         reader, "TotalTractionCorrectionCond", mapiter->first);
   }
 
-  return;
 }  // FluidVolumetricSurfaceFlowWrapper::read_restart
 
 /*----------------------------------------------------------------------*

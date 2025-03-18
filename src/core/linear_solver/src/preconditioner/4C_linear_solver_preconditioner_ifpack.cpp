@@ -18,7 +18,6 @@ Core::LinearSolver::IFPACKPreconditioner::IFPACKPreconditioner(
     Teuchos::ParameterList& ifpacklist, Teuchos::ParameterList& solverlist)
     : ifpacklist_(ifpacklist), solverlist_(solverlist)
 {
-  return;
 }
 
 //------------------------------------------------------------------------------

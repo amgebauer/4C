@@ -91,8 +91,6 @@ void Discret::Elements::MembraneScatra<distype>::pre_evaluate(Teuchos::Parameter
       params.set<std::shared_ptr<std::vector<std::vector<double>>>>("gp_scalar", gpscalar);
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

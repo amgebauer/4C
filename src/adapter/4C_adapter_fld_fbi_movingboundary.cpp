@@ -27,8 +27,6 @@ Adapter::FBIFluidMB::FBIFluidMB(const Teuchos::ParameterList& prbdyn, std::strin
   // make sure
   if (std::dynamic_pointer_cast<Adapter::FluidFBI>(fluid_field()) == nullptr)
     FOUR_C_THROW("Failed to create the correct underlying fluid adapter");
-
-  return;
 }
 
 

@@ -254,8 +254,6 @@ void LowMach::Algorithm::setup()
     const std::shared_ptr<const Epetra_Map> sdbcmap = scatra_field()->dirich_maps()->cond_map();
     lomadbcmap_ = Core::LinAlg::merge_map(fdbcmap, sdbcmap, false);
   }
-
-  return;
 }
 
 
@@ -300,8 +298,6 @@ void LowMach::Algorithm::time_loop()
     output();
 
   }  // time loop
-
-  return;
 }
 
 
@@ -326,11 +322,6 @@ void LowMach::Algorithm::initial_calculations()
   fluid_field()->set_scalar_fields(scatra_field()->phinp(),
       std::dynamic_pointer_cast<ScaTra::ScaTraTimIntLoma>(scatra_field())->therm_press_np(),
       nullptr, scatra_field()->discretization());
-
-  // write initial fields
-  // output();
-
-  return;
 }
 
 
@@ -352,8 +343,6 @@ void LowMach::Algorithm::prepare_time_step()
 
   // prepare fluid time step, among other things, predict velocity field
   fluid_field()->prepare_time_step();
-
-  return;
 }
 
 
@@ -464,8 +453,6 @@ void LowMach::Algorithm::outer_loop()
     // check convergence and stop iteration loop if convergence is achieved
     stopnonliniter = convergence_check(itnum);
   }
-
-  return;
 }
 
 
@@ -530,8 +517,6 @@ void LowMach::Algorithm::mono_loop()
     // check convergence and stop iteration loop if convergence is achieved
     stopnonliniter = convergence_check(itnum);
   }
-
-  return;
 }
 
 
@@ -560,7 +545,6 @@ void LowMach::Algorithm::set_fluid_values_in_scatra()
       FOUR_C_THROW("Time integration scheme not supported");
       break;
   }
-  return;
 }
 
 
@@ -610,7 +594,6 @@ void LowMach::Algorithm::set_scatra_values_in_fluid()
       FOUR_C_THROW("Time integration scheme not supported");
       break;
   }
-  return;
 }
 
 
@@ -855,8 +838,6 @@ void LowMach::Algorithm::time_update()
 
   // update fluid
   fluid_field()->update();
-
-  return;
 }
 
 
@@ -878,8 +859,6 @@ void LowMach::Algorithm::output()
   fluid_field()->statistics_and_output();
 
   scatra_field()->check_and_write_output_and_restart();
-
-  return;
 }
 
 
@@ -901,7 +880,6 @@ void LowMach::Algorithm::read_inflow_restart(int restart)
   // time and step have not been set in the superior class and the ScaTraField
   set_time_step(fluid_field()->time(), fluid_field()->step());
   scatra_field()->set_time_step(fluid_field()->time(), fluid_field()->step());
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

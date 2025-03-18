@@ -363,8 +363,6 @@ Discret::Elements::FluidInternalSurfaceStab<distype, pdistype, ndistype>::FluidI
            (pdistype != Core::FE::CellType::tet4 or ndistype != Core::FE::CellType::tet4)) or
           (nsd_ == 2 and
               (pdistype != Core::FE::CellType::tri3 or ndistype != Core::FE::CellType::tri3)));
-
-  return;
 }
 
 
@@ -1297,8 +1295,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype, ndistype>::r
       mat_block(rpatch, cpatch) += elematrix_ss(ridx, cidx);
     }
   }
-
-  return;
 }
 
 
@@ -1331,7 +1327,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype, ndistype>::r
 
     rhs_block(rpatch) += elevector_s(ridx);
   }
-  return;
 }
 
 
@@ -1574,8 +1569,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype, ndistype>::g
       for (int j = 0; j < nsd_; ++j) xyze_(j, i) += edispnp_(j, i);
     }
   }
-
-  return;
 }
 
 
@@ -1974,8 +1967,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype, ndistype>::
       }
     }
   }
-
-  return;
 }
 
 
@@ -2434,8 +2425,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype,
       elevector_s_(vi * numdofpernode_ + idim, 0) -= nderxy2_n_scaled_sum(vi) * tmp_col_diff;
     }
   }
-
-  return;
 }
 
 
@@ -2532,8 +2521,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype,
         elevector_s_(vi * numdofpernode_ + idim, 0) -= nderxy2_(k, vi) * diff_2nderiv;
     }
   }
-
-  return;
 }
 
 
@@ -2611,8 +2598,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype, ndistype>::p
 
   for (int vi = 0; vi < niel; ++vi)
     elevector_s_(vi * numdofpernode_ + nsd_, 0) -= nderxy_times_prederxy_jump(vi);
-
-  return;
 }
 
 
@@ -2732,9 +2717,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype, ndistype>::d
   for (int vi = 0; vi < niel; ++vi)
     for (int idim = 0; idim < nsd_; ++idim)  // combined components of u and v
       elevector_s_(vi * numdofpernode_ + idim, 0) -= nderxy_times_vderxyaf_diff(idim, vi);
-
-
-  return;
 }
 
 
@@ -2824,8 +2806,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype, ndistype>::d
   for (int vi = 0; vi < niel; ++vi)
     for (int idim = 0; idim < nsd_; ++idim)  // components of v
       elevector_s_(vi * numdofpernode_ + idim, 0) -= div_diff_tau_timefacfacrhs * nderxy_(idim, vi);
-
-  return;
 }
 
 
@@ -2901,8 +2881,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype, ndistype>::p
 
   for (int vi = 0; vi < niel; ++vi)
     elevector_s_(vi * numdofpernode_ + nsd_, 0) -= nderxy_(index_symmetry, vi) * tmp_elevec_s;
-
-  return;
 }
 
 
@@ -4246,8 +4224,6 @@ void Discret::Elements::FluidInternalSurfaceStab<distype, pdistype,
                              : tau_u_gp_2_visc_reaction_ + tau_u_gp_2_ + tau_div_gp_2_;
     tau_pre_2nd_final_ = is_ghost_penalty_reconstruct ? p_hk_squared_ : tau_p_gp_2_;
   }
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

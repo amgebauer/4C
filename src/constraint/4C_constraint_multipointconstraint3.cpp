@@ -150,8 +150,6 @@ void CONSTRAINTS::MPConstraint3::initialize(
 
   if (Core::Communication::my_mpi_rank(actdisc_->get_comm()) == 0)
     systemvector->sum_into_global_values(amplit.size(), amplit.data(), IDs.data());
-
-  return;
 }
 
 /*-----------------------------------------------------------------------*
@@ -180,8 +178,6 @@ void CONSTRAINTS::MPConstraint3::evaluate(Teuchos::ParameterList& params,
   for (discriter = constraintdis_.begin(); discriter != constraintdis_.end(); discriter++)
     evaluate_constraint(discriter->second, params, systemmatrix1, systemmatrix2, systemvector1,
         systemvector2, systemvector3);
-
-  return;
 }
 
 /*------------------------------------------------------------------------*

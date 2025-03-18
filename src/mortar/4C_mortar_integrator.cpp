@@ -697,8 +697,6 @@ void Mortar::IntegratorCalc<distype_s, distype_m>::initialize_gp()
       break;
     }
   }  // switch(eletype)
-
-  return;
 }
 
 
@@ -968,8 +966,6 @@ void Mortar::IntegratorCalc<distype_s, distype_m>::integrate_segment_2d(Mortar::
     double jac = dsxideta * dxdsxi;
     gp_dm(sele, mele, lmval, sval, mval, jac, wgt, nrow, ncol, ndof, bound, comm);
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1100,8 +1096,6 @@ void inline Mortar::IntegratorCalc<distype_s, distype_m>::gp_dm(Mortar::Element&
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -1235,8 +1229,6 @@ void inline Mortar::IntegratorCalc<distype_s, distype_m>::gp_3d_dm_quad(Mortar::
   // INVALID CASES
   else
     FOUR_C_THROW("Invalid integration case for 3D quadratic mortar!");
-
-  return;
 }
 
 
@@ -1490,8 +1482,6 @@ void Mortar::IntegratorCalc<distype_s, distype_m>::integrate_ele_based_3d(
     // strong discontinuity --> Boundary Segmentation
     if (projactable_gp == false) *boundary_ele = true;
   }
-
-  return;
 }
 
 
@@ -1673,8 +1663,6 @@ void Mortar::IntegratorCalc<distype_s, distype_m>::integrate_cell_3d_aux_plane(
     // compute cell D/M matrix *******************************************
     gp_dm(sele, mele, lmval, sval, mval, jac, wgt, nrow, ncol, ndof, bound, comm);
   }
-
-  return;
 }
 
 
@@ -1939,8 +1927,6 @@ void Mortar::IntegratorCalc<distype_s, distype_m>::integrate_cell_3d_aux_plane_q
         ndof, bound);
   }
   //**********************************************************************
-
-  return;
 }
 
 

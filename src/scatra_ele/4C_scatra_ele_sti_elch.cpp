@@ -33,8 +33,6 @@ void Discret::Elements::ScaTraEleSTIElch<distype>::calc_mat_and_rhs_source(
 
   // matrix and vector contributions arising from Soret effect
   calc_mat_and_rhs_soret(emat, erhs, timefacfac, rhsfac);
-
-  return;
 };
 
 
@@ -56,8 +54,6 @@ void Discret::Elements::ScaTraEleSTIElch<distype>::calc_mat_source_od(
 
   // matrix contributions arising from Soret effect
   calc_mat_soret_od(emat, timefacfac);
-
-  return;
 };
 
 
@@ -86,8 +82,6 @@ void Discret::Elements::ScaTraEleSTIElch<distype>::extract_element_and_node_valu
     econcnp_(inode) = myelchnp[inode * 2];
     epotnp_(inode) = myelchnp[inode * 2 + 1];
   }
-
-  return;
 }
 
 
@@ -99,7 +93,6 @@ Discret::Elements::ScaTraEleSTIElch<distype>::ScaTraEleSTIElch(
     const int numdofpernode, const int numscal, const std::string& disname)
     : econcnp_(true), epotnp_(true)
 {
-  return;
 }
 
 

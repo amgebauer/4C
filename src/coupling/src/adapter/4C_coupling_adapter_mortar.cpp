@@ -189,9 +189,6 @@ void Coupling::Adapter::CouplingMortar::setup(
 
   // check if slave dofs have dirichlet constraints
   check_slave_dirichlet_overlap(slavedis, comm, function_manager);
-
-  // bye
-  return;
 }
 
 
@@ -248,8 +245,6 @@ void Coupling::Adapter::CouplingMortar::check_slave_dirichlet_overlap(
           "Slave boundary and Dirichlet boundary conditions overlap!\n"
           "This leads to an over-constraint problem setup");
   }
-
-  return;
 }
 
 
@@ -499,8 +494,6 @@ void Coupling::Adapter::CouplingMortar::setup_interface(
 
   // create binary search tree
   interface_->create_search_tree();
-
-  return;
 }
 
 
@@ -1003,8 +996,6 @@ void Coupling::Adapter::CouplingMortar::mesh_relocation(Core::FE::Discretization
 
     if (gnorm < tol) std::cout << "  --> Mesh relocation was successful. " << std::endl;
   }
-
-  return;
 }
 
 
@@ -1060,9 +1051,6 @@ void Coupling::Adapter::CouplingMortar::create_p()
 
   // complete the matrix
   P_->complete(*masterdofrowmap_, *slavedofrowmap_);
-
-  // bye
-  return;
 }
 
 
@@ -1078,8 +1066,6 @@ void Coupling::Adapter::CouplingMortar::evaluate(
   interface_->set_state(Mortar::state_new_displacement, *idisp);
   evaluate();
   matrix_row_col_transform();
-
-  return;
 }
 
 
@@ -1122,8 +1108,6 @@ void Coupling::Adapter::CouplingMortar::evaluate(
   matrix_row_col_transform();
 
   idispsl->replace_map(stdmap);
-
-  return;
 }
 
 
@@ -1139,8 +1123,6 @@ void Coupling::Adapter::CouplingMortar::evaluate_geometry(
 
   // evaluate geometry information
   interface_->evaluate_geometry(intcells);
-
-  return;
 }
 
 
@@ -1173,8 +1155,6 @@ void Coupling::Adapter::CouplingMortar::evaluate()
 
   // create projection operator and Dinv
   create_p();
-
-  return;
 }
 
 
@@ -1272,8 +1252,6 @@ void Coupling::Adapter::CouplingMortar::evaluate_with_mesh_relocation(
 
   // only for parallel redistribution case
   matrix_row_col_transform();
-
-  return;
 }
 
 
@@ -1428,8 +1406,6 @@ void Coupling::Adapter::CouplingMortar::mortar_condensation(
 {
   Mortar::Utils::mortar_matrix_condensation(k, P_, P_);
   Mortar::Utils::mortar_rhs_condensation(rhs, *P_);
-
-  return;
 }
 
 
@@ -1439,7 +1415,6 @@ void Coupling::Adapter::CouplingMortar::mortar_recover(
     Core::LinAlg::SparseMatrix& k, Core::LinAlg::Vector<double>& inc) const
 {
   Mortar::Utils::mortar_recover(inc, *P_);
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

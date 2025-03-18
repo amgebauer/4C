@@ -111,7 +111,6 @@ void Inpar::STI::set_valid_parameters(std::map<std::string, Core::IO::InputSpec>
  *------------------------------------------------------------------------*/
 void Inpar::STI::set_valid_conditions(std::vector<Core::Conditions::ConditionDefinition>& condlist)
 {
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -34,7 +34,6 @@ Core::FE::Nurbs::NurbsDiscretization::NurbsDiscretization(
     const std::string name, MPI_Comm comm, const unsigned int n_dim)
     : Core::FE::Discretization::Discretization(name, comm, n_dim), knots_(nullptr)
 {
-  return;
 }
 
 
@@ -504,8 +503,6 @@ void Core::FE::Utils::DbcNurbs::do_dirichlet_condition(const Teuchos::ParameterL
   if (assemblevecdd) auxdbcmapextractor.insert_cond_vector(*dbcvectordd, *systemvectors[2]);
 
   if (myrank == 0) std::cout << timer.totalElapsedTime(true) << " seconds \n\n";
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -645,8 +642,6 @@ void Core::FE::Utils::DbcNurbs::fill_matrix_and_rhs_for_ls_dirichlet_boundary(
       }
     }
   }  // end gaussloop
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -799,8 +794,6 @@ void Core::FE::Utils::DbcNurbs::fill_matrix_and_rhs_for_ls_dirichlet_domain(
       }
     }
   }  // end gaussloop
-
-  return;
 }
 
 FOUR_C_NAMESPACE_CLOSE

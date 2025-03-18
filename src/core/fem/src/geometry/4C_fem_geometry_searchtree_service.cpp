@@ -259,8 +259,6 @@ void Core::Geo::search_collisions(const std::map<int, Core::LinAlg::Matrix<3, 2>
       }
     }
   }
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -286,8 +284,6 @@ void Core::Geo::search_collisions(const std::map<int, Core::LinAlg::Matrix<9, 2>
       }
     }
   }
-
-  return;
 }
 
 
@@ -352,8 +348,6 @@ void Core::Geo::nearest_2d_object_in_node(const Core::FE::Discretization& dis,
 
   // save projection point
   minDistCoords = nearestObject.get_phys_coord();
-
-  return;
 }
 
 /*----------------------------------------------------------------------*

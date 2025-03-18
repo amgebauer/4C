@@ -142,7 +142,6 @@ void Arteries::ArteryScatraCloneStrategy::set_element_data(
     FOUR_C_THROW(
         "unsupported element type '{}'", Core::Utils::get_dynamic_type_name(*newele).c_str());
   }
-  return;
 }
 
 /*----------------------------------------------------------------------*

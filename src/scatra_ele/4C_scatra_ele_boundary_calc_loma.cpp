@@ -53,7 +53,6 @@ Discret::Elements::ScaTraEleBoundaryCalcLoma<distype, probdim>::ScaTraEleBoundar
     :  // constructor of base class
       my::ScaTraEleBoundaryCalc(numdofpernode, numscal, disname)
 {
-  return;
 }
 
 
@@ -195,8 +194,6 @@ void Discret::Elements::ScaTraEleBoundaryCalcLoma<distype, probdim>::neumann_inf
 
   // call base class routine
   my::neumann_inflow(ele, params, discretization, la, emat, erhs);
-
-  return;
 }  // Discret::Elements::ScaTraEleBoundaryCalcLoma<distype, probdim>::neumann_inflow
 
 
@@ -233,8 +230,6 @@ void Discret::Elements::ScaTraEleBoundaryCalcLoma<distype,
   // add contributions to the global values
   params.set<double>("normal diffusive flux integral", normdifffluxint);
   params.set<double>("normal velocity integral", normvelint);
-
-  return;
 }  // Discret::Elements::ScaTraEleBoundaryCalcLoma<distype,
    // probdim>::norm_diff_flux_and_vel_integral
 

@@ -32,8 +32,6 @@ FLD::Vreman::Vreman(
   boxf_ = std::make_shared<FLD::Boxfilter>(discret_, params_);
   // Initialize Boxfilter
   boxf_->initialize_vreman();
-
-  return;
 }
 
 
@@ -48,8 +46,6 @@ void FLD::Vreman::add_scatra(std::shared_ptr<Core::FE::Discretization> scatradis
 
   // Initialize Boxfilter
   boxfsc_->initialize_vreman_scatra(scatradiscret_);
-
-  return;
 }
 
 /*----------------------------------------------------------------------*
@@ -84,8 +80,6 @@ void FLD::Vreman::apply_filter_for_dynamic_computation_of_cv(
 
   // compute Cv
   Cv_ = dyn_vreman_compute_cv();
-
-  return;
 }
 
 void FLD::Vreman::apply_filter_for_dynamic_computation_of_dt(
@@ -109,7 +103,6 @@ void FLD::Vreman::apply_filter_for_dynamic_computation_of_dt(
   boxfsc_->get_filtered_phiexpression(*col_filtered_phiexpression_);
   boxfsc_->get_filtered_vreman_alphaijsc(*col_filtered_alphaijsc_);
   dyn_vreman_compute_dt(extraparams);
-  return;
 }
 
 
@@ -217,7 +210,6 @@ void FLD::Vreman::dyn_vreman_compute_dt(Teuchos::ParameterList& extraparams)
 
   modelparams_scatra->set<double>("Dt_vreman", Dt);
   params_.set<double>("Dt_vreman", Dt);
-  return;
 }  // end FLD::Vreman::dyn_vreman_compute_dt()
 
 FOUR_C_NAMESPACE_CLOSE
