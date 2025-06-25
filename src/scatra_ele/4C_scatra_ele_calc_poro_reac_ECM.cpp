@@ -173,8 +173,8 @@ double Discret::Elements::ScaTraEleCalcPoroReacECM<distype>::compute_struct_chem
   defgrd.multiply_nt(my::xyze_, N_XYZ);
 
   // GL strain vector glstrain={E11,E22,E33,2*E12,2*E23,2*E31}
-  static Core::LinAlg::Matrix<6, 1> glstrain(Core::LinAlg::Initialization::zero);
-  glstrain.clear();
+  static Core::LinAlg::SymmetricTensor<double, 3, 3> glstrain;
+  glstrain = {};
   // if (kinemtype_ == Inpar::Solid::KinemType::nonlinearTotLag)
   {
     // Right Cauchy-Green tensor = F^T * F
@@ -184,21 +184,21 @@ double Discret::Elements::ScaTraEleCalcPoroReacECM<distype>::compute_struct_chem
     // GL strain vector glstrain={E11,E22,E33,2*E12,2*E23,2*E31}
     if (nsd_ == 3)
     {
-      glstrain(0) = 0.5 * (cauchygreen(0, 0) - 1.0);
-      glstrain(1) = 0.5 * (cauchygreen(1, 1) - 1.0);
-      glstrain(2) = 0.5 * (cauchygreen(2, 2) - 1.0);
-      glstrain(3) = cauchygreen(0, 1);
-      glstrain(4) = cauchygreen(1, 2);
-      glstrain(5) = cauchygreen(2, 0);
+      glstrain(0, 0) = 0.5 * (cauchygreen(0, 0) - 1.0);
+      glstrain(1, 1) = 0.5 * (cauchygreen(1, 1) - 1.0);
+      glstrain(2, 2) = 0.5 * (cauchygreen(2, 2) - 1.0);
+      glstrain(0, 1) = 0.5 * cauchygreen(0, 1);
+      glstrain(1, 2) = 0.5 * cauchygreen(1, 2);
+      glstrain(2, 0) = 0.5 * cauchygreen(2, 0);
     }
     else if (nsd_ == 2)
     {
-      glstrain(0) = 0.5 * (cauchygreen(0, 0) - 1.0);
-      glstrain(1) = 0.5 * (cauchygreen(1, 1) - 1.0);
-      glstrain(2) = 0.0;
-      glstrain(3) = cauchygreen(0, 1);
-      glstrain(4) = 0.0;
-      glstrain(5) = 0.0;
+      glstrain(0, 0) = 0.5 * (cauchygreen(0, 0) - 1.0);
+      glstrain(1, 1) = 0.5 * (cauchygreen(1, 1) - 1.0);
+      glstrain(2, 2) = 0.0;
+      glstrain(0, 1) = 0.5 * cauchygreen(0, 1);
+      glstrain(1, 2) = 0.0;
+      glstrain(0, 2) = 0.0;
     }
   }
 
