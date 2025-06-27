@@ -64,7 +64,9 @@ def compare_vtk(path1, path2, points_in_time, tol_float=1e-8, raise_error=True):
 
         # Check that both etrees are the same except from file links
         if not (ET.tostring(comp_root) == ET.tostring(ref_root)):
-            raise ValueError("XML structures in PVD files differ!")
+            raise ValueError(
+                f"XML structures in PVD files differ!\n\n{ET.tostring(comp_root)}\n\nvs.\n\n{ET.tostring(ref_root)}"
+            )
 
     def find_pvtk(pvdpath, points_in_time):
         """
