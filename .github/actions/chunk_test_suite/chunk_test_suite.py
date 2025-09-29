@@ -101,7 +101,7 @@ def main():
         current_chunk_num_tests += num_procs
         if (
             current_chunk_run_time > average_processor_time
-            or current_chunk_num_tests > args.max_tests
+            or current_chunk_num_tests > args.max_proctests
         ):
             chunks.append((chunk_start, test_number, current_chunk_run_time))
             chunk_start = test_number + 1
