@@ -70,7 +70,7 @@ namespace TSI
     void prepare_time_step() override;
 
     //! calculate stresses, strains, energies
-    void prepare_output() override;
+    void prepare_output(bool force_prepare) override;
 
     //! take current results for converged and save for next time step
     void update() override;

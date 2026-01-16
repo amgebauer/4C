@@ -1229,10 +1229,9 @@ bool TSI::Partitioned::convergence_check(int itnum, const int itmax, const doubl
 /*----------------------------------------------------------------------*
  |                                                                      |
  *----------------------------------------------------------------------*/
-void TSI::Partitioned::prepare_output()
+void TSI::Partitioned::prepare_output(bool force_prepare)
 {
   // prepare output (i.e. calculate stresses, strains, energies)
-  constexpr bool force_prepare = false;
   structure_field()->prepare_output(force_prepare);
 
   // reset states
