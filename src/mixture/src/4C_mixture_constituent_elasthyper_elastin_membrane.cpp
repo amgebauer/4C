@@ -23,7 +23,19 @@
 #include "4C_mixture_elastin_membrane_prestress_strategy.hpp"
 #include "4C_utils_function.hpp"
 
+#include <Teuchos_RCPDecl.hpp>
+
 FOUR_C_NAMESPACE_OPEN
+
+namespace
+{
+  std::string additional_info()
+  {
+    Teuchos::RCP<std::string> test_string =
+        Teuchos::rcp(new std::string("This is additional info for debugging."));
+    return *test_string;
+  }
+}  // namespace
 
 // Constructor for the parameter class
 Mixture::PAR::MixtureConstituentElastHyperElastinMembrane::
@@ -40,8 +52,8 @@ Mixture::PAR::MixtureConstituentElastHyperElastinMembrane::
   {
     FOUR_C_THROW(
         "number of membrane summands {} does not fit to the size of the membrane summands vector"
-        " {}",
-        nummat_membrane_, matids_membrane_.size());
+        " {}, {}",
+        nummat_membrane_, matids_membrane_.size(), additional_info());
   }
 }
 
