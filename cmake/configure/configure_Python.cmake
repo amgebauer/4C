@@ -44,6 +44,11 @@ function(_execute_process)
   endif()
 endfunction()
 
+# If we specified a custom Python root directory, use it to find Python
+if("${FOUR_C_PYTHON_ROOT}" STREQUAL "")
+  set(Python_ROOT_DIR ${FOUR_C_PYTHON_ROOT})
+endif()
+
 ### Set up a virtual Python environment for building and testing 4C
 message(STATUS "Setting up virtual Python environment for building and testing 4C")
 find_package(Python REQUIRED COMPONENTS Interpreter Development)
