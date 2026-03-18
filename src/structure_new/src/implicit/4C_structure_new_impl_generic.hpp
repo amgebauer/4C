@@ -176,6 +176,9 @@ namespace Solid
       //! Return linear error coefficient of velocities
       virtual double method_lin_err_coeff_vel() const = 0;
 
+      //! Return a reference to the container of the structural dynamic data (read only)
+      const Solid::TimeInt::BaseDataSDyn& get_data_sdyn() const;
+
       //! @}
 
      protected:

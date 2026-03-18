@@ -9,6 +9,7 @@
 
 // supported predictor classes
 #include "4C_structure_new_predict_constdisvelaccpress.hpp"
+#include "4C_structure_new_predict_python_wrapper.hpp"
 #include "4C_structure_new_predict_tangdis.hpp"
 
 FOUR_C_NAMESPACE_OPEN
@@ -40,6 +41,16 @@ std::shared_ptr<Solid::Predict::Generic> Solid::Predict::Factory::build_predicto
     case Inpar::Solid::pred_tangdis:
     case Inpar::Solid::pred_tangdis_constfext:
       predictor = std::make_shared<Solid::Predict::TangDis>();
+      break;
+    case Inpar::Solid::pred_python_wrapper:
+#ifdef FOUR_C_WITH_PYBIND11
+      predictor = std::make_shared<Solid::Predict::PythonWrapper>();
+#else
+      FOUR_C_THROW(
+          "The 'PythonWrapper' predictor type requires 4C to be compiled with pybind11 support, "
+          "but pybind11 was not found during the configuration of 4C. Please either reconfigure 4C "
+          "with pybind11 support or choose a different predictor type.");
+#endif
       break;
     case Inpar::Solid::pred_vague:
     default:

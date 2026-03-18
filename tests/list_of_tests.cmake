@@ -2281,6 +2281,8 @@ __four_c_test_restart(BASED_ON ${current} TEST_FILE structure_new_dynamics_stati
 __four_c_test_restart(BASED_ON ${current} TEST_FILE structure_new_dynamics_statics_restart.4C.yaml NP 1 RESTART_STEP last_possible ASSERT_RESTART_STEP 10)
 four_c_test(TEST_FILE structure_new_nln_solver_singlestep_cube_linear.4C.yaml NP 1 RETURN_AS current)
 __four_c_test_restart(BASED_ON ${current} TEST_FILE structure_new_nln_solver_singlestep_cube_linear_restart.4C.yaml NP 1 RESTART_STEP 1)
+four_c_test(TEST_FILE structure_new_python_wrapper_predictor_constdis.4C.yaml NP 3 REQUIRED_DEPENDENCIES Pybind11)
+four_c_test(TEST_FILE structure_new_python_wrapper_predictor_constdis_with_setup.4C.yaml NP 3 REQUIRED_DEPENDENCIES Pybind11)
 four_c_test(TEST_FILE structure_bidomain_material_problem_torsion.4C.yaml NP 2)
 four_c_test(TEST_FILE structure_solid_beam_element_gid_runtime_output.4C.yaml NP 2 RETURN_AS current)
 __four_c_test_vtk(BASED_ON ${current} PVD_RESULT xxx-structure-beams.pvd PVD_REFERENCE ref/structure_solid_beam_element_gid_runtime_output-vtk/structure-beams.pvd TOLERANCE 1e-08 TIME_STEPS 1e-08 1.0)
