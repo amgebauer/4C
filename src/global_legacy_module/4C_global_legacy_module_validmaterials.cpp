@@ -2825,10 +2825,9 @@ std::unordered_map<Core::Materials::MaterialType, Core::IO::InputSpec> Global::v
     using namespace Core::IO::InputSpecBuilders::Validators;
     known_materials[Core::Materials::mfi_transv_isotrop_elast_viscoplast] = group(
         "MAT_InelasticDefgradTransvIsotropElastViscoplast",
-        {
-            parameter<int>(
-                "VISCOPLAST_LAW_ID", {.description = "MAT ID of the corresponding viscoplastic law",
-                                         .validator = positive<int>()}),
+        {parameter<int>(
+             "VISCOPLAST_LAW_ID", {.description = "MAT ID of the corresponding viscoplastic law",
+                                      .validator = positive<int>()}),
             parameter<int>(
                 "FIBER_READER_ID", {.description = "MAT ID of the used fiber direction reader for "
                                                    "transversely isotropic behavior",
@@ -2876,11 +2875,6 @@ std::unordered_map<Core::Materials::MaterialType, Core::IO::InputSpec> Global::v
                                 "possible overflow errors",
                     .default_value = std::exp(30.0),
                     .validator = positive<double>()}),
-            parameter<int>("MAX_SUBSTEPPING_HALVE_NUM",
-                {.description = "maximum number of times the global time step can "
-                                "be halved in the substepping procedure (default: 10)",
-                    .default_value = 10,
-                    .validator = positive_or_zero<int>()}),
             parameter<Core::LinAlg::MatrixExpCalcMethod>("MATRIX_EXP_CALC_METHOD",
                 {.description = "chosen computation method for matrix exponential (default: "
                                 "automatic method selection based on matrix characteristics)",
@@ -2900,7 +2894,65 @@ std::unordered_map<Core::Materials::MaterialType, Core::IO::InputSpec> Global::v
                                 "logarithm w.r.t. matrix",
                     .default_value =
                         Core::LinAlg::GenMatrixLogFirstDerivCalcMethod::pade_part_fract}),
-        },
+            group("LOCAL_SUBSTEPPING",
+                {
+                    parameter<bool>("USE_SUBSTEPPING",
+                        {.description = "use substepping?", .default_value = false}),
+                    parameter<int>("MAX_SUBSTEPPING_HALVE_NUM",
+                        {.description = "maximum number of times the global time step can "
+                                        "be halved in the substepping procedure",
+                            .default_value = 10,
+                            .validator = positive_or_zero<int>()}),
+                },
+                {.description = "Settings for the usage of local substepping to integrate the "
+                                "viscoplastic evolution equations",
+                    .required = false}),
+            group("LOCAL_NEWTON",
+                {parameter<
+                     Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalNewtonConvCheck>(
+                     "CONV_CHECK",
+                     {.description = "convergence check type",
+                         .default_value = Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::
+                             LocalNewtonConvCheck::residual_and_increment_ratio}),
+                    parameter<int>("MAX_ITER", {.description = "maximum number of iterations",
+                                                   .default_value = 100,
+                                                   .validator = positive<int>()}),
+                    parameter<double>(
+                        "RES_TOL", {.description = "residual tolerance (absolute residual 2-norm)",
+                                       .default_value = 1.0e-8,
+                                       .validator = positive<double>()}),
+                    parameter<double>("MAX_EXCEEDANCE_FACT_RES_TOL",
+                        {.description =
+                                "maximum exceedance factor for the specified residual tolerance "
+                                "(Local Newton divergence safeguard for "
+                                "continuing the simulation, if specified by the user via "
+                                "DIVER_CONT)",
+                            .default_value = 1.0e1,
+                            .validator = positive_or_zero<double>()}),
+                    parameter<double>(
+                        "INCR_TOL", {.description = "increment tolerance ("
+                                                    "ratio of |increment| / |solution|)",
+                                        .default_value = 1.0e-8,
+                                        .validator = positive<double>()}),
+                    parameter<double>("MAX_EXCEEDANCE_FACT_INCR_TOL",
+                        {.description =
+                                "maximum exceedance factor for the specified increment tolerance "
+                                "(Local Newton divergence safeguard for "
+                                "continuing the simulation, if specified by the user via "
+                                "DIVER_CONT)",
+                            .default_value = 1.0e1,
+                            .validator = positive_or_zero<double>()}),
+                    parameter<Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::
+                            LocalNewtonDiverCont>("DIVER_CONT",
+                        {.description = "strategy to deal with divergence in the Local Newton Loop",
+                            .default_value =
+                                Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::
+                                    LocalNewtonDiverCont::stop})
+
+                },
+                {.description = "Parameters used in the Local Newton--Raphson procedure "
+                                "(viscoplastic corrector stage)",
+                    .required = false})},
         {.description = "Versatile transversely isotropic (or isotropic) viscoplasticity model for "
                         "finite deformations with isotropic hardening, using user-defined "
                         "viscoplasticity laws (flow rule + hardening model)"});

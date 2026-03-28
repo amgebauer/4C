@@ -29,9 +29,6 @@ Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::get_detailed_error_messa
     case ErrorType::overflow_error:
       return "Error in InelasticDefgradTransvIsotropElastViscoplast: overflow error related to "
              "the evaluation of the plastic strain increment!";
-    case ErrorType::no_plastic_incompressibility:
-      return "Error in InelasticDefgradTransvIsotropElastViscoplast: plastic incompressibility "
-             "not satisfied!";
     case ErrorType::failed_solution_linear_system_lnl:
       return "Error in InelasticDefgradTransvIsotropElastViscoplast: solution of the linear "
              "system in the Local Newton Loop failed!";
@@ -45,6 +42,12 @@ Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::get_detailed_error_messa
     case ErrorType::failed_solution_analytic_linearization:
       return "Error in InelasticDefgradTransvIsotropElastViscoplast: solution of the linear "
              "system in the analytical linearization failed";
+    case ErrorType::failed_computation_flow_resistance:
+      return "Error in InelasticDefgradTransvIsotropElastViscoplast: Failed while computing "
+             "the flow resistance for the viscoplasticity law";
+    case ErrorType::failed_computation_flow_resistance_derivs:
+      return "Error in InelasticDefgradTransvIsotropElastViscoplast: Failed while computing "
+             "the derivatives of the flow resistance for the viscoplasticity law";
     case ErrorType::failed_matrix_log_evaluation:
       return "Error in InelasticDefgradTransvIsotropElastViscoplast: Failed in evaluating the "
              "matrix logarithm or its derivative with respect to the argument";
@@ -58,7 +61,7 @@ Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::get_detailed_error_messa
       return "Error in InelasticDefgradTransvIsotropElastViscoplast: we are 'under' the yield "
              "surface, sigma < sigma_yield!";
     default:
-      FOUR_C_THROW("to_string(ErrorType): You should not be here!");
+      FOUR_C_THROW("to_string(ErrorType): {}: No error message provided!", err_type);
   }
 }
 
@@ -134,15 +137,34 @@ void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::ConstMatTensors::
 
 /*--------------------------------------------------------------------*
  *--------------------------------------------------------------------*/
-void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalSubsteppingUtils::reset()
+void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalSubsteppingUtils::reset(
+    const double dt)
 {
-  t = 0.0;
-  substep_counter = 0;
-  curr_dt = 0.0;
-  time_step_halving_counter = 0;
-  total_num_of_substeps = 0;
-  iter = 0;
+  t_ = 0.0;
+  substep_counter_ = 1;
+  curr_dt_ = dt;
+  time_step_halving_counter_ = 0;
+  total_num_of_substeps_ = 1;
 }
+
+
+/*--------------------------------------------------------------------*
+ *--------------------------------------------------------------------*/
+void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalSubsteppingUtils::
+    increment_substep()
+{
+  t_ += curr_dt_;
+  substep_counter_++;
+};
+
+/*--------------------------------------------------------------------*
+ *--------------------------------------------------------------------*/
+void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalSubsteppingUtils::halve_substep()
+{
+  curr_dt_ *= 1.0 / 2.0;
+  time_step_halving_counter_ += 1;
+  total_num_of_substeps_ += (total_num_of_substeps_ - substep_counter_ + 1);
+};
 
 
 /*--------------------------------------------------------------------*
@@ -190,7 +212,7 @@ void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::TimeStepQuantities:
 void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::TimeStepQuantities::resize(
     const unsigned int numgp)
 {
-  FOUR_C_ASSERT_ALWAYS(!resize_called_,
+  FOUR_C_ASSERT_ALWAYS(!resize_called,
       "You already called resize for the time step quantities! The number of current GP is {} and "
       "you attempt to set it to {}",
       last_plastic_strain.size(), numgp);
@@ -218,6 +240,8 @@ void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::TimeStepQuantities:
   // default values of the deformation gradient
   last_defgrad.resize(numgp, last_defgrad[0]);
   current_defgrad.resize(numgp, current_defgrad[0]);
+
+  resize_called = true;
 }
 
 /*--------------------------------------------------------------------*
@@ -287,6 +311,74 @@ void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::TimeStepQuantities:
   // gradient is evaluated fully after the restart
   current_defgrad.resize(last_substep_plastic_defgrad_inverse.size(),
       Core::LinAlg::Matrix<3, 3>{Core::LinAlg::Initialization::zero});
+}
+
+/*--------------------------------------------------------------------*
+ *--------------------------------------------------------------------*/
+Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalNewtonManager::LocalNewtonManager(
+    const LocalNewtonParams& lnl_params)
+    : params_(lnl_params)
+{
+  // set number of Gauss points to 1 temporarily, since we don't
+  // know it at this point in time
+  curr_num_iters_.resize(1, 0);
+
+  // set initial number of iterations to 0
+  iter_ = 0;
+}
+
+/*--------------------------------------------------------------------*
+ *--------------------------------------------------------------------*/
+void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalNewtonManager::resize(
+    const unsigned int numgp)
+{
+  FOUR_C_ASSERT_ALWAYS(!resize_called_,
+      "You already called resize for the Local Newton manager! The number of current GP is {} and "
+      "you attempt to set it to {}",
+      curr_num_iters_.size(), numgp);
+
+  // resize arrays
+  curr_num_iters_.resize(numgp, curr_num_iters_[0]);
+
+
+  resize_called_ = true;
+}
+
+/*--------------------------------------------------------------------*
+ *--------------------------------------------------------------------*/
+void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalNewtonManager::
+    update_after_local_newton(const unsigned int gp)
+{
+  // increment number of local Newton iterations for the current timestep at the
+  // current GP
+  curr_num_iters_[gp] += iter_;
+}
+
+
+
+/*--------------------------------------------------------------------*
+ *--------------------------------------------------------------------*/
+void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalNewtonManager::reset()
+{
+  std::ranges::fill(curr_num_iters_, 0);
+}
+
+
+/*--------------------------------------------------------------------*
+ *--------------------------------------------------------------------*/
+void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalNewtonManager::pack(
+    Core::Communication::PackBuffer& data) const
+{
+  add_to_pack(data, curr_num_iters_);
+}
+
+/*--------------------------------------------------------------------*
+ *--------------------------------------------------------------------*/
+void Mat::InelasticDefgradTransvIsotropElastViscoplastUtils::LocalNewtonManager::unpack(
+    Core::Communication::UnpackBuffer& buffer)
+{
+  // extract last values
+  extract_from_pack(buffer, curr_num_iters_);
 }
 
 
