@@ -232,30 +232,63 @@ namespace
         array.GetDataTypeAsString());
   }
 
-  // Returns a map of all numbered arrays with a specific prefix (e.g. "point_set_1",
-  // "point_set_2")
-  std::unordered_map<int, std::reference_wrapper<vtkDataArray>> get_numbered_arrays_with_prefix(
-      const std::unordered_map<std::string, std::reference_wrapper<vtkDataArray>>& data,
-      const std::string& prefix)
+  // Returns true if the given array stores integer values (any width, signed or unsigned)
+  bool is_integral_array(vtkDataArray& array)
   {
-    std::unordered_map<int, std::reference_wrapper<vtkDataArray>> arrays;
+    if (vtkBitArray::SafeDownCast(&array)) return true;
+    bool result = false;
+    vtkArrayDispatch::DispatchByValueType<vtkArrayDispatch::Integrals>::Execute(
+        &array, [&](auto*) { result = true; });
+    return result;
+  }
 
-    auto prefix_filter = std::views::filter(
-        [&](const auto& kv)
-        {
-          const auto& name = kv.first;
-          return name.size() > prefix.size() + 1 && name.starts_with(prefix + "_") &&
-                 name.substr(prefix.size() + 1).find_first_not_of("0123456789") ==
-                     std::string_view::npos;
-        });
-    for (const auto& [name, data] : data | prefix_filter)
+  // Holds information about a single point-set array
+  struct PointSetEntry
+  {
+    int id;
+    std::optional<std::string> name;
+    std::reference_wrapper<vtkDataArray> array;
+  };
+
+  // Returns all single-component integer PointData arrays as point-set entries.
+  // Arrays named "point_set_<N>" keep their numeric ID (backward compatibility).
+  // All other arrays are assigned IDs starting after the highest numeric ID found.
+  std::vector<PointSetEntry> get_point_set_arrays(
+      const std::unordered_map<std::string, std::reference_wrapper<vtkDataArray>>& data)
+  {
+    std::vector<PointSetEntry> numbered;
+    std::vector<PointSetEntry> named;
+    int max_numeric_id = 0;
+    const std::string prefix = "point_set_";
+
+    for (const auto& [array_name, array_ref] : data)
     {
-      int set_id = std::stoi(name.substr(prefix.size() + 1).data());
+      vtkDataArray& array = array_ref.get();
 
-      arrays.emplace(set_id, data);
+      if (array.GetNumberOfComponents() != 1) continue;
+      if (!is_integral_array(array)) continue;
+
+      if (array_name.size() > prefix.size() && array_name.starts_with(prefix))
+      {
+        const std::string suffix = array_name.substr(prefix.size());
+        if (!suffix.empty() && suffix.find_first_not_of("0123456789") == std::string::npos)
+        {
+          int id = std::stoi(suffix);
+          max_numeric_id = std::max(max_numeric_id, id);
+          numbered.push_back({id, std::nullopt, array_ref});
+          continue;
+        }
+      }
+      named.push_back({0, array_name, array_ref});
     }
 
-    return arrays;
+    int next_id = max_numeric_id + 1;
+    for (auto& entry : named)
+    {
+      entry.id = next_id++;
+      numbered.push_back(entry);
+    }
+    return numbered;
   }
 
   // Translates from vtk cell connectivity ordering to 4C connectivity ordering
@@ -355,7 +388,11 @@ Core::IO::MeshInput::RawMesh<3> Core::IO::VTU::read_vtu_file(const std::filesyst
   auto point_data = get_vtk_data(vtk_mesh->GetPointData());
   mesh.points.resize(vtk_mesh->GetNumberOfPoints());
 
-  auto point_sets = get_numbered_arrays_with_prefix(point_data, "point_set");
+  auto point_sets = get_point_set_arrays(point_data);
+  for (const auto& entry : point_sets)
+  {
+    if (entry.name.has_value()) mesh.point_sets[entry.id].name = entry.name;
+  }
   for (const auto& [name, vtk_data] : point_data)
   {
     mesh.point_data.emplace(name, make_empty_field_data_variant(vtk_data.get(), /*reserve=*/true));
@@ -381,14 +418,14 @@ Core::IO::MeshInput::RawMesh<3> Core::IO::VTU::read_vtu_file(const std::filesyst
     }
 
     // check whether this point is part of a point-set
-    for (const auto& [set_id, array_ref] : point_sets)
+    for (const auto& entry : point_sets)
     {
       bool is_part_of_point_set =
-          extract_component_from_integral_array<bool>(array_ref.get(), i, 0);
+          extract_component_from_integral_array<bool>(entry.array.get(), i, 0);
 
       if (is_part_of_point_set)
       {
-        mesh.point_sets[set_id].point_ids.emplace(i);
+        mesh.point_sets[entry.id].point_ids.emplace(i);
       }
     }
   }
