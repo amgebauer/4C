@@ -820,11 +820,11 @@ RESULT DESCRIPTION:
       DIS: "structure"
       NODE: 201
       QUANTITY: "dispx"
-      VALUE: -0.49368905338691793
+      VALUE: -0.49367500
       TOLERANCE: 1e-09
   - STRUCTURE:
       DIS: "structure"
       NODE: 201
       QUANTITY: "dispy"
-      VALUE: -2.765370158207821
+      VALUE: -2.765358749
       TOLERANCE: 1e-09
