@@ -124,14 +124,12 @@ STRUCTURE GEOMETRY:
   FILE: tutorial_fsi_2d.e
   ELEMENT_BLOCKS:
     - ID: 1
-      WALL:
+      SOLID:
         QUAD4:
           MAT: 2
           KINEM: nonlinear
-          EAS: none
-          THICK: 1.0
-          STRESS_STRAIN: plane_strain
-          GP: [2, 2]
+          THICKNESS: 1.0
+          PLANE_ASSUMPTION: plane_strain
 
 FLUID GEOMETRY:
   FILE: tutorial_fsi_2d.e

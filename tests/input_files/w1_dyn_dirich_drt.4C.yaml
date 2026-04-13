@@ -1010,802 +1010,406 @@ NODE COORDS:
   - "NODE 440 COORD 0.000000000000000e+00 9.500000000000000e-01 0.000000000000000e+00"
   - "NODE 441 COORD 0.000000000000000e+00 1.000000000000000e+00 0.000000000000000e+00"
 STRUCTURE ELEMENTS:
-  - "1 WALL QUAD4 440 436 439 441 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "2 WALL QUAD4 437 432 436 440 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "3 WALL QUAD4 435 429 432 437 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "4 WALL QUAD4 430 423 429 435 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "5 WALL QUAD4 426 417 423 430 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "6 WALL QUAD4 419 411 417 426 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "7 WALL QUAD4 412 403 411 419 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "8 WALL QUAD4 405 394 403 412 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "9 WALL QUAD4 401 386 394 405 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "10 WALL QUAD4 392 375 386 401 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "11 WALL QUAD4 382 365 375 392 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "12 WALL QUAD4 378 356 365 382 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "13 WALL QUAD4 368 345 356 378 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "14 WALL QUAD4 362 330 345 368 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "15 WALL QUAD4 355 321 330 362 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "16 WALL QUAD4 348 318 321 355 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "17 WALL QUAD4 343 313 318 348 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "18 WALL QUAD4 338 307 313 343 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "19 WALL QUAD4 337 303 307 338 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "20 WALL QUAD4 332 302 303 337 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "21 WALL QUAD4 436 433 438 439 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "22 WALL QUAD4 432 427 433 436 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "23 WALL QUAD4 429 422 427 432 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "24 WALL QUAD4 423 416 422 429 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "25 WALL QUAD4 417 409 416 423 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "26 WALL QUAD4 411 399 409 417 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "27 WALL QUAD4 403 390 399 411 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "28 WALL QUAD4 394 380 390 403 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "29 WALL QUAD4 386 366 380 394 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "30 WALL QUAD4 375 353 366 386 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "31 WALL QUAD4 365 341 353 375 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "32 WALL QUAD4 356 324 341 365 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "33 WALL QUAD4 345 316 324 356 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "34 WALL QUAD4 330 299 316 345 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "35 WALL QUAD4 321 293 299 330 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "36 WALL QUAD4 318 287 293 321 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "37 WALL QUAD4 313 280 287 318 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "38 WALL QUAD4 307 278 280 313 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "39 WALL QUAD4 303 272 278 307 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "40 WALL QUAD4 302 271 272 303 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "41 WALL QUAD4 433 428 434 438 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "42 WALL QUAD4 427 421 428 433 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "43 WALL QUAD4 422 414 421 427 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "44 WALL QUAD4 416 406 414 422 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "45 WALL QUAD4 409 396 406 416 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "46 WALL QUAD4 399 388 396 409 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "47 WALL QUAD4 390 374 388 399 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "48 WALL QUAD4 380 361 374 390 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "49 WALL QUAD4 366 346 361 380 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "50 WALL QUAD4 353 326 346 366 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "51 WALL QUAD4 341 314 326 353 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "52 WALL QUAD4 324 295 314 341 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "53 WALL QUAD4 316 286 295 324 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "54 WALL QUAD4 299 274 286 316 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "55 WALL QUAD4 293 265 274 299 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "56 WALL QUAD4 287 257 265 293 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "57 WALL QUAD4 280 255 257 287 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "58 WALL QUAD4 278 250 255 280 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "59 WALL QUAD4 272 246 250 278 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "60 WALL QUAD4 271 240 246 272 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "61 WALL QUAD4 428 424 431 434 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "62 WALL QUAD4 421 415 424 428 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "63 WALL QUAD4 414 407 415 421 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "64 WALL QUAD4 406 395 407 414 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "65 WALL QUAD4 396 384 395 406 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "66 WALL QUAD4 388 372 384 396 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "67 WALL QUAD4 374 357 372 388 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "68 WALL QUAD4 361 335 357 374 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "69 WALL QUAD4 346 319 335 361 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "70 WALL QUAD4 326 297 319 346 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "71 WALL QUAD4 314 282 297 326 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "72 WALL QUAD4 295 268 282 314 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "73 WALL QUAD4 286 258 268 295 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "74 WALL QUAD4 274 248 258 286 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "75 WALL QUAD4 265 237 248 274 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "76 WALL QUAD4 257 231 237 265 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "77 WALL QUAD4 255 225 231 257 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "78 WALL QUAD4 250 219 225 255 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "79 WALL QUAD4 246 217 219 250 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "80 WALL QUAD4 240 216 217 246 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "81 WALL QUAD4 424 418 425 431 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "82 WALL QUAD4 415 408 418 424 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "83 WALL QUAD4 407 397 408 415 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "84 WALL QUAD4 395 383 397 407 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "85 WALL QUAD4 384 370 383 395 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "86 WALL QUAD4 372 351 370 384 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "87 WALL QUAD4 357 328 351 372 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "88 WALL QUAD4 335 310 328 357 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "89 WALL QUAD4 319 292 310 335 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "90 WALL QUAD4 297 275 292 319 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "91 WALL QUAD4 282 261 275 297 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "92 WALL QUAD4 268 243 261 282 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "93 WALL QUAD4 258 234 243 268 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "94 WALL QUAD4 248 224 234 258 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "95 WALL QUAD4 237 212 224 248 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "96 WALL QUAD4 231 205 212 237 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "97 WALL QUAD4 225 203 205 231 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "98 WALL QUAD4 219 197 203 225 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "99 WALL QUAD4 217 195 197 219 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "100 WALL QUAD4 216 190 195 217 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "101 WALL QUAD4 418 410 420 425 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "102 WALL QUAD4 408 398 410 418 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "103 WALL QUAD4 397 387 398 408 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "104 WALL QUAD4 383 371 387 397 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "105 WALL QUAD4 370 350 371 383 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "106 WALL QUAD4 351 327 350 370 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "107 WALL QUAD4 328 306 327 351 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "108 WALL QUAD4 310 290 306 328 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "109 WALL QUAD4 292 266 290 310 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "110 WALL QUAD4 275 253 266 292 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "111 WALL QUAD4 261 236 253 275 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "112 WALL QUAD4 243 222 236 261 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "113 WALL QUAD4 234 210 222 243 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "114 WALL QUAD4 224 198 210 234 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "115 WALL QUAD4 212 186 198 224 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "116 WALL QUAD4 205 183 186 212 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "117 WALL QUAD4 203 177 183 205 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "118 WALL QUAD4 197 172 177 203 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "119 WALL QUAD4 195 169 172 197 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "120 WALL QUAD4 190 167 169 195 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "121 WALL QUAD4 410 402 413 420 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "122 WALL QUAD4 398 389 402 410 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "123 WALL QUAD4 387 373 389 398 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "124 WALL QUAD4 371 358 373 387 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "125 WALL QUAD4 350 329 358 371 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "126 WALL QUAD4 327 308 329 350 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "127 WALL QUAD4 306 285 308 327 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "128 WALL QUAD4 290 263 285 306 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "129 WALL QUAD4 266 247 263 290 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "130 WALL QUAD4 253 230 247 266 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "131 WALL QUAD4 236 214 230 253 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "132 WALL QUAD4 222 200 214 236 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "133 WALL QUAD4 210 185 200 222 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "134 WALL QUAD4 198 179 185 210 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "135 WALL QUAD4 186 165 179 198 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "136 WALL QUAD4 183 160 165 186 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "137 WALL QUAD4 177 154 160 183 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "138 WALL QUAD4 172 152 154 177 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "139 WALL QUAD4 169 150 152 172 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "140 WALL QUAD4 167 145 150 169 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "141 WALL QUAD4 402 393 404 413 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "142 WALL QUAD4 389 379 393 402 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "143 WALL QUAD4 373 360 379 389 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "144 WALL QUAD4 358 334 360 373 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "145 WALL QUAD4 329 309 334 358 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "146 WALL QUAD4 308 289 309 329 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "147 WALL QUAD4 285 262 289 308 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "148 WALL QUAD4 263 239 262 285 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "149 WALL QUAD4 247 226 239 263 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "150 WALL QUAD4 230 207 226 247 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "151 WALL QUAD4 214 192 207 230 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "152 WALL QUAD4 200 180 192 214 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "153 WALL QUAD4 185 164 180 200 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "154 WALL QUAD4 179 155 164 185 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "155 WALL QUAD4 165 143 155 179 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "156 WALL QUAD4 160 138 143 165 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "157 WALL QUAD4 154 134 138 160 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "158 WALL QUAD4 152 130 134 154 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "159 WALL QUAD4 150 124 130 152 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "160 WALL QUAD4 145 123 124 150 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "161 WALL QUAD4 393 385 400 404 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "162 WALL QUAD4 379 367 385 393 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "163 WALL QUAD4 360 347 367 379 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "164 WALL QUAD4 334 320 347 360 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "165 WALL QUAD4 309 291 320 334 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "166 WALL QUAD4 289 267 291 309 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "167 WALL QUAD4 262 245 267 289 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "168 WALL QUAD4 239 228 245 262 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "169 WALL QUAD4 226 206 228 239 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "170 WALL QUAD4 207 187 206 226 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "171 WALL QUAD4 192 174 187 207 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "172 WALL QUAD4 180 161 174 192 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "173 WALL QUAD4 164 149 161 180 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "174 WALL QUAD4 155 136 149 164 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "175 WALL QUAD4 143 128 136 155 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "176 WALL QUAD4 138 120 128 143 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "177 WALL QUAD4 134 114 120 138 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "178 WALL QUAD4 130 109 114 134 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "179 WALL QUAD4 124 107 109 130 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "180 WALL QUAD4 123 105 107 124 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "181 WALL QUAD4 385 376 391 400 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "182 WALL QUAD4 367 352 376 385 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "183 WALL QUAD4 347 325 352 367 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "184 WALL QUAD4 320 298 325 347 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "185 WALL QUAD4 291 276 298 320 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "186 WALL QUAD4 267 252 276 291 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "187 WALL QUAD4 245 229 252 267 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "188 WALL QUAD4 228 208 229 245 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "189 WALL QUAD4 206 189 208 228 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "190 WALL QUAD4 187 173 189 206 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "191 WALL QUAD4 174 158 173 187 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "192 WALL QUAD4 161 142 158 174 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "193 WALL QUAD4 149 133 142 161 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "194 WALL QUAD4 136 118 133 149 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "195 WALL QUAD4 128 110 118 136 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "196 WALL QUAD4 120 102 110 128 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "197 WALL QUAD4 114 97 102 120 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "198 WALL QUAD4 109 93 97 114 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "199 WALL QUAD4 107 91 93 109 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "200 WALL QUAD4 105 88 91 107 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "201 WALL QUAD4 376 364 381 391 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "202 WALL QUAD4 352 340 364 376 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "203 WALL QUAD4 325 312 340 352 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "204 WALL QUAD4 298 283 312 325 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "205 WALL QUAD4 276 260 283 298 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "206 WALL QUAD4 252 235 260 276 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "207 WALL QUAD4 229 211 235 252 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "208 WALL QUAD4 208 193 211 229 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "209 WALL QUAD4 189 175 193 208 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "210 WALL QUAD4 173 157 175 189 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "211 WALL QUAD4 158 140 157 173 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "212 WALL QUAD4 142 126 140 158 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "213 WALL QUAD4 133 117 126 142 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "214 WALL QUAD4 118 103 117 133 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "215 WALL QUAD4 110 95 103 118 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "216 WALL QUAD4 102 85 95 110 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "217 WALL QUAD4 97 82 85 102 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "218 WALL QUAD4 93 76 82 97 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "219 WALL QUAD4 91 74 76 93 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "220 WALL QUAD4 88 72 74 91 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "221 WALL QUAD4 364 359 377 381 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "222 WALL QUAD4 340 323 359 364 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "223 WALL QUAD4 312 296 323 340 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "224 WALL QUAD4 283 269 296 312 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "225 WALL QUAD4 260 242 269 283 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "226 WALL QUAD4 235 220 242 260 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "227 WALL QUAD4 211 201 220 235 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "228 WALL QUAD4 193 181 201 211 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "229 WALL QUAD4 175 162 181 193 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "230 WALL QUAD4 157 141 162 175 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "231 WALL QUAD4 140 125 141 157 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "232 WALL QUAD4 126 113 125 140 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "233 WALL QUAD4 117 99 113 126 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "234 WALL QUAD4 103 87 99 117 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "235 WALL QUAD4 95 80 87 103 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "236 WALL QUAD4 85 70 80 95 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "237 WALL QUAD4 82 66 70 85 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "238 WALL QUAD4 76 63 66 82 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "239 WALL QUAD4 74 59 63 76 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "240 WALL QUAD4 72 58 59 74 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "241 WALL QUAD4 359 344 369 377 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "242 WALL QUAD4 323 315 344 359 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "243 WALL QUAD4 296 284 315 323 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "244 WALL QUAD4 269 259 284 296 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "245 WALL QUAD4 242 233 259 269 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "246 WALL QUAD4 220 209 233 242 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "247 WALL QUAD4 201 184 209 220 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "248 WALL QUAD4 181 163 184 201 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "249 WALL QUAD4 162 148 163 181 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "250 WALL QUAD4 141 132 148 162 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "251 WALL QUAD4 125 116 132 141 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "252 WALL QUAD4 113 100 116 125 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "253 WALL QUAD4 99 86 100 113 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "254 WALL QUAD4 87 77 86 99 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "255 WALL QUAD4 80 68 77 87 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "256 WALL QUAD4 70 60 68 80 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "257 WALL QUAD4 66 53 60 70 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "258 WALL QUAD4 63 51 53 66 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "259 WALL QUAD4 59 47 51 63 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "260 WALL QUAD4 58 44 47 59 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "261 WALL QUAD4 344 331 363 369 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "262 WALL QUAD4 315 300 331 344 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "263 WALL QUAD4 284 273 300 315 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "264 WALL QUAD4 259 249 273 284 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "265 WALL QUAD4 233 223 249 259 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "266 WALL QUAD4 209 199 223 233 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "267 WALL QUAD4 184 178 199 209 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "268 WALL QUAD4 163 156 178 184 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "269 WALL QUAD4 148 137 156 163 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "270 WALL QUAD4 132 119 137 148 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "271 WALL QUAD4 116 104 119 132 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "272 WALL QUAD4 100 90 104 116 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "273 WALL QUAD4 86 79 90 100 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "274 WALL QUAD4 77 65 79 86 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "275 WALL QUAD4 68 55 65 77 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "276 WALL QUAD4 60 50 55 68 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "277 WALL QUAD4 53 43 50 60 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "278 WALL QUAD4 51 38 43 53 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "279 WALL QUAD4 47 37 38 51 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "280 WALL QUAD4 44 35 37 47 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "281 WALL QUAD4 331 322 354 363 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "282 WALL QUAD4 300 294 322 331 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "283 WALL QUAD4 273 264 294 300 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "284 WALL QUAD4 249 238 264 273 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "285 WALL QUAD4 223 213 238 249 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "286 WALL QUAD4 199 188 213 223 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "287 WALL QUAD4 178 166 188 199 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "288 WALL QUAD4 156 146 166 178 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "289 WALL QUAD4 137 129 146 156 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "290 WALL QUAD4 119 111 129 137 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "291 WALL QUAD4 104 96 111 119 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "292 WALL QUAD4 90 81 96 104 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "293 WALL QUAD4 79 69 81 90 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "294 WALL QUAD4 65 56 69 79 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "295 WALL QUAD4 55 46 56 65 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "296 WALL QUAD4 50 41 46 55 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "297 WALL QUAD4 43 33 41 50 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "298 WALL QUAD4 38 30 33 43 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "299 WALL QUAD4 37 27 30 38 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "300 WALL QUAD4 35 24 27 37 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "301 WALL QUAD4 322 317 349 354 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "302 WALL QUAD4 294 288 317 322 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "303 WALL QUAD4 264 256 288 294 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "304 WALL QUAD4 238 232 256 264 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "305 WALL QUAD4 213 204 232 238 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "306 WALL QUAD4 188 182 204 213 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "307 WALL QUAD4 166 159 182 188 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "308 WALL QUAD4 146 139 159 166 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "309 WALL QUAD4 129 121 139 146 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "310 WALL QUAD4 111 101 121 129 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "311 WALL QUAD4 96 84 101 111 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "312 WALL QUAD4 81 71 84 96 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "313 WALL QUAD4 69 61 71 81 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "314 WALL QUAD4 56 49 61 69 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "315 WALL QUAD4 46 40 49 56 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "316 WALL QUAD4 41 31 40 46 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "317 WALL QUAD4 33 23 31 41 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "318 WALL QUAD4 30 21 23 33 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "319 WALL QUAD4 27 18 21 30 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "320 WALL QUAD4 24 16 18 27 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "321 WALL QUAD4 317 311 342 349 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "322 WALL QUAD4 288 281 311 317 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "323 WALL QUAD4 256 254 281 288 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "324 WALL QUAD4 232 227 254 256 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "325 WALL QUAD4 204 202 227 232 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "326 WALL QUAD4 182 176 202 204 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "327 WALL QUAD4 159 153 176 182 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "328 WALL QUAD4 139 135 153 159 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "329 WALL QUAD4 121 115 135 139 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "330 WALL QUAD4 101 98 115 121 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "331 WALL QUAD4 84 83 98 101 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "332 WALL QUAD4 71 67 83 84 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "333 WALL QUAD4 61 54 67 71 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "334 WALL QUAD4 49 42 54 61 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "335 WALL QUAD4 40 32 42 49 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "336 WALL QUAD4 31 26 32 40 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "337 WALL QUAD4 23 20 26 31 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "338 WALL QUAD4 21 14 20 23 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "339 WALL QUAD4 18 12 14 21 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "340 WALL QUAD4 16 11 12 18 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "341 WALL QUAD4 311 305 339 342 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "342 WALL QUAD4 281 279 305 311 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "343 WALL QUAD4 254 251 279 281 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "344 WALL QUAD4 227 221 251 254 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "345 WALL QUAD4 202 196 221 227 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "346 WALL QUAD4 176 171 196 202 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "347 WALL QUAD4 153 151 171 176 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "348 WALL QUAD4 135 131 151 153 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "349 WALL QUAD4 115 112 131 135 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "350 WALL QUAD4 98 94 112 115 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "351 WALL QUAD4 83 78 94 98 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "352 WALL QUAD4 67 64 78 83 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "353 WALL QUAD4 54 52 64 67 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "354 WALL QUAD4 42 39 52 54 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "355 WALL QUAD4 32 29 39 42 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "356 WALL QUAD4 26 22 29 32 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "357 WALL QUAD4 20 15 22 26 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "358 WALL QUAD4 14 9 15 20 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "359 WALL QUAD4 12 7 9 14 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP 2
-    2"
-  - "360 WALL QUAD4 11 5 7 12 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP 2
-    2"
-  - "361 WALL QUAD4 305 304 336 339 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "362 WALL QUAD4 279 277 304 305 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "363 WALL QUAD4 251 244 277 279 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "364 WALL QUAD4 221 218 244 251 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "365 WALL QUAD4 196 194 218 221 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "366 WALL QUAD4 171 170 194 196 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "367 WALL QUAD4 151 147 170 171 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "368 WALL QUAD4 131 127 147 151 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "369 WALL QUAD4 112 108 127 131 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "370 WALL QUAD4 94 92 108 112 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "371 WALL QUAD4 78 75 92 94 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "372 WALL QUAD4 64 62 75 78 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "373 WALL QUAD4 52 48 62 64 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "374 WALL QUAD4 39 36 48 52 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "375 WALL QUAD4 29 28 36 39 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "376 WALL QUAD4 22 19 28 29 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "377 WALL QUAD4 15 13 19 22 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "378 WALL QUAD4 9 8 13 15 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP 2
-    2"
-  - "379 WALL QUAD4 7 4 8 9 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP 2 2"
-  - "380 WALL QUAD4 5 3 4 7 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP 2 2"
-  - "381 WALL QUAD4 304 301 333 336 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "382 WALL QUAD4 277 270 301 304 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "383 WALL QUAD4 244 241 270 277 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "384 WALL QUAD4 218 215 241 244 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "385 WALL QUAD4 194 191 215 218 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "386 WALL QUAD4 170 168 191 194 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "387 WALL QUAD4 147 144 168 170 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "388 WALL QUAD4 127 122 144 147 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "389 WALL QUAD4 108 106 122 127 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "390 WALL QUAD4 92 89 106 108 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain
-    GP 2 2"
-  - "391 WALL QUAD4 75 73 89 92 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "392 WALL QUAD4 62 57 73 75 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "393 WALL QUAD4 48 45 57 62 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "394 WALL QUAD4 36 34 45 48 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "395 WALL QUAD4 28 25 34 36 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "396 WALL QUAD4 19 17 25 28 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "397 WALL QUAD4 13 10 17 19 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP
-    2 2"
-  - "398 WALL QUAD4 8 6 10 13 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP 2
-    2"
-  - "399 WALL QUAD4 4 2 6 8 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP 2 2"
-  - "400 WALL QUAD4 3 1 2 4 MAT 1 KINEM nonlinear EAS none THICK 1.0 STRESS_STRAIN plane_strain GP 2 2"
+  - "1 SOLID QUAD4 440 436 439 441 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "2 SOLID QUAD4 437 432 436 440 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "3 SOLID QUAD4 435 429 432 437 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "4 SOLID QUAD4 430 423 429 435 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "5 SOLID QUAD4 426 417 423 430 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "6 SOLID QUAD4 419 411 417 426 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "7 SOLID QUAD4 412 403 411 419 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "8 SOLID QUAD4 405 394 403 412 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "9 SOLID QUAD4 401 386 394 405 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "10 SOLID QUAD4 392 375 386 401 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "11 SOLID QUAD4 382 365 375 392 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "12 SOLID QUAD4 378 356 365 382 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "13 SOLID QUAD4 368 345 356 378 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "14 SOLID QUAD4 362 330 345 368 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "15 SOLID QUAD4 355 321 330 362 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "16 SOLID QUAD4 348 318 321 355 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "17 SOLID QUAD4 343 313 318 348 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "18 SOLID QUAD4 338 307 313 343 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "19 SOLID QUAD4 337 303 307 338 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "20 SOLID QUAD4 332 302 303 337 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "21 SOLID QUAD4 436 433 438 439 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "22 SOLID QUAD4 432 427 433 436 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "23 SOLID QUAD4 429 422 427 432 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "24 SOLID QUAD4 423 416 422 429 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "25 SOLID QUAD4 417 409 416 423 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "26 SOLID QUAD4 411 399 409 417 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "27 SOLID QUAD4 403 390 399 411 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "28 SOLID QUAD4 394 380 390 403 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "29 SOLID QUAD4 386 366 380 394 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "30 SOLID QUAD4 375 353 366 386 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "31 SOLID QUAD4 365 341 353 375 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "32 SOLID QUAD4 356 324 341 365 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "33 SOLID QUAD4 345 316 324 356 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "34 SOLID QUAD4 330 299 316 345 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "35 SOLID QUAD4 321 293 299 330 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "36 SOLID QUAD4 318 287 293 321 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "37 SOLID QUAD4 313 280 287 318 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "38 SOLID QUAD4 307 278 280 313 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "39 SOLID QUAD4 303 272 278 307 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "40 SOLID QUAD4 302 271 272 303 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "41 SOLID QUAD4 433 428 434 438 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "42 SOLID QUAD4 427 421 428 433 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "43 SOLID QUAD4 422 414 421 427 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "44 SOLID QUAD4 416 406 414 422 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "45 SOLID QUAD4 409 396 406 416 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "46 SOLID QUAD4 399 388 396 409 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "47 SOLID QUAD4 390 374 388 399 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "48 SOLID QUAD4 380 361 374 390 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "49 SOLID QUAD4 366 346 361 380 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "50 SOLID QUAD4 353 326 346 366 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "51 SOLID QUAD4 341 314 326 353 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "52 SOLID QUAD4 324 295 314 341 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "53 SOLID QUAD4 316 286 295 324 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "54 SOLID QUAD4 299 274 286 316 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "55 SOLID QUAD4 293 265 274 299 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "56 SOLID QUAD4 287 257 265 293 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "57 SOLID QUAD4 280 255 257 287 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "58 SOLID QUAD4 278 250 255 280 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "59 SOLID QUAD4 272 246 250 278 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "60 SOLID QUAD4 271 240 246 272 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "61 SOLID QUAD4 428 424 431 434 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "62 SOLID QUAD4 421 415 424 428 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "63 SOLID QUAD4 414 407 415 421 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "64 SOLID QUAD4 406 395 407 414 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "65 SOLID QUAD4 396 384 395 406 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "66 SOLID QUAD4 388 372 384 396 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "67 SOLID QUAD4 374 357 372 388 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "68 SOLID QUAD4 361 335 357 374 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "69 SOLID QUAD4 346 319 335 361 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "70 SOLID QUAD4 326 297 319 346 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "71 SOLID QUAD4 314 282 297 326 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "72 SOLID QUAD4 295 268 282 314 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "73 SOLID QUAD4 286 258 268 295 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "74 SOLID QUAD4 274 248 258 286 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "75 SOLID QUAD4 265 237 248 274 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "76 SOLID QUAD4 257 231 237 265 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "77 SOLID QUAD4 255 225 231 257 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "78 SOLID QUAD4 250 219 225 255 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "79 SOLID QUAD4 246 217 219 250 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "80 SOLID QUAD4 240 216 217 246 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "81 SOLID QUAD4 424 418 425 431 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "82 SOLID QUAD4 415 408 418 424 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "83 SOLID QUAD4 407 397 408 415 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "84 SOLID QUAD4 395 383 397 407 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "85 SOLID QUAD4 384 370 383 395 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "86 SOLID QUAD4 372 351 370 384 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "87 SOLID QUAD4 357 328 351 372 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "88 SOLID QUAD4 335 310 328 357 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "89 SOLID QUAD4 319 292 310 335 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "90 SOLID QUAD4 297 275 292 319 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "91 SOLID QUAD4 282 261 275 297 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "92 SOLID QUAD4 268 243 261 282 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "93 SOLID QUAD4 258 234 243 268 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "94 SOLID QUAD4 248 224 234 258 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "95 SOLID QUAD4 237 212 224 248 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "96 SOLID QUAD4 231 205 212 237 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "97 SOLID QUAD4 225 203 205 231 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "98 SOLID QUAD4 219 197 203 225 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "99 SOLID QUAD4 217 195 197 219 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "100 SOLID QUAD4 216 190 195 217 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "101 SOLID QUAD4 418 410 420 425 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "102 SOLID QUAD4 408 398 410 418 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "103 SOLID QUAD4 397 387 398 408 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "104 SOLID QUAD4 383 371 387 397 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "105 SOLID QUAD4 370 350 371 383 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "106 SOLID QUAD4 351 327 350 370 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "107 SOLID QUAD4 328 306 327 351 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "108 SOLID QUAD4 310 290 306 328 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "109 SOLID QUAD4 292 266 290 310 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "110 SOLID QUAD4 275 253 266 292 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "111 SOLID QUAD4 261 236 253 275 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "112 SOLID QUAD4 243 222 236 261 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "113 SOLID QUAD4 234 210 222 243 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "114 SOLID QUAD4 224 198 210 234 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "115 SOLID QUAD4 212 186 198 224 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "116 SOLID QUAD4 205 183 186 212 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "117 SOLID QUAD4 203 177 183 205 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "118 SOLID QUAD4 197 172 177 203 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "119 SOLID QUAD4 195 169 172 197 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "120 SOLID QUAD4 190 167 169 195 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "121 SOLID QUAD4 410 402 413 420 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "122 SOLID QUAD4 398 389 402 410 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "123 SOLID QUAD4 387 373 389 398 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "124 SOLID QUAD4 371 358 373 387 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "125 SOLID QUAD4 350 329 358 371 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "126 SOLID QUAD4 327 308 329 350 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "127 SOLID QUAD4 306 285 308 327 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "128 SOLID QUAD4 290 263 285 306 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "129 SOLID QUAD4 266 247 263 290 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "130 SOLID QUAD4 253 230 247 266 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "131 SOLID QUAD4 236 214 230 253 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "132 SOLID QUAD4 222 200 214 236 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "133 SOLID QUAD4 210 185 200 222 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "134 SOLID QUAD4 198 179 185 210 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "135 SOLID QUAD4 186 165 179 198 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "136 SOLID QUAD4 183 160 165 186 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "137 SOLID QUAD4 177 154 160 183 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "138 SOLID QUAD4 172 152 154 177 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "139 SOLID QUAD4 169 150 152 172 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "140 SOLID QUAD4 167 145 150 169 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "141 SOLID QUAD4 402 393 404 413 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "142 SOLID QUAD4 389 379 393 402 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "143 SOLID QUAD4 373 360 379 389 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "144 SOLID QUAD4 358 334 360 373 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "145 SOLID QUAD4 329 309 334 358 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "146 SOLID QUAD4 308 289 309 329 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "147 SOLID QUAD4 285 262 289 308 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "148 SOLID QUAD4 263 239 262 285 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "149 SOLID QUAD4 247 226 239 263 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "150 SOLID QUAD4 230 207 226 247 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "151 SOLID QUAD4 214 192 207 230 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "152 SOLID QUAD4 200 180 192 214 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "153 SOLID QUAD4 185 164 180 200 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "154 SOLID QUAD4 179 155 164 185 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "155 SOLID QUAD4 165 143 155 179 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "156 SOLID QUAD4 160 138 143 165 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "157 SOLID QUAD4 154 134 138 160 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "158 SOLID QUAD4 152 130 134 154 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "159 SOLID QUAD4 150 124 130 152 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "160 SOLID QUAD4 145 123 124 150 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "161 SOLID QUAD4 393 385 400 404 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "162 SOLID QUAD4 379 367 385 393 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "163 SOLID QUAD4 360 347 367 379 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "164 SOLID QUAD4 334 320 347 360 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "165 SOLID QUAD4 309 291 320 334 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "166 SOLID QUAD4 289 267 291 309 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "167 SOLID QUAD4 262 245 267 289 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "168 SOLID QUAD4 239 228 245 262 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "169 SOLID QUAD4 226 206 228 239 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "170 SOLID QUAD4 207 187 206 226 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "171 SOLID QUAD4 192 174 187 207 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "172 SOLID QUAD4 180 161 174 192 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "173 SOLID QUAD4 164 149 161 180 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "174 SOLID QUAD4 155 136 149 164 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "175 SOLID QUAD4 143 128 136 155 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "176 SOLID QUAD4 138 120 128 143 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "177 SOLID QUAD4 134 114 120 138 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "178 SOLID QUAD4 130 109 114 134 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "179 SOLID QUAD4 124 107 109 130 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "180 SOLID QUAD4 123 105 107 124 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "181 SOLID QUAD4 385 376 391 400 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "182 SOLID QUAD4 367 352 376 385 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "183 SOLID QUAD4 347 325 352 367 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "184 SOLID QUAD4 320 298 325 347 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "185 SOLID QUAD4 291 276 298 320 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "186 SOLID QUAD4 267 252 276 291 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "187 SOLID QUAD4 245 229 252 267 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "188 SOLID QUAD4 228 208 229 245 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "189 SOLID QUAD4 206 189 208 228 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "190 SOLID QUAD4 187 173 189 206 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "191 SOLID QUAD4 174 158 173 187 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "192 SOLID QUAD4 161 142 158 174 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "193 SOLID QUAD4 149 133 142 161 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "194 SOLID QUAD4 136 118 133 149 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "195 SOLID QUAD4 128 110 118 136 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "196 SOLID QUAD4 120 102 110 128 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "197 SOLID QUAD4 114 97 102 120 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "198 SOLID QUAD4 109 93 97 114 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "199 SOLID QUAD4 107 91 93 109 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "200 SOLID QUAD4 105 88 91 107 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "201 SOLID QUAD4 376 364 381 391 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "202 SOLID QUAD4 352 340 364 376 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "203 SOLID QUAD4 325 312 340 352 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "204 SOLID QUAD4 298 283 312 325 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "205 SOLID QUAD4 276 260 283 298 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "206 SOLID QUAD4 252 235 260 276 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "207 SOLID QUAD4 229 211 235 252 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "208 SOLID QUAD4 208 193 211 229 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "209 SOLID QUAD4 189 175 193 208 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "210 SOLID QUAD4 173 157 175 189 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "211 SOLID QUAD4 158 140 157 173 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "212 SOLID QUAD4 142 126 140 158 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "213 SOLID QUAD4 133 117 126 142 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "214 SOLID QUAD4 118 103 117 133 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "215 SOLID QUAD4 110 95 103 118 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "216 SOLID QUAD4 102 85 95 110 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "217 SOLID QUAD4 97 82 85 102 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "218 SOLID QUAD4 93 76 82 97 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "219 SOLID QUAD4 91 74 76 93 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "220 SOLID QUAD4 88 72 74 91 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "221 SOLID QUAD4 364 359 377 381 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "222 SOLID QUAD4 340 323 359 364 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "223 SOLID QUAD4 312 296 323 340 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "224 SOLID QUAD4 283 269 296 312 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "225 SOLID QUAD4 260 242 269 283 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "226 SOLID QUAD4 235 220 242 260 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "227 SOLID QUAD4 211 201 220 235 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "228 SOLID QUAD4 193 181 201 211 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "229 SOLID QUAD4 175 162 181 193 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "230 SOLID QUAD4 157 141 162 175 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "231 SOLID QUAD4 140 125 141 157 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "232 SOLID QUAD4 126 113 125 140 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "233 SOLID QUAD4 117 99 113 126 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "234 SOLID QUAD4 103 87 99 117 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "235 SOLID QUAD4 95 80 87 103 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "236 SOLID QUAD4 85 70 80 95 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "237 SOLID QUAD4 82 66 70 85 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "238 SOLID QUAD4 76 63 66 82 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "239 SOLID QUAD4 74 59 63 76 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "240 SOLID QUAD4 72 58 59 74 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "241 SOLID QUAD4 359 344 369 377 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "242 SOLID QUAD4 323 315 344 359 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "243 SOLID QUAD4 296 284 315 323 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "244 SOLID QUAD4 269 259 284 296 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "245 SOLID QUAD4 242 233 259 269 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "246 SOLID QUAD4 220 209 233 242 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "247 SOLID QUAD4 201 184 209 220 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "248 SOLID QUAD4 181 163 184 201 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "249 SOLID QUAD4 162 148 163 181 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "250 SOLID QUAD4 141 132 148 162 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "251 SOLID QUAD4 125 116 132 141 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "252 SOLID QUAD4 113 100 116 125 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "253 SOLID QUAD4 99 86 100 113 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "254 SOLID QUAD4 87 77 86 99 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "255 SOLID QUAD4 80 68 77 87 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "256 SOLID QUAD4 70 60 68 80 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "257 SOLID QUAD4 66 53 60 70 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "258 SOLID QUAD4 63 51 53 66 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "259 SOLID QUAD4 59 47 51 63 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "260 SOLID QUAD4 58 44 47 59 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "261 SOLID QUAD4 344 331 363 369 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "262 SOLID QUAD4 315 300 331 344 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "263 SOLID QUAD4 284 273 300 315 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "264 SOLID QUAD4 259 249 273 284 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "265 SOLID QUAD4 233 223 249 259 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "266 SOLID QUAD4 209 199 223 233 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "267 SOLID QUAD4 184 178 199 209 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "268 SOLID QUAD4 163 156 178 184 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "269 SOLID QUAD4 148 137 156 163 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "270 SOLID QUAD4 132 119 137 148 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "271 SOLID QUAD4 116 104 119 132 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "272 SOLID QUAD4 100 90 104 116 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "273 SOLID QUAD4 86 79 90 100 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "274 SOLID QUAD4 77 65 79 86 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "275 SOLID QUAD4 68 55 65 77 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "276 SOLID QUAD4 60 50 55 68 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "277 SOLID QUAD4 53 43 50 60 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "278 SOLID QUAD4 51 38 43 53 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "279 SOLID QUAD4 47 37 38 51 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "280 SOLID QUAD4 44 35 37 47 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "281 SOLID QUAD4 331 322 354 363 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "282 SOLID QUAD4 300 294 322 331 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "283 SOLID QUAD4 273 264 294 300 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "284 SOLID QUAD4 249 238 264 273 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "285 SOLID QUAD4 223 213 238 249 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "286 SOLID QUAD4 199 188 213 223 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "287 SOLID QUAD4 178 166 188 199 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "288 SOLID QUAD4 156 146 166 178 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "289 SOLID QUAD4 137 129 146 156 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "290 SOLID QUAD4 119 111 129 137 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "291 SOLID QUAD4 104 96 111 119 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "292 SOLID QUAD4 90 81 96 104 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "293 SOLID QUAD4 79 69 81 90 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "294 SOLID QUAD4 65 56 69 79 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "295 SOLID QUAD4 55 46 56 65 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "296 SOLID QUAD4 50 41 46 55 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "297 SOLID QUAD4 43 33 41 50 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "298 SOLID QUAD4 38 30 33 43 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "299 SOLID QUAD4 37 27 30 38 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "300 SOLID QUAD4 35 24 27 37 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "301 SOLID QUAD4 322 317 349 354 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "302 SOLID QUAD4 294 288 317 322 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "303 SOLID QUAD4 264 256 288 294 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "304 SOLID QUAD4 238 232 256 264 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "305 SOLID QUAD4 213 204 232 238 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "306 SOLID QUAD4 188 182 204 213 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "307 SOLID QUAD4 166 159 182 188 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "308 SOLID QUAD4 146 139 159 166 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "309 SOLID QUAD4 129 121 139 146 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "310 SOLID QUAD4 111 101 121 129 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "311 SOLID QUAD4 96 84 101 111 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "312 SOLID QUAD4 81 71 84 96 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "313 SOLID QUAD4 69 61 71 81 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "314 SOLID QUAD4 56 49 61 69 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "315 SOLID QUAD4 46 40 49 56 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "316 SOLID QUAD4 41 31 40 46 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "317 SOLID QUAD4 33 23 31 41 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "318 SOLID QUAD4 30 21 23 33 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "319 SOLID QUAD4 27 18 21 30 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "320 SOLID QUAD4 24 16 18 27 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "321 SOLID QUAD4 317 311 342 349 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "322 SOLID QUAD4 288 281 311 317 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "323 SOLID QUAD4 256 254 281 288 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "324 SOLID QUAD4 232 227 254 256 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "325 SOLID QUAD4 204 202 227 232 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "326 SOLID QUAD4 182 176 202 204 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "327 SOLID QUAD4 159 153 176 182 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "328 SOLID QUAD4 139 135 153 159 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "329 SOLID QUAD4 121 115 135 139 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "330 SOLID QUAD4 101 98 115 121 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "331 SOLID QUAD4 84 83 98 101 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "332 SOLID QUAD4 71 67 83 84 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "333 SOLID QUAD4 61 54 67 71 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "334 SOLID QUAD4 49 42 54 61 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "335 SOLID QUAD4 40 32 42 49 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "336 SOLID QUAD4 31 26 32 40 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "337 SOLID QUAD4 23 20 26 31 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "338 SOLID QUAD4 21 14 20 23 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "339 SOLID QUAD4 18 12 14 21 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "340 SOLID QUAD4 16 11 12 18 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "341 SOLID QUAD4 311 305 339 342 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "342 SOLID QUAD4 281 279 305 311 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "343 SOLID QUAD4 254 251 279 281 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "344 SOLID QUAD4 227 221 251 254 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "345 SOLID QUAD4 202 196 221 227 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "346 SOLID QUAD4 176 171 196 202 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "347 SOLID QUAD4 153 151 171 176 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "348 SOLID QUAD4 135 131 151 153 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "349 SOLID QUAD4 115 112 131 135 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "350 SOLID QUAD4 98 94 112 115 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "351 SOLID QUAD4 83 78 94 98 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "352 SOLID QUAD4 67 64 78 83 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "353 SOLID QUAD4 54 52 64 67 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "354 SOLID QUAD4 42 39 52 54 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "355 SOLID QUAD4 32 29 39 42 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "356 SOLID QUAD4 26 22 29 32 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "357 SOLID QUAD4 20 15 22 26 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "358 SOLID QUAD4 14 9 15 20 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "359 SOLID QUAD4 12 7 9 14 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "360 SOLID QUAD4 11 5 7 12 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "361 SOLID QUAD4 305 304 336 339 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "362 SOLID QUAD4 279 277 304 305 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "363 SOLID QUAD4 251 244 277 279 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "364 SOLID QUAD4 221 218 244 251 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "365 SOLID QUAD4 196 194 218 221 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "366 SOLID QUAD4 171 170 194 196 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "367 SOLID QUAD4 151 147 170 171 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "368 SOLID QUAD4 131 127 147 151 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "369 SOLID QUAD4 112 108 127 131 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "370 SOLID QUAD4 94 92 108 112 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "371 SOLID QUAD4 78 75 92 94 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "372 SOLID QUAD4 64 62 75 78 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "373 SOLID QUAD4 52 48 62 64 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "374 SOLID QUAD4 39 36 48 52 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "375 SOLID QUAD4 29 28 36 39 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "376 SOLID QUAD4 22 19 28 29 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "377 SOLID QUAD4 15 13 19 22 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "378 SOLID QUAD4 9 8 13 15 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "379 SOLID QUAD4 7 4 8 9 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "380 SOLID QUAD4 5 3 4 7 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "381 SOLID QUAD4 304 301 333 336 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "382 SOLID QUAD4 277 270 301 304 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "383 SOLID QUAD4 244 241 270 277 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "384 SOLID QUAD4 218 215 241 244 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "385 SOLID QUAD4 194 191 215 218 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "386 SOLID QUAD4 170 168 191 194 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "387 SOLID QUAD4 147 144 168 170 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "388 SOLID QUAD4 127 122 144 147 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "389 SOLID QUAD4 108 106 122 127 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "390 SOLID QUAD4 92 89 106 108 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "391 SOLID QUAD4 75 73 89 92 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "392 SOLID QUAD4 62 57 73 75 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "393 SOLID QUAD4 48 45 57 62 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "394 SOLID QUAD4 36 34 45 48 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "395 SOLID QUAD4 28 25 34 36 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "396 SOLID QUAD4 19 17 25 28 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "397 SOLID QUAD4 13 10 17 19 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "398 SOLID QUAD4 8 6 10 13 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "399 SOLID QUAD4 4 2 6 8 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
+  - "400 SOLID QUAD4 3 1 2 4 MAT 1 KINEM nonlinear THICKNESS 1.0 PLANE_ASSUMPTION plane_strain"
 MATERIALS:
   - MAT: 1
     MAT_Struct_StVenantKirchhoff:
