@@ -8,6 +8,7 @@
 #include "4C_fsi_fluid_ale.hpp"
 
 #include "4C_comm_mpi_utils.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_pstream.hpp"
 
@@ -17,10 +18,11 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 FSI::FluidAleAlgorithm::FluidAleAlgorithm(MPI_Comm comm)
     : FluidMovingBoundaryBaseAlgorithm(
-          Global::Problem::instance()->fsi_dynamic_params(), "FSICoupling"),
+          FSI::Utils::problem_from_instance()->fsi_dynamic_params(), "FSICoupling"),
       comm_(comm)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
 
   step_ = 0;
   time_ = 0.;

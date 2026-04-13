@@ -7,6 +7,7 @@
 
 #include "4C_adapter_str_fsiwrapper.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_fem_discretization.hpp"
 #include "4C_fsi_str_model_evaluator_partitioned.hpp"
 #include "4C_global_data.hpp"
@@ -21,10 +22,11 @@ namespace
 {
   bool prestress_is_active(const double currentTime)
   {
+    auto* problem = Adapter::Utils::problem_from_instance();
+
     Inpar::Solid::PreStress pstype = Teuchos::getIntegralValue<Inpar::Solid::PreStress>(
-        Global::Problem::instance()->structural_dynamic_params(), "PRESTRESS");
-    const double pstime =
-        Global::Problem::instance()->structural_dynamic_params().get<double>("PRESTRESSTIME");
+        problem->structural_dynamic_params(), "PRESTRESS");
+    const double pstime = problem->structural_dynamic_params().get<double>("PRESTRESSTIME");
     return pstype != Inpar::Solid::PreStress::none && currentTime <= pstime + 1.0e-15;
   }
 }  // namespace
@@ -34,16 +36,18 @@ namespace
 Adapter::FSIStructureWrapper::FSIStructureWrapper(std::shared_ptr<Structure> structure)
     : StructureWrapper(structure)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   // set-up FSI interface
   interface_ = std::make_shared<Solid::MapExtractor>();
 
-  if (Global::Problem::instance()->get_problem_type() != Core::ProblemType::fpsi)
+  if (problem->get_problem_type() != Core::ProblemType::fpsi)
     interface_->setup(*discretization(), *discretization()->dof_row_map());
   else
     interface_->setup(*discretization(), *discretization()->dof_row_map(),
         true);  // create overlapping maps for fpsi problem
 
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   predictor_ = fsipart.get<std::string>("PREDICTOR");
 }
@@ -86,6 +90,8 @@ std::shared_ptr<Core::LinAlg::Vector<double>> Adapter::FSIStructureWrapper::rela
 std::shared_ptr<Core::LinAlg::Vector<double>>
 Adapter::FSIStructureWrapper::predict_interface_dispnp()
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   // prestressing business
   std::shared_ptr<Core::LinAlg::Vector<double>> idis;
 
@@ -135,8 +141,7 @@ Adapter::FSIStructureWrapper::predict_interface_dispnp()
   }
   else
   {
-    FOUR_C_THROW("unknown interface displacement predictor '{}'", Global::Problem::instance()
-                                                                      ->fsi_dynamic_params()
+    FOUR_C_THROW("unknown interface displacement predictor '{}'", problem->fsi_dynamic_params()
                                                                       .sublist("PARTITIONED SOLVER")
                                                                       .get<std::string>("PREDICTOR")
                                                                       .c_str());

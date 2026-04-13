@@ -7,6 +7,7 @@
 
 #include "4C_adapter_coupling_ehl_mortar.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_contact_friction_node.hpp"
 #include "4C_contact_interface.hpp"
 #include "4C_contact_lagrange_strategy_tsi.hpp"
@@ -25,15 +26,20 @@ Adapter::CouplingEhlMortar::CouplingEhlMortar(int spatial_dimension,
     Core::FE::ShapeFunctionType shape_function_type)
     : CouplingNonLinMortar(
           spatial_dimension, mortar_coupling_params, contact_dynamic_params, shape_function_type),
-      contact_regularization_(Global::Problem::instance()->contact_dynamic_params().get<bool>(
-          "REGULARIZED_NORMAL_CONTACT")),
-      regularization_thickness_(Global::Problem::instance()->contact_dynamic_params().get<double>(
-          "REGULARIZATION_THICKNESS")),
-      regularization_compliance_(Global::Problem::instance()->contact_dynamic_params().get<double>(
-          "REGULARIZATION_STIFFNESS"))
+      contact_regularization_(
+          Adapter::Utils::problem_from_instance()->contact_dynamic_params().get<bool>(
+              "REGULARIZED_NORMAL_CONTACT")),
+      regularization_thickness_(
+          Adapter::Utils::problem_from_instance()->contact_dynamic_params().get<double>(
+              "REGULARIZATION_THICKNESS")),
+      regularization_compliance_(
+          Adapter::Utils::problem_from_instance()->contact_dynamic_params().get<double>(
+              "REGULARIZATION_STIFFNESS"))
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   if (Teuchos::getIntegralValue<Mortar::ParallelRedist>(
-          Global::Problem::instance()->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION"),
+          problem->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION"),
           "PARALLEL_REDIST") != Mortar::ParallelRedist::redist_none)
     FOUR_C_THROW(
         "EHL does not support parallel redistribution. Set \"PARALLEL_REDIST none\" in section "
@@ -43,9 +49,8 @@ Adapter::CouplingEhlMortar::CouplingEhlMortar(int spatial_dimension,
     if (regularization_compliance_ <= 0. || regularization_thickness_ <= 0.)
       FOUR_C_THROW("need positive REGULARIZATION_THICKNESS and REGULARIZATION_STIFFNESS");
   if (contact_regularization_) regularization_compliance_ = 1. / regularization_compliance_;
-  if (Global::Problem::instance()->contact_dynamic_params().get<bool>(
-          "REGULARIZED_NORMAL_CONTACT") &&
-      not Global::Problem::instance()->elasto_hydro_dynamic_params().get<bool>("DRY_CONTACT_MODEL"))
+  if (problem->contact_dynamic_params().get<bool>("REGULARIZED_NORMAL_CONTACT") &&
+      not problem->elasto_hydro_dynamic_params().get<bool>("DRY_CONTACT_MODEL"))
     FOUR_C_THROW("for dry contact model you need REGULARIZED_NORMAL_CONTACT and DRY_CONTACT_MODEL");
 }
 
@@ -70,12 +75,14 @@ void Adapter::CouplingEhlMortar::setup(std::shared_ptr<Core::FE::Discretization>
     std::shared_ptr<Core::FE::Discretization> slavedis, std::vector<int> coupleddof,
     const std::string& couplingcond)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   Adapter::CouplingNonLinMortar::setup(masterdis, slavedis, coupleddof, couplingcond);
   z_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs(), true);
   fscn_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs(), true);
 
   auto ftype = Teuchos::getIntegralValue<CONTACT::FrictionType>(
-      Global::Problem::instance()->contact_dynamic_params(), "FRICTION");
+      problem->contact_dynamic_params(), "FRICTION");
 
   std::vector<const Core::Conditions::Condition*> ehl_conditions;
   masterdis->get_condition(couplingcond, ehl_conditions);
@@ -785,6 +792,8 @@ void Adapter::CouplingEhlMortar::assemble_normals_deriv()
 
 void Adapter::CouplingEhlMortar::assemble_real_gap()
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   nodal_gap_ = std::make_shared<Core::LinAlg::Vector<double>>(*slavenoderowmap_, true);
 
   for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
@@ -811,8 +820,7 @@ void Adapter::CouplingEhlMortar::assemble_real_gap()
     nodal_gap_->replace_global_value(cnode->id(), real_gap);
   }
 
-  static const double offset =
-      Global::Problem::instance()->lubrication_dynamic_params().get<double>("GAP_OFFSET");
+  static const double offset = problem->lubrication_dynamic_params().get<double>("GAP_OFFSET");
   for (int i = 0; i < nodal_gap_->get_map().num_my_elements(); ++i)
     nodal_gap_->get_values()[i] += offset;
 }

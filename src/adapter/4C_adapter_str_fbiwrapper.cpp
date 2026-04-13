@@ -7,6 +7,7 @@
 
 #include "4C_adapter_str_fbiwrapper.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_beaminteraction_calc_utils.hpp"
 #include "4C_fsi_str_model_evaluator_partitioned.hpp"
 #include "4C_global_data.hpp"
@@ -23,9 +24,11 @@ FOUR_C_NAMESPACE_OPEN
 Adapter::FBIStructureWrapper::FBIStructureWrapper(std::shared_ptr<Structure> structure)
     : FSIStructureWrapper(structure)
 {
-  const bool is_prestress = Teuchos::getIntegralValue<Inpar::Solid::PreStress>(
-                                Global::Problem::instance()->structural_dynamic_params(),
-                                "PRESTRESS") != Inpar::Solid::PreStress::none;
+  auto* problem = Adapter::Utils::problem_from_instance();
+
+  const bool is_prestress =
+      Teuchos::getIntegralValue<Inpar::Solid::PreStress>(
+          problem->structural_dynamic_params(), "PRESTRESS") != Inpar::Solid::PreStress::none;
   if (is_prestress)
   {
     FOUR_C_THROW("Prestressing for fluid-beam interaction not tested yet.");

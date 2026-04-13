@@ -18,6 +18,7 @@
 #include "4C_fem_geometry_searchtree.hpp"
 #include "4C_fem_geometry_searchtree_service.hpp"
 #include "4C_fsi_input.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_control.hpp"
 #include "4C_linalg_utils_sparse_algebra_assemble.hpp"
@@ -40,9 +41,11 @@ FSI::DirichletNeumannVolCoupl::DirichletNeumannVolCoupl(MPI_Comm comm)
 /*----------------------------------------------------------------------*/
 void FSI::DirichletNeumannVolCoupl::setup()
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   FSI::DirichletNeumann::setup();
 
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   set_kinematic_coupling(Teuchos::getIntegralValue<FSI::CoupVarPart>(fsipart, "COUPVARIABLE") ==
                          FSI::CoupVarPart::disp);
@@ -62,7 +65,8 @@ void FSI::DirichletNeumannVolCoupl::setup()
 void FSI::DirichletNeumannVolCoupl::setup_coupling_struct_ale(
     const Teuchos::ParameterList& fsidyn, MPI_Comm comm)
 {
-  const int ndim = Global::Problem::instance()->n_dim();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const int ndim = problem->n_dim();
 
   coupsa_ = std::make_shared<Coupling::Adapter::MortarVolCoupl>();
 
@@ -84,8 +88,7 @@ void FSI::DirichletNeumannVolCoupl::setup_coupling_struct_ale(
       &dofsets12, &dofsets21, nullptr, false);
 
   // setup coupling adapter
-  coupsa_->setup(Global::Problem::instance()->volmortar_params(),
-      Global::Problem::instance()->cut_general_params());
+  coupsa_->setup(problem->volmortar_params(), problem->cut_general_params());
 }
 
 /*----------------------------------------------------------------------*/
@@ -172,10 +175,12 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::DirichletNeumannVolCoupl::ale
 /*----------------------------------------------------------------------------*/
 void FSI::InterfaceCorrector::setup(std::shared_ptr<Adapter::FluidAle> fluidale)
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   fluidale_ = fluidale;
 
   volcorrector_ = std::make_shared<VolCorrector>();
-  volcorrector_->setup(Global::Problem::instance()->n_dim(), fluidale);
+  volcorrector_->setup(problem->n_dim(), fluidale);
 
   return;
 }

@@ -8,6 +8,7 @@
 #include "4C_fsi_nox_aitken.hpp"
 
 #include "4C_comm_mpi_utils.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_utils.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_control.hpp"
@@ -130,11 +131,13 @@ bool FSI::Nonlinear::AitkenRelaxation::compute(::NOX::Abstract::Group& grp, doub
   if (Core::Communication::my_mpi_rank(
           dynamic_cast<const NOX::Nln::Vector&>(F).get_linalg_vector().get_comm()) == 0)
   {
+    auto* problem = FSI::Utils::problem_from_instance();
+
     static int count;
     static std::ofstream* out;
     if (out == nullptr)
     {
-      std::string s = Global::Problem::instance()->output_control_file()->file_name();
+      std::string s = problem->output_control_file()->file_name();
       s.append(".omega");
       out = new std::ofstream(s.c_str());
     }

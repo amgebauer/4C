@@ -7,6 +7,7 @@
 
 #include "4C_adapter_str_fpsiwrapper.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_fem_discretization.hpp"
 #include "4C_global_data.hpp"
 #include "4C_linalg_utils_sparse_algebra_create.hpp"
@@ -20,10 +21,11 @@ namespace
 {
   bool prestress_is_active(const double currentTime)
   {
+    auto* problem = Adapter::Utils::problem_from_instance();
+
     Inpar::Solid::PreStress pstype = Teuchos::getIntegralValue<Inpar::Solid::PreStress>(
-        Global::Problem::instance()->structural_dynamic_params(), "PRESTRESS");
-    const double pstime =
-        Global::Problem::instance()->structural_dynamic_params().get<double>("PRESTRESSTIME");
+        problem->structural_dynamic_params(), "PRESTRESS");
+    const double pstime = problem->structural_dynamic_params().get<double>("PRESTRESSTIME");
     return pstype != Inpar::Solid::PreStress::none && currentTime <= pstime + 1.0e-15;
   }
 }  // namespace

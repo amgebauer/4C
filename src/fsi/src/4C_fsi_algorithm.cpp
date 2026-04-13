@@ -12,6 +12,7 @@
 #include "4C_adapter_str_structure_new.hpp"
 #include "4C_comm_mpi_utils.hpp"
 #include "4C_coupling_adapter.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_str_model_evaluator_partitioned.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io.hpp"
@@ -28,7 +29,7 @@ FOUR_C_NAMESPACE_OPEN
 // turn defines the dof number ordering of the Discretizations.
 /*----------------------------------------------------------------------*/
 FSI::Algorithm::Algorithm(MPI_Comm comm)
-    : AlgorithmBase(comm, Global::Problem::instance()->fsi_dynamic_params()),
+    : AlgorithmBase(comm, FSI::Utils::problem_from_instance()->fsi_dynamic_params()),
       adapterbase_ptr_(nullptr),
       use_old_structure_(false)
 {
@@ -41,17 +42,18 @@ FSI::Algorithm::Algorithm(MPI_Comm comm)
 /*----------------------------------------------------------------------*/
 void FSI::Algorithm::setup()
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   // access the structural discretization
-  std::shared_ptr<Core::FE::Discretization> structdis =
-      Global::Problem::instance()->get_dis("structure");
+  std::shared_ptr<Core::FE::Discretization> structdis = problem->get_dis("structure");
 
   // access structural dynamic params list which will be possibly modified while creating the time
   // integrator
-  const Teuchos::ParameterList& sdyn = Global::Problem::instance()->structural_dynamic_params();
+  const Teuchos::ParameterList& sdyn = problem->structural_dynamic_params();
 
   // access the fsi dynamic params
   Teuchos::ParameterList& fsidyn =
-      const_cast<Teuchos::ParameterList&>(Global::Problem::instance()->fsi_dynamic_params());
+      const_cast<Teuchos::ParameterList&>(problem->fsi_dynamic_params());
 
   // build and register fsi model evaluator
   std::shared_ptr<Solid::ModelEvaluator::Generic> fsi_model_ptr =
@@ -94,8 +96,8 @@ void FSI::Algorithm::setup()
                    "\n"
                 << std::endl;
 
-    Adapter::StructureBaseAlgorithm structure(Global::Problem::instance()->fsi_dynamic_params(),
-        const_cast<Teuchos::ParameterList&>(sdyn), structdis);
+    Adapter::StructureBaseAlgorithm structure(
+        problem->fsi_dynamic_params(), const_cast<Teuchos::ParameterList&>(sdyn), structdis);
     structure_ =
         std::dynamic_pointer_cast<Adapter::FSIStructureWrapper>(structure.structure_field());
     structure_->setup();
@@ -113,7 +115,7 @@ void FSI::Algorithm::setup()
         "set INT_STRATEGY to Old in ---STRUCTURAL DYNAMIC section!");
 
   Adapter::FluidMovingBoundaryBaseAlgorithm MBFluidbase(
-      Global::Problem::instance()->fsi_dynamic_params(), "FSICoupling");
+      problem->fsi_dynamic_params(), "FSICoupling");
   fluid_ = MBFluidbase.mb_fluid_field();
 
   coupsf_ = std::make_shared<Coupling::Adapter::Coupling>();

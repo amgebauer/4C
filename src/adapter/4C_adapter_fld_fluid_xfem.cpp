@@ -8,6 +8,7 @@
 #include "4C_adapter_fld_fluid_xfem.hpp"
 
 #include "4C_adapter_fld_fluid_xfsi.hpp"
+#include "4C_adapter_problem_access.hpp"
 #include "4C_coupling_adapter.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_global_data.hpp"
@@ -20,7 +21,7 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 Adapter::FluidXFEM::FluidXFEM(const Teuchos::ParameterList& prbdyn, std::string condname)
     : fluid_(std::make_shared<Adapter::FluidBaseAlgorithm>(
-          prbdyn, Global::Problem::instance()->fluid_dynamic_params(), "fluid", false)
+          prbdyn, Adapter::Utils::problem_from_instance()->fluid_dynamic_params(), "fluid", false)
               ->fluid_field())
 {
   return;

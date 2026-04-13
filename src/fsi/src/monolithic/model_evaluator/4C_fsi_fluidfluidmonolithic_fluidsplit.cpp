@@ -17,6 +17,7 @@
 #include "4C_coupling_adapter.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_fsi_input.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io.hpp"
 #include "4C_io_control.hpp"
@@ -116,6 +117,8 @@ void FSI::FluidFluidMonolithicFluidSplit::setup_dbc_map_extractor()
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplit::output()
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   structure_field()->output();
   fluid_field()->output();
 
@@ -131,7 +134,7 @@ void FSI::FluidFluidMonolithicFluidSplit::output()
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdaemb =
         fluid_field()->x_fluid_fluid_map_extractor()->extract_fluid_vector(*lambdafull);
 
-    const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
     const int uprestart = fsidyn.get<int>("RESTARTEVERY");
     const int upres = fsidyn.get<int>("RESULTSEVERY");
     if ((uprestart != 0 && fluid_field()->step() % uprestart == 0) ||
@@ -153,13 +156,15 @@ void FSI::FluidFluidMonolithicFluidSplit::output()
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplit::read_restart(int step)
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   // Read Lagrange Multiplier (associated with embedded fluid)
   {
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdaemb =
         std::make_shared<Core::LinAlg::Vector<double>>(
             *(fluid_field()->x_fluid_fluid_map_extractor()->fluid_map()), true);
     Core::IO::DiscretizationReader reader = Core::IO::DiscretizationReader(
-        *fluid_field()->discretization(), Global::Problem::instance()->input_control_file(), step);
+        *fluid_field()->discretization(), problem->input_control_file(), step);
     reader.read_vector(lambdaemb, "fsilambda");
     // Insert into vector containing the whole merged fluid DOF
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =

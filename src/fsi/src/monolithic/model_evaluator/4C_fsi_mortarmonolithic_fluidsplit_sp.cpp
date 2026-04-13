@@ -17,6 +17,7 @@
 #include "4C_coupling_adapter_mortar.hpp"
 #include "4C_fem_discretization.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io.hpp"
@@ -42,6 +43,8 @@ FSI::MortarMonolithicFluidSplitSaddlePoint::MortarMonolithicFluidSplitSaddlePoin
     MPI_Comm comm, const Teuchos::ParameterList& timeparams)
     : BlockMonolithic(comm, timeparams), comm_(comm)
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   // ---------------------------------------------------------------------------
   // FSI specific check of Dirichlet boundary conditions
   // ---------------------------------------------------------------------------
@@ -142,9 +145,8 @@ FSI::MortarMonolithicFluidSplitSaddlePoint::MortarMonolithicFluidSplitSaddlePoin
   notsetup_ = true;
 
   coupling_solid_fluid_mortar_ = std::make_shared<Coupling::Adapter::CouplingMortar>(
-      Global::Problem::instance()->n_dim(), Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+      problem->n_dim(), problem->mortar_coupling_params(), problem->contact_dynamic_params(),
+      problem->spatial_approximation_type());
 
   ale_inner_interf_transform_ = std::make_shared<Coupling::Adapter::MatrixColTransform>();
   fluid_mesh_inner_inner_transform_ = std::make_shared<Coupling::Adapter::MatrixColTransform>();
@@ -184,16 +186,18 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::set_lag_mult()
 /*----------------------------------------------------------------------------*/
 void FSI::MortarMonolithicFluidSplitSaddlePoint::setup_system()
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   if (notsetup_)
   {
-    const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
 
     set_default_parameters(fsidyn, nox_parameter_list());
 
     // we use non-matching meshes at the interface
     // mortar with: structure = master, fluid = slave
 
-    const int ndim = Global::Problem::instance()->n_dim();
+    const int ndim = problem->n_dim();
 
     // get coupling objects
     Coupling::Adapter::Coupling& interface_coup_fluid_ale = interface_fluid_ale_coupling();
@@ -207,11 +211,9 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::setup_system()
 
     coupling_solid_fluid_mortar_->setup(structure_field()->discretization(),
         fluid_field()->discretization(), ale_field()->write_access_discretization(), coupleddof,
-        "FSICoupling", comm_, Global::Problem::instance()->function_manager(),
-        Global::Problem::instance()->binning_strategy_params(),
-        Global::Problem::instance()->discretization_map(),
-        Global::Problem::instance()->output_control_file(),
-        Global::Problem::instance()->spatial_approximation_type(), true);
+        "FSICoupling", comm_, problem->function_manager(), problem->binning_strategy_params(),
+        problem->discretization_map(), problem->output_control_file(),
+        problem->spatial_approximation_type(), true);
 
     // fluid to ale at the interface
     interface_coup_fluid_ale.setup_condition_coupling(*fluid_field()->discretization(),
@@ -251,7 +253,7 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::setup_system()
     notsetup_ = false;
   }
 
-  const int restart = Global::Problem::instance()->restart();
+  const int restart = problem->restart();
   if (restart)
   {
     const bool restartfrompartfsi = timeparams_.get<bool>("RESTART_FROM_PART_FSI");
@@ -981,7 +983,8 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::setup_system_matrix(
 void FSI::MortarMonolithicFluidSplitSaddlePoint::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -1036,7 +1039,8 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::unscale_solution(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& x,
     Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -1305,6 +1309,8 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::output_lambda()
 /*----------------------------------------------------------------------------*/
 void FSI::MortarMonolithicFluidSplitSaddlePoint::read_restart(int step)
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   structure_field()->read_restart(step);
   fluid_field()->read_restart(step);
 
@@ -1312,7 +1318,7 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::read_restart(int step)
   std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =
       std::make_shared<Core::LinAlg::Vector<double>>(*fluid_field()->dof_row_map(), true);
   Core::IO::DiscretizationReader reader = Core::IO::DiscretizationReader(
-      *fluid_field()->discretization(), Global::Problem::instance()->input_control_file(), step);
+      *fluid_field()->discretization(), problem->input_control_file(), step);
   reader.read_vector(lambdafull, "fsilambda");
   auto lag_mult_old_on_fluid_map = fluid_field()->interface()->extract_fsi_cond_vector(*lambdafull);
 

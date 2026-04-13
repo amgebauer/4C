@@ -12,6 +12,7 @@
 #include "4C_coupling_adapter_mortar.hpp"
 #include "4C_fem_geometry_searchtree.hpp"
 #include "4C_fsi_input.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_utils.hpp"
 #include "4C_global_data.hpp"
 #include "4C_mortar_interface.hpp"
@@ -33,16 +34,17 @@ FSI::DirichletNeumannSlideale::DirichletNeumannSlideale(MPI_Comm comm) : Dirichl
 /*----------------------------------------------------------------------*/
 void FSI::DirichletNeumannSlideale::setup()
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   // call setup of base class
   FSI::DirichletNeumann::setup();
 
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   set_kinematic_coupling(Teuchos::getIntegralValue<FSI::CoupVarPart>(fsipart, "COUPVARIABLE") ==
                          FSI::CoupVarPart::disp);
 
-  auto aletype = Teuchos::getIntegralValue<FSI::SlideALEProj>(
-      Global::Problem::instance()->fsi_dynamic_params(), "SLIDEALEPROJ");
+  auto aletype = Teuchos::getIntegralValue<FSI::SlideALEProj>(fsidyn, "SLIDEALEPROJ");
 
   slideale_ = std::make_shared<FSI::Utils::SlideAleUtils>(structure_field()->discretization(),
       mb_fluid_field()->discretization(), structure_fluid_coupling_mortar(), true, aletype);
@@ -155,7 +157,8 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::DirichletNeumannSlideale::ini
   }
   else
   {
-    const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+    auto* problem = FSI::Utils::problem_from_instance();
+    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
     const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
     if (fsipart.get<std::string>("PREDICTOR") != "d(n)")
     {

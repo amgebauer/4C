@@ -7,6 +7,7 @@
 
 #include "4C_adapter_scatra_fluid_ale_coupling_algo.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_ale_utils_mapextractor.hpp"
 #include "4C_coupling_adapter.hpp"
 #include "4C_fem_discretization.hpp"
@@ -23,7 +24,8 @@ Adapter::ScaTraFluidAleCouplingAlgorithm::ScaTraFluidAleCouplingAlgorithm(MPI_Co
     : ScaTraFluidCouplingAlgorithm(
           comm, prbdyn, true, "scatra", solverparams),  // yes, we need the ALE formulation
       AleBaseAlgorithm(prbdyn,
-          Global::Problem::instance()->get_dis("ale")),  // construct ale base algorithm as well
+          Adapter::Utils::problem_from_instance()->get_dis(
+              "ale")),  // construct ale base algorithm as well
       condname_(condname)
 {
   // keep constructor empty
@@ -48,10 +50,12 @@ void Adapter::ScaTraFluidAleCouplingAlgorithm::init()
 *----------------------------------------------------------------------*/
 void Adapter::ScaTraFluidAleCouplingAlgorithm::setup()
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   // call setup() in base class
   Adapter::ScaTraFluidCouplingAlgorithm::setup();
 
-  const int ndim = Global::Problem::instance()->n_dim();
+  const int ndim = problem->n_dim();
 
   // set up couplings
   icoupfa_ = std::make_shared<Coupling::Adapter::Coupling>();

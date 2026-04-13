@@ -7,6 +7,7 @@
 
 #include "4C_adapter_str_structure.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_adapter_str_constr_merged.hpp"
 #include "4C_adapter_str_fpsiwrapper.hpp"
 #include "4C_adapter_str_fsi_timint_adaptive.hpp"
@@ -83,7 +84,7 @@ void Adapter::StructureBaseAlgorithm::create_tim_int(const Teuchos::ParameterLis
   Teuchos::TimeMonitor monitor(*t);
 
   // get the problem instance
-  Global::Problem* problem = Global::Problem::instance();
+  Global::Problem* problem = Adapter::Utils::problem_from_instance();
   // what's the current problem type?
   Core::ProblemType probtype = problem->get_problem_type();
 
@@ -350,6 +351,7 @@ void Adapter::StructureBaseAlgorithm::create_tim_int(const Teuchos::ParameterLis
 std::shared_ptr<Core::LinAlg::Solver> Adapter::StructureBaseAlgorithm::create_linear_solver(
     std::shared_ptr<Core::FE::Discretization>& actdis, const Teuchos::ParameterList& sdyn)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
   std::shared_ptr<Core::LinAlg::Solver> solver = nullptr;
 
   // get the solver number used for structural problems
@@ -360,11 +362,9 @@ std::shared_ptr<Core::LinAlg::Solver> Adapter::StructureBaseAlgorithm::create_li
         "no linear solver defined for structural field. Please set LINEAR_SOLVER in STRUCTURAL "
         "DYNAMIC to a valid number!");
 
-  solver = std::make_shared<Core::LinAlg::Solver>(
-      Global::Problem::instance()->solver_params(linsolvernumber), actdis->get_comm(),
-      Global::Problem::instance()->solver_params_callback(),
-      Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-          Global::Problem::instance()->io_params(), "VERBOSITY"));
+  solver = std::make_shared<Core::LinAlg::Solver>(problem->solver_params(linsolvernumber),
+      actdis->get_comm(), problem->solver_params_callback(),
+      Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem->io_params(), "VERBOSITY"));
 
   compute_null_space_if_necessary(*actdis, solver->params());
 
@@ -377,6 +377,7 @@ std::shared_ptr<Core::LinAlg::Solver>
 Adapter::StructureBaseAlgorithm::create_contact_meshtying_solver(
     Core::FE::Discretization& actdis, const Teuchos::ParameterList& sdyn)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
   std::shared_ptr<Core::LinAlg::Solver> solver = nullptr;
 
   // Get mortar information: contact or meshtying or both?
@@ -392,7 +393,7 @@ Adapter::StructureBaseAlgorithm::create_contact_meshtying_solver(
     if (mtcond.size() != 0 and ccond.size() == 0) onlymeshtying = true;
     if (mtcond.size() == 0 and ccond.size() != 0) onlycontact = true;
   }
-  const Teuchos::ParameterList& mcparams = Global::Problem::instance()->contact_dynamic_params();
+  const Teuchos::ParameterList& mcparams = problem->contact_dynamic_params();
 
   // Get the solver number used for meshtying/contact problems
   const int linsolvernumber = mcparams.get<int>("LINEAR_SOLVER");
@@ -412,9 +413,9 @@ Adapter::StructureBaseAlgorithm::create_contact_meshtying_solver(
        * Solver can be either a direct solver (UMFPACK, Superlu) or an iterative solver (Belos).
        */
       const auto sol = Teuchos::getIntegralValue<Core::LinearSolver::SolverType>(
-          Global::Problem::instance()->solver_params(linsolvernumber), "SOLVER");
+          problem->solver_params(linsolvernumber), "SOLVER");
       const auto prec = Teuchos::getIntegralValue<Core::LinearSolver::PreconditionerType>(
-          Global::Problem::instance()->solver_params(linsolvernumber), "AZPREC");
+          problem->solver_params(linsolvernumber), "AZPREC");
       if (Core::LinearSolver::is_iterative_linear_solver(sol))
       {
         // if an iterative solver is chosen we need a block preconditioner
@@ -432,11 +433,9 @@ Adapter::StructureBaseAlgorithm::create_contact_meshtying_solver(
       }
 
       // build meshtying/contact solver
-      solver = std::make_shared<Core::LinAlg::Solver>(
-          Global::Problem::instance()->solver_params(linsolvernumber), actdis.get_comm(),
-          Global::Problem::instance()->solver_params_callback(),
-          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-              Global::Problem::instance()->io_params(), "VERBOSITY"));
+      solver = std::make_shared<Core::LinAlg::Solver>(problem->solver_params(linsolvernumber),
+          actdis.get_comm(), problem->solver_params_callback(),
+          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem->io_params(), "VERBOSITY"));
 
       compute_null_space_if_necessary(actdis, solver->params());
 
@@ -481,11 +480,9 @@ Adapter::StructureBaseAlgorithm::create_contact_meshtying_solver(
     default:
     {
       // build meshtying solver
-      solver = std::make_shared<Core::LinAlg::Solver>(
-          Global::Problem::instance()->solver_params(linsolvernumber), actdis.get_comm(),
-          Global::Problem::instance()->solver_params_callback(),
-          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-              Global::Problem::instance()->io_params(), "VERBOSITY"));
+      solver = std::make_shared<Core::LinAlg::Solver>(problem->solver_params(linsolvernumber),
+          actdis.get_comm(), problem->solver_params_callback(),
+          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem->io_params(), "VERBOSITY"));
       compute_null_space_if_necessary(actdis, solver->params());
     }
     break;

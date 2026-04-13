@@ -9,6 +9,7 @@
 #include "4C_adapter_fld_fluid_ale.hpp"
 #include "4C_adapter_fld_fluid_ale_xfem.hpp"
 #include "4C_adapter_fld_fluid_xfem.hpp"
+#include "4C_adapter_problem_access.hpp"
 #include "4C_global_data.hpp"
 
 #include <Teuchos_StandardParameterEntryValidators.hpp>
@@ -21,7 +22,8 @@ FOUR_C_NAMESPACE_OPEN
 Adapter::FluidMovingBoundaryBaseAlgorithm::FluidMovingBoundaryBaseAlgorithm(
     const Teuchos::ParameterList& prbdyn, std::string condname)
 {
-  const Core::ProblemType probtype = Global::Problem::instance()->get_problem_type();
+  auto* problem = Adapter::Utils::problem_from_instance();
+  const Core::ProblemType probtype = problem->get_problem_type();
 
   // switch between moving domain fluid implementations
   switch (probtype)
@@ -37,7 +39,7 @@ Adapter::FluidMovingBoundaryBaseAlgorithm::FluidMovingBoundaryBaseAlgorithm(
     case Core::ProblemType::fluid_xfem:
     case Core::ProblemType::fsi_xfem:
     {
-      const Teuchos::ParameterList xfluid = Global::Problem::instance()->x_fluid_dynamic_params();
+      const Teuchos::ParameterList xfluid = problem->x_fluid_dynamic_params();
       bool alefluid = xfluid.sublist("GENERAL").get<bool>("ALE_XFluid");
       if (!alefluid)  // xfluid
       {

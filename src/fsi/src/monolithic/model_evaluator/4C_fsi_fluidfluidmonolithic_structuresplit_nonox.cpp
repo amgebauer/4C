@@ -18,6 +18,7 @@
 #include "4C_fem_discretization.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_fsi_input.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_global_data.hpp"
 #include "4C_inpar_xfem.hpp"
@@ -443,8 +444,10 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::initial_guess(
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   // should we scale the system?
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -520,7 +523,8 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::unscale_solution(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& x,
     Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -701,6 +705,8 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::extract_field_vectors(
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::output()
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   structure_field()->output();
 
   // output Lagrange multiplier
@@ -708,7 +714,7 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::output()
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =
         structure_field()->interface()->insert_fsi_cond_vector(*lambda_);
 
-    const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
     const int uprestart = fsidyn.get<int>("RESTARTEVERY");
     const int upres = fsidyn.get<int>("RESULTSEVERY");
     if ((uprestart != 0 && fluid_field()->step() % uprestart == 0) ||
@@ -732,13 +738,14 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::output()
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::read_restart(int step)
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   // read Lagrange multiplier
   {
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =
         std::make_shared<Core::LinAlg::Vector<double>>(*structure_field()->dof_row_map(), true);
-    Core::IO::DiscretizationReader reader =
-        Core::IO::DiscretizationReader(*structure_field()->discretization(),
-            Global::Problem::instance()->input_control_file(), step);
+    Core::IO::DiscretizationReader reader = Core::IO::DiscretizationReader(
+        *structure_field()->discretization(), problem->input_control_file(), step);
     reader.read_vector(lambdafull, "fsilambda");
     lambda_ = structure_field()->interface()->extract_fsi_cond_vector(*lambdafull);
   }

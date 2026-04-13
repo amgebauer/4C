@@ -14,6 +14,7 @@
 #include "4C_coupling_adapter.hpp"
 #include "4C_fem_discretization.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_control.hpp"
@@ -33,14 +34,15 @@ FOUR_C_NAMESPACE_OPEN
 FSI::MonolithicNoNOX::MonolithicNoNOX(MPI_Comm comm, const Teuchos::ParameterList& timeparams)
     : MonolithicBase(comm, timeparams), zeros_(nullptr)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
 
   // use tailored fluid- and ALE-wrappers
   fluid_ = std::dynamic_pointer_cast<Adapter::FluidFluidFSI>(MonolithicBase::fluid_field());
   ale_ = std::dynamic_pointer_cast<Adapter::AleXFFsiWrapper>(MonolithicBase::ale_field());
 
-  std::string s = Global::Problem::instance()->output_control_file()->file_name();
+  std::string s = problem->output_control_file()->file_name();
   s.append(".iteration");
   log_ = std::make_shared<std::ofstream>(s.c_str());
   itermax_ = fsimono.get<int>("ITEMAX");
@@ -71,7 +73,8 @@ FSI::MonolithicNoNOX::MonolithicNoNOX(MPI_Comm comm, const Teuchos::ParameterLis
 
 void FSI::MonolithicNoNOX::setup_system()
 {
-  const int ndim = Global::Problem::instance()->n_dim();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const int ndim = problem->n_dim();
 
   Coupling::Adapter::Coupling& coupsf = structure_fluid_coupling();
   Coupling::Adapter::Coupling& coupsa = structure_ale_coupling();
@@ -280,6 +283,8 @@ bool FSI::MonolithicNoNOX::converged()
 /*----------------------------------------------------------------------*/
 void FSI::MonolithicNoNOX::linear_solve()
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   // merge blockmatrix to SparseMatrix and solve
   std::shared_ptr<Core::LinAlg::SparseMatrix> sparse = systemmatrix_->merge();
 
@@ -291,13 +296,11 @@ void FSI::MonolithicNoNOX::linear_solve()
 
   Core::LinAlg::apply_dirichlet_to_system(*sparse, *iterinc_, *rhs_, *zeros_, *combined_dbc_map());
 
-  const Teuchos::ParameterList& fdyn = Global::Problem::instance()->fluid_dynamic_params();
+  const Teuchos::ParameterList& fdyn = problem->fluid_dynamic_params();
   const int fluidsolver = fdyn.get<int>("LINEAR_SOLVER");
-  solver_ = std::make_shared<Core::LinAlg::Solver>(
-      Global::Problem::instance()->solver_params(fluidsolver), get_comm(),
-      Global::Problem::instance()->solver_params_callback(),
-      Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-          Global::Problem::instance()->io_params(), "VERBOSITY"));
+  solver_ = std::make_shared<Core::LinAlg::Solver>(problem->solver_params(fluidsolver), get_comm(),
+      problem->solver_params_callback(),
+      Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem->io_params(), "VERBOSITY"));
 
 
   // standard solver call

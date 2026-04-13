@@ -7,6 +7,7 @@
 
 #include "4C_adapter_str_fsi_timint_adaptive.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_inpar_structure.hpp"
 #include "4C_io_pstream.hpp"
@@ -27,7 +28,8 @@ Adapter::StructureFSITimIntAda::StructureFSITimIntAda(
     std::shared_ptr<Solid::TimAda> sta, std::shared_ptr<Structure> sti)
     : FSIStructureWrapper(sti), StructureTimIntAda(sta, sti), str_time_integrator_(sti)
 {
-  const Teuchos::ParameterList& sdyn = Global::Problem::instance()->structural_dynamic_params();
+  auto* problem = Adapter::Utils::problem_from_instance();
+  const Teuchos::ParameterList& sdyn = problem->structural_dynamic_params();
   const Teuchos::ParameterList& sada = sdyn.sublist("TIMEADAPTIVITY");
 
   // type of error norm

@@ -7,6 +7,7 @@
 
 #include "4C_adapter_coupling_nonlin_mortar.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_comm_mpi_utils.hpp"
 #include "4C_contact_element.hpp"
 #include "4C_contact_friction_node.hpp"
@@ -138,6 +139,8 @@ void Adapter::CouplingNonLinMortar::read_mortar_condition(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& masterelements,
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   // TODO: extend this to sliding ale + ALE-dis
   // vector coupleddof defines degree of freedom which are coupled (1: coupled; 0: not coupled),
   // e.g.:
@@ -190,9 +193,9 @@ void Adapter::CouplingNonLinMortar::read_mortar_condition(
   }
 
   // get mortar coupling parameters
-  const Teuchos::ParameterList& inputmortar = Global::Problem::instance()->mortar_coupling_params();
-  const Teuchos::ParameterList& meshtying = Global::Problem::instance()->contact_dynamic_params();
-  const Teuchos::ParameterList& wearlist = Global::Problem::instance()->wear_params();
+  const Teuchos::ParameterList& inputmortar = problem->mortar_coupling_params();
+  const Teuchos::ParameterList& meshtying = problem->contact_dynamic_params();
+  const Teuchos::ParameterList& wearlist = problem->wear_params();
 
   input.setParameters(inputmortar);
   input.setParameters(meshtying);
@@ -204,10 +207,10 @@ void Adapter::CouplingNonLinMortar::read_mortar_condition(
 
   // is this a nurbs problem?
   bool isnurbs = false;
-  Core::FE::ShapeFunctionType distype = Global::Problem::instance()->spatial_approximation_type();
+  Core::FE::ShapeFunctionType distype = problem->spatial_approximation_type();
   if (distype == Core::FE::ShapeFunctionType::nurbs) isnurbs = true;
   input.set<bool>("NURBS", isnurbs);
-  input.set<int>("DIMENSION", Global::Problem::instance()->n_dim());
+  input.set<int>("DIMENSION", problem->n_dim());
 
   // check for invalid parameter values
   if (Teuchos::getIntegralValue<Mortar::ShapeFcn>(input, "LM_SHAPEFCN") != Mortar::shape_dual and
@@ -234,10 +237,12 @@ void Adapter::CouplingNonLinMortar::add_mortar_nodes(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements,
     std::shared_ptr<CONTACT::Interface>& interface, int numcoupleddof)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   const bool isnurbs = input.get<bool>("NURBS");
 
   // get problem dimension (2D or 3D) and create (Mortar::Interface)
-  const int dim = Global::Problem::instance()->n_dim();
+  const int dim = problem->n_dim();
 
   // create an empty mortar interface
   interface = CONTACT::Interface::create(0, comm_, dim, input, false);
@@ -342,10 +347,12 @@ void Adapter::CouplingNonLinMortar::add_mortar_elements(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements,
     std::shared_ptr<CONTACT::Interface>& interface, int numcoupleddof)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   const bool isnurbs = input.get<bool>("NURBS");
 
   // get problem dimension (2D or 3D) and create (Mortar::Interface)
-  const int dim = Global::Problem::instance()->n_dim();
+  const int dim = problem->n_dim();
 
   // ########## CHECK for a better implementation of this ###################
   // If this option is used, check functionality ... not sure if this is correct!
@@ -503,8 +510,10 @@ void Adapter::CouplingNonLinMortar::complete_interface(
     std::shared_ptr<Core::FE::Discretization> masterdis,
     std::shared_ptr<CONTACT::Interface>& interface)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   const Teuchos::ParameterList& input =
-      Global::Problem::instance()->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION");
+      problem->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION");
   const Mortar::ParallelRedist parallelRedist =
       Teuchos::getIntegralValue<Mortar::ParallelRedist>(input, "PARALLEL_REDIST");
 
@@ -520,10 +529,8 @@ void Adapter::CouplingNonLinMortar::complete_interface(
     if (parallelRedist == Mortar::ParallelRedist::redist_none ||
         Core::Communication::num_mpi_ranks(comm_) == 1)
       isFinalDistribution = true;
-    interface->fill_complete(Global::Problem::instance()->discretization_map(),
-        Global::Problem::instance()->binning_strategy_params(),
-        Global::Problem::instance()->output_control_file(),
-        Global::Problem::instance()->spatial_approximation_type(), isFinalDistribution);
+    interface->fill_complete(problem->discretization_map(), problem->binning_strategy_params(),
+        problem->output_control_file(), problem->spatial_approximation_type(), isFinalDistribution);
   }
 
   // create binary search tree
@@ -548,10 +555,8 @@ void Adapter::CouplingNonLinMortar::complete_interface(
     interface->redistribute();
 
     // call fill complete again
-    interface->fill_complete(Global::Problem::instance()->discretization_map(),
-        Global::Problem::instance()->binning_strategy_params(),
-        Global::Problem::instance()->output_control_file(),
-        Global::Problem::instance()->spatial_approximation_type(), true);
+    interface->fill_complete(problem->discretization_map(), problem->binning_strategy_params(),
+        problem->output_control_file(), problem->spatial_approximation_type(), true);
 
     // re create binary search tree
     interface->create_search_tree();
@@ -581,6 +586,8 @@ void Adapter::CouplingNonLinMortar::setup_spring_dashpot(
     std::shared_ptr<Core::FE::Discretization> slavedis, const Core::Conditions::Condition& spring,
     const int coupling_id, MPI_Comm comm)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   if (Core::Communication::my_mpi_rank(comm) == 0)
     std::cout << "Generating CONTACT interface for spring dashpot condition...\n" << std::endl;
 
@@ -629,13 +636,13 @@ void Adapter::CouplingNonLinMortar::setup_spring_dashpot(
   // get mortar coupling parameters
   Teuchos::ParameterList input;
   // set default values
-  input.setParameters(Global::Problem::instance()->mortar_coupling_params());
-  input.setParameters(Global::Problem::instance()->contact_dynamic_params());
-  input.setParameters(Global::Problem::instance()->wear_params());
+  input.setParameters(problem->mortar_coupling_params());
+  input.setParameters(problem->contact_dynamic_params());
+  input.setParameters(problem->wear_params());
   input.set<CONTACT::Problemtype>("PROBTYPE", CONTACT::Problemtype::other);
 
   // is this a nurbs problem?
-  Core::FE::ShapeFunctionType distype = Global::Problem::instance()->spatial_approximation_type();
+  Core::FE::ShapeFunctionType distype = problem->spatial_approximation_type();
   switch (distype)
   {
     case Core::FE::ShapeFunctionType::nurbs:
@@ -656,7 +663,7 @@ void Adapter::CouplingNonLinMortar::setup_spring_dashpot(
   input.set<bool>("Two_half_pass", false);
 
   // get problem dimension (2D or 3D) and create (Mortar::Interface)
-  const int dim = Global::Problem::instance()->n_dim();
+  const int dim = problem->n_dim();
 
   // generate contact interface
   std::shared_ptr<CONTACT::Interface> interface =
@@ -729,16 +736,14 @@ void Adapter::CouplingNonLinMortar::setup_spring_dashpot(
   {
     bool isFinalDistribution = false;
     const Teuchos::ParameterList& input =
-        Global::Problem::instance()->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION");
+        problem->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION");
     if (Teuchos::getIntegralValue<Mortar::ParallelRedist>(input, "PARALLEL_REDIST") ==
             Mortar::ParallelRedist::redist_none or
         Core::Communication::num_mpi_ranks(comm_) == 1)
       isFinalDistribution = true;
 
-    interface->fill_complete(Global::Problem::instance()->discretization_map(),
-        Global::Problem::instance()->binning_strategy_params(),
-        Global::Problem::instance()->output_control_file(),
-        Global::Problem::instance()->spatial_approximation_type(), isFinalDistribution);
+    interface->fill_complete(problem->discretization_map(), problem->binning_strategy_params(),
+        problem->output_control_file(), problem->spatial_approximation_type(), isFinalDistribution);
   }
 
   // store old row maps (before parallel redistribution)
@@ -783,6 +788,8 @@ void Adapter::CouplingNonLinMortar::integrate_lin_d(const std::string& statename
     const std::shared_ptr<Core::LinAlg::Vector<double>> vec,
     const std::shared_ptr<Core::LinAlg::Vector<double>> veclm)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   // safety check
   check_setup();
 
@@ -821,7 +828,7 @@ void Adapter::CouplingNonLinMortar::integrate_lin_d(const std::string& statename
   // check for parallel redistribution
   bool parredist = false;
   const Teuchos::ParameterList& input =
-      Global::Problem::instance()->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION");
+      problem->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION");
   if (Teuchos::getIntegralValue<Mortar::ParallelRedist>(input, "PARALLEL_REDIST") !=
       Mortar::ParallelRedist::redist_none)
     parredist = true;
@@ -890,6 +897,8 @@ void Adapter::CouplingNonLinMortar::integrate_lin_dm(const std::string& statenam
  *----------------------------------------------------------------------*/
 void Adapter::CouplingNonLinMortar::matrix_row_col_transform()
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   // call base function
   Coupling::Adapter::CouplingMortar::matrix_row_col_transform();
 
@@ -899,7 +908,7 @@ void Adapter::CouplingNonLinMortar::matrix_row_col_transform()
   // check for parallel redistribution
   bool parredist = false;
   const Teuchos::ParameterList& input =
-      Global::Problem::instance()->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION");
+      problem->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION");
   if (Teuchos::getIntegralValue<Mortar::ParallelRedist>(input, "PARALLEL_REDIST") !=
       Mortar::ParallelRedist::redist_none)
     parredist = true;

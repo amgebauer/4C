@@ -7,6 +7,7 @@
 
 #include "4C_adapter_fld_poro.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_fem_condition_utils.hpp"
 #include "4C_fem_general_assemblestrategy.hpp"
 #include "4C_fluid_ele.hpp"
@@ -43,6 +44,8 @@ void Adapter::FluidPoro::evaluate_no_penetration_cond(
     std::shared_ptr<Core::LinAlg::Vector<double>> condVector, std::set<int>& condIDs,
     PoroElast::Coupltype coupltype)
 {
+  auto* problem = Adapter::Utils::problem_from_instance();
+
   if (!(discretization()->filled())) FOUR_C_THROW("fill_complete() was not called");
   if (!discretization()->have_dofs()) FOUR_C_THROW("assign_degrees_of_freedom() was not called");
 
@@ -63,7 +66,7 @@ void Adapter::FluidPoro::evaluate_no_penetration_cond(
     // write global IDs of dofs on which the no penetration condition is applied (can vary in time
     // and iteration)
     {
-      const int ndim = Global::Problem::instance()->n_dim();
+      const int ndim = problem->n_dim();
       const int ndof = ndim + 1;
       const int length = condVector->local_length();
       const int nnod = length / ndof;

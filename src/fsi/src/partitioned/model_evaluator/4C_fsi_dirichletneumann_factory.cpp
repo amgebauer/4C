@@ -13,6 +13,7 @@
 #include "4C_fsi_dirichletneumann_volcoupl.hpp"
 #include "4C_fsi_dirichletneumannslideale.hpp"
 #include "4C_fsi_input.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 
 #include <Teuchos_StandardParameterEntryValidators.hpp>
@@ -24,12 +25,14 @@ FOUR_C_NAMESPACE_OPEN
 std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algorithm(
     MPI_Comm comm, const Teuchos::ParameterList& fsidyn)
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   auto method = Teuchos::getIntegralValue<FSI::PartitionedCouplingMethod>(fsipart, "PARTITIONED");
   switch (method)
   {
     case FSI::PartitionedCouplingMethod::DirichletNeumannSlideale:
-      switch (Global::Problem::instance()->get_problem_type())
+      switch (problem->get_problem_type())
       {
         case (Core::ProblemType::fsi):
         case (Core::ProblemType::fsi_redmodels):
@@ -49,7 +52,7 @@ std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algo
       }
       break;
     case FSI::PartitionedCouplingMethod::DirichletNeumannVolCoupl:
-      switch (Global::Problem::instance()->get_problem_type())
+      switch (problem->get_problem_type())
       {
         case (Core::ProblemType::fsi):
         case (Core::ProblemType::fsi_redmodels):
@@ -69,7 +72,7 @@ std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algo
       }
       break;
     case FSI::PartitionedCouplingMethod::DirichletNeumann:
-      switch (Global::Problem::instance()->get_problem_type())
+      switch (problem->get_problem_type())
       {
         case (Core::ProblemType::fsi):
         case (Core::ProblemType::fsi_redmodels):

@@ -17,6 +17,7 @@
 #include "4C_coupling_adapter_converter.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_fsi_nox_group.hpp"
+#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io.hpp"
@@ -213,7 +214,8 @@ FSI::MonolithicStructureSplit::MonolithicStructureSplit(
 /*----------------------------------------------------------------------*/
 void FSI::MonolithicStructureSplit::setup_system()
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
 
   set_default_parameters(fsidyn, nox_parameter_list());
 
@@ -247,7 +249,7 @@ void FSI::MonolithicStructureSplit::setup_system()
   // requires coupsf_ in order to map the nodal fluid forces on the structure nodes we have to do it
   // e.g. in here. But:
   // TODO: Move this to read_restart() when possible
-  const int restart = Global::Problem::instance()->restart();
+  const int restart = problem->restart();
   if (restart)
   {
     const bool restartfrompartfsi = timeparams_.get<bool>("RESTART_FROM_PART_FSI");
@@ -255,9 +257,8 @@ void FSI::MonolithicStructureSplit::setup_system()
     {
       std::shared_ptr<Core::LinAlg::Vector<double>> lambdafullfluid =
           std::make_shared<Core::LinAlg::Vector<double>>(*fluid_field()->dof_row_map(), true);
-      Core::IO::DiscretizationReader reader =
-          Core::IO::DiscretizationReader(*fluid_field()->discretization(),
-              Global::Problem::instance()->input_control_file(), restart);
+      Core::IO::DiscretizationReader reader = Core::IO::DiscretizationReader(
+          *fluid_field()->discretization(), problem->input_control_file(), restart);
       reader.read_vector(lambdafullfluid, "fsilambda");
 
       std::shared_ptr<Core::LinAlg::Vector<double>> lambdafluid =
@@ -721,7 +722,8 @@ void FSI::MonolithicStructureSplit::setup_system_matrix(Core::LinAlg::BlockSpars
 void FSI::MonolithicStructureSplit::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -773,7 +775,8 @@ void FSI::MonolithicStructureSplit::scale_system(
 void FSI::MonolithicStructureSplit::unscale_solution(Core::LinAlg::BlockSparseMatrixBase& mat,
     Core::LinAlg::Vector<double>& x, Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = FSI::Utils::problem_from_instance();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -1199,6 +1202,8 @@ void FSI::MonolithicStructureSplit::update()
 /*----------------------------------------------------------------------*/
 void FSI::MonolithicStructureSplit::read_restart(int step)
 {
+  auto* problem = FSI::Utils::problem_from_instance();
+
   const bool restartfrompartfsi = timeparams_.get<bool>("RESTART_FROM_PART_FSI");
 
   // read Lagrange multiplier
@@ -1206,9 +1211,8 @@ void FSI::MonolithicStructureSplit::read_restart(int step)
   {
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =
         std::make_shared<Core::LinAlg::Vector<double>>(*structure_field()->dof_row_map(), true);
-    Core::IO::DiscretizationReader reader =
-        Core::IO::DiscretizationReader(*structure_field()->discretization(),
-            Global::Problem::instance()->input_control_file(), step);
+    Core::IO::DiscretizationReader reader = Core::IO::DiscretizationReader(
+        *structure_field()->discretization(), problem->input_control_file(), step);
     reader.read_vector(lambdafull, "fsilambda");
     lambdaold_ = structure_field()->interface()->extract_fsi_cond_vector(*lambdafull);
   }

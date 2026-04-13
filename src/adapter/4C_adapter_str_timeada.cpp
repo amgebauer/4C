@@ -7,6 +7,7 @@
 
 #include "4C_adapter_str_timeada.hpp"
 
+#include "4C_adapter_problem_access.hpp"
 #include "4C_adapter_str_timeada_joint.hpp"
 #include "4C_adapter_str_timeada_zienxie.hpp"
 #include "4C_fem_discretization.hpp"
@@ -74,8 +75,8 @@ void Adapter::StructureTimeAda::setup()
 /*----------------------------------------------------------------------*/
 void Adapter::StructureTimeAda::setup_time_ada()
 {
-  const Teuchos::ParameterList& sdynparams =
-      Global::Problem::instance()->structural_dynamic_params();
+  auto* problem = Adapter::Utils::problem_from_instance();
+  const Teuchos::ParameterList& sdynparams = problem->structural_dynamic_params();
 
   // initialize the local variables
   timeinitial_ = 0.0;
@@ -124,15 +125,15 @@ void Adapter::StructureTimeAda::setup_time_ada()
   locerrdisn_ = std::make_shared<Core::LinAlg::Vector<double>>(*(stm_->dof_row_map()), true);
 
   // enable restart for adaptive timestepping
-  const int restart = Global::Problem::instance()->restart();
+  const int restart = problem->restart();
   if (restart)
   {
     // read restart of marching time-integrator and reset initial time and step for adaptive loop
     stm_->read_restart(restart);
     timeinitial_ = stm_->time_old();
     timestepinitial_ = stm_->step_old();
-    Core::IO::DiscretizationReader ioreader(*stm_->discretization(),
-        Global::Problem::instance()->input_control_file(), timestepinitial_);
+    Core::IO::DiscretizationReader ioreader(
+        *stm_->discretization(), problem->input_control_file(), timestepinitial_);
     stepsizepre_ = ioreader.read_double("next_delta_time");
     time_ = timeinitial_;
 
