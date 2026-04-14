@@ -18,7 +18,6 @@
 #include "4C_fem_discretization.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_fsi_input.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_global_data.hpp"
 #include "4C_inpar_xfem.hpp"
@@ -35,8 +34,8 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FSI::FluidFluidMonolithicStructureSplitNoNOX::FluidFluidMonolithicStructureSplitNoNOX(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : MonolithicNoNOX(comm, timeparams)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : MonolithicNoNOX(comm, problem, timeparams)
 {
   // Throw an error if there are DBCs on structural interface DOFs.
   std::vector<std::shared_ptr<const Core::LinAlg::Map>> intersectionmaps;
@@ -444,7 +443,7 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::initial_guess(
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // should we scale the system?
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
@@ -523,7 +522,7 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::unscale_solution(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& x,
     Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
@@ -705,7 +704,7 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::extract_field_vectors(
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::output()
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   structure_field()->output();
 
@@ -738,7 +737,7 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::output()
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::read_restart(int step)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // read Lagrange multiplier
   {

@@ -45,7 +45,6 @@
 #include "4C_fsi_mortarmonolithic_fluidsplit.hpp"
 #include "4C_fsi_mortarmonolithic_fluidsplit_sp.hpp"
 #include "4C_fsi_mortarmonolithic_structuresplit.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_resulttest.hpp"
 #include "4C_fsi_slidingmonolithic_fluidsplit.hpp"
 #include "4C_fsi_slidingmonolithic_structuresplit.hpp"
@@ -75,9 +74,9 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 // entry point for Fluid on Ale in discretization management
 /*----------------------------------------------------------------------*/
-void fluid_ale_drt()
+void fluid_ale_drt(Global::Problem& global_problem)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
+  Global::Problem* problem = &global_problem;
 
   MPI_Comm comm = problem->get_dis("fluid")->get_comm();
 
@@ -122,7 +121,8 @@ void fluid_ale_drt()
           "Use either the ALE cloning functionality or ensure non-overlapping node numbering!");
   }
 
-  std::shared_ptr<FSI::FluidAleAlgorithm> fluid = std::make_shared<FSI::FluidAleAlgorithm>(comm);
+  std::shared_ptr<FSI::FluidAleAlgorithm> fluid =
+      std::make_shared<FSI::FluidAleAlgorithm>(comm, *problem);
   const int restart = problem->restart();
   if (restart)
   {
@@ -138,9 +138,10 @@ void fluid_ale_drt()
 /*----------------------------------------------------------------------*/
 // entry point for Fluid on XFEM in discretization management
 /*----------------------------------------------------------------------*/
-void fluid_xfem_drt()
+void fluid_xfem_drt(Global::Problem& global_problem)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
+  Global::Problem* problem = &global_problem;
+
   MPI_Comm comm = problem->get_dis("structure")->get_comm();
 
   std::shared_ptr<Core::FE::Discretization> soliddis = problem->get_dis("structure");
@@ -227,9 +228,9 @@ void fluid_xfem_drt()
 /*----------------------------------------------------------------------*/
 // entry point for FSI using multidimensional immersed method (FBI)
 /*----------------------------------------------------------------------*/
-void fsi_immersed_drt()
+void fsi_immersed_drt(Global::Problem& global_problem)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
+  Global::Problem* problem = &global_problem;
 
   std::shared_ptr<Core::FE::Discretization> structdis = problem->get_dis("structure");
   MPI_Comm comm = structdis->get_comm();
@@ -322,7 +323,7 @@ void fsi_immersed_drt()
       fsidyn.sublist("PARTITIONED SOLVER"), "PARTITIONED");
   if (method == FSI::PartitionedCouplingMethod::DirichletNeumann)
   {
-    fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, fsidyn);
+    fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, *problem, fsidyn);
     std::dynamic_pointer_cast<FSI::DirichletNeumann>(fsi)->setup();
   }
   else
@@ -356,9 +357,9 @@ void fsi_immersed_drt()
 /*----------------------------------------------------------------------*/
 // entry point for FSI using ALE in discretization management
 /*----------------------------------------------------------------------*/
-void fsi_ale_drt()
+void fsi_ale_drt(Global::Problem& global_problem)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
+  Global::Problem* problem = &global_problem;
 
   std::shared_ptr<Core::FE::Discretization> structdis = problem->get_dis("structure");
   MPI_Comm comm = structdis->get_comm();
@@ -496,39 +497,39 @@ void fsi_ale_drt()
       // call constructor to initialize the base class
       if (coupling == fsi_iter_monolithicfluidsplit)
       {
-        fsi = std::make_shared<FSI::MonolithicFluidSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MonolithicFluidSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_monolithicstructuresplit)
       {
-        fsi = std::make_shared<FSI::MonolithicStructureSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MonolithicStructureSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_mortar_monolithicstructuresplit)
       {
-        fsi = std::make_shared<FSI::MortarMonolithicStructureSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MortarMonolithicStructureSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_mortar_monolithicfluidsplit)
       {
-        fsi = std::make_shared<FSI::MortarMonolithicFluidSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MortarMonolithicFluidSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_mortar_monolithicfluidsplit_saddlepoint)
       {
-        fsi = std::make_shared<FSI::MortarMonolithicFluidSplitSaddlePoint>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MortarMonolithicFluidSplitSaddlePoint>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_fluidfluid_monolithicfluidsplit)
       {
-        fsi = std::make_shared<FSI::FluidFluidMonolithicFluidSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::FluidFluidMonolithicFluidSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_fluidfluid_monolithicstructuresplit)
       {
-        fsi = std::make_shared<FSI::FluidFluidMonolithicStructureSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::FluidFluidMonolithicStructureSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_sliding_monolithicfluidsplit)
       {
-        fsi = std::make_shared<FSI::SlidingMonolithicFluidSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::SlidingMonolithicFluidSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_sliding_monolithicstructuresplit)
       {
-        fsi = std::make_shared<FSI::SlidingMonolithicStructureSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::SlidingMonolithicStructureSplit>(comm, *problem, fsidyn);
       }
       else
       {
@@ -579,11 +580,12 @@ void fsi_ale_drt()
       std::shared_ptr<FSI::MonolithicNoNOX> fsi;
       if (coupling == fsi_iter_fluidfluid_monolithicfluidsplit_nonox)
       {
-        fsi = std::make_shared<FSI::FluidFluidMonolithicFluidSplitNoNOX>(comm, fsidyn);
+        fsi = std::make_shared<FSI::FluidFluidMonolithicFluidSplitNoNOX>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_fluidfluid_monolithicstructuresplit_nonox)
       {
-        fsi = std::make_shared<FSI::FluidFluidMonolithicStructureSplitNoNOX>(comm, fsidyn);
+        fsi =
+            std::make_shared<FSI::FluidFluidMonolithicStructureSplitNoNOX>(comm, *problem, fsidyn);
       }
       else
         FOUR_C_THROW("Unsupported monolithic XFFSI scheme");
@@ -637,7 +639,7 @@ void fsi_ale_drt()
         case FSI::PartitionedCouplingMethod::DirichletNeumann:
         case FSI::PartitionedCouplingMethod::DirichletNeumannSlideale:
         case FSI::PartitionedCouplingMethod::DirichletNeumannVolCoupl:
-          fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, fsidyn);
+          fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, *problem, fsidyn);
           std::dynamic_pointer_cast<FSI::DirichletNeumann>(fsi)->setup();
           break;
         default:
@@ -673,9 +675,10 @@ void fsi_ale_drt()
 /*----------------------------------------------------------------------*/
 // entry point for FSI using XFEM in discretization management (also for ale case)
 /*----------------------------------------------------------------------*/
-void xfsi_drt()
+void xfsi_drt(Global::Problem& global_problem)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
+  Global::Problem* problem = &global_problem;
+
   MPI_Comm comm = problem->get_dis("structure")->get_comm();
 
   if (Core::Communication::my_mpi_rank(comm) == 0)
@@ -792,7 +795,7 @@ void xfsi_drt()
       switch (method)
       {
         case FSI::PartitionedCouplingMethod::DirichletNeumann:
-          fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, fsidyn);
+          fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, *problem, fsidyn);
           std::dynamic_pointer_cast<FSI::DirichletNeumann>(fsi)->setup();
           break;
         default:
@@ -826,9 +829,10 @@ void xfsi_drt()
 /*----------------------------------------------------------------------*/
 // entry point for FPSI using XFEM in discretization management
 /*----------------------------------------------------------------------*/
-void xfpsi_drt()
+void xfpsi_drt(Global::Problem& global_problem)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
+  Global::Problem* problem = &global_problem;
+
   MPI_Comm comm = problem->get_dis("structure")->get_comm();
 
   if (Core::Communication::my_mpi_rank(comm) == 0)

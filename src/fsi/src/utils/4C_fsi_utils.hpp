@@ -45,6 +45,11 @@ namespace Core::IO
   class DiscretizationWriter;
 }  // namespace Core::IO
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace FSI
 {
   namespace Utils
@@ -62,7 +67,7 @@ namespace FSI
     {
      public:
       /// constructor initializing internal variables
-      SlideAleUtils(
+      SlideAleUtils(Global::Problem& problem,
           std::shared_ptr<Core::FE::Discretization> structdis,  ///< structure discretization
           std::shared_ptr<Core::FE::Discretization> fluiddis,   ///< fluid discretization
           Coupling::Adapter::CouplingMortar& coupsf,            ///< mortar adapter
@@ -147,6 +152,8 @@ namespace FSI
       void redundant_elements(Coupling::Adapter::CouplingMortar& coupsf, MPI_Comm comm);
 
      private:
+      Global::Problem& problem_;
+
       const FSI::SlideALEProj aletype_;
       std::shared_ptr<Core::LinAlg::Vector<double>>
           idispms_;  ///< merged vector of displacements (struct and fluid interface)

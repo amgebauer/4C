@@ -11,7 +11,6 @@
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_fsi_input.hpp"
 #include "4C_fsi_monolithic.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_control.hpp"
 #include "4C_io_pstream.hpp"
@@ -31,7 +30,7 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------------*/
 void FSI::Monolithic::init_tim_int_ada(const Teuchos::ParameterList& fsidyn)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // access to structural time adaptivity parameters
   const Teuchos::ParameterList& sdyn = problem->structural_dynamic_params();
@@ -181,7 +180,7 @@ void FSI::Monolithic::init_tim_int_ada(const Teuchos::ParameterList& fsidyn)
 void FSI::Monolithic::timeloop_ada_dt(
     const std::shared_ptr<NOX::Nln::Interface::RequiredBase> interface)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   /*--------------------------------------------------------------------------*/
   /* Initialize some parameters                                               */
@@ -326,7 +325,7 @@ void FSI::Monolithic::print_header_repeated_step() const
 /*----------------------------------------------------------------------------*/
 void FSI::Monolithic::write_ada_file_header() const
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // write to adaptivity file
   if (Core::Communication::my_mpi_rank(get_comm()) == 0 and (logada_))
@@ -455,7 +454,7 @@ void FSI::Monolithic::time_step_auxiliary()
 void FSI::Monolithic::adapt_time_step_size()
 {
   TEUCHOS_FUNC_TIME_MONITOR("FSI::Monolithic::adapt_time_step_size");
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // Increment counter for repetition of time steps
   adaptstep_++;
@@ -617,7 +616,7 @@ void FSI::Monolithic::determine_ada_reason(const double dt)
 double FSI::Monolithic::calculate_time_step_size(
     const double errnorm, const double errtol, const double estorder) const
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   //----------------------------------------------------------------------------
   // get some parameters first

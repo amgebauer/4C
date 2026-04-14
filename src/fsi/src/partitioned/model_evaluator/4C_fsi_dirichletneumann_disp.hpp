@@ -43,7 +43,7 @@ namespace FSI
      *
      * \param[in] comm Communicator
      */
-    explicit DirichletNeumannDisp(MPI_Comm comm);
+    explicit DirichletNeumannDisp(MPI_Comm comm, Global::Problem& problem);
 
    public:
     /// setup this object

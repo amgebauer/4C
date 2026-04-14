@@ -8,7 +8,6 @@
 #include "4C_fsi_nox_sd.hpp"
 
 #include "4C_comm_mpi_utils.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_control.hpp"
 #include "4C_linalg_vector.hpp"
@@ -29,9 +28,9 @@
 FOUR_C_NAMESPACE_OPEN
 
 
-FSI::Nonlinear::SDRelaxation::SDRelaxation(
-    const Teuchos::RCP<::NOX::Utils>& utils, Teuchos::ParameterList& params)
-    : utils_(utils)
+FSI::Nonlinear::SDRelaxation::SDRelaxation(const Teuchos::RCP<::NOX::Utils>& utils,
+    Teuchos::ParameterList& params, Global::Problem& problem)
+    : utils_(utils), problem_(problem)
 {
 }
 
@@ -89,13 +88,11 @@ bool FSI::Nonlinear::SDRelaxation::compute(::NOX::Abstract::Group& newgrp, doubl
   if (Core::Communication::my_mpi_rank(
           dynamic_cast<const NOX::Nln::Vector&>(oldgrp.getF()).get_linalg_vector().get_comm()) == 0)
   {
-    auto* problem = FSI::Utils::problem_from_instance();
-
     static int count;
     static std::ofstream* out;
     if (out == nullptr)
     {
-      std::string s = problem->output_control_file()->file_name();
+      std::string s = problem_.output_control_file()->file_name();
       s.append(".omega");
       out = new std::ofstream(s.c_str());
     }

@@ -17,7 +17,6 @@
 #include "4C_coupling_adapter_mortar.hpp"
 #include "4C_fem_discretization.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io.hpp"
@@ -40,10 +39,10 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
 FSI::MortarMonolithicFluidSplitSaddlePoint::MortarMonolithicFluidSplitSaddlePoint(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : BlockMonolithic(comm, timeparams), comm_(comm)
+    MPI_Comm comm, Global::Problem& global_problem, const Teuchos::ParameterList& timeparams)
+    : BlockMonolithic(comm, global_problem, timeparams), comm_(comm)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // ---------------------------------------------------------------------------
   // FSI specific check of Dirichlet boundary conditions
@@ -186,7 +185,7 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::set_lag_mult()
 /*----------------------------------------------------------------------------*/
 void FSI::MortarMonolithicFluidSplitSaddlePoint::setup_system()
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   if (notsetup_)
   {
@@ -983,7 +982,7 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::setup_system_matrix(
 void FSI::MortarMonolithicFluidSplitSaddlePoint::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
@@ -1039,7 +1038,7 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::unscale_solution(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& x,
     Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
@@ -1309,7 +1308,7 @@ void FSI::MortarMonolithicFluidSplitSaddlePoint::output_lambda()
 /*----------------------------------------------------------------------------*/
 void FSI::MortarMonolithicFluidSplitSaddlePoint::read_restart(int step)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   structure_field()->read_restart(step);
   fluid_field()->read_restart(step);

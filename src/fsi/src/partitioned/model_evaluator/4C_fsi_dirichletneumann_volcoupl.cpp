@@ -18,7 +18,6 @@
 #include "4C_fem_geometry_searchtree.hpp"
 #include "4C_fem_geometry_searchtree_service.hpp"
 #include "4C_fsi_input.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_control.hpp"
 #include "4C_linalg_utils_sparse_algebra_assemble.hpp"
@@ -32,8 +31,8 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-FSI::DirichletNeumannVolCoupl::DirichletNeumannVolCoupl(MPI_Comm comm)
-    : DirichletNeumannDisp(comm), coupsa_(nullptr)
+FSI::DirichletNeumannVolCoupl::DirichletNeumannVolCoupl(MPI_Comm comm, Global::Problem& problem)
+    : DirichletNeumannDisp(comm, problem), coupsa_(nullptr)
 {
 }
 
@@ -41,11 +40,11 @@ FSI::DirichletNeumannVolCoupl::DirichletNeumannVolCoupl(MPI_Comm comm)
 /*----------------------------------------------------------------------*/
 void FSI::DirichletNeumannVolCoupl::setup()
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto& problem = this->problem();
 
   FSI::DirichletNeumann::setup();
 
-  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem.fsi_dynamic_params();
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   set_kinematic_coupling(Teuchos::getIntegralValue<FSI::CoupVarPart>(fsipart, "COUPVARIABLE") ==
                          FSI::CoupVarPart::disp);
@@ -65,8 +64,7 @@ void FSI::DirichletNeumannVolCoupl::setup()
 void FSI::DirichletNeumannVolCoupl::setup_coupling_struct_ale(
     const Teuchos::ParameterList& fsidyn, MPI_Comm comm)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
-  const int ndim = problem->n_dim();
+  const int ndim = problem().n_dim();
 
   coupsa_ = std::make_shared<Coupling::Adapter::MortarVolCoupl>();
 
@@ -88,7 +86,7 @@ void FSI::DirichletNeumannVolCoupl::setup_coupling_struct_ale(
       &dofsets12, &dofsets21, nullptr, false);
 
   // setup coupling adapter
-  coupsa_->setup(problem->volmortar_params(), problem->cut_general_params());
+  coupsa_->setup(problem().volmortar_params(), problem().cut_general_params());
 }
 
 /*----------------------------------------------------------------------*/
@@ -98,7 +96,7 @@ void FSI::DirichletNeumannVolCoupl::setup_interface_corrector(
 {
   icorrector_ = std::make_shared<InterfaceCorrector>();
 
-  icorrector_->setup(std::dynamic_pointer_cast<Adapter::FluidAle>(fluid_));
+  icorrector_->setup(problem(), std::dynamic_pointer_cast<Adapter::FluidAle>(fluid_));
 }
 
 
@@ -173,14 +171,13 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::DirichletNeumannVolCoupl::ale
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-void FSI::InterfaceCorrector::setup(std::shared_ptr<Adapter::FluidAle> fluidale)
+void FSI::InterfaceCorrector::setup(
+    const Global::Problem& problem, std::shared_ptr<Adapter::FluidAle> fluidale)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
-
   fluidale_ = fluidale;
 
   volcorrector_ = std::make_shared<VolCorrector>();
-  volcorrector_->setup(problem->n_dim(), fluidale);
+  volcorrector_->setup(problem.n_dim(), fluidale);
 
   return;
 }

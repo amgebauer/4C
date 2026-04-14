@@ -14,7 +14,6 @@
 #include "4C_coupling_adapter_converter.hpp"
 #include "4C_coupling_adapter_mortar.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_fsi_utils.hpp"
 #include "4C_global_data.hpp"
@@ -36,14 +35,14 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
 FSI::SlidingMonolithicFluidSplit::SlidingMonolithicFluidSplit(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : BlockMonolithic(comm, timeparams),
+    MPI_Comm comm, Global::Problem& global_problem, const Teuchos::ParameterList& timeparams)
+    : BlockMonolithic(comm, global_problem, timeparams),
       comm_(comm),
       lambda_(nullptr),
       lambdaold_(nullptr),
       energysum_(0.0)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // ---------------------------------------------------------------------------
   // FSI specific check of Dirichlet boundary conditions
@@ -220,7 +219,7 @@ void FSI::SlidingMonolithicFluidSplit::setup_system()
 {
   if (notsetup_)
   {
-    auto* problem = FSI::Utils::problem_from_instance();
+    auto* problem = &this->problem();
     const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
     const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
     linearsolverstrategy_ =
@@ -291,8 +290,9 @@ void FSI::SlidingMonolithicFluidSplit::setup_system()
     if (aleproj_ != FSI::ALEprojection_none)
     {
       // set up sliding ale utils
-      slideale_ = std::make_shared<FSI::Utils::SlideAleUtils>(structure_field()->discretization(),
-          fluid_field()->discretization(), *coupsfm_, true, aleproj_);
+      slideale_ = std::make_shared<FSI::Utils::SlideAleUtils>(this->problem(),
+          structure_field()->discretization(), fluid_field()->discretization(), *coupsfm_, true,
+          aleproj_);
 
       iprojdispinc_ =
           std::make_shared<Core::LinAlg::Vector<double>>(*coupsfm_->source_dof_map(), true);
@@ -984,7 +984,7 @@ void FSI::SlidingMonolithicFluidSplit::setup_system_matrix(Core::LinAlg::BlockSp
 void FSI::SlidingMonolithicFluidSplit::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
@@ -1036,7 +1036,7 @@ void FSI::SlidingMonolithicFluidSplit::scale_system(
 void FSI::SlidingMonolithicFluidSplit::unscale_solution(Core::LinAlg::BlockSparseMatrixBase& mat,
     Core::LinAlg::Vector<double>& x, Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
@@ -1527,7 +1527,7 @@ void FSI::SlidingMonolithicFluidSplit::read_restart(int step)
   structure_field()->read_restart(step);
   fluid_field()->read_restart(step);
 
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   auto input_control_file = problem->input_control_file();
 
   // read Lagrange multiplier

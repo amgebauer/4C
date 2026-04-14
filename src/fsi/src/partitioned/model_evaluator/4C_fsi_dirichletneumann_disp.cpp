@@ -9,7 +9,6 @@
 
 #include "4C_adapter_str_fsiwrapper.hpp"
 #include "4C_fsi_input.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 
 #include <Teuchos_StandardParameterEntryValidators.hpp>
@@ -18,7 +17,8 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-FSI::DirichletNeumannDisp::DirichletNeumannDisp(MPI_Comm comm) : DirichletNeumann(comm)
+FSI::DirichletNeumannDisp::DirichletNeumannDisp(MPI_Comm comm, Global::Problem& problem)
+    : DirichletNeumann(comm, problem)
 {
   // empty constructor
 }
@@ -28,11 +28,11 @@ FSI::DirichletNeumannDisp::DirichletNeumannDisp(MPI_Comm comm) : DirichletNeuman
 /*----------------------------------------------------------------------*/
 void FSI::DirichletNeumannDisp::setup()
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto& problem = this->problem();
 
   // call setup of base class
   FSI::DirichletNeumann::setup();
-  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem.fsi_dynamic_params();
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   set_kinematic_coupling(Teuchos::getIntegralValue<FSI::CoupVarPart>(fsipart, "COUPVARIABLE") ==
                          FSI::CoupVarPart::disp);
@@ -104,8 +104,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::DirichletNeumannDisp::initial
   }
   else
   {
-    auto* problem = FSI::Utils::problem_from_instance();
-    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
+    const Teuchos::ParameterList& fsidyn = problem().fsi_dynamic_params();
     const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
     if (fsipart.get<std::string>("PREDICTOR") != "d(n)")
     {

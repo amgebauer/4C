@@ -17,7 +17,6 @@
 #include "4C_coupling_adapter.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_fsi_input.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io.hpp"
 #include "4C_io_control.hpp"
@@ -29,8 +28,8 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FSI::FluidFluidMonolithicFluidSplit::FluidFluidMonolithicFluidSplit(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : MonolithicFluidSplit(comm, timeparams)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : MonolithicFluidSplit(comm, problem, timeparams)
 {
   // cast to problem-specific fluid-wrapper
   fluid_ = std::dynamic_pointer_cast<Adapter::FluidFluidFSI>(MonolithicFluidSplit::fluid_field());
@@ -117,7 +116,7 @@ void FSI::FluidFluidMonolithicFluidSplit::setup_dbc_map_extractor()
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplit::output()
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   structure_field()->output();
   fluid_field()->output();
@@ -156,7 +155,7 @@ void FSI::FluidFluidMonolithicFluidSplit::output()
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplit::read_restart(int step)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // Read Lagrange Multiplier (associated with embedded fluid)
   {

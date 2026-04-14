@@ -34,7 +34,7 @@ namespace FSI
    public:
     /// constructor
     explicit FluidFluidMonolithicFluidSplitNoNOX(
-        MPI_Comm comm, const Teuchos::ParameterList& timeparams);
+        MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams);
 
     /// initialize, read parameters and create merged DOF row map
     void setup_system() override;

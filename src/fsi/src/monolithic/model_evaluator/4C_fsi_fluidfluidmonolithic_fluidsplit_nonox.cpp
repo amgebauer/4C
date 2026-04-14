@@ -18,7 +18,6 @@
 #include "4C_fem_discretization.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_fsi_input.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_global_data.hpp"
 #include "4C_inpar_xfem.hpp"
@@ -32,8 +31,8 @@
 FOUR_C_NAMESPACE_OPEN
 
 FSI::FluidFluidMonolithicFluidSplitNoNOX::FluidFluidMonolithicFluidSplitNoNOX(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : MonolithicNoNOX(comm, timeparams)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : MonolithicNoNOX(comm, problem, timeparams)
 {
   // Determine fluid (=slave) DOF on the FSI interface, for which a Dirichlet boundary
   // condition (DBC) has been prescribed
@@ -728,7 +727,7 @@ void FSI::FluidFluidMonolithicFluidSplitNoNOX::extract_field_vectors(
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplitNoNOX::read_restart(int step)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // Read Lagrange Multiplier (associated with embedded fluid)
   {
@@ -755,7 +754,7 @@ void FSI::FluidFluidMonolithicFluidSplitNoNOX::read_restart(int step)
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplitNoNOX::output()
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   structure_field()->output();
   fluid_field()->output();

@@ -14,13 +14,18 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace FSI
 {
   /// Fluid on Ale test algorithm
   class FluidAleAlgorithm : public Adapter::FluidMovingBoundaryBaseAlgorithm
   {
    public:
-    explicit FluidAleAlgorithm(MPI_Comm comm);
+    explicit FluidAleAlgorithm(MPI_Comm comm, Global::Problem& problem);
 
     /// time loop
     void timeloop();

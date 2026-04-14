@@ -53,7 +53,7 @@ namespace FSI
      *
      * @param[in] comm Communicator
      */
-    explicit DirichletNeumann(MPI_Comm comm);
+    explicit DirichletNeumann(MPI_Comm comm, Global::Problem& problem);
 
     /// Creates the appropriate DirichletNeumann algorithm
     //    std::shared_ptr<DirichletNeumann> FSI::DirichletNeumann::Factory(_PROBLEM_TYPE type);

@@ -17,7 +17,6 @@
 #include "4C_fbi_constraintenforcer_factory.hpp"
 #include "4C_fbi_input.hpp"
 #include "4C_fsi_input.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_control.hpp"
 #include "4C_io_visualization_parameters.hpp"
@@ -32,11 +31,10 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-FSI::DirichletNeumannVel::DirichletNeumannVel(MPI_Comm comm)
-    : DirichletNeumann(comm),
+FSI::DirichletNeumannVel::DirichletNeumannVel(MPI_Comm comm, Global::Problem& problem)
+    : DirichletNeumann(comm, problem),
       constraint_manager_(Adapter::ConstraintEnforcerFactory::create_enforcer(
-          FSI::Utils::problem_from_instance()->fsi_dynamic_params(),
-          FSI::Utils::problem_from_instance()->fbi_params()))
+          problem.fsi_dynamic_params(), problem.fbi_params()))
 {
   // empty constructor
 }
@@ -44,11 +42,11 @@ FSI::DirichletNeumannVel::DirichletNeumannVel(MPI_Comm comm)
 /*----------------------------------------------------------------------*/
 void FSI::DirichletNeumannVel::setup()
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto& problem = this->problem();
 
   // call setup of base class
   FSI::DirichletNeumann::setup();
-  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem.fsi_dynamic_params();
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   if (Teuchos::getIntegralValue<FSI::CoupVarPart>(fsipart, "COUPVARIABLE") ==
       FSI::CoupVarPart::disp)
@@ -69,8 +67,7 @@ void FSI::DirichletNeumannVel::setup()
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::DirichletNeumannVel::fluid_op(
     std::shared_ptr<Core::LinAlg::Vector<double>> ivel, const NOX::Nln::FillType fillFlag)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
-  const Teuchos::ParameterList& fbi = problem->fbi_params();
+  const Teuchos::ParameterList& fbi = problem().fbi_params();
 
   FSI::Partitioned::fluid_op(ivel, fillFlag);
 
@@ -108,8 +105,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::DirichletNeumannVel::struct_o
 {
   FSI::Partitioned::struct_op(iforce, fill_flag);
 
-  auto* problem = FSI::Utils::problem_from_instance();
-  const Teuchos::ParameterList& fbi = problem->fbi_params();
+  const Teuchos::ParameterList& fbi = problem().fbi_params();
   if (!(Teuchos::getIntegralValue<FBI::BeamToFluidCoupling>(fbi, "COUPLING") ==
           FBI::BeamToFluidCoupling::fluid) &&
       fbi.get<int>("STARTSTEP") < step())
@@ -150,8 +146,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::DirichletNeumannVel::initial_
   }
   else
   {
-    auto* problem = FSI::Utils::problem_from_instance();
-    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
+    const Teuchos::ParameterList& fsidyn = problem().fsi_dynamic_params();
     const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
     if (fsipart.get<std::string>("PREDICTOR") != "d(n)")
     {
@@ -198,14 +193,14 @@ void FSI::DirichletNeumannVel::output()
 void FSI::DirichletNeumannVel::timeloop(
     const std::shared_ptr<NOX::Nln::Interface::RequiredBase> interface)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto& problem = this->problem();
 
   constraint_manager_->setup(structure_field(), mb_fluid_field());
   if (get_kinematic_coupling()) constraint_manager_->prepare_fluid_solve();
   visualization_output_writer_ =
       std::make_shared<BeamInteraction::BeamToFluidMeshtyingVtkOutputWriter>(
           Core::IO::visualization_parameters_factory(
-              problem->io_params().sublist("RUNTIME VTK OUTPUT"), *problem->output_control_file(),
+              problem.io_params().sublist("RUNTIME VTK OUTPUT"), *problem.output_control_file(),
               time()),
           constraint_manager_->get_bridge()->get_params()->get_visualization_output_params_ptr());
   constraint_manager_->evaluate();

@@ -58,7 +58,7 @@ namespace FSI
 
    public:
     explicit MortarMonolithicStructureSplit(
-        MPI_Comm comm, const Teuchos::ParameterList& timeparams);
+        MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams);
 
     /*! do the setup for the monolithic system
 

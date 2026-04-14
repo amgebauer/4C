@@ -17,7 +17,6 @@
 #include "4C_coupling_adapter_converter.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_fsi_nox_group.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io.hpp"
@@ -33,8 +32,11 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FSI::MonolithicStructureSplit::MonolithicStructureSplit(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : BlockMonolithic(comm, timeparams), lambda_(nullptr), lambdaold_(nullptr), energysum_(0.0)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : BlockMonolithic(comm, problem, timeparams),
+      lambda_(nullptr),
+      lambdaold_(nullptr),
+      energysum_(0.0)
 {
   // ---------------------------------------------------------------------------
   // FSI specific check of Dirichlet boundary conditions
@@ -214,7 +216,7 @@ FSI::MonolithicStructureSplit::MonolithicStructureSplit(
 /*----------------------------------------------------------------------*/
 void FSI::MonolithicStructureSplit::setup_system()
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
 
   set_default_parameters(fsidyn, nox_parameter_list());
@@ -722,7 +724,7 @@ void FSI::MonolithicStructureSplit::setup_system_matrix(Core::LinAlg::BlockSpars
 void FSI::MonolithicStructureSplit::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
@@ -775,7 +777,7 @@ void FSI::MonolithicStructureSplit::scale_system(
 void FSI::MonolithicStructureSplit::unscale_solution(Core::LinAlg::BlockSparseMatrixBase& mat,
     Core::LinAlg::Vector<double>& x, Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
@@ -1202,7 +1204,7 @@ void FSI::MonolithicStructureSplit::update()
 /*----------------------------------------------------------------------*/
 void FSI::MonolithicStructureSplit::read_restart(int step)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   const bool restartfrompartfsi = timeparams_.get<bool>("RESTART_FROM_PART_FSI");
 

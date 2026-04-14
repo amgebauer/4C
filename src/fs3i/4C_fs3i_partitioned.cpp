@@ -268,12 +268,12 @@ void FS3I::PartFS3I::init()
   {
     case fsi_iter_monolithicfluidsplit:
     {
-      fsi_ = std::make_shared<FSI::MonolithicFluidSplit>(comm_, fsitimeparams);
+      fsi_ = std::make_shared<FSI::MonolithicFluidSplit>(comm_, *problem, fsitimeparams);
       break;
     }
     case fsi_iter_monolithicstructuresplit:
     {
-      fsi_ = std::make_shared<FSI::MonolithicStructureSplit>(comm_, fsitimeparams);
+      fsi_ = std::make_shared<FSI::MonolithicStructureSplit>(comm_, *problem, fsitimeparams);
       break;
     }
     default:

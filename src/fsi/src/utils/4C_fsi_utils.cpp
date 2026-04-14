@@ -15,7 +15,6 @@
 #include "4C_fem_general_extract_values.hpp"
 #include "4C_fem_geometry_searchtree.hpp"
 #include "4C_fem_geometry_searchtree_service.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io.hpp"
 #include "4C_io_control.hpp"
@@ -79,18 +78,17 @@ bool FSI::Utils::fluid_ale_nodes_disjoint(
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-FSI::Utils::SlideAleUtils::SlideAleUtils(std::shared_ptr<Core::FE::Discretization> structdis,
+FSI::Utils::SlideAleUtils::SlideAleUtils(Global::Problem& problem,
+    std::shared_ptr<Core::FE::Discretization> structdis,
     std::shared_ptr<Core::FE::Discretization> fluiddis, Coupling::Adapter::CouplingMortar& coupsf,
     bool structcoupmaster, FSI::SlideALEProj aleproj)
-    : aletype_(aleproj)
+    : problem_(problem), aletype_(aleproj)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
-
   structcoupmaster_ = structcoupmaster;
 
-  coupff_ = std::make_shared<Coupling::Adapter::CouplingMortar>(problem->n_dim(),
-      problem->mortar_coupling_params(), problem->contact_dynamic_params(),
-      problem->spatial_approximation_type());
+  coupff_ = std::make_shared<Coupling::Adapter::CouplingMortar>(problem_.n_dim(),
+      problem_.mortar_coupling_params(), problem_.contact_dynamic_params(),
+      problem_.spatial_approximation_type());
 
   // declare struct objects in interface
   std::map<int, std::map<int, std::shared_ptr<Core::Elements::Element>>> structelements;
@@ -194,7 +192,7 @@ FSI::Utils::SlideAleUtils::SlideAleUtils(std::shared_ptr<Core::FE::Discretizatio
   iprojhist_ = std::make_shared<Core::LinAlg::Vector<double>>(*fluiddofrowmap_, true);
 
 
-  centerdisptotal_.resize(problem->n_dim());
+  centerdisptotal_.resize(problem_.n_dim());
 
   redundant_elements(coupsf, structdis->get_comm());
 
@@ -202,14 +200,14 @@ FSI::Utils::SlideAleUtils::SlideAleUtils(std::shared_ptr<Core::FE::Discretizatio
 
   // coupling condition at the fsi interface: displacements (=number spacial dimensions) are
   // coupled) e.g.: 3D: coupleddof = [1, 1, 1]
-  std::vector<int> coupleddof(problem->n_dim(), 1);
+  std::vector<int> coupleddof(problem_.n_dim(), 1);
 
   // this setup only initialize two sets of identical mortar elements (master and slave)
   // -> projection matrix is a unity matrix
   coupff_->setup(fluiddis, fluiddis, nullptr, coupleddof, "FSICoupling", fluiddis->get_comm(),
-      problem->function_manager(), problem->binning_strategy_params(),
-      problem->discretization_map(), problem->output_control_file(),
-      problem->spatial_approximation_type(), false, true);
+      problem_.function_manager(), problem_.binning_strategy_params(),
+      problem_.discretization_map(), problem_.output_control_file(),
+      problem_.spatial_approximation_type(), false, true);
 }
 
 /*----------------------------------------------------------------------*/
@@ -220,7 +218,7 @@ void FSI::Utils::SlideAleUtils::remeshing(Adapter::FSIStructureWrapper& structur
     MPI_Comm comm)
 {
   std::shared_ptr<Core::LinAlg::Vector<double>> idisptotal = structure.extract_interface_dispnp();
-  const int dim = FSI::Utils::problem_from_instance()->n_dim();
+  const int dim = problem_.n_dim();
 
   // project sliding fluid nodes onto struct interface surface
   slide_projection(structure, fluiddis, idispale, iprojdispale, coupsf, comm);
@@ -313,7 +311,7 @@ std::vector<double> FSI::Utils::SlideAleUtils::centerdisp(
 
   idispstep->update(-1.0, *idispn, 1.0);
 
-  const int dim = FSI::Utils::problem_from_instance()->n_dim();
+  const int dim = problem_.n_dim();
   // get structure and fluid discretizations  and set stated for element evaluation
   Core::LinAlg::Vector<double> idisptotalcol(*structdis->dof_col_map(), true);
   export_to(*idisptotal, idisptotalcol);
@@ -436,7 +434,7 @@ void FSI::Utils::SlideAleUtils::slide_projection(
 
 )
 {
-  const int dim = FSI::Utils::problem_from_instance()->n_dim();
+  const int dim = problem_.n_dim();
 
   std::shared_ptr<Core::LinAlg::Vector<double>> idispnp = structure.extract_interface_dispnp();
 
@@ -601,7 +599,7 @@ void FSI::Utils::SlideAleUtils::redundant_elements(
   std::map<int, std::map<int, std::shared_ptr<Core::Elements::Element>>>::iterator mapit;
   // build redundant version istructslideles_;
   std::map<int, std::shared_ptr<Core::Elements::Element>>::iterator it;
-  int dim = FSI::Utils::problem_from_instance()->n_dim();
+  int dim = problem_.n_dim();
 
   for (int i = 0; i <= maxid_; ++i)
   {

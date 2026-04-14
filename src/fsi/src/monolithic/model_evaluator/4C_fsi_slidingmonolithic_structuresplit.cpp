@@ -15,7 +15,6 @@
 #include "4C_coupling_adapter_mortar.hpp"
 #include "4C_fluid_utils_mapextractor.hpp"
 #include "4C_fsi_input.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_statustest.hpp"
 #include "4C_fsi_utils.hpp"
 #include "4C_global_data.hpp"
@@ -34,14 +33,14 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FSI::SlidingMonolithicStructureSplit::SlidingMonolithicStructureSplit(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : BlockMonolithic(comm, timeparams),
+    MPI_Comm comm, Global::Problem& global_problem, const Teuchos::ParameterList& timeparams)
+    : BlockMonolithic(comm, global_problem, timeparams),
       comm_(comm),
       lambda_(nullptr),
       lambdaold_(nullptr),
       energysum_(0.0)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   // ---------------------------------------------------------------------------
   // FSI specific check of Dirichlet boundary conditions
@@ -218,7 +217,7 @@ void FSI::SlidingMonolithicStructureSplit::set_lambda()
 /*----------------------------------------------------------------------------*/
 void FSI::SlidingMonolithicStructureSplit::setup_system()
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
 
   if (notsetup_)
   {
@@ -302,8 +301,9 @@ void FSI::SlidingMonolithicStructureSplit::setup_system()
           .do_boundary_conditions = true,
       });
       // set up sliding ale utils
-      slideale_ = std::make_shared<FSI::Utils::SlideAleUtils>(structure_field()->discretization(),
-          fluid_field()->discretization(), *coupsfm_, false, aleproj_);
+      slideale_ = std::make_shared<FSI::Utils::SlideAleUtils>(this->problem(),
+          structure_field()->discretization(), fluid_field()->discretization(), *coupsfm_, false,
+          aleproj_);
 
       iprojdisp_ =
           std::make_shared<Core::LinAlg::Vector<double>>(*coupsfm_->target_dof_map(), true);
@@ -852,7 +852,7 @@ void FSI::SlidingMonolithicStructureSplit::update()
 void FSI::SlidingMonolithicStructureSplit::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
@@ -906,7 +906,7 @@ void FSI::SlidingMonolithicStructureSplit::unscale_solution(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& x,
     Core::LinAlg::Vector<double>& b)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
@@ -1329,7 +1329,7 @@ void FSI::SlidingMonolithicStructureSplit::output_lambda()
 /*----------------------------------------------------------------------------*/
 void FSI::SlidingMonolithicStructureSplit::read_restart(int step)
 {
-  auto* problem = FSI::Utils::problem_from_instance();
+  auto* problem = &this->problem();
   auto input_control_file = problem->input_control_file();
 
   // read Lagrange multiplier
