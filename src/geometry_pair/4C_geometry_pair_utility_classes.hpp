@@ -402,7 +402,14 @@ namespace GeometryPair
         // The segments are equal.
       }
       else
-        FOUR_C_THROW("The two segments are overlapping. This is fatal!");
+      {
+        FOUR_C_THROW(
+            "The two segments are overlapping. This is fatal! lhs: [{}, {}], rhs: [{}, {}]",
+            Core::FADUtils::cast_to_double(lhs.get_eta_a()),
+            Core::FADUtils::cast_to_double(lhs.get_eta_b()),
+            Core::FADUtils::cast_to_double(rhs.get_eta_a()),
+            Core::FADUtils::cast_to_double(rhs.get_eta_b()));
+      }
 
       return false;
     };
@@ -427,7 +434,14 @@ namespace GeometryPair
         // The segments are equal.
       }
       else
-        FOUR_C_THROW("The two segments are overlapping. This is fatal!");
+      {
+        FOUR_C_THROW(
+            "The two segments are overlapping. This is fatal! lhs: [{}, {}], rhs: [{}, {}]",
+            Core::FADUtils::cast_to_double(lhs.get_eta_a()),
+            Core::FADUtils::cast_to_double(lhs.get_eta_b()),
+            Core::FADUtils::cast_to_double(rhs.get_eta_a()),
+            Core::FADUtils::cast_to_double(rhs.get_eta_b()));
+      }
 
       return false;
     };
