@@ -42,7 +42,6 @@
 #include "4C_structure_new_timint_factory.hpp"
 #include "4C_utils_exceptions.hpp"
 #include "4C_utils_parameter_list.hpp"
-#include "4C_w1.hpp"
 
 #include <Teuchos_ParameterList.hpp>
 #include <Teuchos_StandardParameterEntryValidators.hpp>
@@ -595,11 +594,6 @@ void Adapter::StructureBaseAlgorithmNew::detect_element_technologies(
   {
     Core::Elements::Element* actele = actdis_->l_row_element(i);
     // Detect EAS --------------------------------------------------------------
-    auto* wall_ele = dynamic_cast<Discret::Elements::Wall1*>(actele);
-    if (wall_ele != nullptr)
-    {
-      if (wall_ele->have_eas()) iseas_local = 1;
-    }
 
     Discret::Elements::Shell7p* shell7p = dynamic_cast<Discret::Elements::Shell7p*>(actele);
     if (shell7p)

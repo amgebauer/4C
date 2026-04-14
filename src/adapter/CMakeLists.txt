@@ -43,7 +43,6 @@ set(_dependencies
     structure_new
     thermo
     truss3
-    w1
     xfem
     )
 
