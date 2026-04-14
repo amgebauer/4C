@@ -407,53 +407,6 @@ class FsiAleMonWriter : public AleMonWriter
  private:
 };  // end of class FsiAleMonWriter
 
-
-
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-class TsiStructMonWriter : public StructMonWriter
-{
- public:
-  //! constructor
-  TsiStructMonWriter(PostProblem& problem, std::string& infieldtype, int node)
-      : StructMonWriter(problem, infieldtype, node)
-  {
-  }
-
- protected:
-  void check_infield_type(std::string& infieldtype) override {};
-
-  PostField* get_field_ptr(PostProblem& problem) override;
-
-  void write_header(std::ofstream& outfile) override;
-
- private:
-};  // end of class TsiStructMonWriter
-
-
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-class TsiThermoMonWriter : public ThermoMonWriter
-{
- public:
-  //! constructor
-  TsiThermoMonWriter(PostProblem& problem, std::string& infieldtype, int node)
-      : ThermoMonWriter(problem, infieldtype, node)
-  {
-  }
-
- protected:
-  void check_infield_type(std::string& infieldtype) override {};
-
-  PostField* get_field_ptr(PostProblem& problem) override;
-
-  void write_header(std::ofstream& outfile) override;
-
- private:
-};  // end of class TsiThermoMonWriter
-
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/

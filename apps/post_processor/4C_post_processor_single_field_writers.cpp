@@ -127,9 +127,6 @@ void StructureFilter::write_all_results(PostField* field)
   writer_->write_result(
       "poronopencond_lambda", "poronopencond_lambda", dofbased, field->problem()->num_dim());
 
-  // additional output for tsi (non-matching grid)
-  writer_->write_result("struct_temperature", "struct_temperature", nodebased, 1);
-
   // monolithic scalar-structure interaction involving scatra-scatra interface coupling outputs
   // nodal Cauchy stresses instead of Gauss-point ones
   writer_->write_result("nodal_stresses_xyz", "nodal_stresses_xyz", nodebased, 6);
