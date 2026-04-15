@@ -1505,44 +1505,6 @@ void ThermoMonWriter::write_thermo_result(std::ofstream& outfile, PostField*& fi
   return;
 }
 
-
-
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-PostField* TsiStructMonWriter::get_field_ptr(PostProblem& problem)
-{
-  // get pointer to discretisation of actual field
-  PostField* myfield = problem.get_discretization(1);
-  if (myfield->name() != "structure") FOUR_C_THROW("Fieldtype of field 1 is not structure.");
-  return myfield;
-}
-
-/*----------------------------------------------------------------------*/
-void TsiStructMonWriter::write_header(std::ofstream& outfile)
-{
-  outfile << "# TSI problem, writing nodal data of structure node ";
-}
-
-
-
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-PostField* TsiThermoMonWriter::get_field_ptr(PostProblem& problem)
-{
-  // get pointer to discretisation of actual field
-  PostField* myfield = problem.get_discretization(0);
-  if (myfield->name() != "thermo") FOUR_C_THROW("Fieldtype of field 2 is not thermo.");
-  return myfield;
-}
-
-/*----------------------------------------------------------------------*/
-void TsiThermoMonWriter::write_header(std::ofstream& outfile)
-{
-  outfile << "# TSI problem, writing nodal data of thermal node ";
-}
-
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -1782,32 +1744,6 @@ int main(int argc, char** argv)
       mymonwriter.write_mon_file(problem, infieldtype, node);
       mymonwriter.write_mon_heatflux_file(problem, infieldtype, problem.heatfluxtype(), node);
       mymonwriter.write_mon_tempgrad_file(problem, infieldtype, problem.tempgradtype(), node);
-      break;
-    }
-    case Core::ProblemType::tsi:
-    {
-      if (infieldtype == "structure")
-      {
-        TsiStructMonWriter mymonwriter(problem, infieldtype, node);
-        mymonwriter.write_mon_file(problem, infieldtype, node);
-        mymonwriter.write_mon_stress_file(problem, infieldtype, problem.stresstype(), node);
-        mymonwriter.write_mon_strain_file(problem, infieldtype, problem.straintype(), node);
-        mymonwriter.write_mon_pl_strain_file(problem, infieldtype, problem.straintype(), node);
-      }
-      else if (infieldtype == "thermo")
-      {
-        TsiThermoMonWriter mymonwriter(problem, infieldtype, node);
-        mymonwriter.write_mon_file(problem, infieldtype, node);
-        mymonwriter.write_mon_stress_file(problem, infieldtype, problem.stresstype(), node);
-        mymonwriter.write_mon_strain_file(problem, infieldtype, problem.straintype(), node);
-        // TODO: bugfix in case of coupled tsi
-        //        mymonwriter.write_mon_heatflux_file(problem,infieldtype,problem.heatfluxtype(),node);
-        //        mymonwriter.write_mon_tempgrad_file(problem,infieldtype,problem.tempgradtype(),node);
-      }
-      else
-      {
-        FOUR_C_THROW("handling for monitoring of this fieldtype not yet implemented");
-      }
       break;
     }
     case Core::ProblemType::gas_fsi:

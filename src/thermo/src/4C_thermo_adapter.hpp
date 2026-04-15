@@ -164,9 +164,6 @@ namespace Thermo
     /// print info about finished time step
     virtual void print_step() = 0;
 
-    //! Access to output object
-    virtual std::shared_ptr<Core::IO::DiscretizationWriter> disc_writer() = 0;
-
     /// output results
     virtual void output(bool forced_writerestart = false) = 0;
 
