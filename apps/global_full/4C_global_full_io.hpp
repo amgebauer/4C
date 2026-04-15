@@ -60,12 +60,6 @@ struct CommandlineArguments
  */
 void setup_global_problem(Core::IO::InputFile& input_file, const CommandlineArguments& arguments,
     const Core::Communication::Communicators& communicators);
-/**
- * \brief Returns the wall time in seconds.
- */
-double walltime_in_seconds();
-
-
 
 /**
  * \brief Writes the Teuchos::TimeMonitor information to std::cout

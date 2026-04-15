@@ -221,39 +221,30 @@ void run(CommandlineArguments& cli_args, Core::Communication::Communicators& com
 
   /* input phase, input of all information */
   global_legacy_module_callbacks().RegisterParObjectTypes();
-  double t0 = walltime_in_seconds();
 
-  // and now the actual reading
-  Core::IO::InputFile input_file = setup_input_file(communicators.local_comm());
-  input_file.read(cli_args.input_file_name);
-  setup_global_problem(input_file, cli_args, communicators);
+  {
+    TEUCHOS_FUNC_TIME_MONITOR("Input");
+
+    // and now the actual reading
+    Core::IO::InputFile input_file = setup_input_file(communicators.local_comm());
+    input_file.read(cli_args.input_file_name);
+    setup_global_problem(input_file, cli_args, communicators);
+  }
 
   // we wait till all procs are here. Otherwise a hang up might occur where
   // one proc ended with FOUR_C_THROW but other procs were not finished and waited...
   // we also want to have the printing above being finished.
   Core::Communication::barrier(communicators.local_comm());
 
-
-  const double ti = walltime_in_seconds() - t0;
-  if (Core::Communication::my_mpi_rank(communicators.global_comm()) == 0)
-  {
-    Core::IO::cout << "\nTotal wall time for INPUT:       " << std::setw(10) << std::setprecision(3)
-                   << std::scientific << ti << " sec \n\n";
-  }
-
   /*--------------------------------------------------calculation phase */
-  t0 = walltime_in_seconds();
 
-  entrypoint_switch();
+  {
+    TEUCHOS_FUNC_TIME_MONITOR("Calculation");
+
+    entrypoint_switch();
+  }
 
   write_timemonitor(communicators.local_comm());
-
-  const double tc = walltime_in_seconds() - t0;
-  if (Core::Communication::my_mpi_rank(communicators.global_comm()) == 0)
-  {
-    Core::IO::cout << "\nTotal wall time for CALCULATION: " << std::setw(10) << std::setprecision(3)
-                   << std::scientific << tc << " sec \n\n";
-  }
 }
 
 CommandlineArguments parse_command_line(int argc, char** argv)

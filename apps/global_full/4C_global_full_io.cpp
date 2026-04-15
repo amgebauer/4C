@@ -103,14 +103,6 @@ void setup_global_problem(Core::IO::InputFile& input_file, const CommandlineArgu
   Global::read_fields(*problem, input_file, *mesh_reader);
 }
 
-double walltime_in_seconds()
-{
-  return std::chrono::duration_cast<std::chrono::milliseconds>(
-             std::chrono::high_resolution_clock::now().time_since_epoch())
-             .count() *
-         1.0e-3;
-}
-
 void write_timemonitor(MPI_Comm comm)
 {
   std::shared_ptr<const Teuchos::Comm<int>> TeuchosComm =
