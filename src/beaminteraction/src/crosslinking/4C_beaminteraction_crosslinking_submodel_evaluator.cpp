@@ -3484,7 +3484,7 @@ void BeamInteraction::SubmodelEvaluator::Crosslinking::update_my_double_bonds_re
 
   // find new host procs for double bonded crosslinker by communication
   int err = bin_discret_ptr()->node_row_map()->remote_id_list(
-      size, unique_clgidlist.data(), unique_pidlist.data(), nullptr);
+      std::span(unique_clgidlist), std::span(unique_pidlist), std::span<int>{});
   if (err < 0) FOUR_C_THROW("Core::LinAlg::Map::RemoteIDList returned err={}", err);
 
   std::map<int, std::vector<std::shared_ptr<BeamInteraction::BeamLink>>> dbcltosend;
