@@ -20,7 +20,6 @@ set(_dependencies
     scatra
     scatra_ele
     solid_poro_ele
-    w1
     )
 
 four_c_add_internal_dependency(${AUTO_DEFINED_MODULE_NAME} ${_dependencies})

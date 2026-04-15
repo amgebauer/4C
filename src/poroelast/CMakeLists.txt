@@ -22,7 +22,6 @@ set(_dependencies
     mortar
     solid_poro_ele
     structure
-    w1
     )
 
 four_c_add_internal_dependency(${AUTO_DEFINED_MODULE_NAME} ${_dependencies})

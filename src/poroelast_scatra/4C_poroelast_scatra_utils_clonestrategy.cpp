@@ -16,8 +16,6 @@
 #include "4C_solid_poro_ele_pressure_based.hpp"
 #include "4C_solid_poro_ele_pressure_velocity_based.hpp"
 #include "4C_solid_poro_ele_pressure_velocity_based_p1.hpp"
-#include "4C_w1_poro_p1_scatra.hpp"
-#include "4C_w1_poro_scatra.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -57,56 +55,6 @@ Inpar::ScaTra::ImplType PoroElastScaTra::Utils::PoroScatraCloneStrategy::get_imp
   {
     return (dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBasedP1<3>*>(ele))
         ->get_impl_type();
-  }
-  // wall poro scatra elements
-  // quad 4
-  else if (eletypename == "WallQuad4PoroScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::quad4>*>(ele))
-        ->impl_type();
-  }
-  // quad 9
-  else if (eletypename == "WallQuad9PoroScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::quad9>*>(ele))
-        ->impl_type();
-  }
-  // nurbs 4
-  else if (eletypename == "WallNurbs4PoroScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::nurbs4>*>(ele))
-        ->impl_type();
-  }
-  // nurbs 9
-  else if (eletypename == "WallNurbs9PoroScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::nurbs9>*>(ele))
-        ->impl_type();
-  }
-  // tri 3
-  else if (eletypename == "WallTri3PoroScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::tri3>*>(ele))
-        ->impl_type();
-  }
-  // wall poro p1 elements
-  // quad 4
-  else if (eletypename == "WallQuad4PoroP1ScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroP1Scatra<Core::FE::CellType::quad4>*>(ele))
-        ->impl_type();
-  }
-  // quad 9
-  else if (eletypename == "WallQuad9PoroP1ScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroP1Scatra<Core::FE::CellType::quad9>*>(ele))
-        ->impl_type();
-  }
-  // tri 3
-  else if (eletypename == "WallTri3PoroP1ScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroP1Scatra<Core::FE::CellType::tri3>*>(ele))
-        ->impl_type();
   }
   // call base class routine
   else

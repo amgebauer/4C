@@ -28,8 +28,6 @@
 #include "4C_solid_poro_ele_pressure_velocity_based.hpp"
 #include "4C_solid_poro_ele_pressure_velocity_based_p1.hpp"
 #include "4C_utils_enum.hpp"
-#include "4C_w1_poro_eletypes.hpp"
-#include "4C_w1_poro_p1_eletypes.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -42,11 +40,6 @@ bool PoroElast::Utils::is_poro_element(const Core::Elements::Element* actele)
              Discret::Elements::SolidPoroPressureVelocityBasedType<2>::instance() or
          actele->element_type() ==
              Discret::Elements::SolidPoroPressureVelocityBasedType<3>::instance() or
-         actele->element_type() == Discret::Elements::WallTri3PoroType::instance() or
-         actele->element_type() == Discret::Elements::WallQuad4PoroType::instance() or
-         actele->element_type() == Discret::Elements::WallQuad9PoroType::instance() or
-         actele->element_type() == Discret::Elements::WallNurbs4PoroType::instance() or
-         actele->element_type() == Discret::Elements::WallNurbs9PoroType::instance() or
          is_poro_p1_element(actele);
 }
 
@@ -56,10 +49,7 @@ bool PoroElast::Utils::is_poro_p1_element(const Core::Elements::Element* actele)
   return actele->element_type() ==
              Discret::Elements::SolidPoroPressureVelocityBasedP1Type<2>::instance() or
          actele->element_type() ==
-             Discret::Elements::SolidPoroPressureVelocityBasedP1Type<3>::instance() or
-         actele->element_type() == Discret::Elements::WallQuad4PoroP1Type::instance() or
-         actele->element_type() == Discret::Elements::WallTri3PoroP1Type::instance() or
-         actele->element_type() == Discret::Elements::WallQuad9PoroP1Type::instance();
+             Discret::Elements::SolidPoroPressureVelocityBasedP1Type<3>::instance();
 }
 
 std::shared_ptr<PoroElast::PoroBase> PoroElast::Utils::create_poro_algorithm(
@@ -474,10 +464,6 @@ void PoroElast::Utils::PoroMaterialStrategy::assign_material1_to2(
         solid_poro != nullptr)
     {
       fluid->set_kinematic_type(solid_poro->kinematic_type());
-    }
-    else if (auto* wall_ele = dynamic_cast<Discret::Elements::Wall1*>(ele1); wall_ele != nullptr)
-    {
-      fluid->set_kinematic_type(wall_ele->kinematic_type());
     }
     else
       FOUR_C_THROW("ERROR: ele1 is not a solid element");
