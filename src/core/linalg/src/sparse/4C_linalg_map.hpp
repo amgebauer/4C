@@ -153,10 +153,11 @@ namespace Core::LinAlg
 
     //! Returns the processor IDs and corresponding local index value for a given list of global
     //! indices
-    int remote_id_list(std::span<const int> gidList, std::span<int> pidList, int* LIDList) const
+    int remote_id_list(
+        std::span<const int> gidList, std::span<int> pidList, std::span<int> lidList) const
     {
       return wrapped().RemoteIDList(
-          static_cast<int>(gidList.size()), gidList.data(), pidList.data(), LIDList);
+          static_cast<int>(gidList.size()), gidList.data(), pidList.data(), lidList.data());
     }
 
     //! Returns the minimum global ID owned by this processor.
