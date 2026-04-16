@@ -402,8 +402,8 @@ void Core::LinAlg::DefaultBlockMatrixStrategy::complete(bool enforce_complete)
 
   std::vector<int> cpidlist(cgidlist.size());
 
-  int err = mat_.full_domain_map().remote_id_list(
-      std::span(cgidlist), std::span(cpidlist), std::span<int>{});
+  int err =
+      mat_.full_domain_map().remote_id_list(std::span(cgidlist), std::span(cpidlist), nullptr);
   if (err != 0) FOUR_C_THROW("RemoteIDList failed");
 
   MPI_Comm comm = mat_.full_range_map().get_comm();

@@ -94,7 +94,7 @@ void Core::FE::Discretization::proc_zero_distribute_elements_to_all(
 
   const size_t n_elements_to_distribute = gidlist.size();
   std::vector<int> target_process(n_elements_to_distribute);
-  int err = target.remote_id_list(std::span(gidlist), std::span(target_process), std::span<int>{});
+  int err = target.remote_id_list(std::span(gidlist), std::span(target_process), nullptr);
 
   if (err < 0) FOUR_C_THROW("Core::LinAlg::Map::remoted_id_list() returned err={}", err);
 
@@ -313,7 +313,7 @@ Core::FE::Discretization::build_element_row_column(const Core::LinAlg::Map& node
   const int ncnode = nodecolmap.num_my_elements();
   std::vector<int> cnodeowner(ncnode);
   int err = noderowmap.remote_id_list(std::span<const int>(nodecolmap.my_global_elements(), ncnode),
-      std::span(cnodeowner), std::span<int>{});
+      std::span(cnodeowner), nullptr);
   if (err) FOUR_C_THROW("Core::LinAlg::Map::RemoteIDLis returned err={}", err);
 
   // build connectivity of elements

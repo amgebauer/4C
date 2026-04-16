@@ -979,8 +979,8 @@ void Particle::ParticleEngine::setup_bin_ghosting()
     std::vector<int> ghostbins_vec(ghostbins.begin(), ghostbins.end());
     const int size = static_cast<int>(ghostbins.size());
     std::vector<int> pidlist(size);
-    const int err = binning_->binrowmap_->remote_id_list(
-        std::span(ghostbins_vec), std::span(pidlist), std::span<int>{});
+    const int err =
+        binning_->binrowmap_->remote_id_list(std::span(ghostbins_vec), std::span(pidlist), nullptr);
     if (err < 0) FOUR_C_THROW("Core::LinAlg::Map::RemoteIDList returned err={}", err);
 
     for (int i = 0; i < size; ++i)
@@ -1399,7 +1399,7 @@ void Particle::ParticleEngine::determine_particles_to_be_distributed(
     // 2) communication
     std::vector<int> unique_pidlist(uniquesize);
     int err = binning_->binrowmap_->remote_id_list(
-        std::span<int>(uniquevec_bingidlist), std::span<int>(unique_pidlist), std::span<int>{});
+        std::span<int>(uniquevec_bingidlist), std::span<int>(unique_pidlist), nullptr);
     if (err < 0) FOUR_C_THROW("RemoteIDList returned err={}", err);
 
     // 3) build full pid list via lookup table

@@ -194,7 +194,7 @@ BeamInteraction::BeamCrosslinkerHandler::fill_linker_into_bins_remote_id_list(
     // 2) communication
     std::vector<int> unique_pidlist(uniquesize);
     int err = binstrategy_->bin_discret()->element_row_map()->remote_id_list(
-        std::span(uniquevec_targetbinIdlist), std::span(unique_pidlist), std::span<int>{});
+        std::span(uniquevec_targetbinIdlist), std::span(unique_pidlist), nullptr);
     if (err < 0) FOUR_C_THROW("Core::LinAlg::Map::RemoteIDList returned err={}", err);
 
     // 3) build full pid list via lookup table
