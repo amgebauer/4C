@@ -16,7 +16,8 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FSI::FluidAleAlgorithm::FluidAleAlgorithm(MPI_Comm comm, Global::Problem& problem)
-    : FluidMovingBoundaryBaseAlgorithm(problem.fsi_dynamic_params(), "FSICoupling"), comm_(comm)
+    : FluidMovingBoundaryBaseAlgorithm(problem, problem.fsi_dynamic_params(), "FSICoupling"),
+      comm_(comm)
 {
   const Teuchos::ParameterList& fsidyn = problem.fsi_dynamic_params();
 

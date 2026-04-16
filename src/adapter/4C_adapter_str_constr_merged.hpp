@@ -36,6 +36,11 @@ namespace Core::LinAlg
   class MapExtractor;
 }
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 /*----------------------------------------------------------------------*/
 namespace Adapter
 {
@@ -52,7 +57,7 @@ namespace Adapter
   {
    public:
     /// Constructor
-    StructureConstrMerged(std::shared_ptr<Structure> stru);
+    StructureConstrMerged(Global::Problem& problem, std::shared_ptr<Structure> stru);
 
     /// setup this object
     void setup() override;

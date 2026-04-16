@@ -23,11 +23,12 @@ PoroElast::MonolithicMeshtying::MonolithicMeshtying(MPI_Comm comm,
     std::shared_ptr<Core::LinAlg::MapExtractor> porosity_splitter)
     : Monolithic(comm, timeparams, porosity_splitter), normrhsfactiven_(0.0), tolfres_ncoup_(0.0)
 {
+  auto& problem = *Global::Problem::instance();
+
   // Initialize mortar adapter for meshtying interface
-  mortar_adapter_ = std::make_shared<Adapter::CouplingPoroMortar>(
-      Global::Problem::instance()->n_dim(), Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+  mortar_adapter_ = std::make_shared<Adapter::CouplingPoroMortar>(problem, problem.n_dim(),
+      problem.mortar_coupling_params(), problem.contact_dynamic_params(),
+      problem.spatial_approximation_type());
 
   const int ndim = Global::Problem::instance()->n_dim();
   std::vector<int> coupleddof(ndim, 1);  // 1,1,1 should be in coupleddof

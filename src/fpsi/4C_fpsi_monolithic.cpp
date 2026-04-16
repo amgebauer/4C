@@ -64,11 +64,12 @@ FPSI::MonolithicBase::MonolithicBase(MPI_Comm comm, const Teuchos::ParameterList
   Global::Problem* problem = Global::Problem::instance();
   const Teuchos::ParameterList& fluiddynparams = problem->fluid_dynamic_params();
   std::shared_ptr<Adapter::FluidBaseAlgorithm> fluid =
-      std::make_shared<Adapter::FluidBaseAlgorithm>(fpsidynparams, fluiddynparams, "fluid", true);
+      std::make_shared<Adapter::FluidBaseAlgorithm>(
+          *problem, fpsidynparams, fluiddynparams, "fluid", true);
   fluid_subproblem_ = std::dynamic_pointer_cast<Adapter::FluidFPSI>(fluid->fluid_field());
   // ask base algorithm for the ale time integrator
-  std::shared_ptr<Adapter::AleBaseAlgorithm> ale = std::make_shared<Adapter::AleBaseAlgorithm>(
-      fpsidynparams, Global::Problem::instance()->get_dis("ale"));
+  std::shared_ptr<Adapter::AleBaseAlgorithm> ale =
+      std::make_shared<Adapter::AleBaseAlgorithm>(*problem, fpsidynparams, problem->get_dis("ale"));
   ale_ = std::dynamic_pointer_cast<Adapter::AleFpsiWrapper>(ale->ale_field());
   if (ale_ == nullptr) FOUR_C_THROW("cast from Adapter::Ale to Adapter::AleFpsiWrapper failed");
 

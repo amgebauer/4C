@@ -73,6 +73,11 @@ namespace Solid::ModelEvaluator
   class Generic;
 }  // namespace Solid::ModelEvaluator
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   /// general structural field interface
@@ -515,8 +520,8 @@ namespace Adapter
   {
    public:
     /// constructor
-    StructureBaseAlgorithm(const Teuchos::ParameterList& prbdyn, const Teuchos::ParameterList& sdyn,
-        std::shared_ptr<Core::FE::Discretization> actdis);
+    StructureBaseAlgorithm(Global::Problem& problem, const Teuchos::ParameterList& prbdyn,
+        const Teuchos::ParameterList& sdyn, std::shared_ptr<Core::FE::Discretization> actdis);
 
     /// virtual destructor to support polymorph destruction
     virtual ~StructureBaseAlgorithm() = default;
@@ -587,6 +592,9 @@ namespace Adapter
      */
     std::shared_ptr<Core::LinAlg::Solver> create_linear_solver(
         std::shared_ptr<Core::FE::Discretization>& actdis, const Teuchos::ParameterList& sdyn);
+
+    /// explicit global problem context
+    Global::Problem& problem_;
 
     /// structural field solver
     std::shared_ptr<Structure> structure_;

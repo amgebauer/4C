@@ -28,7 +28,7 @@ FOUR_C_NAMESPACE_OPEN
 // turn defines the dof number ordering of the Discretizations.
 /*----------------------------------------------------------------------*/
 FSI::Algorithm::Algorithm(MPI_Comm comm, Global::Problem& problem)
-    : AlgorithmBase(comm, problem.fsi_dynamic_params()),
+    : AlgorithmBase(problem, comm, problem.fsi_dynamic_params()),
       problem_(problem),
       adapterbase_ptr_(nullptr),
       use_old_structure_(false)
@@ -71,7 +71,7 @@ void FSI::Algorithm::setup()
   if (Teuchos::getIntegralValue<Inpar::Solid::IntegrationStrategy>(sdyn, "INT_STRATEGY") ==
       Inpar::Solid::IntegrationStrategy::int_standard)
   {
-    adapterbase_ptr_ = Adapter::build_structure_algorithm(sdyn);
+    adapterbase_ptr_ = Adapter::build_structure_algorithm(problem, sdyn);
     adapterbase_ptr_->init(fsidyn, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
     adapterbase_ptr_->register_model_evaluator("Partitioned Coupling Model", fsi_model_ptr);
     adapterbase_ptr_->setup();
@@ -96,8 +96,8 @@ void FSI::Algorithm::setup()
                    "\n"
                 << std::endl;
 
-    Adapter::StructureBaseAlgorithm structure(
-        problem.fsi_dynamic_params(), const_cast<Teuchos::ParameterList&>(sdyn), structdis);
+    Adapter::StructureBaseAlgorithm structure(problem, problem.fsi_dynamic_params(),
+        const_cast<Teuchos::ParameterList&>(sdyn), structdis);
     structure_ =
         std::dynamic_pointer_cast<Adapter::FSIStructureWrapper>(structure.structure_field());
     structure_->setup();
@@ -115,7 +115,7 @@ void FSI::Algorithm::setup()
         "set INT_STRATEGY to Old in ---STRUCTURAL DYNAMIC section!");
 
   Adapter::FluidMovingBoundaryBaseAlgorithm MBFluidbase(
-      problem.fsi_dynamic_params(), "FSICoupling");
+      problem, problem.fsi_dynamic_params(), "FSICoupling");
   fluid_ = MBFluidbase.mb_fluid_field();
 
   coupsf_ = std::make_shared<Coupling::Adapter::Coupling>();

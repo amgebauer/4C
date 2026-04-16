@@ -46,7 +46,7 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 SSI::SSIBase::SSIBase(MPI_Comm comm, const Teuchos::ParameterList& globaltimeparams)
-    : AlgorithmBase(comm, globaltimeparams),
+    : AlgorithmBase(*SSI::Utils::problem_from_instance(), comm, globaltimeparams),
       diff_time_step_size_(globaltimeparams.get<bool>("DIFFTIMESTEPSIZE")),
       fieldcoupling_(Teuchos::getIntegralValue<SSI::FieldCoupling>(
           SSI::Utils::problem_from_instance()->ssi_control_params(), "FIELDCOUPLING")),
@@ -770,7 +770,7 @@ void SSI::SSIBase::init_time_integrators(const Teuchos::ParameterList& globaltim
     if (Teuchos::getIntegralValue<Inpar::Solid::IntegrationStrategy>(
             structparams, "INT_STRATEGY") == Inpar::Solid::IntegrationStrategy::int_standard)
     {
-      struct_adapterbase_ptr_ = Adapter::build_structure_algorithm(structparams);
+      struct_adapterbase_ptr_ = Adapter::build_structure_algorithm(*problem, structparams);
 
       // initialize structure base algorithm
       struct_adapterbase_ptr_->init(
@@ -780,8 +780,8 @@ void SSI::SSIBase::init_time_integrators(const Teuchos::ParameterList& globaltim
     else if (Teuchos::getIntegralValue<Inpar::Solid::IntegrationStrategy>(
                  structparams, "INT_STRATEGY") == Inpar::Solid::IntegrationStrategy::int_old)
     {
-      Adapter::StructureBaseAlgorithm structure(
-          *structtimeparams, const_cast<Teuchos::ParameterList&>(structparams), structdis);
+      Adapter::StructureBaseAlgorithm structure(*problem, *structtimeparams,
+          const_cast<Teuchos::ParameterList&>(structparams), structdis);
       structure_ =
           std::dynamic_pointer_cast<Adapter::SSIStructureWrapper>(structure.structure_field());
       if (structure_ == nullptr)
@@ -800,8 +800,8 @@ void SSI::SSIBase::init_time_integrators(const Teuchos::ParameterList& globaltim
   // create and initialize scatra base algorithm.
   // scatra time integrator constructed and initialized inside.
   // mesh is written inside. cloning must happen before!
-  scatra_base_algorithm_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*scatratimeparams,
-      SSI::Utils::modify_scatra_params(scatraparams),
+  scatra_base_algorithm_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*problem,
+      *scatratimeparams, SSI::Utils::modify_scatra_params(scatraparams),
       problem->solver_params(scatraparams.get<int>("LINEAR_SOLVER")), scatra_disname, is_ale);
 
   scatra_base_algorithm()->init();
@@ -810,7 +810,7 @@ void SSI::SSIBase::init_time_integrators(const Teuchos::ParameterList& globaltim
   if (is_scatra_manifold())
   {
     scatra_manifold_base_algorithm_ =
-        std::make_shared<Adapter::ScaTraBaseAlgorithm>(*scatratimeparams,
+        std::make_shared<Adapter::ScaTraBaseAlgorithm>(*problem, *scatratimeparams,
             SSI::Utils::clone_scatra_manifold_params(
                 scatraparams, globaltimeparams.sublist("MANIFOLD")),
             problem->solver_params(globaltimeparams.sublist("MANIFOLD").get<int>("LINEAR_SOLVER")),

@@ -22,7 +22,8 @@ namespace Adapter
   {
    public:
     /// constructor
-    explicit FluidXFEM(const Teuchos::ParameterList& prbdyn, std::string condname);
+    explicit FluidXFEM(
+        Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname);
 
     /*========================================================================*/
     //! @name Misc

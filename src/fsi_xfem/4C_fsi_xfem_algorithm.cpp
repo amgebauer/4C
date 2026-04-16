@@ -34,7 +34,7 @@ FOUR_C_NAMESPACE_OPEN
  *----------------------------------------------------------------------*/
 FSI::AlgorithmXFEM::AlgorithmXFEM(MPI_Comm comm, const Teuchos::ParameterList& timeparams,
     const Adapter::FieldWrapper::Fieldtype type)
-    : AlgorithmBase(comm, timeparams),
+    : AlgorithmBase(*Global::Problem::instance(), comm, timeparams),
       num_fields_(0),
       structp_block_(-1),
       fluid_block_(-1),
@@ -58,8 +58,9 @@ FSI::AlgorithmXFEM::AlgorithmXFEM(MPI_Comm comm, const Teuchos::ParameterList& t
     // access the structural discretization
     std::shared_ptr<Core::FE::Discretization> structdis =
         Global::Problem::instance()->get_dis("structure");
+    auto& problem = *Global::Problem::instance();
     Adapter::StructureBaseAlgorithm structure(
-        timeparams, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
+        problem, timeparams, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
     structureporo_ = std::make_shared<Adapter::StructurePoroWrapper>(
         structure.structure_field(), Adapter::StructurePoroWrapper::type_StructureField, true);
   }
@@ -95,7 +96,7 @@ FSI::AlgorithmXFEM::AlgorithmXFEM(MPI_Comm comm, const Teuchos::ParameterList& t
     Global::Problem* problem = Global::Problem::instance();
     const Teuchos::ParameterList& fsidynparams = problem->fsi_dynamic_params();
     // ask base algorithm for the ale time integrator
-    Adapter::AleBaseAlgorithm ale(fsidynparams, Global::Problem::instance()->get_dis("ale"));
+    Adapter::AleBaseAlgorithm ale(*problem, fsidynparams, problem->get_dis("ale"));
     ale_ = std::dynamic_pointer_cast<Adapter::AleFpsiWrapper>(ale.ale_field());
     if (ale_ == nullptr) FOUR_C_THROW("Cast from Adapter::Ale to Adapter::AleFpsiWrapper failed");
   }
@@ -109,7 +110,8 @@ FSI::AlgorithmXFEM::AlgorithmXFEM(MPI_Comm comm, const Teuchos::ParameterList& t
   // ask base algorithm for the fluid time integrator
   // do not init in ale case!!! (will be done in MonolithicAFSI_XFEM::Setup System())
   std::shared_ptr<Adapter::FluidBaseAlgorithm> fluid =
-      std::make_shared<Adapter::FluidBaseAlgorithm>(timeparams, fdyn, "fluid", ale, false);
+      std::make_shared<Adapter::FluidBaseAlgorithm>(
+          *Global::Problem::instance(), timeparams, fdyn, "fluid", ale, false);
   fluid_ = std::dynamic_pointer_cast<FLD::XFluid>(fluid->fluid_field());
   if (fluid_ == nullptr)
     FOUR_C_THROW("Cast of Fluid to XFluid failed! - Everything fine in setup_fluid()?");

@@ -154,7 +154,8 @@ void Arteries::ArtNetImplStationary::init(const Teuchos::ParameterList& globalti
         Inpar::ScaTra::velocity_zero)
       FOUR_C_THROW("set your velocity field to zero!");
     // construct the scatra problem
-    scatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(globaltimeparams, myscatraparams,
+    scatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*Global::Problem::instance(),
+        globaltimeparams, myscatraparams,
         Global::Problem::instance()->solver_params(linsolvernumber_), scatra_disname, false);
 
     // initialize the base algo.

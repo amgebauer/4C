@@ -7,7 +7,6 @@
 
 #include "4C_adapter_scatra_fluid_ale_coupling_algo.hpp"
 
-#include "4C_adapter_problem_access.hpp"
 #include "4C_ale_utils_mapextractor.hpp"
 #include "4C_coupling_adapter.hpp"
 #include "4C_fem_discretization.hpp"
@@ -18,21 +17,18 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::ScaTraFluidAleCouplingAlgorithm::ScaTraFluidAleCouplingAlgorithm(MPI_Comm comm,
-    const Teuchos::ParameterList& prbdyn, const std::string condname,
+Adapter::ScaTraFluidAleCouplingAlgorithm::ScaTraFluidAleCouplingAlgorithm(Global::Problem& problem,
+    MPI_Comm comm, const Teuchos::ParameterList& prbdyn, const std::string condname,
     const Teuchos::ParameterList& solverparams)
     : ScaTraFluidCouplingAlgorithm(
-          comm, prbdyn, true, "scatra", solverparams),  // yes, we need the ALE formulation
-      AleBaseAlgorithm(prbdyn,
-          Adapter::Utils::problem_from_instance()->get_dis(
-              "ale")),  // construct ale base algorithm as well
+          problem, comm, prbdyn, true, "scatra", solverparams),  // yes, we need the ALE formulation
+      AleBaseAlgorithm(
+          problem, prbdyn, problem.get_dis("ale")),  // construct ale base algorithm as well
       condname_(condname)
 {
   // keep constructor empty
   return;
 }
-
-
 /*----------------------------------------------------------------------*
 | Setup                                                     rauch 08/16 |
 *----------------------------------------------------------------------*/
@@ -50,12 +46,12 @@ void Adapter::ScaTraFluidAleCouplingAlgorithm::init()
 *----------------------------------------------------------------------*/
 void Adapter::ScaTraFluidAleCouplingAlgorithm::setup()
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto& problem = AlgorithmBase::problem();
 
   // call setup() in base class
   Adapter::ScaTraFluidCouplingAlgorithm::setup();
 
-  const int ndim = problem->n_dim();
+  const int ndim = problem.n_dim();
 
   // set up couplings
   icoupfa_ = std::make_shared<Coupling::Adapter::Coupling>();

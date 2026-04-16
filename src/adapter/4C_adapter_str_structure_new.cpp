@@ -7,7 +7,6 @@
 
 #include "4C_adapter_str_structure_new.hpp"
 
-#include "4C_adapter_problem_access.hpp"
 #include "4C_adapter_str_constr_merged.hpp"
 #include "4C_adapter_str_fbiwrapper.hpp"
 #include "4C_adapter_str_fpsiwrapper.hpp"
@@ -53,8 +52,13 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------------*
  *----------------------------------------------------------------------------*/
-Adapter::StructureBaseAlgorithmNew::StructureBaseAlgorithmNew()
-    : str_wrapper_(nullptr), prbdyn_(nullptr), sdyn_(nullptr), isinit_(false), issetup_(false)
+Adapter::StructureBaseAlgorithmNew::StructureBaseAlgorithmNew(Global::Problem& problem)
+    : str_wrapper_(nullptr),
+      prbdyn_(nullptr),
+      sdyn_(nullptr),
+      problem_(problem),
+      isinit_(false),
+      issetup_(false)
 {
   // empty
 }
@@ -126,7 +130,7 @@ void Adapter::StructureBaseAlgorithmNew::setup_tim_int()
   if (not is_init()) FOUR_C_THROW("You have to call init() first!");
 
   // get the problem instance
-  Global::Problem* problem = Adapter::Utils::problem_from_instance();
+  Global::Problem* problem = &problem_;
   // get the restart step
   const int restart = problem->restart();
 
@@ -331,7 +335,7 @@ void Adapter::StructureBaseAlgorithmNew::set_model_types(
     std::set<Inpar::Solid::ModelType>& modeltypes) const
 {
   if (not is_init()) FOUR_C_THROW("You have to call init() first!");
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
 
   // ---------------------------------------------------------------------------
   // check for meshtying and contact conditions
@@ -631,7 +635,7 @@ void Adapter::StructureBaseAlgorithmNew::set_params(Teuchos::ParameterList& iofl
     Teuchos::ParameterList& xparams, Teuchos::ParameterList& time_adaptivity_params)
 {
   // get the problem instance and the problem type
-  Global::Problem* problem = Adapter::Utils::problem_from_instance();
+  Global::Problem* problem = &problem_;
   Core::ProblemType probtype = problem->get_problem_type();
 
   // ---------------------------------------------------------------------------
@@ -782,7 +786,7 @@ void Adapter::StructureBaseAlgorithmNew::set_structure_wrapper(
 {
   // try to firstly create the adaptive wrapper
   if (!str_wrapper_)
-    str_wrapper_ = Adapter::StructureTimeAda::create(time_adaptivity_params, ti_strategy);
+    str_wrapper_ = Adapter::StructureTimeAda::create(problem_, time_adaptivity_params, ti_strategy);
 
   // if no adaptive wrapper was found, we try to create a standard one
   if (!str_wrapper_) create_wrapper(ti_strategy);
@@ -797,7 +801,7 @@ void Adapter::StructureBaseAlgorithmNew::create_wrapper(
     std::shared_ptr<Solid::TimeInt::Base> ti_strategy)
 {
   // get the problem instance and the problem type
-  Global::Problem* problem = Adapter::Utils::problem_from_instance();
+  Global::Problem* problem = &problem_;
   Core::ProblemType probtype = problem->get_problem_type();
 
   switch (probtype)
@@ -818,12 +822,12 @@ void Adapter::StructureBaseAlgorithmNew::create_wrapper(
           Core::IO::cout << "Using StructureNOXCorrectionWrapper()..." << Core::IO::endl;
 
         str_wrapper_ = std::make_shared<StructureConstrMerged>(
-            std::make_shared<StructureNOXCorrectionWrapper>(ti_strategy));
+            problem_, std::make_shared<StructureNOXCorrectionWrapper>(ti_strategy));
       }
       else
       {
         // case of partitioned fsi
-        str_wrapper_ = std::make_shared<FSIStructureWrapper>(ti_strategy);
+        str_wrapper_ = std::make_shared<FSIStructureWrapper>(problem_, ti_strategy);
       }
       break;
     }
@@ -833,7 +837,7 @@ void Adapter::StructureBaseAlgorithmNew::create_wrapper(
       if (Teuchos::getIntegralValue<FSI::PartitionedCouplingMethod>(
               fsidyn.sublist("PARTITIONED SOLVER"), "PARTITIONED") ==
           FSI::PartitionedCouplingMethod::DirichletNeumann)
-        str_wrapper_ = std::make_shared<FBIStructureWrapper>(ti_strategy);
+        str_wrapper_ = std::make_shared<FBIStructureWrapper>(problem_, ti_strategy);
       else
         FOUR_C_THROW("Only DirichletNeumann is implemented for FBI so far");
       break;
@@ -866,19 +870,19 @@ void Adapter::StructureBaseAlgorithmNew::create_wrapper(
         if (coupling == PoroElast::SolutionSchemeOverFields::Monolithic_structuresplit or
             coupling == PoroElast::SolutionSchemeOverFields::Monolithic_fluidsplit or
             coupling == PoroElast::SolutionSchemeOverFields::Monolithic_nopenetrationsplit)
-          str_wrapper_ = std::make_shared<FPSIStructureWrapper>(ti_strategy);
+          str_wrapper_ = std::make_shared<FPSIStructureWrapper>(problem_, ti_strategy);
         else
-          str_wrapper_ = std::make_shared<StructureConstrMerged>(ti_strategy);
+          str_wrapper_ = std::make_shared<StructureConstrMerged>(problem_, ti_strategy);
       }
       else
       {
-        str_wrapper_ = std::make_shared<FPSIStructureWrapper>(ti_strategy);
+        str_wrapper_ = std::make_shared<FPSIStructureWrapper>(problem_, ti_strategy);
       }
       break;
     }
     default:
       /// wrap time loop for pure structure problems
-      str_wrapper_ = (std::make_shared<StructureTimeLoop>(ti_strategy));
+      str_wrapper_ = (std::make_shared<StructureTimeLoop>(problem_, ti_strategy));
       break;
   }
 }

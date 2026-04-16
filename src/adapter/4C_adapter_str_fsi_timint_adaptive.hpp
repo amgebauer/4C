@@ -54,7 +54,8 @@ namespace Adapter
   {
    public:
     //! Constructor
-    StructureFSITimIntAda(std::shared_ptr<Solid::TimAda> sta, std::shared_ptr<Structure> sti);
+    StructureFSITimIntAda(Global::Problem& problem, std::shared_ptr<Solid::TimAda> sta,
+        std::shared_ptr<Structure> sti);
 
     //! Do one time step with auxiliary time integration scheme
     virtual void time_step_auxiliary();

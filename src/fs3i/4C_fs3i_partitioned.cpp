@@ -302,7 +302,7 @@ void FS3I::PartFS3I::init()
         "no linear solver defined for structural ScalarTransport solver. Please set LINEAR_SOLVER2 "
         "in FS3I DYNAMIC to a valid number!");
 
-  fluidscatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(fs3idyn,
+  fluidscatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*problem, fs3idyn,
       problem->scalar_transport_dynamic_params(), problem->solver_params(linsolver1number),
       "scatra1", true);
   fluidscatra_->init();
@@ -310,7 +310,7 @@ void FS3I::PartFS3I::init()
   fluidscatra_->scatra_field()->set_number_of_dof_set_velocity(1);
   fluidscatra_->scatra_field()->set_number_of_dof_set_wall_shear_stress(1);
 
-  structscatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(fs3idyn,
+  structscatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*problem, fs3idyn,
       problem->scalar_transport_dynamic_params(), problem->solver_params(linsolver2number),
       "scatra2", true);
   structscatra_->init();

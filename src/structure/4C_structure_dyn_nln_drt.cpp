@@ -92,8 +92,9 @@ void dyn_nlnstructural_drt()
     // -------------------------------------------------------------------
     case Inpar::Solid::int_old:
     {
+      auto& problem = *Global::Problem::instance();
       Adapter::StructureBaseAlgorithm adapterbase_old_ptr(
-          sdyn, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
+          problem, sdyn, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
       structadapter = adapterbase_old_ptr.structure_field();
       structadapter->setup();
       break;
@@ -104,7 +105,7 @@ void dyn_nlnstructural_drt()
     default:
     {
       std::shared_ptr<Adapter::StructureBaseAlgorithmNew> adapterbase_ptr =
-          Adapter::build_structure_algorithm(sdyn);
+          Adapter::build_structure_algorithm(*Global::Problem::instance(), sdyn);
       adapterbase_ptr->init(sdyn, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
       adapterbase_ptr->setup();
       structadapter = adapterbase_ptr->structure_field();

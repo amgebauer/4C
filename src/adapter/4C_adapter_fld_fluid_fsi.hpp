@@ -40,6 +40,11 @@ namespace FLD
   }
 }  // namespace FLD
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   /*! \brief Fluid field adapter for fsi
@@ -50,9 +55,9 @@ namespace Adapter
   class FluidFSI : public FluidWrapper
   {
    public:
-    /// Constructor
-    FluidFSI(std::shared_ptr<Fluid> fluid, std::shared_ptr<Core::FE::Discretization> dis,
-        std::shared_ptr<Core::LinAlg::Solver> solver,
+    /// Constructor with explicit global problem context
+    FluidFSI(Global::Problem& problem, std::shared_ptr<Fluid> fluid,
+        std::shared_ptr<Core::FE::Discretization> dis, std::shared_ptr<Core::LinAlg::Solver> solver,
         std::shared_ptr<Teuchos::ParameterList> params,
         std::shared_ptr<Core::IO::DiscretizationWriter> output, bool isale, bool dirichletcond);
 
@@ -229,6 +234,7 @@ namespace Adapter
     std::shared_ptr<FLD::FluidImplicitTimeInt> fluidimpl_;
 
     //! @name local copies of input parameters
+    Global::Problem& problem_;
     std::shared_ptr<Core::FE::Discretization> dis_;
     std::shared_ptr<Teuchos::ParameterList> params_;
     std::shared_ptr<Core::IO::DiscretizationWriter> output_;

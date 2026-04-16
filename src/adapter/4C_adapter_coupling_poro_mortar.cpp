@@ -7,7 +7,6 @@
 
 #include "4C_adapter_coupling_poro_mortar.hpp"
 
-#include "4C_adapter_problem_access.hpp"
 #include "4C_comm_mpi_utils.hpp"
 #include "4C_contact_element.hpp"
 #include "4C_contact_input.hpp"
@@ -27,17 +26,18 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*
  |  ctor                                                      ager 10/15|
  *----------------------------------------------------------------------*/
-Adapter::CouplingPoroMortar::CouplingPoroMortar(int spatial_dimension,
+Adapter::CouplingPoroMortar::CouplingPoroMortar(Global::Problem& problem, int spatial_dimension,
     Teuchos::ParameterList mortar_coupling_params, Teuchos::ParameterList contact_dynamic_params,
     Core::FE::ShapeFunctionType shape_function_type)
-    : CouplingNonLinMortar(
-          spatial_dimension, mortar_coupling_params, contact_dynamic_params, shape_function_type),
+    : CouplingNonLinMortar(problem, spatial_dimension, mortar_coupling_params,
+          contact_dynamic_params, shape_function_type),
       firstinit_(false),
       slavetype_(-1),
       mastertype_(-1)
 {
   // empty...
 }
+
 
 /*----------------------------------------------------------------------*
  |  Read Mortar Condition                                     ager 10/15|
@@ -50,7 +50,7 @@ void Adapter::CouplingPoroMortar::read_mortar_condition(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& masterelements,
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &CouplingNonLinMortar::problem();
 
   // Call Base Class
   CouplingNonLinMortar::read_mortar_condition(masterdis, slavedis, coupleddof, couplingcond, input,
@@ -92,7 +92,7 @@ void Adapter::CouplingPoroMortar::add_mortar_elements(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements,
     std::shared_ptr<CONTACT::Interface>& interface, int numcoupleddof)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &CouplingNonLinMortar::problem();
 
   bool isnurbs = input.get<bool>("NURBS");
 
@@ -247,7 +247,7 @@ void Adapter::CouplingPoroMortar::create_strategy(
     std::shared_ptr<Core::FE::Discretization> slavedis, Teuchos::ParameterList& input,
     int numcoupleddof)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &CouplingNonLinMortar::problem();
 
   // poro lagrange strategy:
 
@@ -357,7 +357,7 @@ void Adapter::CouplingPoroMortar::complete_interface(
     std::shared_ptr<Core::FE::Discretization> masterdis,
     std::shared_ptr<CONTACT::Interface>& interface)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &CouplingNonLinMortar::problem();
 
   // finalize the contact interface construction
   int maxdof = masterdis->dof_row_map()->max_all_gid();

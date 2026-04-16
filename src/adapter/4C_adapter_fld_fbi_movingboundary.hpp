@@ -31,7 +31,8 @@ namespace Adapter
   {
    public:
     /// constructor
-    explicit FBIFluidMB(const Teuchos::ParameterList& prbdyn, std::string condname);
+    explicit FBIFluidMB(
+        Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname);
 
     /*========================================================================*/
     //! @name Misc

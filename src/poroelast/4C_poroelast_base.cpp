@@ -38,7 +38,7 @@ FOUR_C_NAMESPACE_OPEN
 
 PoroElast::PoroBase::PoroBase(MPI_Comm comm, const Teuchos::ParameterList& timeparams,
     std::shared_ptr<Core::LinAlg::MapExtractor> porosity_splitter)
-    : AlgorithmBase(comm, timeparams),
+    : AlgorithmBase(*Global::Problem::instance(), comm, timeparams),
       is_part_of_multifield_problem_(false),
       porosity_splitter_(porosity_splitter),
       matchinggrid_(
@@ -86,8 +86,9 @@ PoroElast::PoroBase::PoroBase(MPI_Comm comm, const Teuchos::ParameterList& timep
   // clean up as soon as old time integration is unused!
   if (oldstructimint_)
   {
+    auto& problem = *Global::Problem::instance();
     Adapter::StructureBaseAlgorithm structure(
-        timeparams, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
+        problem, timeparams, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
     structure_ =
         std::dynamic_pointer_cast<Adapter::FPSIStructureWrapper>(structure.structure_field());
     structure_->setup();
@@ -95,7 +96,7 @@ PoroElast::PoroBase::PoroBase(MPI_Comm comm, const Teuchos::ParameterList& timep
   else
   {
     std::shared_ptr<Adapter::StructureBaseAlgorithmNew> adapterbase_ptr =
-        Adapter::build_structure_algorithm(sdyn);
+        Adapter::build_structure_algorithm(*Global::Problem::instance(), sdyn);
     adapterbase_ptr->init(timeparams, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
     adapterbase_ptr->setup();
     structure_ = std::dynamic_pointer_cast<Adapter::FPSIStructureWrapper>(
@@ -109,7 +110,8 @@ PoroElast::PoroBase::PoroBase(MPI_Comm comm, const Teuchos::ParameterList& timep
   Global::Problem* problem = Global::Problem::instance();
   const Teuchos::ParameterList& fluiddynparams = problem->fluid_dynamic_params();
   std::shared_ptr<Adapter::FluidBaseAlgorithm> fluid =
-      std::make_shared<Adapter::FluidBaseAlgorithm>(timeparams, fluiddynparams, "porofluid", true);
+      std::make_shared<Adapter::FluidBaseAlgorithm>(
+          *problem, timeparams, fluiddynparams, "porofluid", true);
   fluid_ = std::dynamic_pointer_cast<Adapter::FluidPoro>(fluid->fluid_field());
 
   if (fluid_ == nullptr)

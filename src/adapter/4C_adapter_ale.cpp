@@ -12,7 +12,6 @@
 #include "4C_adapter_ale_fsi.hpp"
 #include "4C_adapter_ale_fsi_msht.hpp"
 #include "4C_adapter_ale_xffsi.hpp"
-#include "4C_adapter_problem_access.hpp"
 #include "4C_ale.hpp"
 #include "4C_ale_input.hpp"
 #include "4C_fem_condition_periodic.hpp"
@@ -37,8 +36,9 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-Adapter::AleBaseAlgorithm::AleBaseAlgorithm(
+Adapter::AleBaseAlgorithm::AleBaseAlgorithm(Global::Problem& problem,
     const Teuchos::ParameterList& prbdyn, std::shared_ptr<Core::FE::Discretization> actdis)
+    : problem_(problem)
 {
   setup_ale(prbdyn, actdis);
 }
@@ -51,7 +51,7 @@ void Adapter::AleBaseAlgorithm::setup_ale(
 {
   auto t = Teuchos::TimeMonitor::getNewTimer("ALE::AleBaseAlgorithm::setup_ale");
   Teuchos::TimeMonitor monitor(*t);
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
 
   // what's the current problem type?
   const Core::ProblemType probtype = problem->get_problem_type();

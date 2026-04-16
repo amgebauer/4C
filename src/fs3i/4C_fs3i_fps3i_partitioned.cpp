@@ -211,7 +211,7 @@ void FS3I::PartFPS3I::init()
         "no linear solver defined for structural ScalarTransport solver. Please set LINEAR_SOLVER2 "
         "in FS3I DYNAMIC to a valid number!");
   fluidscatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(
-      fs3idyn, scatradyn, problem->solver_params(linsolver1number), "scatra1", true);
+      *problem, fs3idyn, scatradyn, problem->solver_params(linsolver1number), "scatra1", true);
 
   // now we can call init() on the scatra time integrator
   fluidscatra_->init();
@@ -221,7 +221,7 @@ void FS3I::PartFPS3I::init()
   fluidscatra_->scatra_field()->set_number_of_dof_set_pressure(1);
 
   structscatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(
-      fs3idyn, scatradyn, problem->solver_params(linsolver2number), "scatra2", true);
+      *problem, fs3idyn, scatradyn, problem->solver_params(linsolver2number), "scatra2", true);
 
   // only now we must call init() on the scatra time integrator.
   // all objects relying on the parallel distribution are

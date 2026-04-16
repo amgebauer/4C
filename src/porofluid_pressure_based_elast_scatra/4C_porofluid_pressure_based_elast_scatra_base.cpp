@@ -12,6 +12,7 @@
 #include "4C_adapter_scatra_base_algorithm.hpp"
 #include "4C_fem_discretization.hpp"
 #include "4C_fem_general_node.hpp"
+#include "4C_global_data.hpp"
 #include "4C_mat_fluidporo_multiphase.hpp"
 #include "4C_mat_scatra_multiporo.hpp"
 #include "4C_porofluid_pressure_based_elast_scatra_utils.hpp"
@@ -28,7 +29,7 @@ FOUR_C_NAMESPACE_OPEN
  *----------------------------------------------------------------------*/
 PoroPressureBased::PorofluidElastScatraBaseAlgorithm::PorofluidElastScatraBaseAlgorithm(
     MPI_Comm comm, const Teuchos::ParameterList& globaltimeparams)
-    : AlgorithmBase(comm, globaltimeparams),
+    : AlgorithmBase(*Global::Problem::instance(), comm, globaltimeparams),
       porofluid_elast_algo_(nullptr),
       scatra_algo_(nullptr),
       flux_reconstruction_active_(false),
@@ -140,8 +141,9 @@ void PoroPressureBased::PorofluidElastScatraBaseAlgorithm::init(
       "RESULTSEVERY", global_time_params.sublist("output").get<int>("result_data_every"));
 
   // scatra problem
-  scatra_algo_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(scatra_global_time_params,
-      scatra_params, algorithm_deps.solver_params_by_id(linsolvernumber), scatra_disname, true);
+  scatra_algo_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*Global::Problem::instance(),
+      scatra_global_time_params, scatra_params, algorithm_deps.solver_params_by_id(linsolvernumber),
+      scatra_disname, true);
 
   // initialize the base algo.
   // scatra time integrator is constructed and initialized inside.

@@ -9,7 +9,6 @@
 
 #include "4C_adapter_fld_base_algorithm.hpp"
 #include "4C_adapter_fld_fbi_wrapper.hpp"
-#include "4C_adapter_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_linalg_sparseoperator.hpp"
 
@@ -19,13 +18,12 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::FBIFluidMB::FBIFluidMB(const Teuchos::ParameterList& prbdyn, std::string condname)
+Adapter::FBIFluidMB::FBIFluidMB(
+    Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
-
-  fluidadapter_ =
-      std::make_shared<FluidBaseAlgorithm>(prbdyn, problem->fluid_dynamic_params(), "fluid", false)
-          ->fluid_field();
+  fluidadapter_ = std::make_shared<FluidBaseAlgorithm>(
+      problem, prbdyn, problem.fluid_dynamic_params(), "fluid", false)
+                      ->fluid_field();
   // make sure
   if (std::dynamic_pointer_cast<Adapter::FluidFBI>(fluid_field()) == nullptr)
     FOUR_C_THROW("Failed to create the correct underlying fluid adapter");

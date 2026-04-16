@@ -7,7 +7,6 @@
 
 #include "4C_adapter_coupling_nonlin_mortar.hpp"
 
-#include "4C_adapter_problem_access.hpp"
 #include "4C_comm_mpi_utils.hpp"
 #include "4C_contact_element.hpp"
 #include "4C_contact_friction_node.hpp"
@@ -34,11 +33,12 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*
  |  ctor                                                     farah 10/14|
  *----------------------------------------------------------------------*/
-Adapter::CouplingNonLinMortar::CouplingNonLinMortar(int spatial_dimension,
+Adapter::CouplingNonLinMortar::CouplingNonLinMortar(Global::Problem& problem, int spatial_dimension,
     Teuchos::ParameterList mortar_coupling_params, Teuchos::ParameterList contact_dynamic_params,
     Core::FE::ShapeFunctionType shape_function_type)
     : Coupling::Adapter::CouplingMortar(
           spatial_dimension, mortar_coupling_params, contact_dynamic_params, shape_function_type),
+      problem_(problem),
       issetup_(false),
       comm_(MPI_COMM_NULL),
       myrank_(-1),
@@ -139,7 +139,7 @@ void Adapter::CouplingNonLinMortar::read_mortar_condition(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& masterelements,
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
 
   // TODO: extend this to sliding ale + ALE-dis
   // vector coupleddof defines degree of freedom which are coupled (1: coupled; 0: not coupled),
@@ -237,7 +237,7 @@ void Adapter::CouplingNonLinMortar::add_mortar_nodes(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements,
     std::shared_ptr<CONTACT::Interface>& interface, int numcoupleddof)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
 
   const bool isnurbs = input.get<bool>("NURBS");
 
@@ -347,7 +347,7 @@ void Adapter::CouplingNonLinMortar::add_mortar_elements(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements,
     std::shared_ptr<CONTACT::Interface>& interface, int numcoupleddof)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
 
   const bool isnurbs = input.get<bool>("NURBS");
 
@@ -510,7 +510,7 @@ void Adapter::CouplingNonLinMortar::complete_interface(
     std::shared_ptr<Core::FE::Discretization> masterdis,
     std::shared_ptr<CONTACT::Interface>& interface)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
 
   const Teuchos::ParameterList& input =
       problem->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION");
@@ -586,7 +586,7 @@ void Adapter::CouplingNonLinMortar::setup_spring_dashpot(
     std::shared_ptr<Core::FE::Discretization> slavedis, const Core::Conditions::Condition& spring,
     const int coupling_id, MPI_Comm comm)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
 
   if (Core::Communication::my_mpi_rank(comm) == 0)
     std::cout << "Generating CONTACT interface for spring dashpot condition...\n" << std::endl;
@@ -788,7 +788,7 @@ void Adapter::CouplingNonLinMortar::integrate_lin_d(const std::string& statename
     const std::shared_ptr<Core::LinAlg::Vector<double>> vec,
     const std::shared_ptr<Core::LinAlg::Vector<double>> veclm)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
 
   // safety check
   check_setup();
@@ -897,7 +897,7 @@ void Adapter::CouplingNonLinMortar::integrate_lin_dm(const std::string& statenam
  *----------------------------------------------------------------------*/
 void Adapter::CouplingNonLinMortar::matrix_row_col_transform()
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
 
   // call base function
   Coupling::Adapter::CouplingMortar::matrix_row_col_transform();

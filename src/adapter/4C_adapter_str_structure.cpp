@@ -7,7 +7,6 @@
 
 #include "4C_adapter_str_structure.hpp"
 
-#include "4C_adapter_problem_access.hpp"
 #include "4C_adapter_str_constr_merged.hpp"
 #include "4C_adapter_str_fpsiwrapper.hpp"
 #include "4C_adapter_str_fsi_timint_adaptive.hpp"
@@ -44,13 +43,13 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::StructureBaseAlgorithm::StructureBaseAlgorithm(const Teuchos::ParameterList& prbdyn,
-    const Teuchos::ParameterList& sdyn, std::shared_ptr<Core::FE::Discretization> actdis)
+Adapter::StructureBaseAlgorithm::StructureBaseAlgorithm(Global::Problem& problem,
+    const Teuchos::ParameterList& prbdyn, const Teuchos::ParameterList& sdyn,
+    std::shared_ptr<Core::FE::Discretization> actdis)
+    : problem_(problem)
 {
   create_structure(prbdyn, sdyn, actdis);
 }
-
-
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 void Adapter::StructureBaseAlgorithm::create_structure(const Teuchos::ParameterList& prbdyn,
@@ -84,7 +83,7 @@ void Adapter::StructureBaseAlgorithm::create_tim_int(const Teuchos::ParameterLis
   Teuchos::TimeMonitor monitor(*t);
 
   // get the problem instance
-  Global::Problem* problem = Adapter::Utils::problem_from_instance();
+  Global::Problem* problem = &problem_;
   // what's the current problem type?
   Core::ProblemType probtype = problem->get_problem_type();
 
@@ -258,7 +257,7 @@ void Adapter::StructureBaseAlgorithm::create_tim_int(const Teuchos::ParameterLis
 
         std::shared_ptr<FSIStructureWrapper> fsiwrapperwithadaptivity =
             std::make_shared<StructureFSITimIntAda>(
-                sta, std::make_shared<StructureNOXCorrectionWrapper>(tmpstr));
+                problem_, sta, std::make_shared<StructureNOXCorrectionWrapper>(tmpstr));
         // strTeuchos::rcp_dynamic_cast<StructureFSITimIntAda>(fsiwrapperwithadaptivity)->GetStrTimIntPtr();
         structure_ = fsiwrapperwithadaptivity;
         // structure_->GetStrTimIntPtr()-(prbdyn,sdyn,*xparams,actdis,solver);
@@ -289,12 +288,12 @@ void Adapter::StructureBaseAlgorithm::create_tim_int(const Teuchos::ParameterLis
         if (tmpstr->have_constraint())
         {
           structure_ = std::make_shared<StructureConstrMerged>(
-              std::make_shared<StructureNOXCorrectionWrapper>(tmpstr));
+              problem_, std::make_shared<StructureNOXCorrectionWrapper>(tmpstr));
         }
         else
         {
           structure_ = std::make_shared<FSIStructureWrapper>(
-              std::make_shared<StructureNOXCorrectionWrapper>(tmpstr));
+              problem_, std::make_shared<StructureNOXCorrectionWrapper>(tmpstr));
         }
       }
       break;
@@ -319,20 +318,20 @@ void Adapter::StructureBaseAlgorithm::create_tim_int(const Teuchos::ParameterLis
           if (coupling == PoroElast::SolutionSchemeOverFields::Monolithic_structuresplit or
               coupling == PoroElast::SolutionSchemeOverFields::Monolithic_fluidsplit or
               coupling == PoroElast::SolutionSchemeOverFields::Monolithic_nopenetrationsplit)
-            structure_ = std::make_shared<FPSIStructureWrapper>(tmpstr);
+            structure_ = std::make_shared<FPSIStructureWrapper>(problem_, tmpstr);
           else
-            structure_ = std::make_shared<StructureConstrMerged>(tmpstr);
+            structure_ = std::make_shared<StructureConstrMerged>(problem_, tmpstr);
         }
         else
         {
-          structure_ = std::make_shared<FPSIStructureWrapper>(tmpstr);
+          structure_ = std::make_shared<FPSIStructureWrapper>(problem_, tmpstr);
         }
       }
       break;
       default:
       {
         /// wrap time loop for pure structure problems
-        structure_ = (std::make_shared<StructureTimeLoop>(tmpstr));
+        structure_ = (std::make_shared<StructureTimeLoop>(problem_, tmpstr));
       }
       break;
     }
@@ -351,7 +350,7 @@ void Adapter::StructureBaseAlgorithm::create_tim_int(const Teuchos::ParameterLis
 std::shared_ptr<Core::LinAlg::Solver> Adapter::StructureBaseAlgorithm::create_linear_solver(
     std::shared_ptr<Core::FE::Discretization>& actdis, const Teuchos::ParameterList& sdyn)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
   std::shared_ptr<Core::LinAlg::Solver> solver = nullptr;
 
   // get the solver number used for structural problems
@@ -377,7 +376,7 @@ std::shared_ptr<Core::LinAlg::Solver>
 Adapter::StructureBaseAlgorithm::create_contact_meshtying_solver(
     Core::FE::Discretization& actdis, const Teuchos::ParameterList& sdyn)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto* problem = &problem_;
   std::shared_ptr<Core::LinAlg::Solver> solver = nullptr;
 
   // Get mortar information: contact or meshtying or both?

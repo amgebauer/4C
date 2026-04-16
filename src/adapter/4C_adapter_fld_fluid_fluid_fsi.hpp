@@ -47,8 +47,8 @@ namespace Adapter
   {
    public:
     /// constructor
-    FluidFluidFSI(std::shared_ptr<Fluid> xfluidfluid, std::shared_ptr<Fluid> embfluid,
-        std::shared_ptr<Core::LinAlg::Solver> solver,
+    FluidFluidFSI(Global::Problem& problem, std::shared_ptr<Fluid> xfluidfluid,
+        std::shared_ptr<Fluid> embfluid, std::shared_ptr<Core::LinAlg::Solver> solver,
         std::shared_ptr<Teuchos::ParameterList> params, bool isale, bool dirichletcond);
 
     /// initialize and prepare maps

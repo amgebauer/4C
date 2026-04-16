@@ -85,7 +85,7 @@ void ScaTra::ScaTraTimIntElchSCL::setup()
   sdyn_micro->set("INITIALFIELD", initial_field_type);
   sdyn_micro->set("INITFUNCNO", elchparams_->sublist("SCL").get<int>("INITFUNCNO"));
 
-  micro_timint_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*sdyn_micro, *sdyn_micro,
+  micro_timint_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*problem, *sdyn_micro, *sdyn_micro,
       problem->solver_params(sdyn_micro->get<int>("LINEAR_SOLVER")), "scatra_micro", false);
 
   micro_timint_->init();

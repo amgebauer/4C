@@ -7,7 +7,6 @@
 
 #include "4C_adapter_str_timeloop.hpp"
 
-#include "4C_adapter_problem_access.hpp"
 #include "4C_global_data.hpp"
 #include "4C_inpar_structure.hpp"
 
@@ -18,10 +17,15 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
+Adapter::StructureTimeLoop::StructureTimeLoop(
+    Global::Problem& problem, std::shared_ptr<Structure> structure)
+    : StructureWrapper(structure), problem_(problem)
+{
+}
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 int Adapter::StructureTimeLoop::integrate()
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
-
   // error checking variables
   Inpar::Solid::ConvergenceStatus convergencestatus = Inpar::Solid::conv_success;
 
@@ -65,7 +69,7 @@ int Adapter::StructureTimeLoop::integrate()
     }
     // todo: remove this as soon as old structure time integration is gone
     else if (Teuchos::getIntegralValue<Inpar::Solid::IntegrationStrategy>(
-                 problem->structural_dynamic_params(), "INT_STRATEGY") == Inpar::Solid::int_old)
+                 problem_.structural_dynamic_params(), "INT_STRATEGY") == Inpar::Solid::int_old)
     {
       convergencestatus =
           perform_error_action(convergencestatus);  // something went wrong update error code

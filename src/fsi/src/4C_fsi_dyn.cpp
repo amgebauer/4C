@@ -181,7 +181,7 @@ void fluid_xfem_drt(Global::Problem& global_problem)
   if (alefluid)
   {
     // create instance of fluid xfem algorithm, for moving interfaces
-    FSI::FluidXFEMAlgorithm fluidalgo(comm);
+    FSI::FluidXFEMAlgorithm fluidalgo(comm, *problem);
 
     const int restart = problem->restart();
     if (restart)
@@ -203,7 +203,7 @@ void fluid_xfem_drt(Global::Problem& global_problem)
     // create instance of fluid basis algorithm
     const Teuchos::ParameterList& fdyn = problem->fluid_dynamic_params();
 
-    Adapter::FluidBaseAlgorithm fluidalgo(fdyn, fdyn, "fluid", false);
+    Adapter::FluidBaseAlgorithm fluidalgo(*problem, fdyn, fdyn, "fluid", false);
 
     //--------------------------------------------------------------
     // restart the simulation

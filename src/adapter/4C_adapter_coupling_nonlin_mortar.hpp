@@ -53,6 +53,11 @@ namespace Core::LinAlg
   class SparseMatrix;
 }
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   class CouplingNonLinMortar : public Coupling::Adapter::CouplingMortar
@@ -62,7 +67,8 @@ namespace Adapter
      * Construct nonlinear coupling with basic parameters. The remaining information is passed in
      * setup().
      */
-    CouplingNonLinMortar(int spatial_dimension, Teuchos::ParameterList mortar_coupling_params,
+    CouplingNonLinMortar(Global::Problem& problem, int spatial_dimension,
+        Teuchos::ParameterList mortar_coupling_params,
         Teuchos::ParameterList contact_dynamic_params,
         Core::FE::ShapeFunctionType shape_function_type);
 
@@ -211,6 +217,11 @@ namespace Adapter
     }
 
    protected:
+    Global::Problem& problem() { return problem_; }
+    const Global::Problem& problem() const { return problem_; }
+
+    Global::Problem& problem_;
+
     bool issetup_;   ///< check for setup
     MPI_Comm comm_;  ///< communicator
     int myrank_;     ///< my proc id

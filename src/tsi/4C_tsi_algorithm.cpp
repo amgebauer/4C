@@ -37,7 +37,8 @@ FOUR_C_NAMESPACE_OPEN
  | constructor (public)                                      dano 12/09 |
  *----------------------------------------------------------------------*/
 TSI::Algorithm::Algorithm(MPI_Comm comm)
-    : AlgorithmBase(comm, TSI::Utils::tsi_dynamic_params_from_problem()),
+    : AlgorithmBase(*TSI::Utils::problem_from_instance(), comm,
+          TSI::Utils::tsi_dynamic_params_from_problem()),
       dispnp_(nullptr),
       tempnp_(nullptr),
       problem_(TSI::Utils::problem_from_instance()),
@@ -82,7 +83,7 @@ TSI::Algorithm::Algorithm(MPI_Comm comm)
     //  time integrator
     const Teuchos::ParameterList& sdyn = problem_->structural_dynamic_params();
     std::shared_ptr<Adapter::StructureBaseAlgorithmNew> adapterbase_ptr =
-        Adapter::build_structure_algorithm(sdyn);
+        Adapter::build_structure_algorithm(*problem_, sdyn);
     adapterbase_ptr->init(
         problem_->tsi_dynamic_params(), const_cast<Teuchos::ParameterList&>(sdyn), structdis);
 

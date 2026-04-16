@@ -8,7 +8,6 @@
 #include "4C_adapter_fld_fluid_fsi.hpp"
 
 #include "4C_adapter_fld_fluid.hpp"
-#include "4C_adapter_problem_access.hpp"
 #include "4C_fem_general_element.hpp"
 #include "4C_fluid_ele_action.hpp"
 #include "4C_fluid_implicit_integration.hpp"
@@ -35,11 +34,12 @@ FOUR_C_NAMESPACE_OPEN
 
 /*======================================================================*/
 /* constructor */
-Adapter::FluidFSI::FluidFSI(std::shared_ptr<Fluid> fluid,
+Adapter::FluidFSI::FluidFSI(Global::Problem& problem, std::shared_ptr<Fluid> fluid,
     std::shared_ptr<Core::FE::Discretization> dis, std::shared_ptr<Core::LinAlg::Solver> solver,
     std::shared_ptr<Teuchos::ParameterList> params,
     std::shared_ptr<Core::IO::DiscretizationWriter> output, bool isale, bool dirichletcond)
     : FluidWrapper(fluid),
+      problem_(problem),
       dis_(dis),
       params_(params),
       output_(output),
@@ -56,12 +56,11 @@ Adapter::FluidFSI::FluidFSI(std::shared_ptr<Fluid> fluid,
   return;
 }
 
-
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 void Adapter::FluidFSI::init()
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto& problem = problem_;
 
   // call base class init
   FluidWrapper::init();
@@ -78,7 +77,7 @@ void Adapter::FluidFSI::init()
 
   // set nds_master = 2 in case of HDG discretization
   // (nds = 0 used for trace values, nds = 1 used for interior values)
-  if (problem->spatial_approximation_type() == Core::FE::ShapeFunctionType::hdg)
+  if (problem.spatial_approximation_type() == Core::FE::ShapeFunctionType::hdg)
   {
     nds_master = 2;
   }
@@ -100,7 +99,7 @@ void Adapter::FluidFSI::init()
   interfaceforcen_ = std::make_shared<Core::LinAlg::Vector<double>>(*(interface()->fsi_cond_map()));
 
   // time step size adaptivity in monolithic FSI
-  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem.fsi_dynamic_params();
   const bool timeadapton = fsidyn.sublist("TIMEADAPTIVITY").get<bool>("TIMEADAPTON");
   if (timeadapton)
   {
@@ -165,9 +164,9 @@ double Adapter::FluidFSI::time_scaling() const
 /*----------------------------------------------------------------------*/
 void Adapter::FluidFSI::update()
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto& problem = problem_;
 
-  if (problem->spatial_approximation_type() !=
+  if (problem.spatial_approximation_type() !=
       Core::FE::ShapeFunctionType::hdg)  // TODO also fix this!
   {
     std::shared_ptr<Core::LinAlg::Vector<double>> interfaceforcem =
@@ -233,13 +232,13 @@ std::shared_ptr<Core::LinAlg::Vector<double>> Adapter::FluidFSI::extract_interfa
 void Adapter::FluidFSI::apply_interface_velocities(
     std::shared_ptr<Core::LinAlg::Vector<double>> ivel)
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto& problem = problem_;
 
   // apply the interface velocities
   interface()->insert_fsi_cond_vector(*ivel, *fluidimpl_->write_access_velnp());
 
   const Teuchos::ParameterList& fsipart =
-      problem->fsi_dynamic_params().sublist("PARTITIONED SOLVER");
+      problem.fsi_dynamic_params().sublist("PARTITIONED SOLVER");
   if (fsipart.get<bool>("DIVPROJECTION"))
   {
     // project the velocity field into a divergence free subspace
@@ -383,7 +382,7 @@ std::shared_ptr<Core::LinAlg::Solver> Adapter::FluidFSI::linear_solver()
  *----------------------------------------------------------------------*/
 void Adapter::FluidFSI::proj_vel_to_div_zero()
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
+  auto& problem = problem_;
 
   // This projection affects also the inner DOFs. Unfortunately, the matrix
   // does not look nice. Hence, the inversion of B^T*B is quite costly and
@@ -488,7 +487,7 @@ void Adapter::FluidFSI::proj_vel_to_div_zero()
   std::shared_ptr<Core::LinAlg::Vector<double>> x =
       std::make_shared<Core::LinAlg::Vector<double>>(*domainmap);
 
-  const Teuchos::ParameterList& fdyn = problem->fluid_dynamic_params();
+  const Teuchos::ParameterList& fdyn = problem.fluid_dynamic_params();
   const int simplersolvernumber = fdyn.get<int>("LINEAR_SOLVER");
   if (simplersolvernumber == (-1))
     FOUR_C_THROW(
@@ -496,9 +495,9 @@ void Adapter::FluidFSI::proj_vel_to_div_zero()
         "\nPlease set LINEAR_SOLVER in FLUID DYNAMIC to a valid number!");
 
   std::shared_ptr<Core::LinAlg::Solver> solver =
-      std::make_shared<Core::LinAlg::Solver>(problem->solver_params(simplersolvernumber),
-          discretization()->get_comm(), problem->solver_params_callback(),
-          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem->io_params(), "VERBOSITY"));
+      std::make_shared<Core::LinAlg::Solver>(problem.solver_params(simplersolvernumber),
+          discretization()->get_comm(), problem.solver_params_callback(),
+          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem.io_params(), "VERBOSITY"));
 
   if (solver->params().isSublist("MueLu Parameters"))
   {

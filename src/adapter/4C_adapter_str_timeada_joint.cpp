@@ -7,7 +7,6 @@
 
 #include "4C_adapter_str_timeada_joint.hpp"
 
-#include "4C_adapter_problem_access.hpp"
 #include "4C_adapter_str_timeloop.hpp"
 #include "4C_fem_discretization.hpp"
 #include "4C_global_data.hpp"
@@ -28,18 +27,18 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::StructureTimeAdaJoint::StructureTimeAdaJoint(std::shared_ptr<Structure> structure)
-    : StructureTimeAda(structure), sta_(nullptr)
+Adapter::StructureTimeAdaJoint::StructureTimeAdaJoint(
+    Global::Problem& problem, std::shared_ptr<Structure> structure)
+    : StructureTimeAda(problem, structure), sta_(nullptr)
 {
   if (stm_->is_setup()) setup_auxiliary();
 }
-
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 void Adapter::StructureTimeAdaJoint::setup_auxiliary()
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
-  const Teuchos::ParameterList& sdyn = problem->structural_dynamic_params();
+  auto& problem = StructureTimeAda::problem();
+  const Teuchos::ParameterList& sdyn = problem.structural_dynamic_params();
   const Teuchos::ParameterList& jep = sdyn.sublist("TIMEADAPTIVITY").sublist("JOINT EXPLICIT");
 
   // get the parameters of the auxiliary integrator
@@ -52,12 +51,12 @@ void Adapter::StructureTimeAdaJoint::setup_auxiliary()
 
   ///// setup dataio
   std::shared_ptr<Teuchos::ParameterList> ioflags =
-      std::make_shared<Teuchos::ParameterList>(problem->io_params());
+      std::make_shared<Teuchos::ParameterList>(problem.io_params());
   ioflags->set("STDOUTEVERY", 0);
   //
   std::shared_ptr<Teuchos::ParameterList> xparams = std::make_shared<Teuchos::ParameterList>();
   Teuchos::ParameterList& nox = xparams->sublist("NOX");
-  nox = problem->structural_nox_params();
+  nox = problem.structural_nox_params();
   //
   std::shared_ptr<Core::IO::DiscretizationWriter> output = stm_->discretization()->writer();
   //
@@ -91,7 +90,7 @@ void Adapter::StructureTimeAdaJoint::setup_auxiliary()
   sta_->init(dataio, datasdyn, dataglobalstate);
   sta_->setup();
 
-  const int restart = problem->restart();
+  const int restart = problem.restart();
   if (restart)
   {
     sta_->post_setup();

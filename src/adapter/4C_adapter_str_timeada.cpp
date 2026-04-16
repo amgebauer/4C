@@ -7,7 +7,6 @@
 
 #include "4C_adapter_str_timeada.hpp"
 
-#include "4C_adapter_problem_access.hpp"
 #include "4C_adapter_str_timeada_joint.hpp"
 #include "4C_adapter_str_timeada_zienxie.hpp"
 #include "4C_fem_discretization.hpp"
@@ -24,8 +23,9 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::StructureTimeAda::StructureTimeAda(std::shared_ptr<Structure> structure)
-    : StructureWrapper(structure)
+Adapter::StructureTimeAda::StructureTimeAda(
+    Global::Problem& problem, std::shared_ptr<Structure> structure)
+    : StructureWrapper(structure), problem_(problem)
 {
   stm_ = std::dynamic_pointer_cast<Solid::TimeInt::Base>(structure_);
 
@@ -34,10 +34,9 @@ Adapter::StructureTimeAda::StructureTimeAda(std::shared_ptr<Structure> structure
   // call the setup once if stm_ has been setup
   if (stm_->is_setup()) setup_time_ada();
 }
-
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-std::shared_ptr<Adapter::Structure> Adapter::StructureTimeAda::create(
+std::shared_ptr<Adapter::Structure> Adapter::StructureTimeAda::create(Global::Problem& problem,
     const Teuchos::ParameterList& taflags,  //!< adaptive input flags
     std::shared_ptr<Solid::TimeInt::Base> ti_strategy)
 {
@@ -46,11 +45,11 @@ std::shared_ptr<Adapter::Structure> Adapter::StructureTimeAda::create(
   {
     case Inpar::Solid::timada_kind_zienxie:
       // Adaptive time integration with Zienkiewicz-Xie error indicator
-      return std::make_shared<Adapter::StructureTimeAdaZienXie>(ti_strategy);
+      return std::make_shared<Adapter::StructureTimeAdaZienXie>(problem, ti_strategy);
 
     case Inpar::Solid::timada_kind_joint_explicit:
       // Adaptive time integration using auxiliary time integrator
-      return std::make_shared<Adapter::StructureTimeAdaJoint>(ti_strategy);
+      return std::make_shared<Adapter::StructureTimeAdaJoint>(problem, ti_strategy);
 
     default:
       // Unknown adaptive time integration
@@ -75,8 +74,7 @@ void Adapter::StructureTimeAda::setup()
 /*----------------------------------------------------------------------*/
 void Adapter::StructureTimeAda::setup_time_ada()
 {
-  auto* problem = Adapter::Utils::problem_from_instance();
-  const Teuchos::ParameterList& sdynparams = problem->structural_dynamic_params();
+  const Teuchos::ParameterList& sdynparams = problem_.structural_dynamic_params();
 
   // initialize the local variables
   timeinitial_ = 0.0;
@@ -125,7 +123,7 @@ void Adapter::StructureTimeAda::setup_time_ada()
   locerrdisn_ = std::make_shared<Core::LinAlg::Vector<double>>(*(stm_->dof_row_map()), true);
 
   // enable restart for adaptive timestepping
-  const int restart = problem->restart();
+  const int restart = problem_.restart();
   if (restart)
   {
     // read restart of marching time-integrator and reset initial time and step for adaptive loop
@@ -133,7 +131,7 @@ void Adapter::StructureTimeAda::setup_time_ada()
     timeinitial_ = stm_->time_old();
     timestepinitial_ = stm_->step_old();
     Core::IO::DiscretizationReader ioreader(
-        *stm_->discretization(), problem->input_control_file(), timestepinitial_);
+        *stm_->discretization(), problem_.input_control_file(), timestepinitial_);
     stepsizepre_ = ioreader.read_double("next_delta_time");
     time_ = timeinitial_;
 

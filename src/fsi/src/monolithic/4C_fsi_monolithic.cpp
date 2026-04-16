@@ -52,7 +52,7 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------------*/
 FSI::MonolithicBase::MonolithicBase(
     MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
-    : AlgorithmBase(comm, timeparams),
+    : AlgorithmBase(problem, comm, timeparams),
       problem_(problem),
       isadastructure_(false),
       isadafluid_(false),
@@ -101,7 +101,7 @@ void FSI::MonolithicBase::create_structure_time_integrator(
   // ask base algorithm for the structural time integrator
   std::shared_ptr<Adapter::StructureBaseAlgorithm> structure =
       std::make_shared<Adapter::StructureBaseAlgorithm>(
-          timeparams, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
+          problem(), timeparams, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
   structure_ =
       std::dynamic_pointer_cast<Adapter::FSIStructureWrapper>(structure->structure_field());
   structure_->setup();
@@ -127,14 +127,14 @@ void FSI::MonolithicBase::create_fluid_and_ale_time_integrator(
   // ask base algorithm for the fluid time integrator
   std::shared_ptr<Adapter::FluidBaseAlgorithm> fluid =
       std::make_shared<Adapter::FluidBaseAlgorithm>(
-          timeparams, problem().fluid_dynamic_params(), "fluid", true);
+          problem(), timeparams, problem().fluid_dynamic_params(), "fluid", true);
   fluid_ = std::dynamic_pointer_cast<Adapter::FluidFSI>(fluid->fluid_field());
 
   if (fluid_ == nullptr) FOUR_C_THROW("Cast from Adapter::Fluid to Adapter::FluidFSI failed");
 
   // ask base algorithm for the ale time integrator
   std::shared_ptr<Adapter::AleBaseAlgorithm> ale =
-      std::make_shared<Adapter::AleBaseAlgorithm>(timeparams, aledis);
+      std::make_shared<Adapter::AleBaseAlgorithm>(problem(), timeparams, aledis);
   ale_ = std::dynamic_pointer_cast<Adapter::AleFsiWrapper>(ale->ale_field());
 
   if (ale_ == nullptr) FOUR_C_THROW("Cast from Adapter::Ale to Adapter::AleFsiWrapper failed");

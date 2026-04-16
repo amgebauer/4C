@@ -16,7 +16,7 @@
 FOUR_C_NAMESPACE_OPEN
 
 FPSI::FpsiBase::FpsiBase(MPI_Comm comm, const Teuchos::ParameterList& fpsidynparams)
-    : AlgorithmBase(comm, fpsidynparams)
+    : AlgorithmBase(*Global::Problem::instance(), comm, fpsidynparams)
 {
   // nothing to do ... so far
 }

@@ -43,6 +43,11 @@ namespace Core::FE
   class Discretization;
 }  // namespace Core::FE
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   class StructureNew : public Structure
@@ -549,7 +554,7 @@ namespace Adapter
   {
    public:
     /// constructor
-    StructureBaseAlgorithmNew();
+    explicit StructureBaseAlgorithmNew(Global::Problem& problem);
 
     /// virtual destructor to support polymorph destruction
     virtual ~StructureBaseAlgorithmNew() = default;
@@ -671,6 +676,9 @@ namespace Adapter
 
     /// current discretization
     std::shared_ptr<Core::FE::Discretization> actdis_;
+
+    /// explicit global problem context
+    Global::Problem& problem_;
 
     /// init flag
     bool isinit_;

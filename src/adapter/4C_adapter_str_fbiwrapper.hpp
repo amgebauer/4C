@@ -37,7 +37,7 @@ namespace Adapter
   {
    public:
     /// constructor
-    explicit FBIStructureWrapper(std::shared_ptr<Structure> structure);
+    FBIStructureWrapper(Global::Problem& problem, std::shared_ptr<Structure> structure);
 
     /// extracts interface velocities at \f$t_{n}\f$
     virtual std::shared_ptr<Core::LinAlg::Vector<double>> extract_interface_veln();

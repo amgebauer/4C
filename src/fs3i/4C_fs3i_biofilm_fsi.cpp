@@ -87,7 +87,7 @@ void FS3I::BiofilmFSI::init()
   // ask base algorithm for the ale time integrator
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   std::shared_ptr<Adapter::AleBaseAlgorithm> ale =
-      std::make_shared<Adapter::AleBaseAlgorithm>(fsidyn, structaledis);
+      std::make_shared<Adapter::AleBaseAlgorithm>(*problem, fsidyn, structaledis);
   ale_ = std::dynamic_pointer_cast<Adapter::AleFsiWrapper>(ale->ale_field());
   if (ale_ == nullptr) FOUR_C_THROW("cast from Adapter::Ale to Adapter::AleFsiWrapper failed");
 

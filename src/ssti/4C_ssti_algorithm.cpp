@@ -31,7 +31,7 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 SSTI::SSTIAlgorithm::SSTIAlgorithm(MPI_Comm comm, const Teuchos::ParameterList& globaltimeparams)
-    : AlgorithmBase(comm, globaltimeparams),
+    : AlgorithmBase(*Global::Problem::instance(), comm, globaltimeparams),
       iter_(0),
       scatra_(nullptr),
       structure_(nullptr),
@@ -77,21 +77,21 @@ void SSTI::SSTIAlgorithm::init(MPI_Comm comm, const Teuchos::ParameterList& ssti
       Inpar::Solid::IntegrationStrategy::int_old)
     FOUR_C_THROW("Old structural time integration is not supported");
 
-  struct_adapterbase_ptr_ = Adapter::build_structure_algorithm(structparams);
+  struct_adapterbase_ptr_ = Adapter::build_structure_algorithm(*problem, structparams);
 
   // initialize structure base algorithm
   struct_adapterbase_ptr_->init(
       sstitimeparams, const_cast<Teuchos::ParameterList&>(structparams), structuredis);
 
   // create and initialize scatra problem and thermo problem
-  scatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(sstitimeparams,
+  scatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*problem, sstitimeparams,
       SSI::Utils::modify_scatra_params(scatraparams),
       problem->solver_params(scatraparams.get<int>("LINEAR_SOLVER")), "scatra", true);
   scatra_->init();
   scatra_->scatra_field()->set_number_of_dof_set_displacement(1);
   scatra_->scatra_field()->set_number_of_dof_set_velocity(1);
   scatra_->scatra_field()->set_number_of_dof_set_thermo(2);
-  thermo_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(sstitimeparams,
+  thermo_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*problem, sstitimeparams,
       clone_thermo_params(scatraparams, thermoparams),
       problem->solver_params(thermoparams.get<int>("LINEAR_SOLVER")), "thermo", true);
   thermo_->init();

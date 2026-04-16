@@ -30,7 +30,7 @@ FOUR_C_NAMESPACE_OPEN
 EHL::Base::Base(MPI_Comm comm, const Teuchos::ParameterList& globaltimeparams,
     const Teuchos::ParameterList& lubricationparams, const Teuchos::ParameterList& structparams,
     const std::string struct_disname, const std::string lubrication_disname)
-    : AlgorithmBase(comm, globaltimeparams),
+    : AlgorithmBase(*Global::Problem::instance(), comm, globaltimeparams),
       structure_(nullptr),
       lubrication_(nullptr),
       fieldcoupling_(Teuchos::getIntegralValue<EHL::FieldCoupling>(
@@ -69,8 +69,8 @@ EHL::Base::Base(MPI_Comm comm, const Teuchos::ParameterList& globaltimeparams,
   }
 
   std::shared_ptr<Adapter::StructureBaseAlgorithm> structure =
-      std::make_shared<Adapter::StructureBaseAlgorithm>(
-          *structtimeparams, const_cast<Teuchos::ParameterList&>(structparams), structdis);
+      std::make_shared<Adapter::StructureBaseAlgorithm>(*problem, *structtimeparams,
+          const_cast<Teuchos::ParameterList&>(structparams), structdis);
   structure_ = std::dynamic_pointer_cast<Adapter::Structure>(structure->structure_field());
   structure_->setup();
   lubrication_ = std::make_shared<Lubrication::LubricationBaseAlgorithm>();
@@ -590,10 +590,9 @@ void EHL::Base::setup_field_coupling(
   // matching node coupling is defined below.
 
   std::vector<int> coupleddof(ndim, 1);
-  mortaradapter_ = std::make_shared<Adapter::CouplingEhlMortar>(
-      Global::Problem::instance()->n_dim(), Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+  mortaradapter_ = std::make_shared<Adapter::CouplingEhlMortar>(*problem, problem->n_dim(),
+      problem->mortar_coupling_params(), problem->contact_dynamic_params(),
+      problem->spatial_approximation_type());
   mortaradapter_->setup(structdis, structdis, coupleddof, "EHLCoupling");
 
   if (Teuchos::getIntegralValue<CONTACT::SolvingStrategy>(

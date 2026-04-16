@@ -51,6 +51,11 @@ namespace TimeInt
   class TimIntMStep;
 }
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 
 namespace Adapter
 {
@@ -244,7 +249,7 @@ namespace Adapter
   {
    public:
     //! constructor
-    explicit AleBaseAlgorithm(
+    explicit AleBaseAlgorithm(Global::Problem& problem,
         const Teuchos::ParameterList& prbdyn,             ///< the problem's parameter list
         std::shared_ptr<Core::FE::Discretization> actdis  ///< pointer to discretization
     );
@@ -264,6 +269,9 @@ namespace Adapter
     void setup_ale(const Teuchos::ParameterList& prbdyn,  ///< the problem's parameter list
         std::shared_ptr<Core::FE::Discretization> actdis  ///< pointer to discretization
     );
+
+    //! explicit global problem context
+    Global::Problem& problem_;
 
     //! ALE field solver
     std::shared_ptr<Ale> ale_;

@@ -7,7 +7,6 @@
 
 #include "4C_adapter_algorithmbase.hpp"
 
-#include "4C_adapter_problem_access.hpp"
 #include "4C_comm_mpi_utils.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_pstream.hpp"
@@ -19,9 +18,9 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::AlgorithmBase::AlgorithmBase(MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : comm_(comm),
-      printscreen_(Adapter::Utils::problem_from_instance()->io_params().get<int>("STDOUTEVERY"))
+Adapter::AlgorithmBase::AlgorithmBase(
+    Global::Problem& problem, MPI_Comm comm, const Teuchos::ParameterList& timeparams)
+    : problem_(problem), comm_(comm), printscreen_(problem_.io_params().get<int>("STDOUTEVERY"))
 {
   step_ = 0;
   time_ = 0.;
@@ -29,7 +28,6 @@ Adapter::AlgorithmBase::AlgorithmBase(MPI_Comm comm, const Teuchos::ParameterLis
   nstep_ = timeparams.get<int>("NUMSTEP");
   maxtime_ = timeparams.get<double>("MAXTIME");
 }
-
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
