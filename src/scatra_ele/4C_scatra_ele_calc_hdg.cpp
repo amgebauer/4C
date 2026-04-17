@@ -16,6 +16,7 @@
 #include "4C_fem_general_utils_polynomial.hpp"
 #include "4C_fem_geometry_position_array.hpp"
 #include "4C_global_data.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_utils_densematrix_multiply.hpp"
 #include "4C_mat_list.hpp"
 #include "4C_mat_scatra.hpp"
@@ -25,7 +26,6 @@
 #include "4C_scatra_ele_parameter_timint.hpp"
 #include "4C_utils_function.hpp"
 
-#include <Teuchos_SerialDenseSolver.hpp>
 #include <Teuchos_TimeMonitor.hpp>
 
 FOUR_C_NAMESPACE_OPEN
@@ -440,11 +440,9 @@ int Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::project_dirich_field(
 
   }  // loop over integration points
 
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-  inverseMass.setMatrix(Teuchos::rcpFromRef(mass.base()));
-  inverseMass.setVectors(Teuchos::rcpFromRef(trVec.base()), Teuchos::rcpFromRef(trVec.base()));
+  Core::LinAlg::SerialDenseSolver inverseMass;
+  inverseMass.set_matrix(mass);
+  inverseMass.set_vectors(trVec, trVec);
   inverseMass.solve();
 
   for (unsigned int node = 0; node < shapesface_->nfdofs_; node++) elevec1[node] = trVec(node);
@@ -600,10 +598,8 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::LocalSolver::compute
   hdgele->invAMmat_ = hdgele->Mmat_;
   hdgele->invAMmat_.scale(1.0 / (dt * theta));
   hdgele->invAMmat_ += hdgele->Amat_;
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseAMmat;
-  inverseAMmat.setMatrix(Teuchos::rcpFromRef(hdgele->invAMmat_.base()));
+  Core::LinAlg::SerialDenseSolver inverseAMmat;
+  inverseAMmat.set_matrix(hdgele->invAMmat_);
   int err = inverseAMmat.invert();
   if (err != 0)
   {
@@ -1163,10 +1159,8 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::LocalSolver::condens
   tempMat3 = hdgele->Emat_;
   Core::LinAlg::multiply(1.0, tempMat3, -1.0, tempMat1, hdgele->Cmat_);  // = E - (-B^T) AM^{-1} C
 
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseinW;
-  inverseinW.setMatrix(Teuchos::rcpFromRef(tempMat2.base()));
+  Core::LinAlg::SerialDenseSolver inverseinW;
+  inverseinW.set_matrix(tempMat2);
   int err = inverseinW.invert();
   if (err != 0)
     FOUR_C_THROW(
@@ -1617,13 +1611,10 @@ int Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::set_initial_field(
 
     Core::LinAlg::multiply_nt(Mmat, massPart, massPartW);
     {
-      using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-      using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-      Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-      inverseMass.setMatrix(Teuchos::rcpFromRef(Mmat.base()));
-      inverseMass.setVectors(
-          Teuchos::rcpFromRef(localMat.base()), Teuchos::rcpFromRef(localMat.base()));
-      inverseMass.factorWithEquilibration(true);
+      Core::LinAlg::SerialDenseSolver inverseMass;
+      inverseMass.set_matrix(Mmat);
+      inverseMass.set_vectors(localMat, localMat);
+      inverseMass.factor_with_equilibration(true);
       int err2 = inverseMass.factor();
       int err = inverseMass.solve();
       if (err != 0 || err2 != 0) FOUR_C_THROW("Inversion of matrix failed with errorcode {}", err);
@@ -1668,12 +1659,10 @@ int Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::set_initial_field(
       }
     }
 
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-    inverseMass.setMatrix(Teuchos::rcpFromRef(mass.base()));
-    inverseMass.setVectors(Teuchos::rcpFromRef(trVec.base()), Teuchos::rcpFromRef(trVec.base()));
-    inverseMass.factorWithEquilibration(true);
+    Core::LinAlg::SerialDenseSolver inverseMass;
+    inverseMass.set_matrix(mass);
+    inverseMass.set_vectors(trVec, trVec);
+    inverseMass.factor_with_equilibration(true);
     int err2 = inverseMass.factor();
     int err = inverseMass.solve();
     if (err != 0 || err2 != 0) FOUR_C_THROW("Inversion of matrix failed with errorcode {}", err);
@@ -1747,10 +1736,8 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::LocalSolver::prepare
     Core::LinAlg::SerialDenseMatrix& difftensor  //!< diffusion tensor
 )
 {
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseindifftensor;
-  inverseindifftensor.setMatrix(Teuchos::rcpFromRef(difftensor.base()));
+  Core::LinAlg::SerialDenseSolver inverseindifftensor;
+  inverseindifftensor.set_matrix(difftensor);
   int err = inverseindifftensor.invert();
   if (err != 0) FOUR_C_THROW("Inversion of diffusion tensor failed with errorcode {}", err);
 

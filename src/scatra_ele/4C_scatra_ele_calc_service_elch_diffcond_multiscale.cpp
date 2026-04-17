@@ -7,6 +7,7 @@
 
 #include "4C_fem_discretization.hpp"
 #include "4C_fem_general_extract_values.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_utils_densematrix_multiply.hpp"
 #include "4C_mat_elchmat.hpp"
 #include "4C_mat_elchphase.hpp"
@@ -15,7 +16,6 @@
 #include "4C_scatra_ele_parameter_std.hpp"
 
 #include <Teuchos_ParameterList.hpp>
-#include <Teuchos_SerialDenseSolver.hpp>
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -125,10 +125,8 @@ void Discret::Elements::ScaTraEleCalcElchDiffCondMultiScale<distype,
   }
 
   // conc_gp = N * conc --> conc = N^-1 * conc_gp
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  Teuchos::SerialDenseSolver<ordinalType, scalarType> invert;
-  invert.setMatrix(Teuchos::rcpFromRef(N.base()));
+  Core::LinAlg::SerialDenseSolver invert;
+  invert.set_matrix(N);
   invert.invert();
   Core::LinAlg::multiply(conc, N, conc_gp);
 }

@@ -15,6 +15,7 @@
 #include "4C_fluid_ele_hdg_weak_comp.hpp"
 #include "4C_fluid_ele_interface.hpp"
 #include "4C_inpar_fluid.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_utils_singleton_owner.hpp"
 
 FOUR_C_NAMESPACE_OPEN
@@ -405,7 +406,7 @@ namespace Discret
         Core::LinAlg::SerialDenseVector Rlocal;          /// local residual vector
         Core::LinAlg::SerialDenseVector Rglobal;         /// global residual vector
         Core::LinAlg::SerialDenseMatrix KlocallocalInv;  /// inverse local-local matrix
-        Teuchos::SerialDenseSolver<ordinalType, scalarType>
+        Core::LinAlg::SerialDenseSolver
             KlocallocalInvSolver;  /// solver for inverse local-local matrix
 
         // Voigt related quantities

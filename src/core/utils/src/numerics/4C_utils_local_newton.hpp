@@ -13,11 +13,10 @@
 #include "4C_linalg_fixedsizematrix.hpp"
 #include "4C_linalg_fixedsizematrix_solver.hpp"
 #include "4C_linalg_serialdensematrix.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_serialdensevector.hpp"
 #include "4C_linalg_tensor.hpp"
 #include "4C_utils_fad.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 #include <functional>
 
@@ -71,10 +70,10 @@ namespace Core::Utils
   {
     Core::LinAlg::SerialDenseVector dx(x.length(), true);
     Core::LinAlg::SerialDenseVector rhs(residuum);
-    Teuchos::SerialDenseSolver<int, double> solver;
-    solver.setMatrix(Teuchos::rcpFromRef(jacobian.base()));
-    solver.setVectors(Teuchos::rcpFromRef(dx.base()), Teuchos::rcpFromRef(rhs.base()));
-    solver.factorWithEquilibration(true);
+    Core::LinAlg::SerialDenseSolver solver;
+    solver.set_matrix(jacobian);
+    solver.set_vectors(dx, rhs);
+    solver.factor_with_equilibration(true);
     solver.factor();
     solver.solve();
 

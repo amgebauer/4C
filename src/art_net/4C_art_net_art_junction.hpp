@@ -13,9 +13,8 @@
 
 #include "4C_fem_discretization.hpp"
 #include "4C_io.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_utils_sparse_algebra_math.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 #include <memory>
 
@@ -226,7 +225,7 @@ namespace Arteries
       std::vector<int> nodes_;
 
       //! A Teuchos wrapper for a dense matrix solver
-      Teuchos::SerialDenseSolver<ordinalType, scalarType> solver_;
+      Core::LinAlg::SerialDenseSolver solver_;
 
 
     };  // class ArtJunctionBc

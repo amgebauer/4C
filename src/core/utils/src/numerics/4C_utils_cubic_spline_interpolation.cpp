@@ -7,9 +7,8 @@
 
 #include "4C_utils_cubic_spline_interpolation.hpp"
 
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_utils_exceptions.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 #include <utility>
 
@@ -122,13 +121,11 @@ void Core::Utils::CubicSplineInterpolation::solve_linear_system(Core::LinAlg::Se
     Core::LinAlg::SerialDenseVector& c, Core::LinAlg::SerialDenseVector& b) const
 {
   // solve for third-order coefficients for cubic spline interpolation
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  Teuchos::SerialDenseSolver<ordinalType, scalarType> solver;
-  solver.setMatrix(Teuchos::rcpFromRef(A.base()));
-  solver.setVectors(Teuchos::rcpFromRef(c.base()), Teuchos::rcpFromRef(b.base()));
-  solver.factorWithEquilibration(true);
-  solver.solveToRefinedSolution(true);
+  Core::LinAlg::SerialDenseSolver solver;
+  solver.set_matrix(A);
+  solver.set_vectors(c, b);
+  solver.factor_with_equilibration(true);
+  solver.solve_to_refined_solution(true);
   if (solver.factor() or solver.solve())
     FOUR_C_THROW("Solution of linear system of equations failed!");
 }

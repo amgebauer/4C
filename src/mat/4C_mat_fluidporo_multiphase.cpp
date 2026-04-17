@@ -9,12 +9,11 @@
 
 #include "4C_comm_pack_helpers.hpp"
 #include "4C_global_data.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_mat_fluidporo_singlephase.hpp"
 #include "4C_mat_par_bundle.hpp"
 #include "4C_porofluid_pressure_based_ele_calc_utils.hpp"
 #include "4C_utils_enum.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 #include <vector>
 
@@ -179,10 +178,8 @@ void Mat::PAR::FluidPoroMultiPhase::initialize()
   // invert dof2pres_ to get conversion from dofs to pressures for the fluid phases
   if (numfluidphases_ > 0)
   {
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverse;
-    inverse.setMatrix(Teuchos::rcpFromRef(dof2pres_->base()));
+    Core::LinAlg::SerialDenseSolver inverse;
+    inverse.set_matrix(*dof2pres_);
     int err = inverse.invert();
     if (err != 0)
       FOUR_C_THROW(
