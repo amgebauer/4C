@@ -11,9 +11,8 @@
 #include "4C_config.hpp"
 
 #include "4C_fem_general_utils_local_connectivity_matrices.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_serialdensevector.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 #include <numeric>
 #include <utility>
@@ -604,7 +603,7 @@ namespace Core::FE
     void compute_vandermonde_matrices(const unsigned int degree);
 
     Core::LinAlg::SerialDenseMatrix vandermonde_;
-    mutable Teuchos::SerialDenseSolver<ordinalType, scalarType> vandermonde_factor_;
+    mutable Core::LinAlg::SerialDenseSolver vandermonde_factor_;
     mutable Core::LinAlg::SerialDenseVector evaluate_vec_;
     Core::LinAlg::SerialDenseMatrix fekete_points_;
     LegendreBasis<nsd> legendre_;

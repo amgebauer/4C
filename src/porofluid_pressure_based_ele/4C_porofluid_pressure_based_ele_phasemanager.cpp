@@ -7,6 +7,7 @@
 
 #include "4C_porofluid_pressure_based_ele_phasemanager.hpp"
 
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_utils_densematrix_multiply.hpp"
 #include "4C_mat_fluidporo_multiphase.hpp"
 #include "4C_mat_fluidporo_multiphase_reactions.hpp"
@@ -20,7 +21,6 @@
 #include "4C_utils_enum.hpp"
 
 #include <Teuchos_ParameterList.hpp>
-#include <Teuchos_SerialDenseSolver.hpp>
 
 #include <numeric>
 
@@ -797,10 +797,8 @@ void Discret::Elements::PoroFluidManager::PhaseManagerDeriv::evaluate_gp_state(
   // now invert the derivatives of the dofs w.r.t. pressure to get the derivatives
   // of the pressure w.r.t. the dofs
   {
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverse;
-    inverse.setMatrix(Teuchos::rcpFromRef(pressurederiv_->base()));
+    Core::LinAlg::SerialDenseSolver inverse;
+    inverse.set_matrix(*pressurederiv_);
     int err = inverse.invert();
     if (err != 0)
       FOUR_C_THROW("Inversion of matrix for pressure derivative failed with error code {}.", err);

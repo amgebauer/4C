@@ -15,7 +15,6 @@
 #include "4C_utils_exceptions.hpp"
 
 #include <Teuchos_ParameterList.hpp>
-#include <Teuchos_SerialDenseSolver.hpp>
 
 FOUR_C_NAMESPACE_OPEN
 

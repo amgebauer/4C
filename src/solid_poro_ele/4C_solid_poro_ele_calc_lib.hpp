@@ -22,6 +22,7 @@
 #include "4C_linalg_fixedsizematrix.hpp"
 #include "4C_linalg_fixedsizematrix_voigt_notation.hpp"
 #include "4C_linalg_serialdensematrix.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_serialdensevector.hpp"
 #include "4C_linalg_symmetric_tensor.hpp"
 #include "4C_linalg_tensor_conversion.hpp"
@@ -37,8 +38,6 @@
 #include "4C_solid_poro_ele_properties.hpp"
 #include "4C_utils_exceptions.hpp"
 #include "4C_utils_parameter_list.fwd.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 #include <algorithm>
 #include <cstdint>
@@ -1994,9 +1993,9 @@ namespace Discret::Elements
     // now invert the derivatives of the dofs w.r.t. pressure to get the derivatives
     // of the pressure w.r.t. the dofs
     {
-      Teuchos::SerialDenseSolver<int, double> inverse;
+      Core::LinAlg::SerialDenseSolver inverse;
 
-      inverse.setMatrix(Teuchos::rcpFromRef(pressderiv.base()));
+      inverse.set_matrix(pressderiv);
       int err = inverse.invert();
       if (err != 0)
         FOUR_C_THROW("Inversion of matrix for pressure derivative failed with error code {}.", err);

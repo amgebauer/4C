@@ -15,10 +15,9 @@
 #include "4C_fem_general_utils_local_connectivity_matrices.hpp"
 #include "4C_fem_general_utils_nurbs_shapefunctions.hpp"
 #include "4C_fem_nurbs_discretization_utils.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_serialdensevector.hpp"
 #include "4C_linalg_utils_densematrix_multiply.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -153,10 +152,9 @@ namespace
     Core::LinAlg::SerialDenseMatrix shapefunctions_at_gps_copy(shapefcns_at_gps);
     if (shapefcns_at_gps.numRows() == shapefcns_at_gps.numCols())
     {
-      using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-      using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-      Teuchos::SerialDenseSolver<ordinalType, scalarType> matrixInverter;
-      matrixInverter.setMatrix(Teuchos::rcpFromRef(shapefunctions_at_gps_copy.base()));
+      Core::LinAlg::SerialDenseSolver matrixInverter;
+      [[maybe_unused]] double* values_before_inversion = shapefunctions_at_gps_copy.values();
+      matrixInverter.set_matrix(shapefunctions_at_gps_copy);
       int error_code = matrixInverter.invert();
 
       if (error_code != 0)
@@ -168,8 +166,7 @@ namespace
             error_code);
       }
 
-      FOUR_C_ASSERT(
-          shapefunctions_at_gps_copy.values() == matrixInverter.getFactoredMatrix()->values(),
+      FOUR_C_ASSERT(shapefunctions_at_gps_copy.values() == values_before_inversion,
           "Inverse of the matrix was not computed in place, but we expect that. Unfortunately, the "
           "Trilinos documentation is ambiguous here.");
 
@@ -181,10 +178,9 @@ namespace
     Core::LinAlg::multiply_tn(matTmat, shapefcns_at_gps, shapefcns_at_gps);
 
     {
-      using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-      using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-      Teuchos::SerialDenseSolver<ordinalType, scalarType> matrixInverter;
-      matrixInverter.setMatrix(Teuchos::rcpFromRef(matTmat.base()));
+      Core::LinAlg::SerialDenseSolver matrixInverter;
+      [[maybe_unused]] double* values_before_inversion = matTmat.values();
+      matrixInverter.set_matrix(matTmat);
       int error_code = matrixInverter.invert();
 
       if (error_code != 0)
@@ -196,7 +192,7 @@ namespace
             error_code);
       }
 
-      FOUR_C_ASSERT(matTmat.values() == matrixInverter.getFactoredMatrix()->values(),
+      FOUR_C_ASSERT(matTmat.values() == values_before_inversion,
           "Inverse of the matrix was not computed in place, but we expect that. Unfortunately, the "
           "Trilinos documentation is ambiguous here.");
     }

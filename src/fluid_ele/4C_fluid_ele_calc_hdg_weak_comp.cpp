@@ -14,11 +14,10 @@
 #include "4C_fluid_ele_parameter_timint.hpp"
 #include "4C_fluid_functions.hpp"
 #include "4C_global_data.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_utils_densematrix_multiply.hpp"
 #include "4C_mat_fluid_weakly_compressible.hpp"
 #include "4C_utils_shared_ptr_from_ref.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -508,12 +507,9 @@ int Discret::Elements::FluidEleCalcHDGWeakComp<distype>::project_field(
     // The integration is made by computing the matrix product
     Core::LinAlg::multiply_nt(
         local_solver_->massMat, local_solver_->massPart, local_solver_->massPartW);
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-    inverseMass.setMatrix(Teuchos::rcpFromRef(local_solver_->massMat.base()));
-    inverseMass.setVectors(
-        Teuchos::rcpFromRef(localMat.base()), Teuchos::rcpFromRef(localMat.base()));
+    Core::LinAlg::SerialDenseSolver inverseMass;
+    inverseMass.set_matrix(local_solver_->massMat);
+    inverseMass.set_vectors(localMat, localMat);
     inverseMass.solve();
   }
 
@@ -614,13 +610,11 @@ int Discret::Elements::FluidEleCalcHDGWeakComp<distype>::project_field(
     }
 
     // Solving step, nothing fancy
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-    inverseMass.setMatrix(Teuchos::rcpFromRef(mass.base()));
+    Core::LinAlg::SerialDenseSolver inverseMass;
+    inverseMass.set_matrix(mass);
     // In this cas trVec is a proper vector and not a matrix used as multiple
     // RHS vectors
-    inverseMass.setVectors(Teuchos::rcpFromRef(trVec.base()), Teuchos::rcpFromRef(trVec.base()));
+    inverseMass.set_vectors(trVec, trVec);
     inverseMass.solve();
 
     // In this case we fill elevec1 with the values of trVec because we have not
@@ -2034,7 +2028,7 @@ template <Core::FE::CellType distype>
 void Discret::Elements::FluidEleCalcHDGWeakComp<distype>::LocalSolver::invert_local_local_matrix()
 {
   KlocallocalInv = Klocallocal;
-  KlocallocalInvSolver.setMatrix(Teuchos::rcpFromRef(KlocallocalInv.base()));
+  KlocallocalInvSolver.set_matrix(KlocallocalInv);
   int err = KlocallocalInvSolver.invert();
   if (err != 0) FOUR_C_THROW("Inversion of local-local matrix failed with errorcode {}", err);
 }

@@ -11,6 +11,7 @@
 
 #include "4C_linalg_fixedsizematrix.hpp"
 #include "4C_linalg_fixedsizematrix_voigt_notation.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_utils_densematrix_eigen.hpp"
 #include "4C_linalg_utils_scalar_interpolation.hpp"
 #include "4C_utils_exceptions.hpp"
@@ -508,15 +509,13 @@ Core::LinAlg::SecondOrderTensorInterpolator<loc_dim>::get_interpolated_matrix(
 
     // setup solver
     Core::LinAlg::SerialDenseMatrix copy_P = Core::LinAlg::SerialDenseMatrix(P);
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> solver;
+    Core::LinAlg::SerialDenseSolver solver;
 
     // solve for the coefficients of Q
-    solver.setMatrix(Teuchos::rcpFromRef(P.base()));
-    solver.setVectors(Teuchos::rcpFromRef(a_Q.base()), Teuchos::rcpFromRef(b_Q.base()));
-    solver.factorWithEquilibration(true);
-    solver.solveToRefinedSolution(true);
+    solver.set_matrix(P);
+    solver.set_vectors(a_Q, b_Q);
+    solver.factor_with_equilibration(true);
+    solver.solve_to_refined_solution(true);
     if (solver.factor() or solver.solve())
     {
       err_type = TensorInterpolationErrorType::LinSolveFailQMatrix;
@@ -524,10 +523,10 @@ Core::LinAlg::SecondOrderTensorInterpolator<loc_dim>::get_interpolated_matrix(
     }
 
     // solve for the coefficients of R
-    solver.setMatrix(Teuchos::rcpFromRef(copy_P.base()));
-    solver.setVectors(Teuchos::rcpFromRef(a_R.base()), Teuchos::rcpFromRef(b_R.base()));
-    solver.factorWithEquilibration(true);
-    solver.solveToRefinedSolution(true);
+    solver.set_matrix(copy_P);
+    solver.set_vectors(a_R, b_R);
+    solver.factor_with_equilibration(true);
+    solver.solve_to_refined_solution(true);
     if (solver.factor() or solver.solve())
     {
       err_type = TensorInterpolationErrorType::LinSolveFailRMatrix;
