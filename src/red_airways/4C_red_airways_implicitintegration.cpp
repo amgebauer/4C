@@ -51,13 +51,6 @@ Airway::RedAirwayImplicitTimeInt::RedAirwayImplicitTimeInt(
   // Get the processor ID from the communicator
   myrank_ = Core::Communication::my_mpi_rank(discret_->get_comm());
 
-  // Time measurement: initialization
-  if (!coupledTo3D_)
-  {
-    // Time measurement: initialization
-    TEUCHOS_FUNC_TIME_MONITOR(" + initialization");
-  }
-
   // Get the basic parameters first
   // time-step size
   dtp_ = dta_ = params_.get<double>("time step size");
@@ -571,12 +564,6 @@ void Airway::RedAirwayImplicitTimeInt::time_loop(
 {
   coupledTo3D_ = CoupledTo3D;
 
-  // Time measurement: time loop
-  if (!coupledTo3D_)
-  {
-    TEUCHOS_FUNC_TIME_MONITOR(" + time loop");
-  }
-
   // Do the time-stepping
   while (step_ < stepmax_ and time_ < maxtime_)
   {
@@ -821,22 +808,10 @@ void Airway::RedAirwayImplicitTimeInt::non_lin_solve(
 void Airway::RedAirwayImplicitTimeInt::solve(
     std::shared_ptr<Teuchos::ParameterList> CouplingTo3DParams)
 {
-  // Time measurement:  solving reduced dimensional airways
-  if (!coupledTo3D_)
-  {
-    TEUCHOS_FUNC_TIME_MONITOR("   + solving reduced dimensional airways");
-  }
-
   /***
    * 1. Call elements to calculate system matrix and rhs
    ***/
   {
-    // Time measurement: element calls
-    if (!coupledTo3D_)
-    {
-      TEUCHOS_FUNC_TIME_MONITOR("      + element calls");
-    }
-
     // Set both system matrix and rhs vector to zero
     sysmat_->zero();
     rhs_->put_scalar(0.0);
@@ -1007,12 +982,6 @@ void Airway::RedAirwayImplicitTimeInt::solve(
    * 3. Apply the BCs to the system matrix and rhs
    ***/
   {
-    // Time measurement: application of dbc
-    if (!coupledTo3D_)
-    {
-      TEUCHOS_FUNC_TIME_MONITOR("      + apply DBC");
-    }
-
     Core::LinAlg::apply_dirichlet_to_system(*sysmat_, *pnp_, *rhs_, *bcval_, *dbctog_);
   }
 
@@ -1022,11 +991,6 @@ void Airway::RedAirwayImplicitTimeInt::solve(
   // Get cpu time
   const double tcpusolve = Teuchos::Time::wallTime();
   {
-    // Time measurement: solver
-    if (!coupledTo3D_)
-    {
-      TEUCHOS_FUNC_TIME_MONITOR("      + solver calls");
-    }
     // Call solver
     Core::LinAlg::SolverParams solver_params;
     solver_params.refactor = true;
@@ -1179,12 +1143,6 @@ void Airway::RedAirwayImplicitTimeInt::assemble_mat_and_rhs()
 {
   dtele_ = 0.0;
   dtfilter_ = 0.0;
-  // time measurement: element
-  if (!coupledTo3D_)
-  {
-    TEUCHOS_FUNC_TIME_MONITOR("      + element calls");
-  }
-
 }  // RedAirwayImplicitTimeInt::assemble_mat_and_rhs
 
 
