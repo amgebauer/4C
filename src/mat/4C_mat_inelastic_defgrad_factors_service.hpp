@@ -21,6 +21,7 @@
 #include "4C_utils_enum.hpp"
 #include "4C_utils_exceptions.hpp"
 
+#include <format>
 #include <map>
 #include <string>
 
@@ -47,13 +48,10 @@ namespace Mat
       negative_plastic_strain,  ///< negative plastic strain which does not allow for evaluations
                                 ///< inside the viscoplasticity laws
       overflow_error,  ///< overflow error of the term \f$ \Delta t \dot{\varepsilon}^{\text{p}} \f$
-                       ///< (and \f$ \mathsymbol{E}^{\text{p}}  = \exp(- \Delta t
-                       ///< \dot{\varepsilon}^{\text{p}} \mathsymbol{N}^{\text{p}}) \f$)
-      no_flow_resistance,            ///< the material has no flow resistance anymore, such that the
-                                     ///< evaluations model non-physical phenomena
-      no_plastic_incompressibility,  ///< plastic incompressibility not enforced; the determinant of
-                                     ///< the inelastic deformation gradient deviates from 1 beyond
-                                     ///< a set tolerance
+                       ///< (and \f$ \boldsymbol{E}^{\text{p}}  = \exp(- \Delta t
+                       ///< \dot{\varepsilon}^{\text{p}} \boldsymbol{N}^{\text{p}}) \f$)
+      no_flow_resistance,  ///< the material has no flow resistance anymore, such that the
+                           ///< evaluations model non-physical phenomena
       failed_solution_linear_system_lnl,  ///< solution of the linear system in the Local
                                           ///< Newton-Raphson Loop failed
       no_convergence_local_newton,  ///< the Local Newton Loop did not converge for the given loop
@@ -77,6 +75,15 @@ namespace Mat
                            ///< stress is smaller than the yield stress
     };
 
+
+    /// enum class for evaluation management actions in the iterations of the
+    /// Local Newton loop
+    enum class EvaluationAction
+    {
+      continue_current_iteration,    ///< continue current iteration
+      continue_with_next_iteration,  ///< go to next iteration after performing certain reset steps
+      exit_with_error,               ///< exit Local Newton Loop with the set error status
+    };
 
     /// convert error type to detailed error message
     std::string get_detailed_error_message_for_error_type(ErrorType err_type);
@@ -206,7 +213,7 @@ namespace Mat
 
       //! tracks whether the resizing function has been called, to set the current number of
       //! Gauss points exactly once!
-      const bool resize_called_{false};
+      bool resize_called{false};
     };
 
 
@@ -268,29 +275,72 @@ namespace Mat
       void set_material_const_tensors(const Core::LinAlg::Matrix<3, 1>& m);
     };
 
-    //! struct with local substepping utilities
-    struct LocalSubsteppingUtils
+    //! class with local substepping utilities
+    class LocalSubsteppingUtils
     {
+     public:
+      LocalSubsteppingUtils() = delete;
+      //! Constructor (calling reset under the hood)
+      explicit LocalSubsteppingUtils(double dt) { reset(dt); }
+
+      //! reset routine: set a single substep of a given size dt
+      void reset(const double dt);
+
+      //! verify whether the substepping routine has reached its end
+      [[nodiscard]] bool end_substepping() const
+      {
+        return substep_counter_ > total_num_of_substeps_;
+      };
+
+      //! increment substep
+      void increment_substep();
+
+      //! halve current substep and update relevant quantities
+      void halve_substep();
+
+      //! get substep size
+      [[nodiscard]] double get_substep_size() const { return curr_dt_; }
+
+      //! retrieve the normalized time parameter at the next time instant during substepping, i.e.,
+      //! \f$ \frac{\left(t_{m} + \Delta t_{m}\right)}{\Delta t} \f$, where \f$t_{m}\f$ denotes the
+      //! previously converged time instant, \f$\Delta t_{m}\f$ denotes the current substep size,
+      //! and \f$\Delta t\f$ specifies the global timestep
+      [[nodiscard]] double get_normalized_next_time_param(const double dt) const
+      {
+        return (t_ + curr_dt_) / dt;
+      }
+
+      //! get counter for the current number of time step halving procedures
+      [[nodiscard]] unsigned int get_halving_counter() const { return time_step_halving_counter_; }
+
+      //! get substepping info as string
+      [[nodiscard]] std::string get_info() const
+      {
+        std::string out;
+        out += "Substepping info: \n";
+        out += std::format(
+            "t: {}, substep_counter: {}, curr_dt: {}, time_step_halving_counter: {}, "
+            "total_num_of_substeps: {} \n",
+            t_, substep_counter_, curr_dt_, time_step_halving_counter_, total_num_of_substeps_);
+        return out;
+      };
+
+     private:
       //! current time parameter ranging from 0 to the problem time step \f$ \Delta t \f$
-      double t;
+      double t_;
       //! counter of evaluated substeps
-      unsigned int substep_counter;
+      unsigned int substep_counter_;
       //! current substep size
-      double curr_dt;
+      double curr_dt_;
       //! number of times the problem time step \f$ \Delta t \f$ has been halved
-      unsigned int time_step_halving_counter;
-      //!  current total number of substeps to be evaluated within the time step \f$ \Delta t
-      //! \f$; this is not always given by time_step_halving_counter, since the
+      unsigned int time_step_halving_counter_;
+      //!  total number of substeps to be evaluated within the time step \f$ \Delta t
+      //! \f$; this is not always directly proportional to time_step_halving_counter, since the
       //! halving does not have to be uniform (e.g. we could halve the time step twice and still
       //! have 3 substeps to evaluate instead of 4, i.e. if the first substep was evaluable
       //! numerically, but the second substep not, leading to another halving of the substep
       //! length)
-      unsigned int total_num_of_substeps;
-      //! current Local Newton iteration index for the substep
-      unsigned int iter;
-
-      //! reset routine: basically, create a new empty object
-      void reset();
+      unsigned int total_num_of_substeps_;
     };
 
     /// enum class for state quantity evaluations in
@@ -299,11 +349,11 @@ namespace Mat
     /// plastic strain rate,...)
     enum class StateQuantityEvalType
     {
-      FullEval,  ///< full evaluation (full call of the evaluate_state_quantities method)
-      PlasticStrainRateOnly,  ///< return in evaluate_state_quantities once the plastic strain
-                              ///< rate has been evaluated
-      EquivStressOnly,        ///< return in evaluate_state_quantities once the
-                              ///< equivalent stress has been evaluated
+      full_eval,  ///< full evaluation (full call of the evaluate_state_quantities method)
+      plastic_strain_rate_only,  ///< return in evaluate_state_quantities once the plastic strain
+                                 ///< rate has been evaluated
+      equiv_stress_only,         ///< return in evaluate_state_quantities once the
+                                 ///< equivalent stress has been evaluated
     };
 
 
@@ -361,13 +411,13 @@ namespace Mat
     /// derivatives of the plastic strain rate,...)
     enum class StateQuantityDerivEvalType
     {
-      FullEval,  ///< full evaluation (full call of the evaluate_state_quantity_derivatives
-                 ///< method)
-      PlasticStrainRateDerivsOnly,  ///< return in evaluate_state_quantity_derivatives once the
-                                    ///< derivatives of the plastic strain rate have been
-                                    ///< evaluated
-      EquivStressDerivsOnly,  ///< return in evaluate_state_quantities once the derivatives of the
-                              ///< equivalent stress has been evaluated
+      full_eval,  ///< full evaluation (full call of the evaluate_state_quantity_derivatives
+                  ///< method)
+      plastic_strain_rate_derivs_only,  ///< return in evaluate_state_quantity_derivatives once the
+                                        ///< derivatives of the plastic strain rate have been
+                                        ///< evaluated
+      equiv_stress_derivs_only,  ///< return in evaluate_state_quantities once the derivatives of
+                                 ///< the equivalent stress has been evaluated
     };
 
 
@@ -450,6 +500,147 @@ namespace Mat
       //! derivative with respect to the plastic strain
       double deriv_plastic_strain;
     };
+
+
+    /// enum: strategy in dealing with divergence of the Local Newton Loop
+    enum class LocalNewtonConvCheck
+    {
+      residual,         ///< verify convergence based on the absolute value of the Local Newton
+                        ///< residual 2-norm
+      increment_ratio,  ///< verify convergence based on the ratio of solution increment to current
+                        ///< solution: \f$ \frac{\left| \Delta \boldsymbol{s}^{l+1} \right|}{\left|
+                        ///< \boldsymbol{s}^{l} \right|}  \f$
+      residual_and_increment_ratio,  ///< verify convergence based on both the absolute Local Newton
+                                     ///< residual and the ratio of solution increment to current
+                                     ///< solution
+    };
+
+
+    /// enum: strategy in dealing with divergence of the Local Newton Loop
+    enum class LocalNewtonDiverCont
+    {
+      stop,          ///< stop the simulation entirely
+      continue_sim,  ///<  continue the simulation, and display warning in regards to the current
+                     ///<  state within the Local Newton Loop
+      continue_sim_with_safeguard  ///< continue the simulation only if the convergence tolerances
+                                   ///< are not exceeded excessively, as specified with specific
+                                   ///< exceedance factors for the tolerances
+    };
+
+    /// enum: quantities relevant for convergence checking within the Local Newton Loop
+    struct LocalNewtonConvQuantities
+    {
+      //! residual 2-norm
+      double residual_norm;
+
+      //! ratio of solution increment to current solution: \f$ \frac{\left| \Delta
+      //! \boldsymbol{s}^{l+1} \right|}{\left| \boldsymbol{s}^{l} \right|}  \f$
+      double increment_norm;
+    };
+
+
+
+    //! struct containing parameter specifications for the Local Newton loop
+    struct LocalNewtonParams
+    {
+      //! convergence tolerance: absolute residual value
+      const double res_tol;
+
+      //! convergence tolerance: ratio of solution increment to current solution
+      const double incr_tol;
+
+      //! convergence check strategy
+      const LocalNewtonConvCheck conv_check;
+
+      //! strategy for dealing with divergence
+      const LocalNewtonDiverCont diver_cont;
+
+      //! maximum number of local iterations
+      const unsigned int max_iter;
+
+      //! maximum exceedance factor for the residual tolerance (to be used when
+      //! employing the divergence management strategy for continuation with
+      //! safeguard)
+      const double max_exceedance_fact_res_tol;
+
+      //! maximum exceedance factor for the solution increment tolerance (to be used when
+      //! employing the divergence management strategy for continuation with
+      //! safeguard)
+      const double max_exceedance_fact_incr_tol;
+    };
+
+    //! class for managing the Local Newton loop, containing the utilized parameters and iteration
+    //! data
+    class LocalNewtonManager
+    {
+     public:
+      LocalNewtonManager() = delete;
+      /*!
+       * @brief Constructor
+       *
+       * @param[in] lnl_params Local Newton parameters
+       *
+       */
+      explicit LocalNewtonManager(const LocalNewtonParams& lnl_params);
+
+      /// getter for Local Newton parameters
+      [[nodiscard]] LocalNewtonParams params() const { return params_; }
+
+      /// getter for local iteration count
+      [[nodiscard]] unsigned int iter() const { return iter_; }
+
+      /// setter for local iteration count
+      void set_iteration_count(const unsigned int iter) { iter_ = iter; }
+
+      /// getter for total number of local iterations evaluated in this time step (vector over all
+      /// Gauss points)
+      [[nodiscard]] const std::vector<unsigned int>& curr_num_iters() const
+      {
+        return curr_num_iters_;
+      }
+
+      /// increment iteration count by 1
+      void increment_iteration_count() { iter_++; }
+
+      /*!
+       * @brief Resizing based on a given number of Gauss points
+       *
+       * @param[in] numgp Number of Gauss points
+       */
+      void resize(const unsigned int numgp);
+
+      /*!
+       * @brief Routine to be run after the Local Newton-Raphson at a given Gauss point
+       *
+       * @param[in] gp Gauss point index
+       */
+      void update_after_local_newton(const unsigned int gp);
+
+      //! reset method
+      void reset();
+
+      //! pack values
+      void pack(Core::Communication::PackBuffer& data) const;
+
+      //! unpack values
+      void unpack(Core::Communication::UnpackBuffer& buffer);
+
+     private:
+      //! Local Newton parameters
+      const LocalNewtonParams params_;
+
+      //! current local iteration
+      unsigned int iter_;
+
+      //! total number of local iterations for the current timestep; vector of Gauss point values
+      std::vector<unsigned int> curr_num_iters_;
+
+      //! tracks whether the resizing function has been called, to set the current number of
+      //! Gauss points exactly once!
+      bool resize_called_{false};
+    };
+
+
 
   }  // namespace InelasticDefgradTransvIsotropElastViscoplastUtils
 

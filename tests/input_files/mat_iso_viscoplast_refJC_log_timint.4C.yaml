@@ -1,5 +1,5 @@
 TITLE:
-  - "Simple test case based on 1hex8 element with transversely-isotropic elastic-viscoplastic"
+  - "Simple test case based on 1hex8 element with isotropic elastic-viscoplastic"
   - "behavior in a finite strain setting. The following conditions are assumed:"
   - "- element is stretched at a constant strain rate"
   - "- element can freely contract in lateral dimensions"
@@ -7,7 +7,7 @@ TITLE:
   - "Reformulated Johnson-Cook law, as shown in:"
   - "Mareau: A thermodynamically consistent formulation of the Johnson-Cook"
   - "model, Mechanics of Materials 143, 2020"
-  - "- time integration of internal variables using standard substepping, as shown in:"
+  - "- time integration of internal variables using logarithmic substepping, as shown in:"
   - "Ana: Continuum Modeling and Calibration of Viscoplasticity in the Context"
   - "of the Lithium Anode in Solid-State Batteries"
   - "(Master's Thesis, Institute for Computational Mechanics, TU Munich, 2024)"
@@ -49,12 +49,16 @@ MATERIALS:
     MAT_InelasticDefgradTransvIsotropElastViscoplast:
       VISCOPLAST_LAW_ID: 4
       FIBER_READER_ID: 5
-      YIELD_COND_A: 1
-      YIELD_COND_B: 2
-      YIELD_COND_F: 2.5
-      MAT_BEHAVIOR: "transv_isotropic"
-      TIME_INTEGRATION_HIST_VARS: standard
-      MAX_SUBSTEPPING_HALVE_NUM: 10
+      MAT_BEHAVIOR: "isotropic"
+      TIME_INTEGRATION_HIST_VARS: logarithmic
+      LOCAL_NEWTON:
+        CONV_CHECK: residual_and_increment_ratio
+        MAX_ITER: 100
+        RES_TOL: 1e-8
+        INCR_TOL: 1e-8
+        MAX_EXCEEDANCE_FACT_RES_TOL: 10
+        MAX_EXCEEDANCE_FACT_INCR_TOL: 10
+        DIVER_CONT: stop
   - MAT: 4
     MAT_ViscoplasticLawReformulatedJohnsonCook:
       STRAIN_RATE_PREFAC: 1
@@ -88,26 +92,26 @@ RESULT DESCRIPTION:
       DIS: "structure"
       NODE: 4
       QUANTITY: "dispy"
-      VALUE: -0.004270301460037347
-      TOLERANCE: 4.3e-11
+      VALUE: -0.003966194599572764
+      TOLERANCE: 4e-11
   - STRUCTURE:
       DIS: "structure"
       NODE: 5
       QUANTITY: "dispx"
-      VALUE: -0.004270301460037106
-      TOLERANCE: 4.3e-11
+      VALUE: -0.0039661945995734475
+      TOLERANCE: 4e-11
   - STRUCTURE:
       DIS: "structure"
       NODE: 8
       QUANTITY: "dispx"
-      VALUE: -0.004270301460038198
-      TOLERANCE: 4.3e-11
+      VALUE: -0.0039661945995732185
+      TOLERANCE: 4e-11
   - STRUCTURE:
       DIS: "structure"
       NODE: 8
       QUANTITY: "dispy"
-      VALUE: -0.004270301460037766
-      TOLERANCE: 4.3e-11
+      VALUE: -0.0039661945995739184
+      TOLERANCE: 4e-11
   - STRUCTURE:
       DIS: "structure"
       NODE: 8
@@ -118,20 +122,20 @@ RESULT DESCRIPTION:
       DIS: "structure"
       NODE: 6
       QUANTITY: "dispx"
-      VALUE: -0.004270301460039201
-      TOLERANCE: 4.3e-11
+      VALUE: -0.003966194599575029
+      TOLERANCE: 4e-11
   - STRUCTURE:
       DIS: "structure"
       NODE: 4
       QUANTITY: "stress_zz"
-      VALUE: 686.9280605800491
-      TOLERANCE: 0.00069
+      VALUE: 978.4575843807388
+      TOLERANCE: 0.00098
   - STRUCTURE:
       DIS: "structure"
       NODE: 8
       QUANTITY: "stress_zz"
-      VALUE: 686.9280605791739
-      TOLERANCE: 0.00069
+      VALUE: 978.4575843813795
+      TOLERANCE: 0.00098
 DESIGN POINT DIRICH CONDITIONS:
   - E: 1
     NUMDOF: 3
