@@ -1015,6 +1015,95 @@ function(__four_c_test_vtk)
     )
 endfunction()
 
+###------------------------------------------------------------------ Compare VTK
+# Central function to define a timings test based on an a previous input file test
+#
+# required parameters:
+#   BASED_ON:                     Reference to previous test
+#   TIMINGS_FILE:                 name of the timings file in the output directory of the previous test that contains the timings to compare
+#   TIMERS:                       List of names of the timers to compare
+#
+# optional parameters:
+#   MAX_TIMES:                    List of maximum times for the timers to compare (either empty or matching the length of TIMERS).
+#   MAX_CALLS:                    List of maximum calls for the timers to compare (either empty or matching the length of TIMERS).
+#   LABELS:                       Add labels to the test
+#   REQUIRED_DEPENDENCIES:        Any required external dependencies. The test will be skipped if the dependencies are not met.
+#                                 Either a dependency, e.g. "Trilinos", or a dependency with a version constraint, e.g. "Trilinos>=2025.2".
+#                                 The supported version constraint operators are: >=, <=, >, <, ==
+#                                 If multiple dependencies are provided, all must be met for the test to run.
+#                                 Note that the version is the _internal_ version that 4C assigns to the dependency.
+function(__four_c_test_timings)
+  set(options "")
+  set(oneValueArgs BASED_ON TIMINGS_FILE)
+  set(multiValueArgs
+      TIMERS
+      MAX_TIMES
+      MAX_CALLS
+      LABELS
+      REQUIRED_DEPENDENCIES
+      )
+  cmake_parse_arguments(
+    _parsed
+    "${options}"
+    "${oneValueArgs}"
+    "${multiValueArgs}"
+    ${ARGN}
+    )
+
+  # validate input arguments
+  if(DEFINED _parsed_UNPARSED_ARGUMENTS)
+    message(FATAL_ERROR "There are unparsed arguments: ${_parsed_UNPARSED_ARGUMENTS}!")
+  endif()
+
+  assert_required_arguments(_parsed BASED_ON TIMINGS_FILE TIMERS)
+
+  # get test directory of base test
+  get_test_property(${_parsed_BASED_ON} _internal_OUTPUT_DIR test_directory)
+
+  set(merged_timers_to_compare "")
+  if(DEFINED _parsed_TIMERS)
+    list(JOIN _parsed_TIMERS " " merged_timers_to_compare)
+  endif()
+
+  set(merged_times_to_compare "")
+  if(DEFINED _parsed_MAX_TIMES)
+    list(JOIN _parsed_MAX_TIMES " " merged_times_to_compare)
+  endif()
+
+  set(merged_num_calls_to_compare "")
+  if(DEFINED _parsed_MAX_CALLS)
+    list(JOIN _parsed_MAX_CALLS " " merged_num_calls_to_compare)
+  endif()
+
+  set(name_of_test "${_parsed_BASED_ON}-timings")
+  set(test_command
+      "${FOUR_C_PYTHON_VENV_BUILD}/bin/check-timings ${test_directory}/${_parsed_TIMINGS_FILE} ${merged_timers_to_compare} --expected-max-time ${merged_times_to_compare} --expected-max-num-calls ${merged_num_calls_to_compare}"
+      )
+
+  # Ensure that Python is listed as required dependency
+  list(APPEND _parsed_REQUIRED_DEPENDENCIES "Python")
+
+  # Add test
+  _add_test_with_options(
+    NAME_OF_TEST
+    ${name_of_test}
+    TEST_COMMAND
+    ${test_command}
+    ADDITIONAL_FIXTURE
+    ${_parsed_BASED_ON}
+    TOTAL_PROCS
+    "1"
+    TIMEOUT
+    "${_parsed_TIMEOUT}"
+    LABELS
+    "${_parsed_LABELS}"
+    OUTPUT_DIR
+    "${test_directory}"
+    REQUIRED_DEPENDENCIES
+    "${_parsed_REQUIRED_DEPENDENCIES}"
+    )
+endfunction()
+
 ###------------------------------------------------------------------ Restart 4C simulation and compare VTK Output
 # Two-stage test case, where a simulation is restarted from same input file and
 # VTK file is compared for the restarted run.

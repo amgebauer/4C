@@ -9,9 +9,11 @@
 #include "4C_config_revision.hpp"
 
 #include "4C_comm_utils.hpp"
+#include "4C_global_data.hpp"
 #include "4C_global_full_io.hpp"
 #include "4C_global_legacy_module.hpp"
 #include "4C_io_command_line_helpers.hpp"
+#include "4C_io_control.hpp"
 #include "4C_io_input_file_utils.hpp"
 #include "4C_io_pstream.hpp"
 #include "4C_utils_exceptions.hpp"
@@ -245,6 +247,14 @@ void run(CommandlineArguments& cli_args, Core::Communication::Communicators& com
   }
 
   write_timemonitor(communicators.local_comm());
+
+  if (Global::Problem::instance()->io_params().get<bool>("WRITE_TIMINGS"))
+  {
+    std::filesystem::path filename(
+        Global::Problem::instance()->output_control_file()->file_name() + "-timings.yaml");
+
+    export_timings(filename, communicators.global_comm());
+  }
 }
 
 CommandlineArguments parse_command_line(int argc, char** argv)

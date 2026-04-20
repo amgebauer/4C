@@ -15,8 +15,13 @@
 #include "4C_io_pstream.hpp"
 #include "4C_utils_exceptions.hpp"
 
+#include <Teuchos_oblackholestream.hpp>
 #include <Teuchos_StandardParameterEntryValidators.hpp>
 #include <Teuchos_TimeMonitor.hpp>
+
+#include <fstream>
+#include <memory>
+
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -108,6 +113,29 @@ void write_timemonitor(MPI_Comm comm)
   std::shared_ptr<const Teuchos::Comm<int>> TeuchosComm =
       Core::Communication::to_teuchos_comm<int>(comm);
   Teuchos::TimeMonitor::summarize(Teuchos::Ptr(TeuchosComm.get()), std::cout, false, true, false);
+}
+
+void export_timings(const std::filesystem::path& filename, MPI_Comm comm)
+{
+  std::shared_ptr<const Teuchos::Comm<int>> TeuchosComm =
+      Core::Communication::to_teuchos_comm<int>(comm);
+
+  Teuchos::RCP<Teuchos::ParameterList> params = Teuchos::parameterList();
+  params->set("Report format", "YAML");
+  params->set("YAML style", "spacious");
+
+  if (Core::Communication::my_mpi_rank(comm) == 0)
+  {
+    std::ofstream out(filename);
+    FOUR_C_ASSERT_ALWAYS(
+        out.is_open(), "Could not open file '{}' for writing timings!", filename.string());
+    Teuchos::TimeMonitor::report(Teuchos::Ptr(TeuchosComm.get()), out, "", params);
+  }
+  else
+  {
+    Teuchos::oblackholestream null_stream;
+    Teuchos::TimeMonitor::report(Teuchos::Ptr(TeuchosComm.get()), null_stream, "", params);
+  }
 }
 
 std::vector<std::pair<std::filesystem::path, std::string>> build_io_pairs(

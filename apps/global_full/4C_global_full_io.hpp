@@ -67,6 +67,13 @@ void setup_global_problem(Core::IO::InputFile& input_file, const CommandlineArgu
 void write_timemonitor(MPI_Comm comm);
 
 /**
+ * \brief Exports timing information to a YAML file.
+ * \param filename The name of the file to export timings to.
+ * \param comm The MPI communicator.
+ */
+void export_timings(const std::filesystem::path& filename, MPI_Comm comm);
+
+/**
  * \brief Build canonical input/output pairs from positional command line arguments.
  * Due to the legacy argument structure, we separate between the primary input and output (first two
  * positional arguments) and the rest (io_pairs). The latter are only required when using nested

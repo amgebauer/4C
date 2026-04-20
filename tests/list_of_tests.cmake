@@ -2003,6 +2003,7 @@ __four_c_test_vtk(BASED_ON ${current} PVD_RESULT xxx-structure.pvd PVD_REFERENCE
 four_c_test(TEST_FILE solid_runtime_gauss_point_quantity_output_element_center.4C.yaml RETURN_AS current REQUIRED_DEPENDENCIES TRILINOS_MUMPS)
 __four_c_test_restart(BASED_ON ${current} SAME_FILE RESTART_STEP 5 REQUIRED_DEPENDENCIES TRILINOS_MUMPS)
 __four_c_test_vtk(BASED_ON ${current} PVD_RESULT xxx-structure.pvd PVD_REFERENCE ref/solid_runtime_gauss_point_quantity_output_element_center-vtk/structure.pvd TOLERANCE 1e-08)
+__four_c_test_timings(BASED_ON ${current} TIMINGS_FILE xxx-timings.yaml TIMERS Input Calculation MAX_TIMES 1.0 5.0 MAX_CALLS 1 1)
 four_c_test(TEST_FILE solid_runtime_gauss_point_quantity_output_gauss_point.4C.yaml RETURN_AS current REQUIRED_DEPENDENCIES TRILINOS_MUMPS)
 __four_c_test_restart(BASED_ON ${current} SAME_FILE RESTART_STEP 5 REQUIRED_DEPENDENCIES TRILINOS_MUMPS)
 __four_c_test_vtk(BASED_ON ${current} PVD_RESULT xxx-structure.pvd PVD_REFERENCE ref/solid_runtime_gauss_point_quantity_output_gauss_point-vtk/structure.pvd TOLERANCE 1e-08)

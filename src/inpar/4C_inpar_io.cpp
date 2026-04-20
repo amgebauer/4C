@@ -28,6 +28,12 @@ std::vector<Core::IO::InputSpec> Inpar::IO::valid_parameters()
               {.description = "Flag indicating whether quantities related to the spring dashpot "
                               "conditions should be written to output.",
                   .default_value = false}),
+          parameter<bool>("WRITE_TIMINGS",
+              {.description =
+                      "Flag indicating whether timings of the time monitor should be written to a "
+                      "yaml file. The timing information is written to "
+                      "<outputprefix>-timings.yaml.",
+                  .default_value = true}),
           parameter<bool>("OUTPUT_BIN",
               {.description = "Do you want to have binary output?", .default_value = true}),
 
