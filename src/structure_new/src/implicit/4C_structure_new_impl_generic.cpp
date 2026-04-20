@@ -82,6 +82,13 @@ Teuchos::ParameterList& Solid::IMPLICIT::Generic::get_nox_params()
 
 /*----------------------------------------------------------------------------*
  *----------------------------------------------------------------------------*/
+const Solid::TimeInt::BaseDataSDyn& Solid::IMPLICIT::Generic::get_data_sdyn() const
+{
+  return tim_int().get_data_sdyn();
+}
+
+/*----------------------------------------------------------------------------*
+ *----------------------------------------------------------------------------*/
 double Solid::IMPLICIT::Generic::get_default_step_length() const
 {
   const Teuchos::ParameterList& p_nox = tim_int().get_data_sdyn().get_nox_params();

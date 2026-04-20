@@ -40,6 +40,8 @@ namespace Inpar
           return "ConstDisPres";
         case pred_constdisvelaccpres:
           return "ConstDisVelAccPres";
+        case pred_python_wrapper:
+          return "PythonWrapper";
         default:
           FOUR_C_THROW("Cannot make std::string for predictor {}", name);
       }
@@ -347,18 +349,19 @@ namespace Inpar
               // Since predictor "none" would be misleading, the usage of no predictor is called
               // vague.
               deprecated_selection<Solid::PredEnum>("PREDICT",
-                  {
-                      {"Vague", pred_vague},
-                      {"ConstDis", pred_constdis},
-                      {"ConstVel", pred_constvel},
-                      {"ConstAcc", pred_constacc},
-                      {"ConstDisVelAcc", pred_constdisvelacc},
-                      {"TangDis", pred_tangdis},
-                      {"TangDisConstFext", pred_tangdis_constfext},
+                  {{"Vague", pred_vague}, {"ConstDis", pred_constdis}, {"ConstVel", pred_constvel},
+                      {"ConstAcc", pred_constacc}, {"ConstDisVelAcc", pred_constdisvelacc},
+                      {"TangDis", pred_tangdis}, {"TangDisConstFext", pred_tangdis_constfext},
                       {"ConstDisPres", pred_constdispres},
                       {"ConstDisVelAccPres", pred_constdisvelaccpres},
-                  },
+                      {"PythonWrapper", pred_python_wrapper}},
                   {.description = "Type of predictor", .default_value = pred_constdis}),
+
+              // File providing the python implementation of the predictor
+              parameter<std::filesystem::path>("PYTHON_PREDICTOR_FILE",
+                  {.description = "Absolute or relative path to the Python script implementing the "
+                                  "PythonWrapper predictor.",
+                      .default_value = std::filesystem::path{}}),
 
               // Uzawa iteration for constraint systems
               parameter<double>("UZAWAPARAM",
