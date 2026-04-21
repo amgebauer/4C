@@ -35,6 +35,8 @@ PoroElast::MonolithicSplitNoPenetration::MonolithicSplitNoPenetration(MPI_Comm c
     std::shared_ptr<Core::LinAlg::MapExtractor> porosity_splitter)
     : MonolithicSplit(comm, timeparams, porosity_splitter), normrhs_nopenetration_(-1.0)
 {
+  auto& problem = *Global::Problem::instance();
+
   // Initialize Transformation Objects
   k_d_transform_ = std::make_shared<Coupling::Adapter::MatrixColTransform>();
   k_inv_d_transform_ = std::make_shared<Coupling::Adapter::MatrixRowTransform>();
@@ -49,10 +51,9 @@ PoroElast::MonolithicSplitNoPenetration::MonolithicSplitNoPenetration(MPI_Comm c
 
   k_dn_ = nullptr;
 
-  mortar_adapter_ = std::make_shared<Adapter::CouplingNonLinMortar>(
-      Global::Problem::instance()->n_dim(), Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+  mortar_adapter_ = std::make_shared<Adapter::CouplingNonLinMortar>(problem, problem.n_dim(),
+      problem.mortar_coupling_params(), problem.contact_dynamic_params(),
+      problem.spatial_approximation_type());
 }
 
 void PoroElast::MonolithicSplitNoPenetration::setup_system()

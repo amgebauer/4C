@@ -18,8 +18,9 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::AlgorithmBase::AlgorithmBase(MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : comm_(comm), printscreen_(Global::Problem::instance()->io_params().get<int>("STDOUTEVERY"))
+Adapter::AlgorithmBase::AlgorithmBase(
+    Global::Problem& problem, MPI_Comm comm, const Teuchos::ParameterList& timeparams)
+    : problem_(problem), comm_(comm), printscreen_(problem_.io_params().get<int>("STDOUTEVERY"))
 {
   step_ = 0;
   time_ = 0.;
@@ -27,7 +28,6 @@ Adapter::AlgorithmBase::AlgorithmBase(MPI_Comm comm, const Teuchos::ParameterLis
   nstep_ = timeparams.get<int>("NUMSTEP");
   maxtime_ = timeparams.get<double>("MAXTIME");
 }
-
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/

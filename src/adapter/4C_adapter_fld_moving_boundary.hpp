@@ -30,6 +30,11 @@ namespace FLD
   }
 }  // namespace FLD
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   class Fluid;
@@ -133,7 +138,7 @@ namespace Adapter
    public:
     /// constructor
     explicit FluidMovingBoundaryBaseAlgorithm(
-        const Teuchos::ParameterList& prbdyn, std::string condname);
+        Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname);
 
     /// virtual destructor to support polymorph destruction
     virtual ~FluidMovingBoundaryBaseAlgorithm() = default;

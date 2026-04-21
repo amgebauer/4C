@@ -14,7 +14,6 @@
 #include "4C_adapter_fld_fluid_fsi_msht.hpp"
 #include "4C_adapter_fld_fluid_xfsi.hpp"
 #include "4C_adapter_fld_poro.hpp"
-#include "4C_adapter_problem_access.hpp"
 #include "4C_elch_input.hpp"
 #include "4C_fem_condition_periodic.hpp"
 #include "4C_fem_discretization.hpp"
@@ -53,22 +52,23 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::FluidBaseAlgorithm::FluidBaseAlgorithm(const Teuchos::ParameterList& prbdyn,
-    const Teuchos::ParameterList& fdyn, const std::string& disname, bool isale, bool init)
+Adapter::FluidBaseAlgorithm::FluidBaseAlgorithm(Global::Problem& problem,
+    const Teuchos::ParameterList& prbdyn, const Teuchos::ParameterList& fdyn,
+    const std::string& disname, bool isale, bool init)
+    : problem_(problem)
 {
   setup_fluid(prbdyn, fdyn, disname, isale, init);
 }
 
-
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::FluidBaseAlgorithm::FluidBaseAlgorithm(
+Adapter::FluidBaseAlgorithm::FluidBaseAlgorithm(Global::Problem& problem,
     const Teuchos::ParameterList& prbdyn, const std::shared_ptr<Core::FE::Discretization> discret)
+    : problem_(problem)
 {
   setup_inflow_fluid(prbdyn, discret);
   return;
 }
-
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -77,7 +77,7 @@ void Adapter::FluidBaseAlgorithm::setup_fluid(const Teuchos::ParameterList& prbd
 {
   auto t = Teuchos::TimeMonitor::getNewTimer("Adapter::FluidBaseAlgorithm::setup_fluid");
   Teuchos::TimeMonitor monitor(*t);
-  Global::Problem* problem = Adapter::Utils::problem_from_instance();
+  Global::Problem* problem = &problem_;
 
   // -------------------------------------------------------------------
   // what's the current problem type?
@@ -756,18 +756,18 @@ void Adapter::FluidBaseAlgorithm::setup_fluid(const Teuchos::ParameterList& prbd
           std::shared_ptr<FLD::XFluidFluid> xffluid = std::make_shared<FLD::XFluidFluid>(
               tmpfluid, xfluiddis, solver, fluidtimeparams, false, isale);
           fluid_ = std::make_shared<FluidFluidFSI>(
-              xffluid, tmpfluid, solver, fluidtimeparams, isale, dirichletcond);
+              *problem, xffluid, tmpfluid, solver, fluidtimeparams, isale, dirichletcond);
         }
         else if (coupling == fsi_iter_sliding_monolithicfluidsplit or
                  coupling == fsi_iter_sliding_monolithicstructuresplit)
           fluid_ = std::make_shared<FluidFSIMsht>(
-              tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
+              *problem, tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
         else if (probtype == Core::ProblemType::fbi)
           fluid_ = std::make_shared<FluidFBI>(
-              tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
+              *problem, tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
         else
           fluid_ = std::make_shared<FluidFSI>(
-              tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
+              *problem, tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
       }
       break;
       case Core::ProblemType::thermo_fsi:
@@ -811,10 +811,10 @@ void Adapter::FluidBaseAlgorithm::setup_fluid(const Teuchos::ParameterList& prbd
         if (coupling == fsi_iter_sliding_monolithicfluidsplit or
             coupling == fsi_iter_sliding_monolithicstructuresplit)
           fluid_ = std::make_shared<FluidFSIMsht>(
-              tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
+              *problem, tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
         else
           fluid_ = std::make_shared<FluidFSI>(
-              tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
+              *problem, tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
       }
       break;
       case Core::ProblemType::fsi_redmodels:
@@ -840,7 +840,7 @@ void Adapter::FluidBaseAlgorithm::setup_fluid(const Teuchos::ParameterList& prbd
         else
           FOUR_C_THROW("Unknown time integration for this fluid problem type\n");
         fluid_ = std::make_shared<FluidFSI>(
-            tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
+            *problem, tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
       }
       break;
       case Core::ProblemType::poroelast:
@@ -865,7 +865,7 @@ void Adapter::FluidBaseAlgorithm::setup_fluid(const Teuchos::ParameterList& prbd
           else
             FOUR_C_THROW("Unknown time integration for this fluid problem type\n");
           fluid_ = std::make_shared<FluidPoro>(
-              tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
+              *problem, tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
         }
         else if (disname == "fluid")
         {
@@ -880,7 +880,7 @@ void Adapter::FluidBaseAlgorithm::setup_fluid(const Teuchos::ParameterList& prbd
             else
               FOUR_C_THROW("Unknown time integration for this fluid problem type\n");
             fluid_ = std::make_shared<FluidFPSI>(
-                tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
+                *problem, tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
           }
           else if (probtype == Core::ProblemType::fpsi_xfem)
           {
@@ -921,7 +921,7 @@ void Adapter::FluidBaseAlgorithm::setup_fluid(const Teuchos::ParameterList& prbd
           else
             FOUR_C_THROW("Unknown time integration for this fluid problem type\n");
           fluid_ = std::make_shared<FluidFSI>(
-              tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
+              *problem, tmpfluid, actdis, solver, fluidtimeparams, output, isale, dirichletcond);
         }
         else
         {
@@ -1014,7 +1014,7 @@ void Adapter::FluidBaseAlgorithm::setup_inflow_fluid(
 {
   auto t = Teuchos::TimeMonitor::getNewTimer("Adapter::FluidBaseAlgorithm::setup_fluid");
   Teuchos::TimeMonitor monitor(*t);
-  Global::Problem* problem = Adapter::Utils::problem_from_instance();
+  Global::Problem* problem = &problem_;
 
   // -------------------------------------------------------------------
   // what's the current problem type?
@@ -1192,7 +1192,7 @@ void Adapter::FluidBaseAlgorithm::set_general_parameters(
     const std::shared_ptr<Teuchos::ParameterList> fluidtimeparams,
     const Teuchos::ParameterList& prbdyn, const Teuchos::ParameterList& fdyn)
 {
-  Global::Problem* problem = Adapter::Utils::problem_from_instance();
+  Global::Problem* problem = &problem_;
   fluidtimeparams->set<bool>("BLOCKMATRIX", fdyn.get<bool>("BLOCKMATRIX"));
 
   // -------------------------------------- number of degrees of freedom

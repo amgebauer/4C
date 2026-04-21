@@ -24,7 +24,8 @@ FOUR_C_NAMESPACE_OPEN
 ElCh::MovingBoundaryAlgorithm::MovingBoundaryAlgorithm(MPI_Comm comm,
     const Teuchos::ParameterList& elchcontrol, const Teuchos::ParameterList& scatradyn,
     const Teuchos::ParameterList& solverparams)
-    : ScaTraFluidAleCouplingAlgorithm(comm, scatradyn, "FSICoupling", solverparams),
+    : ScaTraFluidAleCouplingAlgorithm(
+          *Global::Problem::instance(), comm, scatradyn, "FSICoupling", solverparams),
       pseudotransient_(false),
       molarvolume_(elchcontrol.get<double>("MOLARVOLUME")),
       idispn_(nullptr),

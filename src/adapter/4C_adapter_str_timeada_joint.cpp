@@ -27,17 +27,18 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::StructureTimeAdaJoint::StructureTimeAdaJoint(std::shared_ptr<Structure> structure)
-    : StructureTimeAda(structure), sta_(nullptr)
+Adapter::StructureTimeAdaJoint::StructureTimeAdaJoint(
+    Global::Problem& problem, std::shared_ptr<Structure> structure)
+    : StructureTimeAda(problem, structure), sta_(nullptr)
 {
   if (stm_->is_setup()) setup_auxiliary();
 }
-
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 void Adapter::StructureTimeAdaJoint::setup_auxiliary()
 {
-  const Teuchos::ParameterList& sdyn = Global::Problem::instance()->structural_dynamic_params();
+  auto& problem = StructureTimeAda::problem();
+  const Teuchos::ParameterList& sdyn = problem.structural_dynamic_params();
   const Teuchos::ParameterList& jep = sdyn.sublist("TIMEADAPTIVITY").sublist("JOINT EXPLICIT");
 
   // get the parameters of the auxiliary integrator
@@ -49,15 +50,13 @@ void Adapter::StructureTimeAdaJoint::setup_auxiliary()
   sta_ = Solid::TimeInt::build_strategy(adyn);
 
   ///// setup dataio
-  Global::Problem* problem = Global::Problem::instance();
-  //
   std::shared_ptr<Teuchos::ParameterList> ioflags =
-      std::make_shared<Teuchos::ParameterList>(problem->io_params());
+      std::make_shared<Teuchos::ParameterList>(problem.io_params());
   ioflags->set("STDOUTEVERY", 0);
   //
   std::shared_ptr<Teuchos::ParameterList> xparams = std::make_shared<Teuchos::ParameterList>();
   Teuchos::ParameterList& nox = xparams->sublist("NOX");
-  nox = problem->structural_nox_params();
+  nox = problem.structural_nox_params();
   //
   std::shared_ptr<Core::IO::DiscretizationWriter> output = stm_->discretization()->writer();
   //
@@ -91,7 +90,7 @@ void Adapter::StructureTimeAdaJoint::setup_auxiliary()
   sta_->init(dataio, datasdyn, dataglobalstate);
   sta_->setup();
 
-  const int restart = Global::Problem::instance()->restart();
+  const int restart = problem.restart();
   if (restart)
   {
     sta_->post_setup();

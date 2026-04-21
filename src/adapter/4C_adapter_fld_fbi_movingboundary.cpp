@@ -18,10 +18,11 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::FBIFluidMB::FBIFluidMB(const Teuchos::ParameterList& prbdyn, std::string condname)
+Adapter::FBIFluidMB::FBIFluidMB(
+    Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname)
 {
   fluidadapter_ = std::make_shared<FluidBaseAlgorithm>(
-      prbdyn, Global::Problem::instance()->fluid_dynamic_params(), "fluid", false)
+      problem, prbdyn, problem.fluid_dynamic_params(), "fluid", false)
                       ->fluid_field();
   // make sure
   if (std::dynamic_pointer_cast<Adapter::FluidFBI>(fluid_field()) == nullptr)

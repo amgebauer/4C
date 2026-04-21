@@ -20,8 +20,9 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::FluidAleXFEM::FluidAleXFEM(const Teuchos::ParameterList& prbdyn, std::string condname)
-    : FluidAle(prbdyn, condname)
+Adapter::FluidAleXFEM::FluidAleXFEM(
+    Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname)
+    : FluidAle(problem, prbdyn, condname)
 {
   return;
 }

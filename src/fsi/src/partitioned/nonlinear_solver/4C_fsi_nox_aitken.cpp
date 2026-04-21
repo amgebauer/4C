@@ -25,9 +25,9 @@
 
 FOUR_C_NAMESPACE_OPEN
 
-FSI::Nonlinear::AitkenRelaxation::AitkenRelaxation(
-    const Teuchos::RCP<::NOX::Utils>& utils, Teuchos::ParameterList& params)
-    : utils_(utils)
+FSI::Nonlinear::AitkenRelaxation::AitkenRelaxation(const Teuchos::RCP<::NOX::Utils>& utils,
+    Teuchos::ParameterList& params, Global::Problem& problem)
+    : utils_(utils), problem_(problem)
 {
   Teuchos::ParameterList& p = params.sublist("Aitken");
   nu_ = p.get("Start nu", 0.0);
@@ -134,7 +134,7 @@ bool FSI::Nonlinear::AitkenRelaxation::compute(::NOX::Abstract::Group& grp, doub
     static std::ofstream* out;
     if (out == nullptr)
     {
-      std::string s = Global::Problem::instance()->output_control_file()->file_name();
+      std::string s = problem_.output_control_file()->file_name();
       s.append(".omega");
       out = new std::ofstream(s.c_str());
     }

@@ -18,6 +18,11 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace FSI
 {
   class DirichletNeumann;
@@ -47,7 +52,7 @@ namespace FSI
      * \return Coupling algorithm based on Dirichlet-Neumann partitioning
      */
     static std::shared_ptr<DirichletNeumann> create_algorithm(
-        MPI_Comm comm, const Teuchos::ParameterList& fsidyn);
+        MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& fsidyn);
   };
 }  // namespace FSI
 

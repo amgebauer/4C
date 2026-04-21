@@ -64,7 +64,8 @@ void ScaTra::MeshtyingStrategyArtery::init_meshtying()
 
   // construct artery scatra problem
   std::shared_ptr<Adapter::ScaTraBaseAlgorithm> art_scatra =
-      std::make_shared<Adapter::ScaTraBaseAlgorithm>(scatra_global_time_params, scatra_params,
+      std::make_shared<Adapter::ScaTraBaseAlgorithm>(*Global::Problem::instance(),
+          scatra_global_time_params, scatra_params,
           Global::Problem::instance()->solver_params(scatra_params.get<int>("LINEAR_SOLVER")),
           "artery_scatra", false);
 

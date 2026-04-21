@@ -15,12 +15,12 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-FSI::FluidXFEMAlgorithm::FluidXFEMAlgorithm(MPI_Comm comm)
-    : FluidMovingBoundaryBaseAlgorithm(
-          Global::Problem::instance()->fluid_dynamic_params(), "FSICoupling"),
-      comm_(comm)
+FSI::FluidXFEMAlgorithm::FluidXFEMAlgorithm(MPI_Comm comm, Global::Problem& problem)
+    : FluidMovingBoundaryBaseAlgorithm(problem, problem.fluid_dynamic_params(), "FSICoupling"),
+      comm_(comm),
+      problem_(problem)
 {
-  const Teuchos::ParameterList& fluiddyn = Global::Problem::instance()->fluid_dynamic_params();
+  const Teuchos::ParameterList& fluiddyn = problem_.fluid_dynamic_params();
 
   step_ = 0;
   time_ = 0.;
@@ -35,7 +35,7 @@ FSI::FluidXFEMAlgorithm::FluidXFEMAlgorithm(MPI_Comm comm)
 /*----------------------------------------------------------------------*/
 void FSI::FluidXFEMAlgorithm::timeloop()
 {
-  if (Global::Problem::instance()->get_problem_type() == Core::ProblemType::fluid_xfem)
+  if (problem_.get_problem_type() == Core::ProblemType::fluid_xfem)
   {
     if (Core::Communication::my_mpi_rank(get_comm()) == 0)
       std::cout << "Integrate routine for MOVING INTERFACES"

@@ -23,7 +23,8 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-FSI::DirichletNeumannSlideale::DirichletNeumannSlideale(MPI_Comm comm) : DirichletNeumann(comm)
+FSI::DirichletNeumannSlideale::DirichletNeumannSlideale(MPI_Comm comm, Global::Problem& problem)
+    : DirichletNeumann(comm, problem)
 {
   // empty constructor
 }
@@ -33,19 +34,21 @@ FSI::DirichletNeumannSlideale::DirichletNeumannSlideale(MPI_Comm comm) : Dirichl
 /*----------------------------------------------------------------------*/
 void FSI::DirichletNeumannSlideale::setup()
 {
+  auto& problem = this->problem();
+
   // call setup of base class
   FSI::DirichletNeumann::setup();
 
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem.fsi_dynamic_params();
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   set_kinematic_coupling(Teuchos::getIntegralValue<FSI::CoupVarPart>(fsipart, "COUPVARIABLE") ==
                          FSI::CoupVarPart::disp);
 
-  auto aletype = Teuchos::getIntegralValue<FSI::SlideALEProj>(
-      Global::Problem::instance()->fsi_dynamic_params(), "SLIDEALEPROJ");
+  auto aletype = Teuchos::getIntegralValue<FSI::SlideALEProj>(fsidyn, "SLIDEALEPROJ");
 
-  slideale_ = std::make_shared<FSI::Utils::SlideAleUtils>(structure_field()->discretization(),
-      mb_fluid_field()->discretization(), structure_fluid_coupling_mortar(), true, aletype);
+  slideale_ =
+      std::make_shared<FSI::Utils::SlideAleUtils>(problem, structure_field()->discretization(),
+          mb_fluid_field()->discretization(), structure_fluid_coupling_mortar(), true, aletype);
 
   islave_ = std::make_shared<Core::LinAlg::Vector<double>>(
       *structure_fluid_coupling_mortar().source_dof_map(), true);
@@ -155,7 +158,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::DirichletNeumannSlideale::ini
   }
   else
   {
-    const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+    const Teuchos::ParameterList& fsidyn = problem().fsi_dynamic_params();
     const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
     if (fsipart.get<std::string>("PREDICTOR") != "d(n)")
     {

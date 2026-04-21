@@ -15,8 +15,8 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-FSI::DirichletNeumann::DirichletNeumann(MPI_Comm comm)
-    : Partitioned(comm), kinematiccoupling_(false)
+FSI::DirichletNeumann::DirichletNeumann(MPI_Comm comm, Global::Problem& problem)
+    : Partitioned(comm, problem), kinematiccoupling_(false)
 {
   // empty constructor
 }

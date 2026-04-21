@@ -80,8 +80,8 @@ void loma_dyn(int restart)
             "TRANSPORT DYNAMIC to a valid number!");
 
       // create instance of scalar transport basis algorithm (no fluid discretization)
-      Adapter::ScaTraBaseAlgorithm scatraonly(
-          lomacontrol, scatradyn, Global::Problem::instance()->solver_params(linsolvernumber));
+      Adapter::ScaTraBaseAlgorithm scatraonly(*Global::Problem::instance(), lomacontrol, scatradyn,
+          Global::Problem::instance()->solver_params(linsolvernumber));
 
       // add proxy of velocity related degrees of freedom to scatra discretization
       std::shared_ptr<Core::DOFSets::DofSetInterface> dofsetaux =

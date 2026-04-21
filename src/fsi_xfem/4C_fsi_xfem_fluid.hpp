@@ -14,13 +14,18 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace FSI
 {
   /// Fluid on XFEM test algorithm
   class FluidXFEMAlgorithm : public Adapter::FluidMovingBoundaryBaseAlgorithm
   {
    public:
-    explicit FluidXFEMAlgorithm(MPI_Comm comm);
+    FluidXFEMAlgorithm(MPI_Comm comm, Global::Problem& problem);
 
     /// time loop
     void timeloop();
@@ -60,6 +65,9 @@ namespace FSI
    private:
     /// communication (mainly for screen output)
     MPI_Comm comm_;
+
+    /// explicit global problem context
+    Global::Problem& problem_;
 
     //! @name Time stepping variables
     int step_;

@@ -34,8 +34,8 @@ namespace Adapter
   {
    public:
     /// Constructor
-    FluidFSIMsht(std::shared_ptr<Fluid> fluid, std::shared_ptr<Core::FE::Discretization> dis,
-        std::shared_ptr<Core::LinAlg::Solver> solver,
+    FluidFSIMsht(Global::Problem& problem, std::shared_ptr<Fluid> fluid,
+        std::shared_ptr<Core::FE::Discretization> dis, std::shared_ptr<Core::LinAlg::Solver> solver,
         std::shared_ptr<Teuchos::ParameterList> params,
         std::shared_ptr<Core::IO::DiscretizationWriter> output, bool isale, bool dirichletcond);
 

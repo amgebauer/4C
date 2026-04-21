@@ -24,7 +24,6 @@
 #include "4C_fsi_nox_linearsystem_gcr.hpp"
 #include "4C_fsi_nox_mpe.hpp"
 #include "4C_fsi_nox_sd.hpp"
-#include "4C_fsi_problem_access.hpp"
 #include "4C_fsi_utils.hpp"
 #include "4C_global_data.hpp"
 #include "4C_io_control.hpp"
@@ -45,8 +44,8 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-FSI::Partitioned::Partitioned(MPI_Comm comm)
-    : Algorithm(comm),
+FSI::Partitioned::Partitioned(MPI_Comm comm, Global::Problem& problem)
+    : Algorithm(comm, problem),
       idispn_(nullptr),
       iveln_(nullptr),
       raw_graph_(nullptr),
@@ -66,7 +65,7 @@ void FSI::Partitioned::setup()
   // call setup of base class
   FSI::Algorithm::setup();
 
-  const Teuchos::ParameterList& fsidyn = FSI::Utils::fsi_dynamic_params_from_problem();
+  const Teuchos::ParameterList& fsidyn = problem().fsi_dynamic_params();
   set_default_parameters(fsidyn, noxparameterlist_);
   setup_coupling(fsidyn, get_comm());
 }
@@ -76,23 +75,23 @@ void FSI::Partitioned::setup()
 /*----------------------------------------------------------------------*/
 void FSI::Partitioned::setup_coupling(const Teuchos::ParameterList& fsidyn, MPI_Comm comm)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
+  auto& problem = this->problem();
 
   if (Core::Communication::my_mpi_rank(get_comm()) == 0)
     std::cout << "\n setup_coupling in FSI::Partitioned ..." << std::endl;
 
   Coupling::Adapter::Coupling& coupsf = structure_fluid_coupling();
-  coupsfm_ = std::make_shared<Coupling::Adapter::CouplingMortar>(problem->n_dim(),
-      problem->mortar_coupling_params(), problem->contact_dynamic_params(),
-      problem->spatial_approximation_type());
+  coupsfm_ = std::make_shared<Coupling::Adapter::CouplingMortar>(problem.n_dim(),
+      problem.mortar_coupling_params(), problem.contact_dynamic_params(),
+      problem.spatial_approximation_type());
 
 
   if (fsidyn.sublist("PARTITIONED SOLVER").get<std::string>("COUPMETHOD") == "conforming" and
-      (problem->get_problem_type() != Core::ProblemType::fsi_xfem) and
-      (problem->get_problem_type() != Core::ProblemType::fbi))
+      (problem.get_problem_type() != Core::ProblemType::fsi_xfem) and
+      (problem.get_problem_type() != Core::ProblemType::fbi))
   {
     matchingnodes_ = true;
-    const int ndim = problem->n_dim();
+    const int ndim = problem.n_dim();
     coupsf.setup_condition_coupling(*structure_field()->discretization(),
         structure_field()->interface()->fsi_cond_map(), *mb_fluid_field()->discretization(),
         mb_fluid_field()->interface()->fsi_cond_map(), "FSICoupling", ndim);
@@ -101,13 +100,13 @@ void FSI::Partitioned::setup_coupling(const Teuchos::ParameterList& fsidyn, MPI_
       FOUR_C_THROW("No nodes in matching FSI interface. Empty FSI coupling condition?");
   }
   else if ((fsidyn.sublist("PARTITIONED SOLVER").get<std::string>("COUPMETHOD") == "conforming") and
-           (problem->get_problem_type() == Core::ProblemType::fsi_xfem) and
-           (problem->get_problem_type() != Core::ProblemType::fbi))
+           (problem.get_problem_type() == Core::ProblemType::fsi_xfem) and
+           (problem.get_problem_type() != Core::ProblemType::fbi))
   {
     // matching between structure and boundary dis! non-matching between boundary dis and fluid is
     // handled bei XFluid itself
     matchingnodes_ = true;
-    const int ndim = problem->n_dim();
+    const int ndim = problem.n_dim();
 
     std::shared_ptr<Adapter::FluidXFEM> x_movingboundary =
         std::dynamic_pointer_cast<Adapter::FluidXFEM>(mb_fluid_field());
@@ -119,25 +118,25 @@ void FSI::Partitioned::setup_coupling(const Teuchos::ParameterList& fsidyn, MPI_
     if (coupsf.target_dof_map()->num_global_elements() == 0)
       FOUR_C_THROW("No nodes in matching FSI interface. Empty FSI coupling condition?");
   }
-  else if ((problem->get_problem_type() == Core::ProblemType::fbi))
+  else if ((problem.get_problem_type() == Core::ProblemType::fbi))
   {
     matchingnodes_ = true;
   }
   else if (fsidyn.sublist("PARTITIONED SOLVER").get<std::string>("COUPMETHOD") == "mortar" and
-           (problem->get_problem_type() != Core::ProblemType::fsi_xfem))
+           (problem.get_problem_type() != Core::ProblemType::fsi_xfem))
   {
     // coupling condition at the fsi interface: displacements (=number of spatial dimensions) are
     // coupled e.g.: 3D: coupleddof = [1, 1, 1]
-    std::vector<int> coupleddof(problem->n_dim(), 1);
+    std::vector<int> coupleddof(problem.n_dim(), 1);
 
     matchingnodes_ = false;
     coupsfm_->setup(structure_field()->discretization(), mb_fluid_field()->discretization(),
         (std::dynamic_pointer_cast<Adapter::FluidAle>(mb_fluid_field()))
             ->ale_field()
             ->write_access_discretization(),
-        coupleddof, "FSICoupling", comm, problem->function_manager(),
-        problem->binning_strategy_params(), problem->discretization_map(),
-        problem->output_control_file(), problem->spatial_approximation_type(), true);
+        coupleddof, "FSICoupling", comm, problem.function_manager(),
+        problem.binning_strategy_params(), problem.discretization_map(),
+        problem.output_control_file(), problem.spatial_approximation_type(), true);
   }
   else
   {
@@ -209,7 +208,7 @@ void FSI::Partitioned::set_default_parameters(
       dirParams.set("User Defined Direction Factory", fixpointfactory);
 
       Teuchos::RCP<::NOX::LineSearch::UserDefinedFactory> linesearchfactory =
-          Teuchos::make_rcp<FSI::Nonlinear::AitkenFactory>();
+          Teuchos::make_rcp<FSI::Nonlinear::AitkenFactory>(problem());
       lineSearchParams.set("Method", "User Defined");
       lineSearchParams.set("User Defined Line Search Factory", linesearchfactory);
 
@@ -231,7 +230,7 @@ void FSI::Partitioned::set_default_parameters(
       dirParams.set("User Defined Direction Factory", fixpointfactory);
 
       Teuchos::RCP<::NOX::LineSearch::UserDefinedFactory> linesearchfactory =
-          Teuchos::make_rcp<FSI::Nonlinear::SDFactory>();
+          Teuchos::make_rcp<FSI::Nonlinear::SDFactory>(problem());
       lineSearchParams.set("Method", "User Defined");
       lineSearchParams.set("User Defined Line Search Factory", linesearchfactory);
       break;
@@ -338,8 +337,8 @@ void FSI::Partitioned::set_default_parameters(
 /*----------------------------------------------------------------------*/
 void FSI::Partitioned::timeloop(const std::shared_ptr<NOX::Nln::Interface::RequiredBase> interface)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
-  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
+  auto& problem = this->problem();
+  const Teuchos::ParameterList& fsidyn = problem.fsi_dynamic_params();
 
   // Get the top level parameter list
   Teuchos::ParameterList& nlParams = noxparameterlist_;
@@ -362,7 +361,7 @@ void FSI::Partitioned::timeloop(const std::shared_ptr<NOX::Nln::Interface::Requi
   std::shared_ptr<std::ofstream> log;
   if (Core::Communication::my_mpi_rank(get_comm()) == 0)
   {
-    std::string s = problem->output_control_file()->file_name();
+    std::string s = problem.output_control_file()->file_name();
     s.append(".iteration");
     log = std::make_shared<std::ofstream>(s.c_str());
     (*log) << "# num procs      = " << Core::Communication::num_mpi_ranks(get_comm()) << "\n"
@@ -750,7 +749,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::Partitioned::struct_op(
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::Partitioned::interface_velocity(
     const Core::LinAlg::Vector<double>& idispnp) const
 {
-  const Teuchos::ParameterList& fsidyn = FSI::Utils::fsi_dynamic_params_from_problem();
+  const Teuchos::ParameterList& fsidyn = problem().fsi_dynamic_params();
   std::shared_ptr<Core::LinAlg::Vector<double>> ivel = nullptr;
 
   if (fsidyn.get<bool>("SECONDORDER"))
@@ -837,8 +836,7 @@ void FSI::Partitioned::output()
   // call base class version
   FSI::Algorithm::output();
 
-  switch (Teuchos::getIntegralValue<FsiCoupling>(
-      FSI::Utils::fsi_dynamic_params_from_problem(), "COUPALGO"))
+  switch (Teuchos::getIntegralValue<FsiCoupling>(problem().fsi_dynamic_params(), "COUPALGO"))
   {
     case fsi_iter_stagg_AITKEN_rel_param:
     {
@@ -865,17 +863,17 @@ void FSI::Partitioned::output()
 /*----------------------------------------------------------------------*/
 void FSI::Partitioned::read_restart(int step)
 {
-  Global::Problem* problem = FSI::Utils::problem_from_instance();
+  auto& problem = this->problem();
 
   // call base class version
   FSI::Algorithm::read_restart(step);
 
-  switch (Teuchos::getIntegralValue<FsiCoupling>(problem->fsi_dynamic_params(), "COUPALGO"))
+  switch (Teuchos::getIntegralValue<FsiCoupling>(problem.fsi_dynamic_params(), "COUPALGO"))
   {
     case fsi_iter_stagg_AITKEN_rel_param:
     {
       double omega = -1234.0;
-      auto input_control_file = problem->input_control_file();
+      auto input_control_file = problem.input_control_file();
 
       if (std::dynamic_pointer_cast<Adapter::FBIFluidMB>(mb_fluid_field()) != nullptr)
       {

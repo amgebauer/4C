@@ -51,8 +51,13 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------------*
  *----------------------------------------------------------------------------*/
-Adapter::StructureBaseAlgorithmNew::StructureBaseAlgorithmNew()
-    : str_wrapper_(nullptr), prbdyn_(nullptr), sdyn_(nullptr), isinit_(false), issetup_(false)
+Adapter::StructureBaseAlgorithmNew::StructureBaseAlgorithmNew(Global::Problem& problem)
+    : str_wrapper_(nullptr),
+      prbdyn_(nullptr),
+      sdyn_(nullptr),
+      problem_(problem),
+      isinit_(false),
+      issetup_(false)
 {
   // empty
 }
@@ -124,7 +129,7 @@ void Adapter::StructureBaseAlgorithmNew::setup_tim_int()
   if (not is_init()) FOUR_C_THROW("You have to call init() first!");
 
   // get the problem instance
-  Global::Problem* problem = Global::Problem::instance();
+  Global::Problem* problem = &problem_;
   // get the restart step
   const int restart = problem->restart();
 
@@ -142,10 +147,9 @@ void Adapter::StructureBaseAlgorithmNew::setup_tim_int()
   if (actdis_->has_condition("PointCoupling"))
   {
     std::vector<std::shared_ptr<Core::FE::Discretization>> actdis_vec(1, actdis_);
-    Teuchos::ParameterList binning_params = Global::Problem::instance()->binning_strategy_params();
+    Teuchos::ParameterList binning_params = problem->binning_strategy_params();
     Core::Utils::add_enum_class_to_parameter_list<Core::FE::ShapeFunctionType>(
-        "spatial_approximation_type", Global::Problem::instance()->spatial_approximation_type(),
-        binning_params);
+        "spatial_approximation_type", problem->spatial_approximation_type(), binning_params);
     actdis_vec[0]->fill_complete(Core::FE::OptionsFillComplete::none());
 
     // Different types of structural elements may be present, so we need to help the binning
@@ -187,8 +191,8 @@ void Adapter::StructureBaseAlgorithmNew::setup_tim_int()
     try
     {
       Core::Rebalance::rebalance_discretizations_by_binning(binning_params,
-          Global::Problem::instance()->output_control_file(), actdis_vec, correct_node,
-          determine_relevant_points, true);
+          problem->output_control_file(), actdis_vec, correct_node, determine_relevant_points,
+          true);
     }
     catch (const Core::DOFSets::NodalDistributionException& e)
     {
@@ -330,6 +334,8 @@ void Adapter::StructureBaseAlgorithmNew::set_model_types(
     std::set<Inpar::Solid::ModelType>& modeltypes) const
 {
   if (not is_init()) FOUR_C_THROW("You have to call init() first!");
+  auto* problem = &problem_;
+
   // ---------------------------------------------------------------------------
   // check for meshtying and contact conditions
   // ---------------------------------------------------------------------------
@@ -339,14 +345,14 @@ void Adapter::StructureBaseAlgorithmNew::set_model_types(
   if (ccond.size())
   {
     // what's the current problem type?
-    Core::ProblemType probtype = Global::Problem::instance()->get_problem_type();
+    Core::ProblemType probtype = problem->get_problem_type();
     // ToDo: once the new structural time integration can handle
     //       condensed contact formulations, the model_evaluator
     //       can have its contact model. For now, the TSI Lagrange
     //       strategy resides in the TSI algorithm.
     if (probtype == Core::ProblemType::tsi)
     {
-      const Teuchos::ParameterList& contact = Global::Problem::instance()->contact_dynamic_params();
+      const Teuchos::ParameterList& contact = problem->contact_dynamic_params();
       if (Teuchos::getIntegralValue<CONTACT::SolvingStrategy>(contact, "STRATEGY") ==
           CONTACT::SolvingStrategy::nitsche)
         modeltypes.insert(Inpar::Solid::model_contact);
@@ -417,8 +423,6 @@ void Adapter::StructureBaseAlgorithmNew::set_model_types(
   // ---------------------------------------------------------------------------
   // check for coupled problems
   // ---------------------------------------------------------------------------
-  // get the problem instance
-  Global::Problem* problem = Global::Problem::instance();
   // what's the current problem type?
   Core::ProblemType probtype = problem->get_problem_type();
   switch (probtype)
@@ -506,7 +510,7 @@ void Adapter::StructureBaseAlgorithmNew::set_model_types(
   // ---------------------------------------------------------------------------
   // check for brownian dynamics
   // ---------------------------------------------------------------------------
-  if (Global::Problem::instance()->brownian_dynamics_params().get<bool>("BROWNDYNPROB"))
+  if (problem->brownian_dynamics_params().get<bool>("BROWNDYNPROB"))
     modeltypes.insert(Inpar::Solid::model_browniandyn);
 
   // ---------------------------------------------------------------------------
@@ -517,32 +521,24 @@ void Adapter::StructureBaseAlgorithmNew::set_model_types(
   std::vector<const Core::Conditions::Condition*> beamtobeamcontactconditions;
   actdis_->get_condition("BeamToBeamContact", beamtobeamcontactconditions);
 
-  if (Global::Problem::instance()
-          ->beam_interaction_params()
-          .sublist("CROSSLINKING")
-          .get<bool>("CROSSLINKER") or
-      Global::Problem::instance()
-          ->beam_interaction_params()
+  if (problem->beam_interaction_params().sublist("CROSSLINKING").get<bool>("CROSSLINKER") or
+      problem->beam_interaction_params()
           .sublist("SPHERE BEAM LINK")
           .get<bool>("SPHEREBEAMLINKING") or
       beamtobeamcontactconditions.size() > 0 or
       Teuchos::getIntegralValue<BeamInteraction::Strategy>(
-          Global::Problem::instance()->beam_interaction_params().sublist("BEAM TO SPHERE CONTACT"),
-          "STRATEGY") != BeamInteraction::Strategy::bstr_none or
+          problem->beam_interaction_params().sublist("BEAM TO SPHERE CONTACT"), "STRATEGY") !=
+          BeamInteraction::Strategy::bstr_none or
       Teuchos::getIntegralValue<BeamToSolid::BeamToSolidContactDiscretization>(
-          Global::Problem::instance()->beam_interaction_params().sublist(
-              "BEAM TO SOLID VOLUME MESHTYING"),
+          problem->beam_interaction_params().sublist("BEAM TO SOLID VOLUME MESHTYING"),
           "CONTACT_DISCRETIZATION") != BeamToSolid::BeamToSolidContactDiscretization::none or
       Teuchos::getIntegralValue<BeamToSolid::BeamToSolidContactDiscretization>(
-          Global::Problem::instance()->beam_interaction_params().sublist(
-              "BEAM TO SOLID SURFACE MESHTYING"),
+          problem->beam_interaction_params().sublist("BEAM TO SOLID SURFACE MESHTYING"),
           "CONTACT_DISCRETIZATION") != BeamToSolid::BeamToSolidContactDiscretization::none or
       Teuchos::getIntegralValue<BeamToSolid::BeamToSolidContactDiscretization>(
-          Global::Problem::instance()->beam_interaction_params().sublist(
-              "BEAM TO SOLID SURFACE CONTACT"),
+          problem->beam_interaction_params().sublist("BEAM TO SOLID SURFACE CONTACT"),
           "CONTACT_DISCRETIZATION") != BeamToSolid::BeamToSolidContactDiscretization::none or
-      Global::Problem::instance()->parameters().isParameter(
-          "BEAM INTERACTION/BEAM TO SOLID EDGE CONTACT") or
+      problem->parameters().isParameter("BEAM INTERACTION/BEAM TO SOLID EDGE CONTACT") or
       beampotconditions.size() > 0 or beampenaltycouplingconditions_direct.size() > 0 or
       beampenaltycouplingconditions_indirect.size() > 0)
   {
@@ -637,7 +633,7 @@ void Adapter::StructureBaseAlgorithmNew::set_params(Teuchos::ParameterList& iofl
     Teuchos::ParameterList& xparams, Teuchos::ParameterList& time_adaptivity_params)
 {
   // get the problem instance and the problem type
-  Global::Problem* problem = Global::Problem::instance();
+  Global::Problem* problem = &problem_;
   Core::ProblemType probtype = problem->get_problem_type();
 
   // ---------------------------------------------------------------------------
@@ -788,7 +784,7 @@ void Adapter::StructureBaseAlgorithmNew::set_structure_wrapper(
 {
   // try to firstly create the adaptive wrapper
   if (!str_wrapper_)
-    str_wrapper_ = Adapter::StructureTimeAda::create(time_adaptivity_params, ti_strategy);
+    str_wrapper_ = Adapter::StructureTimeAda::create(problem_, time_adaptivity_params, ti_strategy);
 
   // if no adaptive wrapper was found, we try to create a standard one
   if (!str_wrapper_) create_wrapper(ti_strategy);
@@ -803,7 +799,7 @@ void Adapter::StructureBaseAlgorithmNew::create_wrapper(
     std::shared_ptr<Solid::TimeInt::Base> ti_strategy)
 {
   // get the problem instance and the problem type
-  Global::Problem* problem = Global::Problem::instance();
+  Global::Problem* problem = &problem_;
   Core::ProblemType probtype = problem->get_problem_type();
 
   switch (probtype)
@@ -824,12 +820,12 @@ void Adapter::StructureBaseAlgorithmNew::create_wrapper(
           Core::IO::cout << "Using StructureNOXCorrectionWrapper()..." << Core::IO::endl;
 
         str_wrapper_ = std::make_shared<StructureConstrMerged>(
-            std::make_shared<StructureNOXCorrectionWrapper>(ti_strategy));
+            problem_, std::make_shared<StructureNOXCorrectionWrapper>(ti_strategy));
       }
       else
       {
         // case of partitioned fsi
-        str_wrapper_ = std::make_shared<FSIStructureWrapper>(ti_strategy);
+        str_wrapper_ = std::make_shared<FSIStructureWrapper>(problem_, ti_strategy);
       }
       break;
     }
@@ -839,7 +835,7 @@ void Adapter::StructureBaseAlgorithmNew::create_wrapper(
       if (Teuchos::getIntegralValue<FSI::PartitionedCouplingMethod>(
               fsidyn.sublist("PARTITIONED SOLVER"), "PARTITIONED") ==
           FSI::PartitionedCouplingMethod::DirichletNeumann)
-        str_wrapper_ = std::make_shared<FBIStructureWrapper>(ti_strategy);
+        str_wrapper_ = std::make_shared<FBIStructureWrapper>(problem_, ti_strategy);
       else
         FOUR_C_THROW("Only DirichletNeumann is implemented for FBI so far");
       break;
@@ -872,19 +868,19 @@ void Adapter::StructureBaseAlgorithmNew::create_wrapper(
         if (coupling == PoroElast::SolutionSchemeOverFields::Monolithic_structuresplit or
             coupling == PoroElast::SolutionSchemeOverFields::Monolithic_fluidsplit or
             coupling == PoroElast::SolutionSchemeOverFields::Monolithic_nopenetrationsplit)
-          str_wrapper_ = std::make_shared<FPSIStructureWrapper>(ti_strategy);
+          str_wrapper_ = std::make_shared<FPSIStructureWrapper>(problem_, ti_strategy);
         else
-          str_wrapper_ = std::make_shared<StructureConstrMerged>(ti_strategy);
+          str_wrapper_ = std::make_shared<StructureConstrMerged>(problem_, ti_strategy);
       }
       else
       {
-        str_wrapper_ = std::make_shared<FPSIStructureWrapper>(ti_strategy);
+        str_wrapper_ = std::make_shared<FPSIStructureWrapper>(problem_, ti_strategy);
       }
       break;
     }
     default:
       /// wrap time loop for pure structure problems
-      str_wrapper_ = (std::make_shared<StructureTimeLoop>(ti_strategy));
+      str_wrapper_ = (std::make_shared<StructureTimeLoop>(problem_, ti_strategy));
       break;
   }
 }

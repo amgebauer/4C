@@ -54,7 +54,7 @@ namespace FSI
      *
      * @param[in] comm Communicator
      */
-    explicit DirichletNeumannSlideale(MPI_Comm comm);
+    explicit DirichletNeumannSlideale(MPI_Comm comm, Global::Problem& problem);
 
    public:
     /// setup this object

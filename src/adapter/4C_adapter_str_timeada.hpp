@@ -20,6 +20,11 @@ namespace Solid::TimeInt
   class Base;
 }  // namespace Solid::TimeInt
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   /*! \brief Adaptive time loop for structural simulations
@@ -57,11 +62,11 @@ namespace Adapter
     };
 
     /// constructor
-    explicit StructureTimeAda(std::shared_ptr<Structure> structure);
+    StructureTimeAda(Global::Problem& problem, std::shared_ptr<Structure> structure);
 
     /*! \brief Utility function to create the adaptive time integration structure wrapper
      */
-    static std::shared_ptr<Structure> create(
+    static std::shared_ptr<Structure> create(Global::Problem& problem,
         const Teuchos::ParameterList& taflags,  //!< adaptive input flags
         std::shared_ptr<Solid::TimeInt::Base> ti_strategy);
 
@@ -196,7 +201,14 @@ namespace Adapter
     /// setup of the auxiliary time integrator
     virtual void setup_auxiliary() = 0;
 
+    /// explicit global problem context
+    Global::Problem& problem() { return problem_; }
+    const Global::Problem& problem() const { return problem_; }
+
    private:
+    /// explicit global problem context
+    Global::Problem& problem_;
+
     //! Setup necessities for time adaptivity
     void setup_time_ada();
 

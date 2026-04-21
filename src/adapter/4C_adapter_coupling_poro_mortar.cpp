@@ -26,17 +26,18 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*
  |  ctor                                                      ager 10/15|
  *----------------------------------------------------------------------*/
-Adapter::CouplingPoroMortar::CouplingPoroMortar(int spatial_dimension,
+Adapter::CouplingPoroMortar::CouplingPoroMortar(Global::Problem& problem, int spatial_dimension,
     Teuchos::ParameterList mortar_coupling_params, Teuchos::ParameterList contact_dynamic_params,
     Core::FE::ShapeFunctionType shape_function_type)
-    : CouplingNonLinMortar(
-          spatial_dimension, mortar_coupling_params, contact_dynamic_params, shape_function_type),
+    : CouplingNonLinMortar(problem, spatial_dimension, mortar_coupling_params,
+          contact_dynamic_params, shape_function_type),
       firstinit_(false),
       slavetype_(-1),
       mastertype_(-1)
 {
   // empty...
 }
+
 
 /*----------------------------------------------------------------------*
  |  Read Mortar Condition                                     ager 10/15|
@@ -49,12 +50,14 @@ void Adapter::CouplingPoroMortar::read_mortar_condition(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& masterelements,
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements)
 {
+  auto* problem = &CouplingNonLinMortar::problem();
+
   // Call Base Class
   CouplingNonLinMortar::read_mortar_condition(masterdis, slavedis, coupleddof, couplingcond, input,
       mastergnodes, slavegnodes, masterelements, slaveelements);
 
   // Set Problem Type to Poro
-  switch (Global::Problem::instance()->get_problem_type())
+  switch (problem->get_problem_type())
   {
     case Core::ProblemType::poroelast:
       input.set<CONTACT::Problemtype>("PROBTYPE", CONTACT::Problemtype::poroelast);
@@ -68,11 +71,11 @@ void Adapter::CouplingPoroMortar::read_mortar_condition(
   }
 
   // porotimefac = 1/(theta*dt) --- required for derivation of structural displacements!
-  const Teuchos::ParameterList& stru = Global::Problem::instance()->structural_dynamic_params();
+  const Teuchos::ParameterList& stru = problem->structural_dynamic_params();
   double porotimefac =
       1 / (stru.sublist("ONESTEPTHETA").get<double>("THETA") * stru.get<double>("TIMESTEP"));
   input.set<double>("porotimefac", porotimefac);
-  const Teuchos::ParameterList& porodyn = Global::Problem::instance()->poroelast_dynamic_params();
+  const Teuchos::ParameterList& porodyn = problem->poroelast_dynamic_params();
   input.set<bool>("CONTACT_NO_PENETRATION",
       porodyn.get<bool>("CONTACT_NO_PENETRATION"));  // used in the integrator
   if (!porodyn.get<bool>("CONTACT_NO_PENETRATION"))
@@ -89,10 +92,12 @@ void Adapter::CouplingPoroMortar::add_mortar_elements(
     std::map<int, std::shared_ptr<Core::Elements::Element>>& slaveelements,
     std::shared_ptr<CONTACT::Interface>& interface, int numcoupleddof)
 {
+  auto* problem = &CouplingNonLinMortar::problem();
+
   bool isnurbs = input.get<bool>("NURBS");
 
   // get problem dimension (2D or 3D) and create (Mortar::Interface)
-  const int dim = Global::Problem::instance()->n_dim();
+  const int dim = problem->n_dim();
 
   // feeding master elements to the interface
   std::map<int, std::shared_ptr<Core::Elements::Element>>::const_iterator elemiter;
@@ -242,10 +247,12 @@ void Adapter::CouplingPoroMortar::create_strategy(
     std::shared_ptr<Core::FE::Discretization> slavedis, Teuchos::ParameterList& input,
     int numcoupleddof)
 {
+  auto* problem = &CouplingNonLinMortar::problem();
+
   // poro lagrange strategy:
 
   // get problem dimension (2D or 3D) and create (Mortar::Interface)
-  const int dim = Global::Problem::instance()->n_dim();
+  const int dim = problem->n_dim();
 
   // bools to decide which side is structural and which side is poroelastic to manage all 4
   // constellations
@@ -313,7 +320,7 @@ void Adapter::CouplingPoroMortar::create_strategy(
     }
   }
 
-  const Teuchos::ParameterList& stru = Global::Problem::instance()->structural_dynamic_params();
+  const Teuchos::ParameterList& stru = problem->structural_dynamic_params();
   double theta = stru.sublist("ONESTEPTHETA").get<double>("THETA");
   // what if problem is static ? there should be an error for previous line called in a dyna_statics
   // problem and not a value of 0.5 a proper distinction is necessary if poro meshtying is expanded
@@ -350,11 +357,12 @@ void Adapter::CouplingPoroMortar::complete_interface(
     std::shared_ptr<Core::FE::Discretization> masterdis,
     std::shared_ptr<CONTACT::Interface>& interface)
 {
+  auto* problem = &CouplingNonLinMortar::problem();
+
   // finalize the contact interface construction
   int maxdof = masterdis->dof_row_map()->max_all_gid();
-  interface->fill_complete({}, Global::Problem::instance()->binning_strategy_params(),
-      Global::Problem::instance()->output_control_file(),
-      Global::Problem::instance()->spatial_approximation_type(), true, maxdof);
+  interface->fill_complete({}, problem->binning_strategy_params(), problem->output_control_file(),
+      problem->spatial_approximation_type(), true, maxdof);
 
   // interface->create_volume_ghosting(*masterdis);
 

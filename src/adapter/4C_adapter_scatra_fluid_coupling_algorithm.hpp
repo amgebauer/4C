@@ -35,10 +35,10 @@ namespace Adapter
                                        public Adapter::ScaTraBaseAlgorithm
   {
    public:
-    ScaTraFluidCouplingAlgorithm(MPI_Comm comm,  ///< communicator
-        const Teuchos::ParameterList& prbdyn,    ///< problem-specific parameters
-        bool isale,                              ///< do we need an ALE formulation of the fields?
-        const std::string scatra_disname,        ///< scatra discretization name
+    ScaTraFluidCouplingAlgorithm(Global::Problem& problem, MPI_Comm comm,  ///< communicator
+        const Teuchos::ParameterList& prbdyn,                              ///< problem parameters
+        bool isale,                        ///< do we need an ALE formulation of the fields?
+        const std::string scatra_disname,  ///< scatra discretization name
         const Teuchos::ParameterList& solverparams);
 
     /// setup this class

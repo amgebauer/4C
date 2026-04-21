@@ -13,11 +13,11 @@ FOUR_C_NAMESPACE_OPEN
 
 /*======================================================================*/
 /* constructor */
-Adapter::FluidFSIMsht::FluidFSIMsht(std::shared_ptr<Fluid> fluid,
+Adapter::FluidFSIMsht::FluidFSIMsht(Global::Problem& problem, std::shared_ptr<Fluid> fluid,
     std::shared_ptr<Core::FE::Discretization> dis, std::shared_ptr<Core::LinAlg::Solver> solver,
     std::shared_ptr<Teuchos::ParameterList> params,
     std::shared_ptr<Core::IO::DiscretizationWriter> output, bool isale, bool dirichletcond)
-    : FluidFSI(fluid, dis, solver, params, output, isale, dirichletcond),
+    : FluidFSI(problem, fluid, dis, solver, params, output, isale, dirichletcond),
       fsiinterface_(std::make_shared<FLD::Utils::FsiMapExtractor>())
 {
   return;

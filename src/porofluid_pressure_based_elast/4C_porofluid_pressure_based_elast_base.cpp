@@ -11,6 +11,7 @@
 #include "4C_adapter_str_factory.hpp"
 #include "4C_adapter_str_structure_new.hpp"
 #include "4C_fem_discretization.hpp"
+#include "4C_global_data.hpp"
 #include "4C_io.hpp"
 #include "4C_io_control.hpp"
 #include "4C_linalg_utils_sparse_algebra_create.hpp"
@@ -25,7 +26,7 @@ FOUR_C_NAMESPACE_OPEN
  *----------------------------------------------------------------------*/
 PoroPressureBased::PorofluidElastAlgorithm::PorofluidElastAlgorithm(
     MPI_Comm comm, const Teuchos::ParameterList& globaltimeparams)
-    : AlgorithmBase(comm, globaltimeparams),
+    : AlgorithmBase(*Global::Problem::instance(), comm, globaltimeparams),
       structure_algo_(nullptr),
       porofluid_algo_(nullptr),
       solve_structure_(true)
@@ -53,7 +54,7 @@ void PoroPressureBased::PorofluidElastAlgorithm::init(
 
   // build underlying structure algorithm
   std::shared_ptr<Adapter::StructureBaseAlgorithmNew> structure_adapter_algo =
-      Adapter::build_structure_algorithm(structure_params);
+      Adapter::build_structure_algorithm(*Global::Problem::instance(), structure_params);
 
   // Translate updated porofluid input format to old structure format
   Teuchos::ParameterList structure_global_time_params;

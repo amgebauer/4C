@@ -22,14 +22,14 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algorithm(
-    MPI_Comm comm, const Teuchos::ParameterList& fsidyn)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& fsidyn)
 {
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   auto method = Teuchos::getIntegralValue<FSI::PartitionedCouplingMethod>(fsipart, "PARTITIONED");
   switch (method)
   {
     case FSI::PartitionedCouplingMethod::DirichletNeumannSlideale:
-      switch (Global::Problem::instance()->get_problem_type())
+      switch (problem.get_problem_type())
       {
         case (Core::ProblemType::fsi):
         case (Core::ProblemType::fsi_redmodels):
@@ -41,7 +41,8 @@ std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algo
                 "interface velocities. Check your problem type!");
           }
           else
-            return std::shared_ptr<FSI::DirichletNeumann>(new FSI::DirichletNeumannSlideale(comm));
+            return std::shared_ptr<FSI::DirichletNeumann>(
+                new FSI::DirichletNeumannSlideale(comm, problem));
           break;
         default:
           FOUR_C_THROW("Your problem does not work with DirichletNeumann Slide ALE yet!!");
@@ -49,7 +50,7 @@ std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algo
       }
       break;
     case FSI::PartitionedCouplingMethod::DirichletNeumannVolCoupl:
-      switch (Global::Problem::instance()->get_problem_type())
+      switch (problem.get_problem_type())
       {
         case (Core::ProblemType::fsi):
         case (Core::ProblemType::fsi_redmodels):
@@ -61,7 +62,8 @@ std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algo
                 "interface velocities. Check your problem type!");
           }
           else
-            return std::shared_ptr<FSI::DirichletNeumann>(new FSI::DirichletNeumannVolCoupl(comm));
+            return std::shared_ptr<FSI::DirichletNeumann>(
+                new FSI::DirichletNeumannVolCoupl(comm, problem));
           break;
         default:
           FOUR_C_THROW("Your problem does not work with DirichletNeumann Volume Coupling yet!!");
@@ -69,7 +71,7 @@ std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algo
       }
       break;
     case FSI::PartitionedCouplingMethod::DirichletNeumann:
-      switch (Global::Problem::instance()->get_problem_type())
+      switch (problem.get_problem_type())
       {
         case (Core::ProblemType::fsi):
         case (Core::ProblemType::fsi_redmodels):
@@ -82,7 +84,8 @@ std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algo
                 "interface velocities. Check your problem type!");
           }
           else
-            return std::shared_ptr<FSI::DirichletNeumann>(new FSI::DirichletNeumannDisp(comm));
+            return std::shared_ptr<FSI::DirichletNeumann>(
+                new FSI::DirichletNeumannDisp(comm, problem));
           break;
         case (Core::ProblemType::fbi):
           if (Teuchos::getIntegralValue<FSI::CoupVarPart>(fsipart, "COUPVARIABLE") ==
@@ -93,7 +96,8 @@ std::shared_ptr<FSI::DirichletNeumann> FSI::DirichletNeumannFactory::create_algo
                 "interface displacements. Check your problem type!");
           }
           else
-            return std::shared_ptr<FSI::DirichletNeumann>(new FSI::DirichletNeumannVel(comm));
+            return std::shared_ptr<FSI::DirichletNeumann>(
+                new FSI::DirichletNeumannVel(comm, problem));
           break;
         default:
           FOUR_C_THROW("Your problem does not work with DirichletNeumann yet!!");

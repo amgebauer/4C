@@ -19,24 +19,25 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   /// fluid field solver
   class FluidBaseAlgorithm
   {
    public:
-    /// constructor which distinguishes different discretizations for different fluids in
-    /// multi-fluid field problems // rauch 09/13
-    explicit FluidBaseAlgorithm(const Teuchos::ParameterList& prbdyn,
+    /// constructor with explicit global problem context
+    explicit FluidBaseAlgorithm(Global::Problem& problem, const Teuchos::ParameterList& prbdyn,
         const Teuchos::ParameterList& fdyn, const std::string& disname, bool isale,
         bool init = true);  // initialize time-integration scheme immediately
-    // remark: parameter init allows for distinguishing an immediate initialization of all members
-    // and state vectors and a
-    //         later initialization which enables a later modifications of the maps
 
-    /// second constructor (special version for turbulent flows with separate inflow
-    /// section for generation of turbulent inflow profiles)
-    explicit FluidBaseAlgorithm(const Teuchos::ParameterList& prbdyn,
+    /// second constructor with explicit global problem context (special version for turbulent
+    /// flows with separate inflow section for generation of turbulent inflow profiles)
+    explicit FluidBaseAlgorithm(Global::Problem& problem, const Teuchos::ParameterList& prbdyn,
         const std::shared_ptr<Core::FE::Discretization> discret);
 
     /// virtual destructor to support polymorph destruction
@@ -77,6 +78,9 @@ namespace Adapter
 
     /// fluid field solver
     std::shared_ptr<Fluid> fluid_;
+
+    /// explicit global problem context
+    Global::Problem& problem_;
   };
 
 }  // namespace Adapter

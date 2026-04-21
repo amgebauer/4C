@@ -54,7 +54,7 @@ namespace FSI
 
    public:
     explicit MortarMonolithicFluidSplitSaddlePoint(
-        MPI_Comm comm, const Teuchos::ParameterList& timeparams);
+        MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams);
 
     void setup_system() final;
 

@@ -19,35 +19,34 @@ FOUR_C_NAMESPACE_OPEN
 
 namespace
 {
-  bool prestress_is_active(const double currentTime)
+  bool prestress_is_active(const Global::Problem& problem, const double currentTime)
   {
     Inpar::Solid::PreStress pstype = Teuchos::getIntegralValue<Inpar::Solid::PreStress>(
-        Global::Problem::instance()->structural_dynamic_params(), "PRESTRESS");
-    const double pstime =
-        Global::Problem::instance()->structural_dynamic_params().get<double>("PRESTRESSTIME");
+        problem.structural_dynamic_params(), "PRESTRESS");
+    const double pstime = problem.structural_dynamic_params().get<double>("PRESTRESSTIME");
     return pstype != Inpar::Solid::PreStress::none && currentTime <= pstime + 1.0e-15;
   }
 }  // namespace
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::FSIStructureWrapper::FSIStructureWrapper(std::shared_ptr<Structure> structure)
-    : StructureWrapper(structure)
+Adapter::FSIStructureWrapper::FSIStructureWrapper(
+    Global::Problem& problem, std::shared_ptr<Structure> structure)
+    : StructureWrapper(structure), problem_(problem)
 {
   // set-up FSI interface
   interface_ = std::make_shared<Solid::MapExtractor>();
 
-  if (Global::Problem::instance()->get_problem_type() != Core::ProblemType::fpsi)
+  if (problem_.get_problem_type() != Core::ProblemType::fpsi)
     interface_->setup(*discretization(), *discretization()->dof_row_map());
   else
     interface_->setup(*discretization(), *discretization()->dof_row_map(),
         true);  // create overlapping maps for fpsi problem
 
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem_.fsi_dynamic_params();
   const Teuchos::ParameterList& fsipart = fsidyn.sublist("PARTITIONED SOLVER");
   predictor_ = fsipart.get<std::string>("PREDICTOR");
 }
-
 /*------------------------------------------------------------------------------------*
  * Rebuild FSI interface on structure side                              sudhakar 09/13
  * This is necessary if elements are added/deleted from interface
@@ -92,7 +91,7 @@ Adapter::FSIStructureWrapper::predict_interface_dispnp()
   if (predictor_ == "d(n)")
   {
     // respect Dirichlet conditions at the interface (required for pseudo-rigid body)
-    if (prestress_is_active(time()))
+    if (prestress_is_active(problem_, time()))
     {
       idis = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->fsi_cond_map(), true);
     }
@@ -107,7 +106,7 @@ Adapter::FSIStructureWrapper::predict_interface_dispnp()
   }
   else if (predictor_ == "d(n)+dt*v(n)")
   {
-    if (prestress_is_active(time()))
+    if (prestress_is_active(problem_, time()))
       FOUR_C_THROW("only constant interface predictor useful for prestressing");
 
     double current_dt = dt();
@@ -120,7 +119,7 @@ Adapter::FSIStructureWrapper::predict_interface_dispnp()
   }
   else if (predictor_ == "d(n)+dt*v(n)+0.5*dt^2*a(n)")
   {
-    if (prestress_is_active(time()))
+    if (prestress_is_active(problem_, time()))
       FOUR_C_THROW("only constant interface predictor useful for prestressing");
 
     double current_dt = dt();
@@ -135,8 +134,7 @@ Adapter::FSIStructureWrapper::predict_interface_dispnp()
   }
   else
   {
-    FOUR_C_THROW("unknown interface displacement predictor '{}'", Global::Problem::instance()
-                                                                      ->fsi_dynamic_params()
+    FOUR_C_THROW("unknown interface displacement predictor '{}'", problem_.fsi_dynamic_params()
                                                                       .sublist("PARTITIONED SOLVER")
                                                                       .get<std::string>("PREDICTOR")
                                                                       .c_str());
@@ -155,7 +153,7 @@ Adapter::FSIStructureWrapper::extract_interface_dispn()
       "Full map of map extractor and Dispn() do not match.");
 
   // prestressing business
-  if (prestress_is_active(time()))
+  if (prestress_is_active(problem_, time()))
   {
     return std::make_shared<Core::LinAlg::Vector<double>>(*interface_->fsi_cond_map(), true);
   }
@@ -175,7 +173,7 @@ Adapter::FSIStructureWrapper::extract_interface_dispnp()
       "Full map of map extractor and Dispnp() do not match.");
 
   // prestressing business
-  if (prestress_is_active(time()))
+  if (prestress_is_active(problem_, time()))
   {
     if (Core::Communication::my_mpi_rank(discretization()->get_comm()) == 0)
       std::cout << "Applying no displacements to the fluid since we do prestressing" << std::endl;

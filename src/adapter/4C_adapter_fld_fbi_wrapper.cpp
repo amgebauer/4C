@@ -17,11 +17,11 @@ FOUR_C_NAMESPACE_OPEN
 
 /*======================================================================*/
 /* constructor */
-Adapter::FluidFBI::FluidFBI(std::shared_ptr<Fluid> fluid,
+Adapter::FluidFBI::FluidFBI(Global::Problem& problem, std::shared_ptr<Fluid> fluid,
     std::shared_ptr<Core::FE::Discretization> dis, std::shared_ptr<Core::LinAlg::Solver> solver,
     std::shared_ptr<Teuchos::ParameterList> params,
     std::shared_ptr<Core::IO::DiscretizationWriter> output, bool isale, bool dirichletcond)
-    : FluidFSI(fluid, dis, solver, params, output, isale, dirichletcond)
+    : FluidFSI(problem, fluid, dis, solver, params, output, isale, dirichletcond)
 {
   // make sure
   if (std::dynamic_pointer_cast<FLD::FluidImplicitTimeInt>(fluid_) == nullptr)

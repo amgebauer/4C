@@ -16,6 +16,11 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   class StructureBaseAlgorithmNew;
@@ -30,12 +35,12 @@ namespace Adapter
 
     //! Build the structural adapter object
     std::shared_ptr<Adapter::StructureBaseAlgorithmNew> build_structure_algorithm(
-        const Teuchos::ParameterList& sdyn) const;
+        Global::Problem& problem, const Teuchos::ParameterList& sdyn) const;
   };  // class Factory
 
   // non-member function
   std::shared_ptr<Adapter::StructureBaseAlgorithmNew> build_structure_algorithm(
-      const Teuchos::ParameterList& sdyn);
+      Global::Problem& problem, const Teuchos::ParameterList& sdyn);
 }  // namespace Adapter
 
 

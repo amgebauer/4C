@@ -20,21 +20,23 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------------*/
 void dyn_ale_drt()
 {
+  Global::Problem* problem = Global::Problem::instance();
+
   // -------------------------------------------------------------------
   // access the discretization
   // -------------------------------------------------------------------
-  std::shared_ptr<Core::FE::Discretization> actdis = Global::Problem::instance()->get_dis("ale");
+  std::shared_ptr<Core::FE::Discretization> actdis = problem->get_dis("ale");
 
   // -------------------------------------------------------------------
   // ask ALE::AleBaseAlgorithm for the ale time integrator
   // -------------------------------------------------------------------
-  Adapter::AleBaseAlgorithm ale(Global::Problem::instance()->ale_dynamic_params(), actdis);
+  Adapter::AleBaseAlgorithm ale(*problem, problem->ale_dynamic_params(), actdis);
   std::shared_ptr<Adapter::Ale> aletimint = ale.ale_field();
 
   // -------------------------------------------------------------------
   // read the restart information, set vectors and variables if necessary
   // -------------------------------------------------------------------
-  const int restart = Global::Problem::instance()->restart();
+  const int restart = problem->restart();
   if (restart) aletimint->read_restart(restart);
 
   // -------------------------------------------------------------------
@@ -47,8 +49,8 @@ void dyn_ale_drt()
   // do the result test
   // -------------------------------------------------------------------
   // test results
-  Global::Problem::instance()->add_field_test(aletimint->create_field_test());
-  Global::Problem::instance()->test_all(actdis->get_comm());
+  problem->add_field_test(aletimint->create_field_test());
+  problem->test_all(actdis->get_comm());
 
   return;
 }

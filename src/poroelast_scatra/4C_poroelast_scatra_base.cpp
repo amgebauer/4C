@@ -31,7 +31,7 @@ FOUR_C_NAMESPACE_OPEN
  *----------------------------------------------------------------------*/
 PoroElastScaTra::PoroScatraBase::PoroScatraBase(
     MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : AlgorithmBase(comm, timeparams),
+    : AlgorithmBase(*Global::Problem::instance(), comm, timeparams),
       matchinggrid_(
           Global::Problem::instance()->poro_scatra_control_params().get<bool>("MATCHINGGRID")),
       volcoupl_structurescatra_(nullptr),
@@ -71,7 +71,7 @@ PoroElastScaTra::PoroScatraBase::PoroScatraBase(
   const int linsolvernumber = scatradyn.get<int>("LINEAR_SOLVER");
   // 2. scatra problem
   scatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(
-      timeparams, scatradyn, problem->solver_params(linsolvernumber), "scatra", true);
+      *problem, timeparams, scatradyn, problem->solver_params(linsolvernumber), "scatra", true);
 
   // now we can call init() on the base algo.
   // time integrator is constructed and initialized inside.

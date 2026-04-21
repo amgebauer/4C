@@ -34,11 +34,10 @@ namespace Adapter
                                           public Adapter::AleBaseAlgorithm
   {
    public:
-    ScaTraFluidAleCouplingAlgorithm(MPI_Comm comm,  ///< communicator
-        const Teuchos::ParameterList& prbdyn,       ///< problem-specific parameters
+    ScaTraFluidAleCouplingAlgorithm(Global::Problem& problem, MPI_Comm comm,  ///< communicator
+        const Teuchos::ParameterList& prbdyn,  ///< problem-specific parameters
         const std::string condname,  ///< name of condition that defines fluid-ale coupling
         const Teuchos::ParameterList& solverparams);
-
 
     /// setup
     void setup() override;

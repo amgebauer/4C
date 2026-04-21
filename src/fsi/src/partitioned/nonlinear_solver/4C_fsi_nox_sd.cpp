@@ -28,9 +28,9 @@
 FOUR_C_NAMESPACE_OPEN
 
 
-FSI::Nonlinear::SDRelaxation::SDRelaxation(
-    const Teuchos::RCP<::NOX::Utils>& utils, Teuchos::ParameterList& params)
-    : utils_(utils)
+FSI::Nonlinear::SDRelaxation::SDRelaxation(const Teuchos::RCP<::NOX::Utils>& utils,
+    Teuchos::ParameterList& params, Global::Problem& problem)
+    : utils_(utils), problem_(problem)
 {
 }
 
@@ -92,7 +92,7 @@ bool FSI::Nonlinear::SDRelaxation::compute(::NOX::Abstract::Group& newgrp, doubl
     static std::ofstream* out;
     if (out == nullptr)
     {
-      std::string s = Global::Problem::instance()->output_control_file()->file_name();
+      std::string s = problem_.output_control_file()->file_name();
       s.append(".omega");
       out = new std::ofstream(s.c_str());
     }

@@ -31,8 +31,8 @@
 FOUR_C_NAMESPACE_OPEN
 
 FSI::FluidFluidMonolithicFluidSplitNoNOX::FluidFluidMonolithicFluidSplitNoNOX(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : MonolithicNoNOX(comm, timeparams)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : MonolithicNoNOX(comm, problem, timeparams)
 {
   // Determine fluid (=slave) DOF on the FSI interface, for which a Dirichlet boundary
   // condition (DBC) has been prescribed
@@ -727,13 +727,15 @@ void FSI::FluidFluidMonolithicFluidSplitNoNOX::extract_field_vectors(
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplitNoNOX::read_restart(int step)
 {
+  auto* problem = &this->problem();
+
   // Read Lagrange Multiplier (associated with embedded fluid)
   {
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdaemb =
         std::make_shared<Core::LinAlg::Vector<double>>(
             *(fluid_field()->x_fluid_fluid_map_extractor()->fluid_map()), true);
     Core::IO::DiscretizationReader reader = Core::IO::DiscretizationReader(
-        *fluid_field()->discretization(), Global::Problem::instance()->input_control_file(), step);
+        *fluid_field()->discretization(), problem->input_control_file(), step);
     reader.read_vector(lambdaemb, "fsilambda");
     // Insert into vector containing the whole merged fluid DOF
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =
@@ -752,6 +754,8 @@ void FSI::FluidFluidMonolithicFluidSplitNoNOX::read_restart(int step)
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplitNoNOX::output()
 {
+  auto* problem = &this->problem();
+
   structure_field()->output();
   fluid_field()->output();
 
@@ -767,7 +771,7 @@ void FSI::FluidFluidMonolithicFluidSplitNoNOX::output()
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdaemb =
         fluid_field()->x_fluid_fluid_map_extractor()->extract_fluid_vector(*lambdafull);
 
-    const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
     const int uprestart = fsidyn.get<int>("RESTARTEVERY");
     const int upres = fsidyn.get<int>("RESULTSEVERY");
     if ((uprestart != 0 && fluid_field()->step() % uprestart == 0) ||

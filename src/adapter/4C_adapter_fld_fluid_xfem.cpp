@@ -18,9 +18,10 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::FluidXFEM::FluidXFEM(const Teuchos::ParameterList& prbdyn, std::string condname)
+Adapter::FluidXFEM::FluidXFEM(
+    Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname)
     : fluid_(std::make_shared<Adapter::FluidBaseAlgorithm>(
-          prbdyn, Global::Problem::instance()->fluid_dynamic_params(), "fluid", false)
+          problem, prbdyn, problem.fluid_dynamic_params(), "fluid", false)
               ->fluid_field())
 {
   return;

@@ -29,7 +29,8 @@ namespace FSI
   class MonolithicNoNOX : public FSI::MonolithicBase, public FSI::MonolithicInterface
   {
    public:
-    explicit MonolithicNoNOX(MPI_Comm comm, const Teuchos::ParameterList& timeparams);
+    explicit MonolithicNoNOX(
+        MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams);
 
     ///
     /*! do the setup for the monolithic system

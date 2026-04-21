@@ -35,8 +35,11 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FSI::MonolithicFluidSplit::MonolithicFluidSplit(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : BlockMonolithic(comm, timeparams), lambda_(nullptr), lambdaold_(nullptr), energysum_(0.0)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : BlockMonolithic(comm, problem, timeparams),
+      lambda_(nullptr),
+      lambdaold_(nullptr),
+      energysum_(0.0)
 {
   // ---------------------------------------------------------------------------
   // FSI specific check of Dirichlet boundary conditions
@@ -205,7 +208,8 @@ FSI::MonolithicFluidSplit::MonolithicFluidSplit(
 /*----------------------------------------------------------------------*/
 void FSI::MonolithicFluidSplit::setup_system()
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = &this->problem();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   linearsolverstrategy_ =
       Teuchos::getIntegralValue<FSI::LinearBlockSolver>(fsimono, "LINEARBLOCKSOLVER");
@@ -818,7 +822,8 @@ void FSI::MonolithicFluidSplit::setup_system_matrix(Core::LinAlg::BlockSparseMat
 void FSI::MonolithicFluidSplit::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = &this->problem();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -869,7 +874,8 @@ void FSI::MonolithicFluidSplit::scale_system(
 void FSI::MonolithicFluidSplit::unscale_solution(Core::LinAlg::BlockSparseMatrixBase& mat,
     Core::LinAlg::Vector<double>& x, Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = &this->problem();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -1317,6 +1323,8 @@ void FSI::MonolithicFluidSplit::update()
 /*----------------------------------------------------------------------*/
 void FSI::MonolithicFluidSplit::read_restart(int step)
 {
+  auto* problem = &this->problem();
+
   structure_field()->read_restart(step);
   fluid_field()->read_restart(step);
 
@@ -1325,7 +1333,7 @@ void FSI::MonolithicFluidSplit::read_restart(int step)
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =
         std::make_shared<Core::LinAlg::Vector<double>>(*fluid_field()->dof_row_map(), true);
     Core::IO::DiscretizationReader reader = Core::IO::DiscretizationReader(
-        *fluid_field()->discretization(), Global::Problem::instance()->input_control_file(), step);
+        *fluid_field()->discretization(), problem->input_control_file(), step);
     reader.read_vector(lambdafull, "fsilambda");
     lambdaold_ = fluid_field()->interface()->extract_fsi_cond_vector(*lambdafull);
     // Note: the above is normally enough. However, we can use the restart in order to periodically

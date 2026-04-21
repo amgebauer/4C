@@ -28,8 +28,8 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FSI::FluidFluidMonolithicFluidSplit::FluidFluidMonolithicFluidSplit(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : MonolithicFluidSplit(comm, timeparams)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : MonolithicFluidSplit(comm, problem, timeparams)
 {
   // cast to problem-specific fluid-wrapper
   fluid_ = std::dynamic_pointer_cast<Adapter::FluidFluidFSI>(MonolithicFluidSplit::fluid_field());
@@ -116,6 +116,8 @@ void FSI::FluidFluidMonolithicFluidSplit::setup_dbc_map_extractor()
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplit::output()
 {
+  auto* problem = &this->problem();
+
   structure_field()->output();
   fluid_field()->output();
 
@@ -131,7 +133,7 @@ void FSI::FluidFluidMonolithicFluidSplit::output()
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdaemb =
         fluid_field()->x_fluid_fluid_map_extractor()->extract_fluid_vector(*lambdafull);
 
-    const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
     const int uprestart = fsidyn.get<int>("RESTARTEVERY");
     const int upres = fsidyn.get<int>("RESULTSEVERY");
     if ((uprestart != 0 && fluid_field()->step() % uprestart == 0) ||
@@ -153,13 +155,15 @@ void FSI::FluidFluidMonolithicFluidSplit::output()
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicFluidSplit::read_restart(int step)
 {
+  auto* problem = &this->problem();
+
   // Read Lagrange Multiplier (associated with embedded fluid)
   {
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdaemb =
         std::make_shared<Core::LinAlg::Vector<double>>(
             *(fluid_field()->x_fluid_fluid_map_extractor()->fluid_map()), true);
     Core::IO::DiscretizationReader reader = Core::IO::DiscretizationReader(
-        *fluid_field()->discretization(), Global::Problem::instance()->input_control_file(), step);
+        *fluid_field()->discretization(), problem->input_control_file(), step);
     reader.read_vector(lambdaemb, "fsilambda");
     // Insert into vector containing the whole merged fluid DOF
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =

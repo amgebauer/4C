@@ -35,13 +35,15 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
 FSI::SlidingMonolithicFluidSplit::SlidingMonolithicFluidSplit(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : BlockMonolithic(comm, timeparams),
+    MPI_Comm comm, Global::Problem& global_problem, const Teuchos::ParameterList& timeparams)
+    : BlockMonolithic(comm, global_problem, timeparams),
       comm_(comm),
       lambda_(nullptr),
       lambdaold_(nullptr),
       energysum_(0.0)
 {
+  auto* problem = &this->problem();
+
   // ---------------------------------------------------------------------------
   // FSI specific check of Dirichlet boundary conditions
   // ---------------------------------------------------------------------------
@@ -141,19 +143,17 @@ FSI::SlidingMonolithicFluidSplit::SlidingMonolithicFluidSplit(
 
   notsetup_ = true;
 
-  coupsfm_ = std::make_shared<Coupling::Adapter::CouplingMortar>(
-      Global::Problem::instance()->n_dim(), Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+  coupsfm_ = std::make_shared<Coupling::Adapter::CouplingMortar>(problem->n_dim(),
+      problem->mortar_coupling_params(), problem->contact_dynamic_params(),
+      problem->spatial_approximation_type());
   fscoupfa_ = std::make_shared<Coupling::Adapter::Coupling>();
 
   aigtransform_ = std::make_shared<Coupling::Adapter::MatrixColTransform>();
   fmiitransform_ = std::make_shared<Coupling::Adapter::MatrixColTransform>();
 
-  coupsfm_ = std::make_shared<Coupling::Adapter::CouplingMortar>(
-      Global::Problem::instance()->n_dim(), Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+  coupsfm_ = std::make_shared<Coupling::Adapter::CouplingMortar>(problem->n_dim(),
+      problem->mortar_coupling_params(), problem->contact_dynamic_params(),
+      problem->spatial_approximation_type());
   fscoupfa_ = std::make_shared<Coupling::Adapter::Coupling>();
 
   aigtransform_ = std::make_shared<Coupling::Adapter::MatrixColTransform>();
@@ -219,7 +219,8 @@ void FSI::SlidingMonolithicFluidSplit::setup_system()
 {
   if (notsetup_)
   {
-    const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+    auto* problem = &this->problem();
+    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
     const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
     linearsolverstrategy_ =
         Teuchos::getIntegralValue<FSI::LinearBlockSolver>(fsimono, "LINEARBLOCKSOLVER");
@@ -231,7 +232,7 @@ void FSI::SlidingMonolithicFluidSplit::setup_system()
     // we use non-matching meshes at the interface
     // mortar with: structure = master, fluid = slave
 
-    const int ndim = Global::Problem::instance()->n_dim();
+    const int ndim = problem->n_dim();
 
     // get coupling objects
     Coupling::Adapter::Coupling& icoupfa = interface_fluid_ale_coupling();
@@ -245,11 +246,9 @@ void FSI::SlidingMonolithicFluidSplit::setup_system()
 
     coupsfm_->setup(structure_field()->discretization(), fluid_field()->discretization(),
         ale_field()->write_access_discretization(), coupleddof, "FSICoupling", comm_,
-        Global::Problem::instance()->function_manager(),
-        Global::Problem::instance()->binning_strategy_params(),
-        Global::Problem::instance()->discretization_map(),
-        Global::Problem::instance()->output_control_file(),
-        Global::Problem::instance()->spatial_approximation_type(), true);
+        problem->function_manager(), problem->binning_strategy_params(),
+        problem->discretization_map(), problem->output_control_file(),
+        problem->spatial_approximation_type(), true);
 
     // fluid to ale at the interface
 
@@ -291,8 +290,9 @@ void FSI::SlidingMonolithicFluidSplit::setup_system()
     if (aleproj_ != FSI::ALEprojection_none)
     {
       // set up sliding ale utils
-      slideale_ = std::make_shared<FSI::Utils::SlideAleUtils>(structure_field()->discretization(),
-          fluid_field()->discretization(), *coupsfm_, true, aleproj_);
+      slideale_ = std::make_shared<FSI::Utils::SlideAleUtils>(this->problem(),
+          structure_field()->discretization(), fluid_field()->discretization(), *coupsfm_, true,
+          aleproj_);
 
       iprojdispinc_ =
           std::make_shared<Core::LinAlg::Vector<double>>(*coupsfm_->source_dof_map(), true);
@@ -984,7 +984,8 @@ void FSI::SlidingMonolithicFluidSplit::setup_system_matrix(Core::LinAlg::BlockSp
 void FSI::SlidingMonolithicFluidSplit::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = &this->problem();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -1035,7 +1036,8 @@ void FSI::SlidingMonolithicFluidSplit::scale_system(
 void FSI::SlidingMonolithicFluidSplit::unscale_solution(Core::LinAlg::BlockSparseMatrixBase& mat,
     Core::LinAlg::Vector<double>& x, Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = &this->problem();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -1525,7 +1527,8 @@ void FSI::SlidingMonolithicFluidSplit::read_restart(int step)
   structure_field()->read_restart(step);
   fluid_field()->read_restart(step);
 
-  auto input_control_file = Global::Problem::instance()->input_control_file();
+  auto* problem = &this->problem();
+  auto input_control_file = problem->input_control_file();
 
   // read Lagrange multiplier
   {
