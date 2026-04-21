@@ -41,8 +41,8 @@ namespace Core
       }
 
       std::stringstream compound_message;
-      compound_message << "PROC " << myrank << " ERROR in " << loc.file_name() << ", line "
-                       << loc.line() << ":\n";
+      compound_message << "PROC " << myrank << " ERROR in " << loc.file_name() << ":" << loc.line()
+                       << ":\n";
 
       compound_message << formatted_message;
       compound_message << "\n------------------\n";
