@@ -11,6 +11,7 @@
 #include "4C_global_data.hpp"
 #include "4C_linalg_fixedsizematrix_tensor_products.hpp"
 #include "4C_linalg_fixedsizematrix_voigt_notation.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_tensor.hpp"
 #include "4C_linalg_tensor_conversion.hpp"
 #include "4C_linalg_tensor_generators.hpp"
@@ -23,10 +24,8 @@
 #include "4C_mat_par_bundle.hpp"
 #include "4C_mat_service.hpp"
 #include "4C_mat_so3_material.hpp"
-#include "4C_solid_3D_ele_fibers.hpp"
+#include "4C_solid_ele_fibers.hpp"
 #include "4C_utils_enum.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 #include <cmath>
 
@@ -954,9 +953,7 @@ void Mat::GrowthRemodelElastHyper::solve_for_rho_lambr(Core::LinAlg::SerialDense
   static std::vector<std::vector<double>> dEdlambr(
       nr_rf_tot_, std::vector<double>(nr_rf_tot_, 0.0));
   static std::vector<double> E(nr_rf_tot_, 0.0);
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  static Teuchos::SerialDenseSolver<ordinalType, scalarType> solver;
+  static Core::LinAlg::SerialDenseSolver solver;
   // residual vector of assembled system of equation
   static Core::LinAlg::SerialDenseMatrix R(2 * nr_rf_tot_, 1);
   for (unsigned i = 0; i < 2 * nr_rf_tot_; ++i) R(i, 0) = 1.0;
@@ -971,10 +968,10 @@ void Mat::GrowthRemodelElastHyper::solve_for_rho_lambr(Core::LinAlg::SerialDense
     if (iter != 0)
     {
       // Solve linearized system of equations
-      solver.setMatrix(Teuchos::rcpFromRef(K_T.base()));
-      solver.setVectors(Teuchos::rcpFromRef(dsol.base()), Teuchos::rcpFromRef(R.base()));
-      solver.solveToRefinedSolution(true);
-      solver.factorWithEquilibration(true);
+      solver.set_matrix(K_T);
+      solver.set_vectors(dsol, R);
+      solver.solve_to_refined_solution(true);
+      solver.factor_with_equilibration(true);
       solver.solve();
 
       l = 0;
@@ -1064,14 +1061,12 @@ void Mat::GrowthRemodelElastHyper::solve_fordrhod_cdlambrd_c(
   }
 
   // Solve
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  static Teuchos::SerialDenseSolver<ordinalType, scalarType> solver;
+  static Core::LinAlg::SerialDenseSolver solver;
   static Core::LinAlg::SerialDenseMatrix dsolcmat(2 * nr_rf_tot_, 6);
-  solver.setMatrix(Teuchos::rcpFromRef(K_T.base()));
-  solver.setVectors(Teuchos::rcpFromRef(dsolcmat.base()), Teuchos::rcpFromRef(Rcmat.base()));
-  solver.solveToRefinedSolution(true);
-  solver.factorWithEquilibration(true);
+  solver.set_matrix(K_T);
+  solver.set_vectors(dsolcmat, Rcmat);
+  solver.solve_to_refined_solution(true);
+  solver.factor_with_equilibration(true);
   solver.solve();
 
   sum_drhodC.clear();

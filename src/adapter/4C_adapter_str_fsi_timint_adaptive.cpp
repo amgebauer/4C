@@ -24,10 +24,10 @@ FOUR_C_NAMESPACE_OPEN
 /*======================================================================*/
 /* constructor */
 Adapter::StructureFSITimIntAda::StructureFSITimIntAda(
-    std::shared_ptr<Solid::TimAda> sta, std::shared_ptr<Structure> sti)
-    : FSIStructureWrapper(sti), StructureTimIntAda(sta, sti), str_time_integrator_(sti)
+    Global::Problem& problem, std::shared_ptr<Solid::TimAda> sta, std::shared_ptr<Structure> sti)
+    : FSIStructureWrapper(problem, sti), StructureTimIntAda(sta, sti), str_time_integrator_(sti)
 {
-  const Teuchos::ParameterList& sdyn = Global::Problem::instance()->structural_dynamic_params();
+  const Teuchos::ParameterList& sdyn = problem.structural_dynamic_params();
   const Teuchos::ParameterList& sada = sdyn.sublist("TIMEADAPTIVITY");
 
   // type of error norm
@@ -48,7 +48,6 @@ Adapter::StructureFSITimIntAda::StructureFSITimIntAda(
   numdbcfsidofs_ = intersectionmap->num_global_elements();
   numdbcinnerdofs_ = numdbcdofs_ - numdbcfsidofs_;
 }
-
 /*----------------------------------------------------------------------------*/
 /* Indicate norms of local discretization error */
 void Adapter::StructureFSITimIntAda::indicate_error_norms(double& err, double& errcond,

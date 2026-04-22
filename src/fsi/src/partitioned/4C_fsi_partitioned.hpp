@@ -86,7 +86,7 @@ namespace FSI
      *
      * \param[in] comm Communicator
      */
-    explicit Partitioned(MPI_Comm comm);
+    explicit Partitioned(MPI_Comm comm, Global::Problem& problem);
 
     /// setup this object
     void setup() override;

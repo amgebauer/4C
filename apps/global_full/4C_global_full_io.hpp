@@ -60,17 +60,18 @@ struct CommandlineArguments
  */
 void setup_global_problem(Core::IO::InputFile& input_file, const CommandlineArguments& arguments,
     const Core::Communication::Communicators& communicators);
-/**
- * \brief Returns the wall time in seconds.
- */
-double walltime_in_seconds();
-
-
 
 /**
  * \brief Writes the Teuchos::TimeMonitor information to std::cout
  */
 void write_timemonitor(MPI_Comm comm);
+
+/**
+ * \brief Exports timing information to a YAML file.
+ * \param filename The name of the file to export timings to.
+ * \param comm The MPI communicator.
+ */
+void export_timings(const std::filesystem::path& filename, MPI_Comm comm);
 
 /**
  * \brief Build canonical input/output pairs from positional command line arguments.

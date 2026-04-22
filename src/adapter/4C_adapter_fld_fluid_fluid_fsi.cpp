@@ -16,10 +16,10 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::FluidFluidFSI::FluidFluidFSI(std::shared_ptr<Fluid> xfluidfluid,
+Adapter::FluidFluidFSI::FluidFluidFSI(Global::Problem& problem, std::shared_ptr<Fluid> xfluidfluid,
     std::shared_ptr<Fluid> embfluid, std::shared_ptr<Core::LinAlg::Solver> solver,
     std::shared_ptr<Teuchos::ParameterList> params, bool isale, bool dirichletcond)
-    : FluidFSI(xfluidfluid, embfluid->discretization(), solver, params,
+    : FluidFSI(problem, xfluidfluid, embfluid->discretization(), solver, params,
           embfluid->discretization()->writer(), isale, dirichletcond)
 {
   // cast fluid to XFluidFluid

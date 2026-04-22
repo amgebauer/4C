@@ -212,6 +212,13 @@ std::vector<Core::IO::InputSpec> Particle::valid_parameters()
                   .default_value = "none"}),
 
 
+          // particle types that may carry a per-particle Dirichlet function id
+          parameter<std::optional<std::vector<std::string>>>("DIRICHLET_BOUNDARY_CONDITION_FLAGGED",
+              {.description = "Particle type names for which individual particles may carry a "
+                              "DIRICHLET_FUNCT id (per-particle Dirichlet BC), e.g. '[phase1, "
+                              "phase2]'. \nNote: Individually flagged particles override a "
+                              "potentially set condition via DIRICHLET_BOUNDARY_CONDITION."}),
+
           // dirichlet boundary condition of particle phase given by function
           parameter<std::string>("DIRICHLET_BOUNDARY_CONDITION",
               {.description =
@@ -623,7 +630,38 @@ std::vector<Core::IO::InputSpec> Particle::valid_parameters()
           // peridynamic dimension
           parameter<PeridynamicDimension>(
               "PD_DIMENSION", {.description = "dimension of peridynamic problem",
-                                  .default_value = PeridynamicDimension::Peridynamic_3D})},
+                                  .default_value = PeridynamicDimension::Peridynamic_3D}),
+
+          // peridynamic initial bond breakage via line definition
+          list("PRE_CRACK_LINES",
+              all_of({
+                  parameter<std::vector<double>>(
+                      "START", {.description = "start point of crack line segment", .size = 3}),
+                  parameter<std::vector<double>>(
+                      "END", {.description = "end point of crack line segment", .size = 3}),
+              }),
+              {.description =
+                      "Pre-crack line segments (3D): peridynamic bonds whose reference "
+                      "configuration crosses any of these segments are broken at initialization. "
+                      "Each entry is defined by a start point (START) and an end point (END).",
+                  .required = false}),
+
+          // peridynamic initial bond breakage via plane definition
+          list("PRE_CRACK_PLANES",
+              all_of({
+                  parameter<std::vector<double>>(
+                      "P0", {.description = "corner point 0 of parallelogram patch", .size = 3}),
+                  parameter<std::vector<double>>(
+                      "P1", {.description = "corner point 1 of parallelogram patch", .size = 3}),
+                  parameter<std::vector<double>>(
+                      "P2", {.description = "corner point 2 of parallelogram patch", .size = 3}),
+              }),
+              {.description =
+                      "Pre-crack parallelogram patches (3D): peridynamic bonds whose reference "
+                      "configuration crosses any of these patches are broken at initialization. "
+                      "Each patch is defined by three corner points P0, P1, P2; the parallelogram "
+                      "is spanned by edges e1 = P1-P0 and e2 = P2-P0",
+                  .required = false})},
       {.required = false}));
   return specs;
 }

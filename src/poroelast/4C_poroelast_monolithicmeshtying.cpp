@@ -23,11 +23,12 @@ PoroElast::MonolithicMeshtying::MonolithicMeshtying(MPI_Comm comm,
     std::shared_ptr<Core::LinAlg::MapExtractor> porosity_splitter)
     : Monolithic(comm, timeparams, porosity_splitter), normrhsfactiven_(0.0), tolfres_ncoup_(0.0)
 {
+  auto& problem = *Global::Problem::instance();
+
   // Initialize mortar adapter for meshtying interface
-  mortar_adapter_ = std::make_shared<Adapter::CouplingPoroMortar>(
-      Global::Problem::instance()->n_dim(), Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+  mortar_adapter_ = std::make_shared<Adapter::CouplingPoroMortar>(problem, problem.n_dim(),
+      problem.mortar_coupling_params(), problem.contact_dynamic_params(),
+      problem.spatial_approximation_type());
 
   const int ndim = Global::Problem::instance()->n_dim();
   std::vector<int> coupleddof(ndim, 1);  // 1,1,1 should be in coupleddof
@@ -55,7 +56,7 @@ void PoroElast::MonolithicMeshtying::evaluate(
   Monolithic::evaluate(iterinc, firstiter);
 
   // get state vectors to store in contact data container
-  std::shared_ptr<Core::LinAlg::Vector<double>> fvel = fluid_structure_coupling().slave_to_master(
+  std::shared_ptr<Core::LinAlg::Vector<double>> fvel = fluid_structure_coupling().source_to_target(
       *fluid_field()->extract_velocity_part(fluid_field()->velnp()));
 
   // modified pressure vector modfpres is used to get pressure values to mortar/contact integrator.
@@ -78,7 +79,7 @@ void PoroElast::MonolithicMeshtying::evaluate(
     modfpres->replace_global_values(1, &val[i], &gid);
   }
   // convert velocity map to structure displacement map
-  modfpres = fluid_structure_coupling().slave_to_master(*modfpres);
+  modfpres = fluid_structure_coupling().source_to_target(*modfpres);
 
   // for the set_state() methods in EvaluatePoroMt() non const state vectors are needed
   // ->WriteAccess... methods are used (even though we will not change the states ...)

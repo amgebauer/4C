@@ -20,14 +20,19 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   class FluidPoro : public FluidFPSI
   {
    public:
-    //! Constructor
-    FluidPoro(std::shared_ptr<Fluid> fluid, std::shared_ptr<Core::FE::Discretization> dis,
-        std::shared_ptr<Core::LinAlg::Solver> solver,
+    //! Constructor with explicit global problem context
+    FluidPoro(Global::Problem& problem, std::shared_ptr<Fluid> fluid,
+        std::shared_ptr<Core::FE::Discretization> dis, std::shared_ptr<Core::LinAlg::Solver> solver,
         std::shared_ptr<Teuchos::ParameterList> params,
         std::shared_ptr<Core::IO::DiscretizationWriter> output, bool isale, bool dirichletcond);
 
@@ -65,6 +70,9 @@ namespace Adapter
     virtual void output(const int step = -1, const double time = -1);
 
    private:
+    /// explicit global problem context
+    Global::Problem& problem_;
+
     /// fluid field
     const std::shared_ptr<Adapter::Fluid>& fluid_field() { return fluid_; }
 

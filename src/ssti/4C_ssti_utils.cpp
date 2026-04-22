@@ -90,8 +90,8 @@ std::shared_ptr<Core::LinAlg::Map> SSTI::SSTIMaps::map_interface(
     std::shared_ptr<const ScaTra::MeshtyingStrategyS2I> meshtyingstrategy) const
 {
   auto mergedInterfaceMap = Core::LinAlg::MultiMapExtractor::merge_maps(
-      {meshtyingstrategy->coupling_adapter()->master_dof_map(),
-          meshtyingstrategy->coupling_adapter()->slave_dof_map()});
+      {meshtyingstrategy->coupling_adapter()->target_dof_map(),
+          meshtyingstrategy->coupling_adapter()->source_dof_map()});
   if (not mergedInterfaceMap->unique_gids()) FOUR_C_THROW("Map not unique");
   return mergedInterfaceMap;
 }
@@ -153,7 +153,7 @@ std::shared_ptr<Core::LinAlg::MultiMapExtractor> SSTI::SSTIMaps::maps_interface_
   {
     case Core::LinAlg::MatrixType::sparse:
     {
-      const auto slavedofmap = meshtyingstrategy.coupling_adapter()->slave_dof_map();
+      const auto slavedofmap = meshtyingstrategy.coupling_adapter()->source_dof_map();
       blockmapinterfaceslave = std::make_shared<Core::LinAlg::MultiMapExtractor>(
           *slavedofmap, std::vector<std::shared_ptr<const Core::LinAlg::Map>>(1, slavedofmap));
       break;
@@ -727,7 +727,7 @@ void SSTI::SSTIScatraStructureCloneStrategy::set_element_data(
           "discretization, but the STRUCTURE elements that are defined in the input file are "
           "either "
           "not meant to be copied to scatra elements or the ImplType is set 'Undefined' which is "
-          "not meaningful for the created scatra discretization! Use SOLIDSCATRA, WALLSCATRA or "
+          "not meaningful for the created scatra discretization! Use SOLIDSCATRA or "
           "SHELLSCATRA elements with meaningful ImplType instead!");
     }
     else

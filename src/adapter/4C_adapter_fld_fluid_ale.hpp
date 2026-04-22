@@ -33,6 +33,11 @@ namespace FSI
   class InterfaceCorrector;
 }
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 /*----------------------------------------------------------------------------*/
 /* definition of classes */
 namespace Adapter
@@ -41,7 +46,7 @@ namespace Adapter
   class FluidAle : public FluidMovingBoundary
   {
    public:
-    FluidAle(const Teuchos::ParameterList& prbdyn, std::string condname);
+    FluidAle(Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname);
 
     /// fluid field
     const std::shared_ptr<Adapter::Fluid>& fluid_field() override { return fluid_; }
@@ -131,6 +136,9 @@ namespace Adapter
     std::shared_ptr<Coupling::Adapter::Coupling> aucoupfa_;
 
    private:
+    /// explicit global problem context
+    Global::Problem& problem_;
+
     /// problem-specific Fluid-wrapper
     std::shared_ptr<Adapter::Fluid> fluid_;
 

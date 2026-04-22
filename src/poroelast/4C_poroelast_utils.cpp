@@ -24,26 +24,22 @@
 #include "4C_poroelast_monolithicstructuresplit.hpp"
 #include "4C_poroelast_partitioned.hpp"
 #include "4C_poroelast_utils_clonestrategy.hpp"
-#include "4C_solid_poro_3D_ele_pressure_based.hpp"
-#include "4C_solid_poro_3D_ele_pressure_velocity_based.hpp"
-#include "4C_solid_poro_3D_ele_pressure_velocity_based_p1.hpp"
+#include "4C_solid_poro_ele_pressure_based.hpp"
+#include "4C_solid_poro_ele_pressure_velocity_based.hpp"
+#include "4C_solid_poro_ele_pressure_velocity_based_p1.hpp"
 #include "4C_utils_enum.hpp"
-#include "4C_w1_poro_eletypes.hpp"
-#include "4C_w1_poro_p1_eletypes.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
 bool PoroElast::Utils::is_poro_element(const Core::Elements::Element* actele)
 {
   // all poro elements need to be listed here
-  return actele->element_type() == Discret::Elements::SolidPoroPressureBasedType::instance() or
+  return actele->element_type() == Discret::Elements::SolidPoroPressureBasedType<2>::instance() or
+         actele->element_type() == Discret::Elements::SolidPoroPressureBasedType<3>::instance() or
          actele->element_type() ==
-             Discret::Elements::SolidPoroPressureVelocityBasedType::instance() or
-         actele->element_type() == Discret::Elements::WallTri3PoroType::instance() or
-         actele->element_type() == Discret::Elements::WallQuad4PoroType::instance() or
-         actele->element_type() == Discret::Elements::WallQuad9PoroType::instance() or
-         actele->element_type() == Discret::Elements::WallNurbs4PoroType::instance() or
-         actele->element_type() == Discret::Elements::WallNurbs9PoroType::instance() or
+             Discret::Elements::SolidPoroPressureVelocityBasedType<2>::instance() or
+         actele->element_type() ==
+             Discret::Elements::SolidPoroPressureVelocityBasedType<3>::instance() or
          is_poro_p1_element(actele);
 }
 
@@ -51,10 +47,9 @@ bool PoroElast::Utils::is_poro_p1_element(const Core::Elements::Element* actele)
 {
   // all poro-p1 elements need to be listed here
   return actele->element_type() ==
-             Discret::Elements::SolidPoroPressureVelocityBasedP1Type::instance() or
-         actele->element_type() == Discret::Elements::WallQuad4PoroP1Type::instance() or
-         actele->element_type() == Discret::Elements::WallTri3PoroP1Type::instance() or
-         actele->element_type() == Discret::Elements::WallQuad9PoroP1Type::instance();
+             Discret::Elements::SolidPoroPressureVelocityBasedP1Type<2>::instance() or
+         actele->element_type() ==
+             Discret::Elements::SolidPoroPressureVelocityBasedP1Type<3>::instance();
 }
 
 std::shared_ptr<PoroElast::PoroBase> PoroElast::Utils::create_poro_algorithm(
@@ -281,7 +276,7 @@ void PoroElast::Utils::set_slave_and_master(const Core::FE::Discretization& vold
 
   Core::Elements::Element* vele = voldiscret.g_element(volgid);
   if (!vele) FOUR_C_THROW("ERROR: Cannot find element with gid %", volgid);
-  faceele->set_parent_master_element(vele, faceele->face_parent_number());
+  faceele->set_parent_target_element(vele, faceele->face_parent_number());
 
   if (voldiscret2)
   {
@@ -458,14 +453,17 @@ void PoroElast::Utils::PoroMaterialStrategy::assign_material1_to2(
   auto* fluid = dynamic_cast<Discret::Elements::FluidPoro*>(ele2);
   if (fluid != nullptr)
   {
-    if (auto* solid_poro = dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBased*>(ele1);
+    if (auto* solid_poro =
+            dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBased<2>*>(ele1);
         solid_poro != nullptr)
     {
       fluid->set_kinematic_type(solid_poro->kinematic_type());
     }
-    else if (auto* wall_ele = dynamic_cast<Discret::Elements::Wall1*>(ele1); wall_ele != nullptr)
+    else if (auto* solid_poro =
+                 dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBased<3>*>(ele1);
+        solid_poro != nullptr)
     {
-      fluid->set_kinematic_type(wall_ele->kinematic_type());
+      fluid->set_kinematic_type(solid_poro->kinematic_type());
     }
     else
       FOUR_C_THROW("ERROR: ele1 is not a solid element");

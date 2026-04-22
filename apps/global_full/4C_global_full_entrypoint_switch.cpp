@@ -47,10 +47,11 @@ void entrypoint_switch()
 {
   using namespace FourC;
 
-  int restart = Global::Problem::instance()->restart();
+  auto& problem = *Global::Problem::instance();
+  int restart = problem.restart();
 
   // choose the entry-routine depending on the problem type
-  switch (Global::Problem::instance()->get_problem_type())
+  switch (problem.get_problem_type())
   {
     case Core::ProblemType::structure:
     case Core::ProblemType::polymernetwork:
@@ -76,22 +77,22 @@ void entrypoint_switch()
       sti_dyn(restart);
       break;
     case Core::ProblemType::fluid_xfem:
-      fluid_xfem_drt();
+      fluid_xfem_drt(problem);
       break;
       break;
     case Core::ProblemType::fluid_ale:
-      fluid_ale_drt();
+      fluid_ale_drt(problem);
       break;
 
     case Core::ProblemType::fsi:
     case Core::ProblemType::fsi_redmodels:
-      fsi_ale_drt();
+      fsi_ale_drt(problem);
       break;
     case Core::ProblemType::fsi_xfem:
-      xfsi_drt();
+      xfsi_drt(problem);
       break;
     case Core::ProblemType::fpsi_xfem:
-      xfpsi_drt();
+      xfpsi_drt(problem);
       break;
     case Core::ProblemType::gas_fsi:
     case Core::ProblemType::biofilm_fsi:
@@ -100,7 +101,7 @@ void entrypoint_switch()
       fs3i_dyn();
       break;
     case Core::ProblemType::fbi:
-      fsi_immersed_drt();
+      fsi_immersed_drt(problem);
       break;
 
     case Core::ProblemType::ale:
@@ -181,8 +182,7 @@ void entrypoint_switch()
       break;
 
     default:
-      FOUR_C_THROW("solution of unknown problemtype {} requested",
-          Global::Problem::instance()->get_problem_type());
+      FOUR_C_THROW("solution of unknown problemtype {} requested", problem.get_problem_type());
       break;
   }
 }

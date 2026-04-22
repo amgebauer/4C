@@ -1264,11 +1264,12 @@ void Constraints::SpringDashpot::output_prestr_offset_old(
 
 void Constraints::SpringDashpot::initialize_cur_surf_normal()
 {
+  auto& problem = *Global::Problem::instance();
+
   // create MORTAR interface
-  mortar_ = std::make_shared<Adapter::CouplingNonLinMortar>(Global::Problem::instance()->n_dim(),
-      Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+  mortar_ = std::make_shared<Adapter::CouplingNonLinMortar>(problem, problem.n_dim(),
+      problem.mortar_coupling_params(), problem.contact_dynamic_params(),
+      problem.spatial_approximation_type());
 
   // create CONTACT elements at interface for normal and gap calculation
   mortar_->setup_spring_dashpot(actdisc_, actdisc_, *spring_, coupling_, actdisc_->get_comm());

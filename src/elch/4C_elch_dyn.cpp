@@ -75,8 +75,8 @@ void elch_dyn(int restart)
       }
 
       // create instance of scalar transport basis algorithm (empty fluid discretization)
-      Adapter::ScaTraBaseAlgorithm scatraonly(
-          scatradyn, scatradyn, Global::Problem::instance()->solver_params(linsolvernumber));
+      Adapter::ScaTraBaseAlgorithm scatraonly(*Global::Problem::instance(), scatradyn, scatradyn,
+          Global::Problem::instance()->solver_params(linsolvernumber));
 
       // add proxy of velocity related degrees of freedom to scatra discretization
       auto dofsetaux = std::make_shared<Core::DOFSets::DofSetPredefinedDoFNumber>(

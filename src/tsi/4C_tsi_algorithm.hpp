@@ -28,6 +28,12 @@ namespace Core::FE
 {
   class Discretization;
 }  // namespace Core::FE
+
+namespace Global
+{
+  class Problem;
+}
+
 namespace CONTACT
 {
   class LagrangeStrategyTsi;
@@ -117,11 +123,6 @@ namespace TSI
     //! write output
     void output(bool forced_writerestart = false);
 
-    //! communicate displacement vector to thermal field to enable their
-    //! visualisation on the deformed body
-    void output_deformation_in_thermo(std::shared_ptr<const Core::LinAlg::Vector<double>> dispnp,
-        Core::FE::Discretization& structdis);
-
     //@}
 
     //! @name Transfer methods
@@ -171,6 +172,8 @@ namespace TSI
     //@}
 
     //! @name Volume Mortar stuff
+
+    Global::Problem* problem_;
 
     //! flag for matchinggrid
     const bool matchinggrid_;

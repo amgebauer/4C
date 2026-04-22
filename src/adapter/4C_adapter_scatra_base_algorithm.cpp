@@ -34,10 +34,10 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(const Teuchos::ParameterList& prbdyn,
-    const Teuchos::ParameterList& scatradyn, const Teuchos::ParameterList& solverparams,
-    const std::string& disname, const bool isale)
-    : scatra_(nullptr), issetup_(false), isinit_(false)
+Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
+    const Teuchos::ParameterList& prbdyn, const Teuchos::ParameterList& scatradyn,
+    const Teuchos::ParameterList& solverparams, const std::string& disname, const bool isale)
+    : problem_(problem), scatra_(nullptr), issetup_(false), isinit_(false)
 {
   // setup scalar transport algorithm (overriding some dynamic parameters
   // with values specified in given problem-dependent ParameterList prbdyn)
@@ -45,12 +45,12 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(const Teuchos::ParameterList& 
   // -------------------------------------------------------------------
   // what's the current problem type?
   // -------------------------------------------------------------------
-  auto probtype = Global::Problem::instance()->get_problem_type();
+  auto probtype = problem_.get_problem_type();
 
   // -------------------------------------------------------------------
   // access the discretization
   // -------------------------------------------------------------------
-  auto discret = Global::Problem::instance()->get_dis(disname);
+  auto discret = problem_.get_dis(disname);
 
   // -------------------------------------------------------------------
   // set degrees of freedom in the discretization
@@ -72,9 +72,8 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(const Teuchos::ParameterList& 
   // change input parameter to solver number instead of parameter list?
   // -> no default parameter possible any more
   auto solver = std::make_shared<Core::LinAlg::Solver>(solverparams, discret->get_comm(),
-      Global::Problem::instance()->solver_params_callback(),
-      Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-          Global::Problem::instance()->io_params(), "VERBOSITY"));
+      problem_.solver_params_callback(),
+      Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem_.io_params(), "VERBOSITY"));
 
   // -------------------------------------------------------------------
   // set parameters in list required for all schemes
@@ -154,7 +153,7 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(const Teuchos::ParameterList& 
   extraparams->set<bool>("isale", isale);
 
   // ------------------------------------get also fluid turbulence sublist
-  const auto& fdyn = Global::Problem::instance()->fluid_dynamic_params();
+  const auto& fdyn = problem_.fluid_dynamic_params();
   extraparams->sublist("TURBULENCE MODEL") = fdyn.sublist("TURBULENCE MODEL");
   extraparams->sublist("SUBGRID VISCOSITY") = fdyn.sublist("SUBGRID VISCOSITY");
   extraparams->sublist("MULTIFRACTAL SUBGRID SCALES") = fdyn.sublist("MULTIFRACTAL SUBGRID SCALES");
@@ -170,8 +169,7 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(const Teuchos::ParameterList& 
   // low Mach number flow
   if (probtype == Core::ProblemType::loma or probtype == Core::ProblemType::thermo_fsi)
   {
-    auto lomaparams = std::make_shared<Teuchos::ParameterList>(
-        Global::Problem::instance()->loma_control_params());
+    auto lomaparams = std::make_shared<Teuchos::ParameterList>(problem_.loma_control_params());
     switch (timintscheme)
     {
       case Inpar::ScaTra::timeint_gen_alpha:
@@ -190,21 +188,19 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(const Teuchos::ParameterList& 
   // electrochemistry
   else if (probtype == Core::ProblemType::elch or
            ((probtype == Core::ProblemType::ssi and
-                Teuchos::getIntegralValue<SSI::ScaTraTimIntType>(
-                    Global::Problem::instance()->ssi_control_params(), "SCATRATIMINTTYPE") ==
-                    SSI::ScaTraTimIntType::elch) or
+                Teuchos::getIntegralValue<SSI::ScaTraTimIntType>(problem_.ssi_control_params(),
+                    "SCATRATIMINTTYPE") == SSI::ScaTraTimIntType::elch) or
                (disname == "scatra" and
                    ((probtype == Core::ProblemType::ssti and
                         Teuchos::getIntegralValue<SSTI::ScaTraTimIntType>(
-                            Global::Problem::instance()->ssti_control_params(),
-                            "SCATRATIMINTTYPE") == SSTI::ScaTraTimIntType::elch) or
+                            problem_.ssti_control_params(), "SCATRATIMINTTYPE") ==
+                            SSTI::ScaTraTimIntType::elch) or
                        (probtype == Core::ProblemType::sti and
                            Teuchos::getIntegralValue<STI::ScaTraTimIntType>(
-                               Global::Problem::instance()->sti_dynamic_params(),
-                               "SCATRATIMINTTYPE") == STI::ScaTraTimIntType::elch)))))
+                               problem_.sti_dynamic_params(), "SCATRATIMINTTYPE") ==
+                               STI::ScaTraTimIntType::elch)))))
   {
-    auto elchparams = std::make_shared<Teuchos::ParameterList>(
-        Global::Problem::instance()->elch_control_params());
+    auto elchparams = std::make_shared<Teuchos::ParameterList>(problem_.elch_control_params());
 
     switch (timintscheme)
     {
@@ -282,16 +278,13 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(const Teuchos::ParameterList& 
   // cardiac monodomain
   else if (probtype == Core::ProblemType::cardiac_monodomain or
            (probtype == Core::ProblemType::ssi and
-               Teuchos::getIntegralValue<SSI::ScaTraTimIntType>(
-                   Global::Problem::instance()->ssi_control_params(), "SCATRATIMINTTYPE") ==
-                   SSI::ScaTraTimIntType::cardiac_monodomain))
+               Teuchos::getIntegralValue<SSI::ScaTraTimIntType>(problem_.ssi_control_params(),
+                   "SCATRATIMINTTYPE") == SSI::ScaTraTimIntType::cardiac_monodomain))
   {
-    auto cmonoparams =
-        std::make_shared<Teuchos::ParameterList>(Global::Problem::instance()->ep_control_params());
+    auto cmonoparams = std::make_shared<Teuchos::ParameterList>(problem_.ep_control_params());
 
     // HDG implements all time stepping schemes within gen-alpha
-    if (Global::Problem::instance()->spatial_approximation_type() ==
-        Core::FE::ShapeFunctionType::hdg)
+    if (problem_.spatial_approximation_type() == Core::FE::ShapeFunctionType::hdg)
     {
       scatra_ = std::make_shared<ScaTra::TimIntCardiacMonodomainHDG>(
           discret, solver, cmonoparams, scatratimeparams, extraparams, output);
@@ -368,8 +361,7 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(const Teuchos::ParameterList& 
   else
   {
     // HDG implements all time stepping schemes within gen-alpha
-    if (Global::Problem::instance()->spatial_approximation_type() ==
-        Core::FE::ShapeFunctionType::hdg)
+    if (problem_.spatial_approximation_type() == Core::FE::ShapeFunctionType::hdg)
     {
       switch (timintscheme)
       {
@@ -434,8 +426,6 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(const Teuchos::ParameterList& 
   }
 }
 
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
 void Adapter::ScaTraBaseAlgorithm::init()
 {
   set_is_setup(false);

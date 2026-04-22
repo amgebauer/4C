@@ -17,6 +17,7 @@
 #include "4C_fem_general_utils_integration.hpp"
 #include "4C_fem_general_utils_polynomial.hpp"
 #include "4C_global_data.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_tensor_conversion.hpp"
 #include "4C_linalg_utils_densematrix_multiply.hpp"
 #include "4C_mat_list.hpp"
@@ -622,12 +623,10 @@ int Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype,
       shapes->ndofs_, actmat->get_number_of_internal_state_variables());
   Core::LinAlg::multiply(tempMat1, massPartOldW, state_variables);
 
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMat;
-  inverseMat.setMatrix(Teuchos::rcpFromRef(Mmat.base()));
-  inverseMat.setVectors(Teuchos::rcpFromRef(tempMat1.base()), Teuchos::rcpFromRef(tempMat1.base()));
-  inverseMat.factorWithEquilibration(true);
+  Core::LinAlg::SerialDenseSolver inverseMat;
+  inverseMat.set_matrix(Mmat);
+  inverseMat.set_vectors(tempMat1, tempMat1);
+  inverseMat.factor_with_equilibration(true);
   int err2 = inverseMat.factor();
   int err = inverseMat.solve();
   if (err != 0 || err2 != 0) FOUR_C_THROW("Inversion of matrix failed with errorcode {}", err);
@@ -752,12 +751,10 @@ int Discret::Elements::ScaTraEleCalcHDGCardiacMonodomain<distype,
       polySpace->size(), actmat->get_number_of_internal_state_variables());
   Core::LinAlg::multiply(tempMat1, massPartOldW, state_variables);
 
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMat;
-  inverseMat.setMatrix(Teuchos::rcpFromRef(Mmat.base()));
-  inverseMat.setVectors(Teuchos::rcpFromRef(tempMat1.base()), Teuchos::rcpFromRef(tempMat1.base()));
-  inverseMat.factorWithEquilibration(true);
+  Core::LinAlg::SerialDenseSolver inverseMat;
+  inverseMat.set_matrix(Mmat);
+  inverseMat.set_vectors(tempMat1, tempMat1);
+  inverseMat.factor_with_equilibration(true);
   int err2 = inverseMat.factor();
   int err = inverseMat.solve();
   if (err != 0 || err2 != 0) FOUR_C_THROW("Inversion of matrix failed with errorcode {}", err);

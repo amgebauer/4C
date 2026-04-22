@@ -30,7 +30,7 @@ namespace Adapter
   {
    public:
     /// constructor
-    explicit StructureTimeAdaJoint(std::shared_ptr<Structure> structure);
+    StructureTimeAdaJoint(Global::Problem& problem, std::shared_ptr<Structure> structure);
 
     //! Provide the name
     Inpar::Solid::TimAdaKind method_name() const override

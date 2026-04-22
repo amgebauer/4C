@@ -50,20 +50,20 @@ FOUR_C_NAMESPACE_OPEN
  * Discretizations.
  */
 /*----------------------------------------------------------------------------*/
-FSI::MonolithicBase::MonolithicBase(MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : AlgorithmBase(comm, timeparams),
+FSI::MonolithicBase::MonolithicBase(
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : AlgorithmBase(problem, comm, timeparams),
+      problem_(problem),
       isadastructure_(false),
       isadafluid_(false),
       isadasolver_(false),
       verbosity_(Teuchos::getIntegralValue<FSI::OutputVerbosity>(
-          Global::Problem::instance()->fsi_dynamic_params(), "VERBOSITY"))
+          problem.fsi_dynamic_params(), "VERBOSITY"))
 {
   // access the discretizations
-  std::shared_ptr<Core::FE::Discretization> structdis =
-      Global::Problem::instance()->get_dis("structure");
-  std::shared_ptr<Core::FE::Discretization> fluiddis =
-      Global::Problem::instance()->get_dis("fluid");
-  std::shared_ptr<Core::FE::Discretization> aledis = Global::Problem::instance()->get_dis("ale");
+  std::shared_ptr<Core::FE::Discretization> structdis = problem.get_dis("structure");
+  std::shared_ptr<Core::FE::Discretization> fluiddis = problem.get_dis("fluid");
+  std::shared_ptr<Core::FE::Discretization> aledis = problem.get_dis("ale");
 
   create_structure_time_integrator(timeparams, structdis);
   create_fluid_and_ale_time_integrator(timeparams, fluiddis, aledis);
@@ -96,12 +96,12 @@ void FSI::MonolithicBase::create_structure_time_integrator(
   structure_ = nullptr;
 
   // access structural dynamic params
-  const Teuchos::ParameterList& sdyn = Global::Problem::instance()->structural_dynamic_params();
+  const Teuchos::ParameterList& sdyn = problem().structural_dynamic_params();
 
   // ask base algorithm for the structural time integrator
   std::shared_ptr<Adapter::StructureBaseAlgorithm> structure =
       std::make_shared<Adapter::StructureBaseAlgorithm>(
-          timeparams, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
+          problem(), timeparams, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
   structure_ =
       std::dynamic_pointer_cast<Adapter::FSIStructureWrapper>(structure->structure_field());
   structure_->setup();
@@ -127,14 +127,14 @@ void FSI::MonolithicBase::create_fluid_and_ale_time_integrator(
   // ask base algorithm for the fluid time integrator
   std::shared_ptr<Adapter::FluidBaseAlgorithm> fluid =
       std::make_shared<Adapter::FluidBaseAlgorithm>(
-          timeparams, Global::Problem::instance()->fluid_dynamic_params(), "fluid", true);
+          problem(), timeparams, problem().fluid_dynamic_params(), "fluid", true);
   fluid_ = std::dynamic_pointer_cast<Adapter::FluidFSI>(fluid->fluid_field());
 
   if (fluid_ == nullptr) FOUR_C_THROW("Cast from Adapter::Fluid to Adapter::FluidFSI failed");
 
   // ask base algorithm for the ale time integrator
   std::shared_ptr<Adapter::AleBaseAlgorithm> ale =
-      std::make_shared<Adapter::AleBaseAlgorithm>(timeparams, aledis);
+      std::make_shared<Adapter::AleBaseAlgorithm>(problem(), timeparams, aledis);
   ale_ = std::dynamic_pointer_cast<Adapter::AleFsiWrapper>(ale->ale_field());
 
   if (ale_ == nullptr) FOUR_C_THROW("Cast from Adapter::Ale to Adapter::AleFsiWrapper failed");
@@ -213,7 +213,7 @@ void FSI::MonolithicBase::output()
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::struct_to_ale(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsa_->master_to_slave(*iv);
+  return coupsa_->target_to_source(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -221,7 +221,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::struct_to_ale
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_struct(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsa_->slave_to_master(*iv);
+  return coupsa_->source_to_target(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -229,7 +229,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_struct
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::struct_to_fluid(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsf_->master_to_slave(*iv);
+  return coupsf_->target_to_source(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -237,7 +237,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::struct_to_flu
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::fluid_to_struct(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsf_->slave_to_master(*iv);
+  return coupsf_->source_to_target(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -245,7 +245,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::fluid_to_stru
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_fluid(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv) const
 {
-  return coupfa_->slave_to_master(*iv);
+  return coupfa_->source_to_target(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -253,7 +253,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_fluid(
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::fluid_to_ale_interface(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv) const
 {
-  return icoupfa_->master_to_slave(*iv);
+  return icoupfa_->target_to_source(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -261,7 +261,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::fluid_to_ale_
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_fluid_interface(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv) const
 {
-  return icoupfa_->slave_to_master(*iv);
+  return icoupfa_->source_to_target(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -269,7 +269,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_fluid_
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::struct_to_ale(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsa_->master_to_slave(*iv);
+  return coupsa_->target_to_source(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -277,7 +277,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::struct_to_ale
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_struct(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsa_->slave_to_master(*iv);
+  return coupsa_->source_to_target(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -285,7 +285,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_struct
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::struct_to_fluid(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsf_->master_to_slave(*iv);
+  return coupsf_->target_to_source(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -293,7 +293,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::struct_to_flu
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::fluid_to_struct(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsf_->slave_to_master(*iv);
+  return coupsf_->source_to_target(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -301,7 +301,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::fluid_to_stru
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_fluid(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return coupfa_->slave_to_master(*iv);
+  return coupfa_->source_to_target(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -309,7 +309,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_fluid(
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::fluid_to_ale_interface(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return icoupfa_->master_to_slave(*iv);
+  return icoupfa_->target_to_source(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -317,30 +317,32 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::fluid_to_ale_
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::MonolithicBase::ale_to_fluid_interface(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return icoupfa_->slave_to_master(*iv);
+  return icoupfa_->source_to_target(*iv);
 }
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-FSI::Monolithic::Monolithic(MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : MonolithicBase(comm, timeparams),
+FSI::Monolithic::Monolithic(
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : MonolithicBase(comm, problem, timeparams),
       firstcall_(true),
       noxiter_(0),
       erroraction_(erroraction_stop),
       log_(nullptr),
       logada_(nullptr)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto& my_problem = this->problem();
+  const Teuchos::ParameterList& fsidyn = my_problem.fsi_dynamic_params();
 
   // write iterations-file
-  std::string fileiter = Global::Problem::instance()->output_control_file()->file_name();
+  std::string fileiter = my_problem.output_control_file()->file_name();
   fileiter.append(".iteration");
   log_ = std::make_shared<std::ofstream>(fileiter.c_str());
 
   // write energy-file
   if (fsidyn.sublist("MONOLITHIC SOLVER").get<bool>("ENERGYFILE"))
   {
-    std::string fileiter2 = Global::Problem::instance()->output_control_file()->file_name();
+    std::string fileiter2 = my_problem.output_control_file()->file_name();
     fileiter2.append(".fsienergy");
     logenergy_ = std::make_shared<std::ofstream>(fileiter2.c_str());
   }
@@ -374,7 +376,7 @@ void FSI::Monolithic::setup_system()
 {
   // right now we use matching meshes at the interface
 
-  const int ndim = Global::Problem::instance()->n_dim();
+  const int ndim = problem().n_dim();
 
   Coupling::Adapter::Coupling& coupsf = structure_fluid_coupling();
   Coupling::Adapter::Coupling& coupsa = structure_ale_coupling();
@@ -403,10 +405,10 @@ void FSI::Monolithic::setup_system()
   // map at the structural side. This enables us to use just one
   // interface dof map for all fields and have just one transfer
   // operator from the interface map to the full field map.
-  if (not coupsf.master_dof_map()->same_as(*coupsa.master_dof_map()))
+  if (not coupsf.target_dof_map()->same_as(*coupsa.target_dof_map()))
     FOUR_C_THROW("structure interface dof maps do not match");
 
-  if (coupsf.master_dof_map()->num_global_elements() == 0)
+  if (coupsf.target_dof_map()->num_global_elements() == 0)
     FOUR_C_THROW("No nodes in matching FSI interface. Empty FSI coupling condition?");
 
   // the fluid-ale coupling always matches
@@ -416,7 +418,7 @@ void FSI::Monolithic::setup_system()
   coupfa.setup_coupling(*fluid_field()->discretization(), *ale_field()->discretization(),
       *fluidnodemap, *alenodemap, ndim);
 
-  fluid_field()->set_mesh_map(coupfa.master_dof_map());
+  fluid_field()->set_mesh_map(coupfa.target_dof_map());
 
   return;
 }
@@ -425,7 +427,7 @@ void FSI::Monolithic::setup_system()
 /*----------------------------------------------------------------------------*/
 void FSI::Monolithic::timeloop(const std::shared_ptr<NOX::Nln::Interface::RequiredBase> interface)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem().fsi_dynamic_params();
   const bool timeadapton = fsidyn.sublist("TIMEADAPTIVITY").get<bool>("TIMEADAPTON");
 
   // Run time loop with constant or adaptive time step size (depending on the user's will)
@@ -522,10 +524,11 @@ void FSI::Monolithic::prepare_timeloop()
   // check for prestressing,
   // do not allow monolithic in the pre-phase
   // allow monolithic in the post-phase
-  const Inpar::Solid::PreStress pstype = Teuchos::getIntegralValue<Inpar::Solid::PreStress>(
-      Global::Problem::instance()->structural_dynamic_params(), "PRESTRESS");
-  const double pstime =
-      Global::Problem::instance()->structural_dynamic_params().get<double>("PRESTRESSTIME");
+  const auto& my_problem = problem();
+  const auto& structural_dyn = my_problem.structural_dynamic_params();
+  const Inpar::Solid::PreStress pstype =
+      Teuchos::getIntegralValue<Inpar::Solid::PreStress>(structural_dyn, "PRESTRESS");
+  const double pstime = structural_dyn.get<double>("PRESTRESSTIME");
   if (pstype != Inpar::Solid::PreStress::none && time() + dt() <= pstime + 1.0e-15)
     FOUR_C_THROW("No monolithic FSI in the pre-phase of prestressing, use Aitken!");
 
@@ -686,7 +689,7 @@ void FSI::Monolithic::time_step(const std::shared_ptr<NOX::Nln::Interface::Requi
 /*----------------------------------------------------------------------------*/
 void FSI::Monolithic::update()
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem().fsi_dynamic_params();
   const bool timeadapton = fsidyn.sublist("TIMEADAPTIVITY").get<bool>("TIMEADAPTON");
 
   if (not timeadapton)
@@ -721,7 +724,7 @@ void FSI::Monolithic::non_lin_error_check()
   // that depends on the user's will given in the input file
 
   // get the FSI parameter list
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem().fsi_dynamic_params();
 
   // get the user's will
   const auto divcontype =
@@ -1072,8 +1075,9 @@ void FSI::Monolithic::write_interface_energy_file(const double energystep, const
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-FSI::BlockMonolithic::BlockMonolithic(MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : Monolithic(comm, timeparams),
+FSI::BlockMonolithic::BlockMonolithic(
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : Monolithic(comm, problem, timeparams),
       precondreusecount_(0),
       timeparams_(timeparams),
       interfaceprocs_(0)
@@ -1099,7 +1103,7 @@ bool FSI::BlockMonolithic::compute_jacobian(
 void FSI::BlockMonolithic::prepare_time_step_preconditioner()
 {
   const Teuchos::ParameterList& fsimono =
-      Global::Problem::instance()->fsi_dynamic_params().sublist("MONOLITHIC SOLVER");
+      problem().fsi_dynamic_params().sublist("MONOLITHIC SOLVER");
 
   if (fsimono.get<bool>("REBUILDPRECEVERYSTEP")) precondreusecount_ = 0;
 }
@@ -1119,6 +1123,8 @@ std::shared_ptr<NOX::Nln::LinearSystemBase> FSI::BlockMonolithic::create_linear_
     Teuchos::ParameterList& nlParams, NOX::Nln::Vector& noxSoln,
     std::shared_ptr<::NOX::Utils> utils)
 {
+  auto& problem = this->problem();
+
   Teuchos::ParameterList& printParams = nlParams.sublist("Printing");
   Teuchos::ParameterList& dirParams = nlParams.sublist("Direction");
   Teuchos::ParameterList& newtonParams = dirParams.sublist("Newton");
@@ -1128,7 +1134,7 @@ std::shared_ptr<NOX::Nln::LinearSystemBase> FSI::BlockMonolithic::create_linear_
   const std::shared_ptr<Core::LinAlg::BlockSparseMatrixBase> J = system_matrix();
   const std::shared_ptr<Core::LinAlg::BlockSparseMatrixBase> M = system_matrix();
 
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem.fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
 
   const int linsolvernumber = fsimono.get<int>("LINEAR_SOLVER");
@@ -1137,13 +1143,11 @@ std::shared_ptr<NOX::Nln::LinearSystemBase> FSI::BlockMonolithic::create_linear_
         "no linear solver defined for monolithic FSI. Please set LINEAR_SOLVER in FSI "
         "DYNAMIC/MONOLITHIC SOLVER to a valid number!");
 
-  const Teuchos::ParameterList& fsisolverparams =
-      Global::Problem::instance()->solver_params(linsolvernumber);
+  const Teuchos::ParameterList& fsisolverparams = problem.solver_params(linsolvernumber);
 
   auto solver = std::make_shared<Core::LinAlg::Solver>(fsisolverparams, get_comm(),
-      Global::Problem::instance()->solver_params_callback(),
-      Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-          Global::Problem::instance()->io_params(), "VERBOSITY"));
+      problem.solver_params_callback(),
+      Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem.io_params(), "VERBOSITY"));
 
   const auto azprectype =
       Teuchos::getIntegralValue<Core::LinearSolver::PreconditionerType>(fsisolverparams, "AZPREC");
@@ -1154,9 +1158,8 @@ std::shared_ptr<NOX::Nln::LinearSystemBase> FSI::BlockMonolithic::create_linear_
     case Core::LinearSolver::PreconditionerType::block_teko:
     {
       solver->put_solver_params_to_sub_params("Inverse1", fsisolverparams,
-          Global::Problem::instance()->solver_params_callback(),
-          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-              Global::Problem::instance()->io_params(), "VERBOSITY"),
+          problem.solver_params_callback(),
+          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem.io_params(), "VERBOSITY"),
           get_comm());
       compute_null_space_if_necessary(
           *structure_field()->discretization(), solver->params().sublist("Inverse1"));
@@ -1166,9 +1169,8 @@ std::shared_ptr<NOX::Nln::LinearSystemBase> FSI::BlockMonolithic::create_linear_
           solver->params().sublist("Inverse1"));
 
       solver->put_solver_params_to_sub_params("Inverse2", fsisolverparams,
-          Global::Problem::instance()->solver_params_callback(),
-          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-              Global::Problem::instance()->io_params(), "VERBOSITY"),
+          problem.solver_params_callback(),
+          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem.io_params(), "VERBOSITY"),
           get_comm());
       compute_null_space_if_necessary(
           *fluid_field()->discretization(), solver->params().sublist("Inverse2"));
@@ -1178,9 +1180,8 @@ std::shared_ptr<NOX::Nln::LinearSystemBase> FSI::BlockMonolithic::create_linear_
           solver->params().sublist("Inverse2"));
 
       solver->put_solver_params_to_sub_params("Inverse3", fsisolverparams,
-          Global::Problem::instance()->solver_params_callback(),
-          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-              Global::Problem::instance()->io_params(), "VERBOSITY"),
+          problem.solver_params_callback(),
+          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem.io_params(), "VERBOSITY"),
           get_comm());
       compute_null_space_if_necessary(
           *ale_field()->discretization(), solver->params().sublist("Inverse3"));

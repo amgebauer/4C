@@ -13,11 +13,9 @@
 #include "4C_poroelast_scatra_utils.hpp"
 #include "4C_poroelast_utils_clonestrategy.hpp"
 #include "4C_scatra_ele.hpp"
-#include "4C_solid_poro_3D_ele_pressure_based.hpp"
-#include "4C_solid_poro_3D_ele_pressure_velocity_based.hpp"
-#include "4C_solid_poro_3D_ele_pressure_velocity_based_p1.hpp"
-#include "4C_w1_poro_p1_scatra.hpp"
-#include "4C_w1_poro_scatra.hpp"
+#include "4C_solid_poro_ele_pressure_based.hpp"
+#include "4C_solid_poro_ele_pressure_velocity_based.hpp"
+#include "4C_solid_poro_ele_pressure_velocity_based_p1.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -30,68 +28,33 @@ Inpar::ScaTra::ImplType PoroElastScaTra::Utils::PoroScatraCloneStrategy::get_imp
   const std::string& eletypename = ele->element_type().name();
 
   // Solidporo
-  if (eletypename == "SolidPoroPressureBasedType")
+  if (eletypename == "SolidPoroPressureBasedType<2>")
   {
-    return (dynamic_cast<Discret::Elements::SolidPoroPressureBased*>(ele))->get_impl_type();
+    return (dynamic_cast<Discret::Elements::SolidPoroPressureBased<2>*>(ele))->get_impl_type();
   }
-  else if (eletypename == "SolidPoroPressureVelocityBasedType")
+  else if (eletypename == "SolidPoroPressureBasedType<3>")
   {
-    return (dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBased*>(ele))->get_impl_type();
+    return (dynamic_cast<Discret::Elements::SolidPoroPressureBased<3>*>(ele))->get_impl_type();
   }
-  else if (eletypename == "SolidPoroPressureVelocityBasedP1Type")
+  else if (eletypename == "SolidPoroPressureVelocityBasedType<2>")
   {
-    return (dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBasedP1*>(ele))
+    return (dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBased<2>*>(ele))
         ->get_impl_type();
   }
-  // wall poro scatra elements
-  // quad 4
-  else if (eletypename == "WallQuad4PoroScatraType")
+  else if (eletypename == "SolidPoroPressureVelocityBasedType<3>")
   {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::quad4>*>(ele))
-        ->impl_type();
+    return (dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBased<3>*>(ele))
+        ->get_impl_type();
   }
-  // quad 9
-  else if (eletypename == "WallQuad9PoroScatraType")
+  else if (eletypename == "SolidPoroPressureVelocityBasedP1Type<2>")
   {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::quad9>*>(ele))
-        ->impl_type();
+    return (dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBasedP1<2>*>(ele))
+        ->get_impl_type();
   }
-  // nurbs 4
-  else if (eletypename == "WallNurbs4PoroScatraType")
+  else if (eletypename == "SolidPoroPressureVelocityBasedP1Type<3>")
   {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::nurbs4>*>(ele))
-        ->impl_type();
-  }
-  // nurbs 9
-  else if (eletypename == "WallNurbs9PoroScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::nurbs9>*>(ele))
-        ->impl_type();
-  }
-  // tri 3
-  else if (eletypename == "WallTri3PoroScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroScatra<Core::FE::CellType::tri3>*>(ele))
-        ->impl_type();
-  }
-  // wall poro p1 elements
-  // quad 4
-  else if (eletypename == "WallQuad4PoroP1ScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroP1Scatra<Core::FE::CellType::quad4>*>(ele))
-        ->impl_type();
-  }
-  // quad 9
-  else if (eletypename == "WallQuad9PoroP1ScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroP1Scatra<Core::FE::CellType::quad9>*>(ele))
-        ->impl_type();
-  }
-  // tri 3
-  else if (eletypename == "WallTri3PoroP1ScatraType")
-  {
-    return (dynamic_cast<Discret::Elements::Wall1PoroP1Scatra<Core::FE::CellType::tri3>*>(ele))
-        ->impl_type();
+    return (dynamic_cast<Discret::Elements::SolidPoroPressureVelocityBasedP1<3>*>(ele))
+        ->get_impl_type();
   }
   // call base class routine
   else
@@ -144,7 +107,7 @@ void PoroElastScaTra::Utils::PoroScatraCloneStrategy::set_element_data(
         "copied "
         "to scatra elements or the ImplType is set 'Undefined' which is not meaningful for the "
         "created scatra discretization! "
-        "Use SOLIDSCATRA, WALLSCATRA, SHELLSCATRA, SOLIDPOROSCATRA, SOLIDPOROP1SCATRA, "
+        "Use SOLIDSCATRA, SHELLSCATRA, SOLIDPOROSCATRA, SOLIDPOROP1SCATRA, "
         "SOLIDPORO_PRESSURE_BASED, WALLPOROSCATRA or WALLPOROP1SCATRA Elements with meaningful "
         "ImplType instead!");
 

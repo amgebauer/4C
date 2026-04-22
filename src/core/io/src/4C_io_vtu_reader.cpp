@@ -279,11 +279,11 @@ namespace
         {
           int id = std::stoi(suffix);
           max_numeric_id = std::max(max_numeric_id, id);
-          numbered.push_back({id, array_name, array_ref});
+          numbered.emplace_back(id, array_name, array_ref);
           continue;
         }
       }
-      named.push_back({0, array_name, array_ref});
+      named.emplace_back(0, array_name, array_ref);
     }
 
     std::sort(named.begin(), named.end(),

@@ -49,7 +49,8 @@ namespace Adapter
     \brief Empty constructor
 
     */
-    CouplingPoroMortar(int spatial_dimension, Teuchos::ParameterList mortar_coupling_params,
+    CouplingPoroMortar(Global::Problem& problem, int spatial_dimension,
+        Teuchos::ParameterList mortar_coupling_params,
         Teuchos::ParameterList contact_dynamic_params,
         Core::FE::ShapeFunctionType shape_function_type);
 

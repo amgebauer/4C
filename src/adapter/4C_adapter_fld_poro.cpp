@@ -21,11 +21,13 @@ FOUR_C_NAMESPACE_OPEN
 
 /*======================================================================*/
 /* constructor */
-Adapter::FluidPoro::FluidPoro(std::shared_ptr<Fluid> fluid,
+Adapter::FluidPoro::FluidPoro(Global::Problem& problem, std::shared_ptr<Fluid> fluid,
     std::shared_ptr<Core::FE::Discretization> dis, std::shared_ptr<Core::LinAlg::Solver> solver,
     std::shared_ptr<Teuchos::ParameterList> params,
     std::shared_ptr<Core::IO::DiscretizationWriter> output, bool isale, bool dirichletcond)
-    : Adapter::FluidFPSI::FluidFPSI(fluid, dis, solver, params, output, isale, dirichletcond)
+    : Adapter::FluidFPSI::FluidFPSI(
+          problem, fluid, dis, solver, params, output, isale, dirichletcond),
+      problem_(problem)
 {
   // make sure
 
@@ -43,6 +45,8 @@ void Adapter::FluidPoro::evaluate_no_penetration_cond(
     std::shared_ptr<Core::LinAlg::Vector<double>> condVector, std::set<int>& condIDs,
     PoroElast::Coupltype coupltype)
 {
+  auto& problem = problem_;
+
   if (!(discretization()->filled())) FOUR_C_THROW("fill_complete() was not called");
   if (!discretization()->have_dofs()) FOUR_C_THROW("assign_degrees_of_freedom() was not called");
 
@@ -63,7 +67,7 @@ void Adapter::FluidPoro::evaluate_no_penetration_cond(
     // write global IDs of dofs on which the no penetration condition is applied (can vary in time
     // and iteration)
     {
-      const int ndim = Global::Problem::instance()->n_dim();
+      const int ndim = problem.n_dim();
       const int ndof = ndim + 1;
       const int length = condVector->local_length();
       const int nnod = length / ndof;

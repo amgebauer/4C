@@ -19,8 +19,7 @@ set(_dependencies
     poroelast
     scatra
     scatra_ele
-    solid_poro_3D_ele
-    w1
+    solid_poro_ele
     )
 
 four_c_add_internal_dependency(${AUTO_DEFINED_MODULE_NAME} ${_dependencies})

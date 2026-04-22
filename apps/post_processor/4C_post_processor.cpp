@@ -440,23 +440,6 @@ namespace
         writer.write_files();
         break;
       }
-      case Core::ProblemType::tsi:
-      {
-        std::cout << "Output TSI Problem" << std::endl;
-
-        std::string basename = problem.outname();
-
-        PostField* thermfield = problem.get_discretization(0);
-        ThermoFilter thermwriter(
-            thermfield, basename, problem.heatfluxtype(), problem.tempgradtype());
-        thermwriter.write_files();
-
-        PostField* structfield = problem.get_discretization(1);
-        StructureFilter structwriter(
-            structfield, basename, problem.stresstype(), problem.straintype());
-        structwriter.write_files();
-        break;
-      }
       case Core::ProblemType::red_airways:
       {
         std::string basename = problem.outname();

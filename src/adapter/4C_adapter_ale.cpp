@@ -36,8 +36,9 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-Adapter::AleBaseAlgorithm::AleBaseAlgorithm(
+Adapter::AleBaseAlgorithm::AleBaseAlgorithm(Global::Problem& problem,
     const Teuchos::ParameterList& prbdyn, std::shared_ptr<Core::FE::Discretization> actdis)
+    : problem_(problem)
 {
   setup_ale(prbdyn, actdis);
 }
@@ -50,9 +51,10 @@ void Adapter::AleBaseAlgorithm::setup_ale(
 {
   auto t = Teuchos::TimeMonitor::getNewTimer("ALE::AleBaseAlgorithm::setup_ale");
   Teuchos::TimeMonitor monitor(*t);
+  auto* problem = &problem_;
 
   // what's the current problem type?
-  const Core::ProblemType probtype = Global::Problem::instance()->get_problem_type();
+  const Core::ProblemType probtype = problem->get_problem_type();
 
   // ---------------------------------------------------------------------------
   // set degrees of freedom in the discretization
@@ -78,7 +80,7 @@ void Adapter::AleBaseAlgorithm::setup_ale(
   // set some pointers and variables
   // ---------------------------------------------------------------------------
   std::shared_ptr<Teuchos::ParameterList> adyn =
-      std::make_shared<Teuchos::ParameterList>(Global::Problem::instance()->ale_dynamic_params());
+      std::make_shared<Teuchos::ParameterList>(problem->ale_dynamic_params());
 
   // ---------------------------------------------------------------------------
   // create a linear solver
@@ -90,11 +92,10 @@ void Adapter::AleBaseAlgorithm::setup_ale(
         "No linear solver defined for ALE problems. Please set "
         "LINEAR_SOLVER in ALE DYNAMIC to a valid number!");
 
-  std::shared_ptr<Core::LinAlg::Solver> solver = std::make_shared<Core::LinAlg::Solver>(
-      Global::Problem::instance()->solver_params(linsolvernumber), actdis->get_comm(),
-      Global::Problem::instance()->solver_params_callback(),
-      Teuchos::getIntegralValue<Core::IO::Verbositylevel>(
-          Global::Problem::instance()->io_params(), "VERBOSITY"));
+  std::shared_ptr<Core::LinAlg::Solver> solver =
+      std::make_shared<Core::LinAlg::Solver>(problem->solver_params(linsolvernumber),
+          actdis->get_comm(), problem->solver_params_callback(),
+          Teuchos::getIntegralValue<Core::IO::Verbositylevel>(problem->io_params(), "VERBOSITY"));
   compute_null_space_if_necessary(*actdis, solver->params());
 
   // ---------------------------------------------------------------------------
@@ -109,7 +110,7 @@ void Adapter::AleBaseAlgorithm::setup_ale(
   if (probtype == Core::ProblemType::fpsi)
   {
     // FPSI input parameters
-    const Teuchos::ParameterList& fpsidyn = Global::Problem::instance()->fpsi_dynamic_params();
+    const Teuchos::ParameterList& fpsidyn = problem->fpsi_dynamic_params();
     auto coupling = Teuchos::getIntegralValue<FpsiCouplingType>(fpsidyn, "COUPALGO");
     if (coupling == partitioned)
     {
@@ -162,7 +163,7 @@ void Adapter::AleBaseAlgorithm::setup_ale(
     case Core::ProblemType::thermo_fsi:
     case Core::ProblemType::biofilm_fsi:
     {
-      const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+      const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
       auto coupling = Teuchos::getIntegralValue<FsiCoupling>(fsidyn, "COUPALGO");
       if (coupling == fsi_iter_monolithicfluidsplit or
           coupling == fsi_iter_monolithicstructuresplit or
@@ -204,7 +205,7 @@ void Adapter::AleBaseAlgorithm::setup_ale(
     }
     case Core::ProblemType::fsi_redmodels:
     {
-      const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+      const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
       auto coupling = Teuchos::getIntegralValue<FsiCoupling>(fsidyn, "COUPALGO");
       if (coupling == fsi_iter_monolithicfluidsplit or
           coupling == fsi_iter_monolithicstructuresplit or

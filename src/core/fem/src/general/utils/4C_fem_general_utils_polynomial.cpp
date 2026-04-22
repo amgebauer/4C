@@ -533,7 +533,7 @@ namespace Core::FE
       const Core::LinAlg::Matrix<nsd, 1>& point, Core::LinAlg::SerialDenseVector& values) const
   {
     legendre_.evaluate(point, values);
-    vandermonde_factor_.setVectors(Teuchos::rcpFromRef(values), Teuchos::rcpFromRef(values));
+    vandermonde_factor_.set_vectors(values, values);
     vandermonde_factor_.solve();
   }
 
@@ -547,8 +547,7 @@ namespace Core::FE
     for (unsigned int d = 0; d < nsd; ++d)
     {
       for (unsigned int i = 0; i < size(); ++i) evaluate_vec_(i) = derivatives(d, i);
-      vandermonde_factor_.setVectors(
-          Teuchos::rcpFromRef(evaluate_vec_), Teuchos::rcpFromRef(evaluate_vec_));
+      vandermonde_factor_.set_vectors(evaluate_vec_, evaluate_vec_);
       vandermonde_factor_.solve();
       for (unsigned int i = 0; i < size(); ++i) derivatives(d, i) = evaluate_vec_(i);
     }
@@ -564,8 +563,7 @@ namespace Core::FE
     for (unsigned int d = 0; d < (nsd * (nsd + 1)) / 2; ++d)
     {
       for (unsigned int i = 0; i < size(); ++i) evaluate_vec_(i) = derivatives(d, i);
-      vandermonde_factor_.setVectors(
-          Teuchos::rcpFromRef(evaluate_vec_), Teuchos::rcpFromRef(evaluate_vec_));
+      vandermonde_factor_.set_vectors(evaluate_vec_, evaluate_vec_);
       vandermonde_factor_.solve();
       for (unsigned int i = 0; i < size(); ++i) derivatives(d, i) = evaluate_vec_(i);
     }
@@ -668,9 +666,9 @@ namespace Core::FE
       for (unsigned int j = 0; j < size(); ++j) vandermonde_(j, i) = values(j);
     }
 
-    vandermonde_factor_.setMatrix(Teuchos::rcpFromRef(vandermonde_.base()));
+    vandermonde_factor_.set_matrix(vandermonde_);
     vandermonde_factor_.factor();
-    evaluate_vec_.shape(size(), 1);
+    evaluate_vec_.resize(size());
 
 
     // Sanity check: Polynomials should be nodal in the Fekete points

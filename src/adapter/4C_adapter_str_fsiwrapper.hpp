@@ -25,6 +25,11 @@ namespace Solid
   }
 }  // namespace Solid
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 
 namespace Adapter
 {
@@ -32,7 +37,7 @@ namespace Adapter
   {
    public:
     /// constructor
-    explicit FSIStructureWrapper(std::shared_ptr<Structure> structure);
+    FSIStructureWrapper(Global::Problem& problem, std::shared_ptr<Structure> structure);
 
     /// communication object at the interface
     virtual std::shared_ptr<const Solid::MapExtractor> interface() const { return interface_; }
@@ -98,7 +103,14 @@ namespace Adapter
     /// access the fsi model evaluator
     std::shared_ptr<Solid::ModelEvaluator::PartitionedFSI> fsi_model_evaluator();
 
+    /// explicit global problem context
+    Global::Problem& problem() { return problem_; }
+    const Global::Problem& problem() const { return problem_; }
+
    private:
+    /// explicit global problem context
+    Global::Problem& problem_;
+
     /// The structural model evaluator object.
     /// Your FSI algorithm calls methods in this adapter.
     /// If this method is related to the structural field,

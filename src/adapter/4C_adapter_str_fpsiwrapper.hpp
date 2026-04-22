@@ -20,7 +20,7 @@ namespace Adapter
   {
    public:
     /// constructor
-    explicit FPSIStructureWrapper(std::shared_ptr<Structure> structure);
+    FPSIStructureWrapper(Global::Problem& problem, std::shared_ptr<Structure> structure);
 
     /*!
     \brief extract interface displacements at \f$t_{n}\f$

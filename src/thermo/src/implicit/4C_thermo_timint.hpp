@@ -272,9 +272,6 @@ namespace Thermo
       return std::make_shared<Core::LinAlg::Map>(*dofrowmap);
     }
 
-    //! Access output object
-    std::shared_ptr<Core::IO::DiscretizationWriter> disc_writer() override { return output_; }
-
     //! Read restart values at given restart step
     void read_restart(const int step) override;
 

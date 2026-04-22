@@ -12,6 +12,9 @@
 
 #include "4C_linalg_fixedsizematrix.hpp"
 #include "4C_linalg_fixedsizematrix_solver.hpp"
+#include "4C_linalg_serialdensematrix.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
+#include "4C_linalg_serialdensevector.hpp"
 #include "4C_linalg_tensor.hpp"
 #include "4C_utils_fad.hpp"
 
@@ -61,6 +64,24 @@ namespace Core::Utils
   {
     x -= Core::LinAlg::inv(jacobian) * residuum;
   }
+
+  inline void local_newton_iteration(Core::LinAlg::SerialDenseVector& x,
+      const Core::LinAlg::SerialDenseVector& residuum, Core::LinAlg::SerialDenseMatrix&& jacobian)
+  {
+    Core::LinAlg::SerialDenseVector dx(x.length(), true);
+    Core::LinAlg::SerialDenseVector rhs(residuum);
+    Core::LinAlg::SerialDenseSolver solver;
+    solver.set_matrix(jacobian);
+    solver.set_vectors(dx, rhs);
+    solver.factor_with_equilibration(true);
+    solver.factor();
+    solver.solve();
+
+    for (int i = 0; i < x.length(); ++i)
+    {
+      x(i) -= dx(i);
+    }
+  }
   /// @}
 
   /// @brief Free functions defining a to compute the L2-norm of the used Vector Type
@@ -85,6 +106,8 @@ namespace Core::Utils
   {
     return Core::LinAlg::norm2(x);
   }
+
+  inline double l2_norm(const Core::LinAlg::SerialDenseVector& x) { return Core::LinAlg::norm2(x); }
   /// @}
 
   /*!

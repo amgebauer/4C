@@ -9,9 +9,11 @@
 #include "4C_config_revision.hpp"
 
 #include "4C_comm_utils.hpp"
+#include "4C_global_data.hpp"
 #include "4C_global_full_io.hpp"
 #include "4C_global_legacy_module.hpp"
 #include "4C_io_command_line_helpers.hpp"
+#include "4C_io_control.hpp"
 #include "4C_io_input_file_utils.hpp"
 #include "4C_io_pstream.hpp"
 #include "4C_utils_exceptions.hpp"
@@ -221,38 +223,37 @@ void run(CommandlineArguments& cli_args, Core::Communication::Communicators& com
 
   /* input phase, input of all information */
   global_legacy_module_callbacks().RegisterParObjectTypes();
-  double t0 = walltime_in_seconds();
 
-  // and now the actual reading
-  Core::IO::InputFile input_file = setup_input_file(communicators.local_comm());
-  input_file.read(cli_args.input_file_name);
-  setup_global_problem(input_file, cli_args, communicators);
+  {
+    TEUCHOS_FUNC_TIME_MONITOR("Input");
+
+    // and now the actual reading
+    Core::IO::InputFile input_file = setup_input_file(communicators.local_comm());
+    input_file.read(cli_args.input_file_name);
+    setup_global_problem(input_file, cli_args, communicators);
+  }
 
   // we wait till all procs are here. Otherwise a hang up might occur where
   // one proc ended with FOUR_C_THROW but other procs were not finished and waited...
   // we also want to have the printing above being finished.
   Core::Communication::barrier(communicators.local_comm());
 
-
-  const double ti = walltime_in_seconds() - t0;
-  if (Core::Communication::my_mpi_rank(communicators.global_comm()) == 0)
-  {
-    Core::IO::cout << "\nTotal wall time for INPUT:       " << std::setw(10) << std::setprecision(3)
-                   << std::scientific << ti << " sec \n\n";
-  }
-
   /*--------------------------------------------------calculation phase */
-  t0 = walltime_in_seconds();
 
-  entrypoint_switch();
+  {
+    TEUCHOS_FUNC_TIME_MONITOR("Calculation");
+
+    entrypoint_switch();
+  }
 
   write_timemonitor(communicators.local_comm());
 
-  const double tc = walltime_in_seconds() - t0;
-  if (Core::Communication::my_mpi_rank(communicators.global_comm()) == 0)
+  if (Global::Problem::instance()->io_params().get<bool>("WRITE_TIMINGS"))
   {
-    Core::IO::cout << "\nTotal wall time for CALCULATION: " << std::setw(10) << std::setprecision(3)
-                   << std::scientific << tc << " sec \n\n";
+    std::filesystem::path filename(
+        Global::Problem::instance()->output_control_file()->file_name() + "-timings.yaml");
+
+    export_timings(filename, communicators.global_comm());
   }
 }
 

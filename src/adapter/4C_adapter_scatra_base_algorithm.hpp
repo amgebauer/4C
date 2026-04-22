@@ -33,6 +33,11 @@ namespace Core::LinAlg
   class Solver;
 }
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   /// general scalar transport field interface for multiphysics problems
@@ -45,8 +50,8 @@ namespace Adapter
   {
    public:
     /// constructor
-    ScaTraBaseAlgorithm(
-        const Teuchos::ParameterList& prbdyn,  ///< parameter list for global problem
+    ScaTraBaseAlgorithm(Global::Problem& problem,  ///< explicit global problem context
+        const Teuchos::ParameterList& prbdyn,      ///< parameter list for global problem
         const Teuchos::ParameterList&
             scatradyn,  ///< parameter list for scalar transport subproblem
         const Teuchos::ParameterList& solverparams,  ///< parameter list for scalar transport solver
@@ -70,6 +75,9 @@ namespace Adapter
     std::shared_ptr<Core::Utils::ResultTest> create_scatra_field_test();
 
    private:
+    /// explicit global problem context
+    Global::Problem& problem_;
+
     /// scalar transport field solver
     std::shared_ptr<ScaTra::ScaTraTimIntImpl> scatra_;
 

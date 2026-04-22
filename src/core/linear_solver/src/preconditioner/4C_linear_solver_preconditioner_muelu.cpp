@@ -14,12 +14,12 @@
 #include "4C_linear_solver_thyra_utils.hpp"
 #include "4C_utils_exceptions.hpp"
 
+#include <Amesos2_Factory.hpp>
 #include <MueLu_CreateXpetraPreconditioner.hpp>
 #include <MueLu_EpetraOperator.hpp>
 #include <MueLu_ParameterListInterpreter.hpp>
 #include <MueLu_UseDefaultTypes.hpp>
 #include <Stratimikos_MueLuHelpers.hpp>
-#include <Teko_EpetraInverseOpWrapper.hpp>
 #include <Teuchos_ParameterList.hpp>
 #include <Teuchos_RCPStdSharedPtrConversions.hpp>
 #include <Xpetra_EpetraCrsMatrix.hpp>
@@ -51,13 +51,16 @@ void Core::LinearSolver::MueLuPreconditioner::setup(
 {
   using EpetraMultiVector = Xpetra::EpetraMultiVectorT<GO, NO>;
 
-  if (!muelulist_.sublist("MueLu Parameters").isParameter("MUELU_XML_FILE"))
-    FOUR_C_THROW("MUELU_XML_FILE parameter not set!");
-  auto xmlFileName = muelulist_.sublist("MueLu Parameters").get<std::string>("MUELU_XML_FILE");
+  if (!muelulist_.sublist("MueLu Parameters").isParameter("PRECONDITIONER_XML_FILE"))
+    FOUR_C_THROW("PRECONDITIONER_XML_FILE parameter not set!");
+  auto xmlFileName =
+      muelulist_.sublist("MueLu Parameters").get<std::string>("PRECONDITIONER_XML_FILE");
 
   Teuchos::ParameterList muelu_params;
   auto comm = Core::Communication::to_teuchos_comm<int>(matrix.get_comm());
   Teuchos::updateParametersFromXmlFileAndBroadcast(xmlFileName, Teuchos::Ptr(&muelu_params), *comm);
+
+  validate_coarse_solver(muelu_params);
 
   Teuchos::RCP<Core::LinAlg::BlockSparseMatrixBase> A =
       Teuchos::rcp_dynamic_cast<Core::LinAlg::BlockSparseMatrixBase>(Teuchos::rcpFromRef(matrix));
@@ -118,7 +121,7 @@ void Core::LinearSolver::MueLuPreconditioner::setup(
         Thyra::prec<double>(*precFactory, pmatrix_);
     auto inverseOp = prec->getUnspecifiedPrecOp();
 
-    p_ = std::make_shared<Teko::Epetra::EpetraInverseOpWrapper>(inverseOp);
+    p_ = Utils::get_epetra_inverse_operator_from_thyra(inverseOp);
   }
   else
   {
@@ -191,16 +194,16 @@ void Core::LinearSolver::MueLuPreconditioner::setup(
       H_->GetLevel(0)->Set("Nullspace" + std::to_string(block + 1), nullspace);
     }
 
-    if (muelulist_.sublist("Belos Parameters").isParameter("contact slaveDofMap"))
+    if (muelulist_.sublist("Belos Parameters").isParameter("contact sourceDofMap"))
     {
-      const auto slave_dof_map =
+      const auto source_dof_map =
           muelulist_.sublist("Belos Parameters")
-              .get<std::shared_ptr<Core::LinAlg::Map>>("contact slaveDofMap");
+              .get<std::shared_ptr<Core::LinAlg::Map>>("contact sourceDofMap");
 
-      if (slave_dof_map == nullptr) FOUR_C_THROW("Interface contact map is not available!");
+      if (source_dof_map == nullptr) FOUR_C_THROW("Interface contact map is not available!");
 
       Teuchos::RCP<EpetraMap> ep_slave_dof_map =
-          Teuchos::make_rcp<EpetraMap>(Teuchos::rcpFromRef(slave_dof_map->get_epetra_map()));
+          Teuchos::make_rcp<EpetraMap>(Teuchos::rcpFromRef(source_dof_map->get_epetra_map()));
 
       H_->GetLevel(0)->Set("Primal interface DOF map",
           Teuchos::rcp_dynamic_cast<const Xpetra::Map<LO, GO, NO>>(ep_slave_dof_map, true));
@@ -221,6 +224,16 @@ void Core::LinearSolver::MueLuPreconditioner::setup(
     mueLuFactory.SetupHierarchy(*H_);
     p_ = std::make_shared<MueLu::EpetraOperator>(H_);
   }
+}
+
+void Core::LinearSolver::validate_coarse_solver(const Teuchos::ParameterList& params)
+{
+  if (!params.isParameter("coarse: type")) return;
+
+  const std::string solver = params.get<std::string>("coarse: type");
+
+  FOUR_C_ASSERT_ALWAYS(Amesos2::query(solver),
+      "Requested coarse solver {} is not available in your Trilinos build of Amesos2.", solver);
 }
 
 FOUR_C_NAMESPACE_CLOSE

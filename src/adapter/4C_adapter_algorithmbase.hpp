@@ -18,6 +18,11 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   /// base class for algorithms
@@ -29,7 +34,8 @@ namespace Adapter
   class AlgorithmBase
   {
    public:
-    explicit AlgorithmBase(MPI_Comm comm, const Teuchos::ParameterList& timeparams);
+    explicit AlgorithmBase(
+        Global::Problem& problem, MPI_Comm comm, const Teuchos::ParameterList& timeparams);
 
     /// virtual destruction
     virtual ~AlgorithmBase() = default;
@@ -95,7 +101,12 @@ namespace Adapter
     /// return printscreen_
     int print_screen_every() { return printscreen_; }
 
+    Global::Problem& problem() { return problem_; }
+    const Global::Problem& problem() const { return problem_; }
+
    private:
+    Global::Problem& problem_;
+
     /// communication (mainly for screen output)
     MPI_Comm comm_;
 

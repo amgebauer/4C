@@ -36,14 +36,13 @@ set(_dependencies
     scatra_ele
     shell7p
     shell_kl_nurbs
-    solid_3D_ele
-    solid_poro_3D_ele
-    solid_scatra_3D_ele
+    solid_ele
+    solid_poro_ele
+    solid_scatra_ele
     structure_new
     thermo
     torsion3
     truss3
-    w1
     )
 
 four_c_add_internal_dependency(${AUTO_DEFINED_MODULE_NAME} ${_dependencies})

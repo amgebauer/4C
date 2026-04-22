@@ -17,6 +17,13 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
+Adapter::StructureTimeLoop::StructureTimeLoop(
+    Global::Problem& problem, std::shared_ptr<Structure> structure)
+    : StructureWrapper(structure), problem_(problem)
+{
+}
+/*----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------*/
 int Adapter::StructureTimeLoop::integrate()
 {
   // error checking variables
@@ -62,8 +69,7 @@ int Adapter::StructureTimeLoop::integrate()
     }
     // todo: remove this as soon as old structure time integration is gone
     else if (Teuchos::getIntegralValue<Inpar::Solid::IntegrationStrategy>(
-                 Global::Problem::instance()->structural_dynamic_params(), "INT_STRATEGY") ==
-             Inpar::Solid::int_old)
+                 problem_.structural_dynamic_params(), "INT_STRATEGY") == Inpar::Solid::int_old)
     {
       convergencestatus =
           perform_error_action(convergencestatus);  // something went wrong update error code

@@ -20,12 +20,13 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-Adapter::FBIStructureWrapper::FBIStructureWrapper(std::shared_ptr<Structure> structure)
-    : FSIStructureWrapper(structure)
+Adapter::FBIStructureWrapper::FBIStructureWrapper(
+    Global::Problem& problem, std::shared_ptr<Structure> structure)
+    : FSIStructureWrapper(problem, structure)
 {
-  const bool is_prestress = Teuchos::getIntegralValue<Inpar::Solid::PreStress>(
-                                Global::Problem::instance()->structural_dynamic_params(),
-                                "PRESTRESS") != Inpar::Solid::PreStress::none;
+  const bool is_prestress =
+      Teuchos::getIntegralValue<Inpar::Solid::PreStress>(
+          problem.structural_dynamic_params(), "PRESTRESS") != Inpar::Solid::PreStress::none;
   if (is_prestress)
   {
     FOUR_C_THROW("Prestressing for fluid-beam interaction not tested yet.");

@@ -27,8 +27,8 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FSI::FluidFluidMonolithicStructureSplit::FluidFluidMonolithicStructureSplit(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : MonolithicStructureSplit(comm, timeparams)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : MonolithicStructureSplit(comm, problem, timeparams)
 {
   // cast to problem-specific fluid-wrapper
   fluid_ =

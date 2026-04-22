@@ -20,20 +20,22 @@
 
 FOUR_C_NAMESPACE_OPEN
 
-Adapter::CouplingEhlMortar::CouplingEhlMortar(int spatial_dimension,
+Adapter::CouplingEhlMortar::CouplingEhlMortar(Global::Problem& problem, int spatial_dimension,
     Teuchos::ParameterList mortar_coupling_params, Teuchos::ParameterList contact_dynamic_params,
     Core::FE::ShapeFunctionType shape_function_type)
-    : CouplingNonLinMortar(
-          spatial_dimension, mortar_coupling_params, contact_dynamic_params, shape_function_type),
-      contact_regularization_(Global::Problem::instance()->contact_dynamic_params().get<bool>(
-          "REGULARIZED_NORMAL_CONTACT")),
-      regularization_thickness_(Global::Problem::instance()->contact_dynamic_params().get<double>(
-          "REGULARIZATION_THICKNESS")),
-      regularization_compliance_(Global::Problem::instance()->contact_dynamic_params().get<double>(
-          "REGULARIZATION_STIFFNESS"))
+    : CouplingNonLinMortar(problem, spatial_dimension, mortar_coupling_params,
+          contact_dynamic_params, shape_function_type),
+      contact_regularization_(
+          problem.contact_dynamic_params().get<bool>("REGULARIZED_NORMAL_CONTACT")),
+      regularization_thickness_(
+          problem.contact_dynamic_params().get<double>("REGULARIZATION_THICKNESS")),
+      regularization_compliance_(
+          problem.contact_dynamic_params().get<double>("REGULARIZATION_STIFFNESS"))
 {
+  auto* active_problem = &problem;
+
   if (Teuchos::getIntegralValue<Mortar::ParallelRedist>(
-          Global::Problem::instance()->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION"),
+          active_problem->mortar_coupling_params().sublist("PARALLEL REDISTRIBUTION"),
           "PARALLEL_REDIST") != Mortar::ParallelRedist::redist_none)
     FOUR_C_THROW(
         "EHL does not support parallel redistribution. Set \"PARALLEL_REDIST none\" in section "
@@ -43,9 +45,8 @@ Adapter::CouplingEhlMortar::CouplingEhlMortar(int spatial_dimension,
     if (regularization_compliance_ <= 0. || regularization_thickness_ <= 0.)
       FOUR_C_THROW("need positive REGULARIZATION_THICKNESS and REGULARIZATION_STIFFNESS");
   if (contact_regularization_) regularization_compliance_ = 1. / regularization_compliance_;
-  if (Global::Problem::instance()->contact_dynamic_params().get<bool>(
-          "REGULARIZED_NORMAL_CONTACT") &&
-      not Global::Problem::instance()->elasto_hydro_dynamic_params().get<bool>("DRY_CONTACT_MODEL"))
+  if (active_problem->contact_dynamic_params().get<bool>("REGULARIZED_NORMAL_CONTACT") &&
+      not active_problem->elasto_hydro_dynamic_params().get<bool>("DRY_CONTACT_MODEL"))
     FOUR_C_THROW("for dry contact model you need REGULARIZED_NORMAL_CONTACT and DRY_CONTACT_MODEL");
 }
 
@@ -70,12 +71,14 @@ void Adapter::CouplingEhlMortar::setup(std::shared_ptr<Core::FE::Discretization>
     std::shared_ptr<Core::FE::Discretization> slavedis, std::vector<int> coupleddof,
     const std::string& couplingcond)
 {
+  auto* problem = &CouplingNonLinMortar::problem();
+
   Adapter::CouplingNonLinMortar::setup(masterdis, slavedis, coupleddof, couplingcond);
-  z_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_dofs(), true);
-  fscn_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_dofs(), true);
+  z_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs(), true);
+  fscn_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs(), true);
 
   auto ftype = Teuchos::getIntegralValue<CONTACT::FrictionType>(
-      Global::Problem::instance()->contact_dynamic_params(), "FRICTION");
+      problem->contact_dynamic_params(), "FRICTION");
 
   std::vector<const Core::Conditions::Condition*> ehl_conditions;
   masterdis->get_condition(couplingcond, ehl_conditions);
@@ -183,27 +186,27 @@ void Adapter::CouplingEhlMortar::condense_contact(
       std::make_shared<Core::LinAlg::Vector<double>>(*interface_->active_dofs(), true);
   std::shared_ptr<Core::LinAlg::Vector<double>> g_all;
   if (constr_direction_ == CONTACT::ConstraintDirection::xyz)
-    g_all = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_dofs(), true);
+    g_all = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs(), true);
   else
-    g_all = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_nodes(), true);
+    g_all = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_nodes(), true);
 
   std::shared_ptr<Core::LinAlg::SparseMatrix> dmatrix =
-      std::make_shared<Core::LinAlg::SparseMatrix>(*interface_->slave_row_dofs(), 10);
+      std::make_shared<Core::LinAlg::SparseMatrix>(*interface_->source_row_dofs(), 10);
   std::shared_ptr<Core::LinAlg::SparseMatrix> mmatrix =
-      std::make_shared<Core::LinAlg::SparseMatrix>(*interface_->slave_row_dofs(), 100);
+      std::make_shared<Core::LinAlg::SparseMatrix>(*interface_->source_row_dofs(), 100);
   interface_->assemble_dm(*dmatrix, *mmatrix);
   dmatrix->complete();
   mmatrix->complete(*masterdofrowmap_, *slavedofrowmap_);
 
   // setup some linearizations
   Core::LinAlg::SparseMatrix linDcontactLM(
-      *interface_->slave_row_dofs(), 100, true, false, Core::LinAlg::SparseMatrix::FE_MATRIX);
+      *interface_->source_row_dofs(), 100, true, false, Core::LinAlg::SparseMatrix::FE_MATRIX);
   Core::LinAlg::SparseMatrix linMcontactLM(
-      *interface_->master_row_dofs(), 100, true, false, Core::LinAlg::SparseMatrix::FE_MATRIX);
+      *interface_->target_row_dofs(), 100, true, false, Core::LinAlg::SparseMatrix::FE_MATRIX);
   interface_->assemble_lin_dm(linDcontactLM, linMcontactLM);
 
   // D and M matrix for the active nodes
-  Core::LinAlg::SparseMatrix dInv(*interface_->slave_row_dofs(), 100, true, false);
+  Core::LinAlg::SparseMatrix dInv(*interface_->source_row_dofs(), 100, true, false);
 
   // linearized normal contact
   interface_->assemble_s(*dcsdd);
@@ -239,8 +242,8 @@ void Adapter::CouplingEhlMortar::condense_contact(
 
   // complete all those linearizations
   //                             colmap        rowmap
-  linDcontactLM.complete(*s_mdof_map(), *interface_->slave_row_dofs());
-  linMcontactLM.complete(*s_mdof_map(), *interface_->master_row_dofs());
+  linDcontactLM.complete(*s_mdof_map(), *interface_->source_row_dofs());
+  linMcontactLM.complete(*s_mdof_map(), *interface_->target_row_dofs());
 
   // normal contact
   std::shared_ptr<Core::LinAlg::Vector<double>> gact;
@@ -282,7 +285,7 @@ void Adapter::CouplingEhlMortar::condense_contact(
   std::shared_ptr<Core::LinAlg::Map> gpres_DofRowMap =
       std::make_shared<Core::LinAlg::Map>(ktt.row_map());
   std::shared_ptr<Core::LinAlg::Map> gmdof =
-      std::make_shared<Core::LinAlg::Map>(*interface_->master_row_dofs());
+      std::make_shared<Core::LinAlg::Map>(*interface_->target_row_dofs());
   std::shared_ptr<Core::LinAlg::Map> active_dofs =
       std::make_shared<Core::LinAlg::Map>(*interface_->active_dofs());
 
@@ -308,7 +311,7 @@ void Adapter::CouplingEhlMortar::condense_contact(
 
   // map containing the inactive and non-contact structural dofs
   std::shared_ptr<Core::LinAlg::Map> str_gni_dofs = Core::LinAlg::split_map(
-      *Core::LinAlg::split_map(Core::LinAlg::Map(kss->row_map()), *interface_->master_row_dofs()),
+      *Core::LinAlg::split_map(Core::LinAlg::Map(kss->row_map()), *interface_->target_row_dofs()),
       *interface_->active_dofs());
 
   // add to kss
@@ -423,7 +426,7 @@ void Adapter::CouplingEhlMortar::condense_contact(
   // split structural rhs
   Core::LinAlg::Vector<double> rsni(*str_gni_dofs);
   Core::LinAlg::export_to(rs, rsni);
-  Core::LinAlg::Vector<double> rsm(*interface_->master_row_dofs());
+  Core::LinAlg::Vector<double> rsm(*interface_->target_row_dofs());
   Core::LinAlg::export_to(rs, rsm);
   std::shared_ptr<Core::LinAlg::Vector<double>> rsa =
       std::make_shared<Core::LinAlg::Vector<double>>(*interface_->active_dofs());
@@ -453,7 +456,7 @@ void Adapter::CouplingEhlMortar::condense_contact(
   dummy1 = dummy2 = dummy3 = nullptr;
   Core::LinAlg::split_matrix2x2(
       mmatrix, active_dofs, dummy_map1, gmdof, dummy_map2, mA, dummy1, dummy2, dummy3);
-  mA->complete(*interface_->master_row_dofs(), *interface_->active_dofs());
+  mA->complete(*interface_->target_row_dofs(), *interface_->active_dofs());
 
   // get dinv * M
   std::shared_ptr<Core::LinAlg::SparseMatrix> dInvMa =
@@ -551,7 +554,7 @@ void Adapter::CouplingEhlMortar::condense_contact(
   Core::LinAlg::matrix_add(
       *Core::LinAlg::matrix_multiply(*dInvMa, true, *kst_a, false, false, false, true), false, 1.,
       kst_new, 1.);
-  tmpv = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->master_row_dofs());
+  tmpv = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->target_row_dofs());
   dInvMa->multiply(true, *rsa, *tmpv);
   CONTACT::Utils::add_vector(*tmpv, *combined_RHS);
   tmpv = nullptr;
@@ -584,7 +587,7 @@ void Adapter::CouplingEhlMortar::condense_contact(
 
 void Adapter::CouplingEhlMortar::evaluate_rel_mov()
 {
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
     Core::Nodes::Node* node = interface()->discret().l_row_node(i);
     if (!node) FOUR_C_THROW("node not found");
@@ -627,13 +630,13 @@ void Adapter::CouplingEhlMortar::recover_coupled(std::shared_ptr<Core::LinAlg::V
     lmc_a_new.update(1., tmp, 1.);
     dinvA_->multiply(false, lmc_a_new, tmp);
     tmp.scale(-1. / (1. - alphaf_));
-    z_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_dofs());
+    z_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs());
 
     Core::LinAlg::export_to(tmp, *z_);
   }
 
   else
-    z_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_dofs());
+    z_ = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs());
 
   if (z_old != nullptr)
   {
@@ -642,7 +645,7 @@ void Adapter::CouplingEhlMortar::recover_coupled(std::shared_ptr<Core::LinAlg::V
   }
 
   // store updated LM into nodes
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
     CONTACT::Node* cnode = dynamic_cast<CONTACT::Node*>(interface_->discret().l_row_node(i));
     for (int dof = 0; dof < interface_->n_dim(); ++dof)
@@ -661,9 +664,9 @@ void Adapter::CouplingEhlMortar::recover_coupled(std::shared_ptr<Core::LinAlg::V
 void Adapter::CouplingEhlMortar::store_dirichlet_status(const Core::LinAlg::MapExtractor& dbcmaps)
 {
   // loop over all slave row nodes on the current interface
-  for (int j = 0; j < interface_->slave_row_nodes()->num_my_elements(); ++j)
+  for (int j = 0; j < interface_->source_row_nodes()->num_my_elements(); ++j)
   {
-    int gid = interface_->slave_row_nodes()->gid(j);
+    int gid = interface_->source_row_nodes()->gid(j);
     Core::Nodes::Node* node = interface_->discret().g_node(gid);
     if (!node) FOUR_C_THROW("ERROR: Cannot find node with gid %", gid);
     CONTACT::Node* cnode = dynamic_cast<CONTACT::Node*>(node);
@@ -691,7 +694,7 @@ void Adapter::CouplingEhlMortar::store_dirichlet_status(const Core::LinAlg::MapE
   }
   // create old style dirichtoggle vector (supposed to go away)
   sdirichtoggle_ =
-      std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_dofs(), true);
+      std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs(), true);
   Core::LinAlg::Vector<double> temp(*(dbcmaps.cond_map()));
   temp.put_scalar(1.0);
   Core::LinAlg::export_to(temp, *sdirichtoggle_);
@@ -750,11 +753,11 @@ std::shared_ptr<Core::LinAlg::SparseMatrix> Adapter::CouplingEhlMortar::assemble
 
 void Adapter::CouplingEhlMortar::assemble_normals()
 {
-  normals_ = std::make_shared<Core::LinAlg::Vector<double>>(*slave_dof_map(), true);
+  normals_ = std::make_shared<Core::LinAlg::Vector<double>>(*source_dof_map(), true);
 
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
-    Core::Nodes::Node* node = interface()->discret().g_node(interface_->slave_row_nodes()->gid(i));
+    Core::Nodes::Node* node = interface()->discret().g_node(interface_->source_row_nodes()->gid(i));
     if (!node) FOUR_C_THROW("node not found");
     CONTACT::Node* cnode = dynamic_cast<CONTACT::Node*>(node);
     if (!cnode) FOUR_C_THROW("not a contact node");
@@ -768,9 +771,9 @@ void Adapter::CouplingEhlMortar::assemble_normals()
 void Adapter::CouplingEhlMortar::assemble_normals_deriv()
 {
   Nderiv_ = std::make_shared<Core::LinAlg::SparseMatrix>(*slavedofrowmap_, 81, false, false);
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
-    Core::Nodes::Node* node = interface()->discret().g_node(interface_->slave_row_nodes()->gid(i));
+    Core::Nodes::Node* node = interface()->discret().g_node(interface_->source_row_nodes()->gid(i));
     if (!node) FOUR_C_THROW("node not found");
     CONTACT::Node* cnode = dynamic_cast<CONTACT::Node*>(node);
     if (!cnode) FOUR_C_THROW("not a contact node");
@@ -785,11 +788,13 @@ void Adapter::CouplingEhlMortar::assemble_normals_deriv()
 
 void Adapter::CouplingEhlMortar::assemble_real_gap()
 {
+  auto* problem = &CouplingNonLinMortar::problem();
+
   nodal_gap_ = std::make_shared<Core::LinAlg::Vector<double>>(*slavenoderowmap_, true);
 
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
-    Core::Nodes::Node* node = interface()->discret().g_node(interface_->slave_row_nodes()->gid(i));
+    Core::Nodes::Node* node = interface()->discret().g_node(interface_->source_row_nodes()->gid(i));
     if (!node) FOUR_C_THROW("node not found");
     CONTACT::Node* cnode = dynamic_cast<CONTACT::Node*>(node);
     if (!cnode) FOUR_C_THROW("not a contact node");
@@ -811,8 +816,7 @@ void Adapter::CouplingEhlMortar::assemble_real_gap()
     nodal_gap_->replace_global_value(cnode->id(), real_gap);
   }
 
-  static const double offset =
-      Global::Problem::instance()->lubrication_dynamic_params().get<double>("GAP_OFFSET");
+  static const double offset = problem->lubrication_dynamic_params().get<double>("GAP_OFFSET");
   for (int i = 0; i < nodal_gap_->get_map().num_my_elements(); ++i)
     nodal_gap_->get_values()[i] += offset;
 }
@@ -822,9 +826,9 @@ void Adapter::CouplingEhlMortar::assemble_real_gap_deriv()
   deriv_nodal_gap_ =
       std::make_shared<Core::LinAlg::SparseMatrix>(*slavedofrowmap_, 81, false, false);
 
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
-    Core::Nodes::Node* node = interface()->discret().g_node(interface_->slave_row_nodes()->gid(i));
+    Core::Nodes::Node* node = interface()->discret().g_node(interface_->source_row_nodes()->gid(i));
     if (!node) FOUR_C_THROW("node not found");
     CONTACT::Node* cnode = dynamic_cast<CONTACT::Node*>(node);
     if (!cnode) FOUR_C_THROW("not a contact node");
@@ -881,9 +885,9 @@ void Adapter::CouplingEhlMortar::assemble_interface_velocities(const double dt)
   avTangVel_deriv_ =
       std::make_shared<Core::LinAlg::SparseMatrix>(*slavedofrowmap_, 81, false, false);
 
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
-    Core::Nodes::Node* node = interface()->discret().g_node(interface_->slave_row_nodes()->gid(i));
+    Core::Nodes::Node* node = interface()->discret().g_node(interface_->source_row_nodes()->gid(i));
     if (!node) FOUR_C_THROW("node not found");
     CONTACT::Node* cnode = dynamic_cast<CONTACT::Node*>(node);
     if (!cnode) FOUR_C_THROW("not a contact node");
@@ -967,9 +971,9 @@ void Adapter::CouplingEhlMortar::assemble_surf_grad()
   SurfGrad_ = std::make_shared<Core::LinAlg::SparseMatrix>(
       *slavedofrowmap_, 81, false, false, Core::LinAlg::SparseMatrix::FE_MATRIX);
 
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
-    Core::Nodes::Node* node = interface()->discret().g_node(interface_->slave_row_nodes()->gid(i));
+    Core::Nodes::Node* node = interface()->discret().g_node(interface_->source_row_nodes()->gid(i));
     if (!node) FOUR_C_THROW("ERROR: Cannot find node");
     CONTACT::Node* cnode = dynamic_cast<CONTACT::Node*>(node);
     if (!cnode) FOUR_C_THROW("this is not a contact node");
@@ -1007,9 +1011,9 @@ std::shared_ptr<Core::LinAlg::SparseMatrix> Adapter::CouplingEhlMortar::assemble
       std::make_shared<Core::LinAlg::SparseMatrix>(
           *slavedofrowmap_, 81, false, false, Core::LinAlg::SparseMatrix::FE_MATRIX);
 
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
-    Core::Nodes::Node* node = interface()->discret().g_node(interface_->slave_row_nodes()->gid(i));
+    Core::Nodes::Node* node = interface()->discret().g_node(interface_->source_row_nodes()->gid(i));
     if (!node) FOUR_C_THROW("ERROR: Cannot find node");
     CONTACT::Node* cnode = dynamic_cast<CONTACT::Node*>(node);
     if (!cnode) FOUR_C_THROW("this is not a contact node");
@@ -1076,9 +1080,9 @@ std::shared_ptr<Core::LinAlg::SparseMatrix> Adapter::CouplingEhlMortar::assemble
 void Adapter::CouplingEhlMortar::create_force_vec(std::shared_ptr<Core::LinAlg::Vector<double>>& n,
     std::shared_ptr<Core::LinAlg::Vector<double>>& t)
 {
-  n = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_dofs());
-  t = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_dofs());
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  n = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs());
+  t = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_dofs());
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
     CONTACT::FriNode* cnode = dynamic_cast<CONTACT::FriNode*>(interface_->discret().l_row_node(i));
     if (!cnode) FOUR_C_THROW("cast failed");
@@ -1103,11 +1107,11 @@ void Adapter::CouplingEhlMortar::create_active_slip_toggle(
     std::shared_ptr<Core::LinAlg::Vector<double>>* slip,
     std::shared_ptr<Core::LinAlg::Vector<double>>* active_old)
 {
-  *active = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_nodes());
-  *slip = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_nodes());
+  *active = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_nodes());
+  *slip = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_nodes());
   if (active_old != nullptr)
-    *active_old = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_nodes());
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+    *active_old = std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_nodes());
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
     CONTACT::FriNode* cnode = dynamic_cast<CONTACT::FriNode*>(interface_->discret().l_row_node(i));
     if (!cnode) FOUR_C_THROW("cast failed");
@@ -1153,16 +1157,16 @@ void Adapter::CouplingEhlMortar::read_restart(Core::IO::DiscretizationReader& re
   reader.read_vector(z_, "contact_lm");
 
   std::shared_ptr<Core::LinAlg::Vector<double>> active_toggle =
-      std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_nodes());
+      std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_nodes());
   std::shared_ptr<Core::LinAlg::Vector<double>> active_old_toggle =
-      std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_nodes());
+      std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_nodes());
   std::shared_ptr<Core::LinAlg::Vector<double>> slip_toggle =
-      std::make_shared<Core::LinAlg::Vector<double>>(*interface_->slave_row_nodes());
+      std::make_shared<Core::LinAlg::Vector<double>>(*interface_->source_row_nodes());
   reader.read_vector(active_toggle, "active_toggle");
   reader.read_vector(active_old_toggle, "active_old_toggle");
   reader.read_vector(slip_toggle, "slip_toggle");
 
-  for (int i = 0; i < interface_->slave_row_nodes()->num_my_elements(); ++i)
+  for (int i = 0; i < interface_->source_row_nodes()->num_my_elements(); ++i)
   {
     CONTACT::FriNode* cnode = dynamic_cast<CONTACT::FriNode*>(interface_->discret().l_row_node(i));
     if (!cnode) FOUR_C_THROW("cast failed");

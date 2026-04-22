@@ -23,7 +23,8 @@ ScaTra::ScaTraAlgorithm::ScaTraAlgorithm(MPI_Comm comm,  ///< communicator
     const std::string scatra_disname,                    ///< scatra discretization name
     const Teuchos::ParameterList& solverparams           ///< solver parameter list
     )
-    : ScaTraFluidCouplingAlgorithm(comm, scatradyn, false, scatra_disname, solverparams),
+    : ScaTraFluidCouplingAlgorithm(
+          *Global::Problem::instance(), comm, scatradyn, false, scatra_disname, solverparams),
       natconv_(scatradyn.get<bool>("NATURAL_CONVECTION")),
       natconvitmax_(scatradyn.sublist("NONLINEAR").get<int>("ITEMAX_OUTER")),
       natconvittol_(scatradyn.sublist("NONLINEAR").get<double>("CONVTOL_OUTER")),

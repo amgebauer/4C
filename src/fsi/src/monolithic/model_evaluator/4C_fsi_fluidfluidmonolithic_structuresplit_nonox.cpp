@@ -34,8 +34,8 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FSI::FluidFluidMonolithicStructureSplitNoNOX::FluidFluidMonolithicStructureSplitNoNOX(
-    MPI_Comm comm, const Teuchos::ParameterList& timeparams)
-    : MonolithicNoNOX(comm, timeparams)
+    MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams)
+    : MonolithicNoNOX(comm, problem, timeparams)
 {
   // Throw an error if there are DBCs on structural interface DOFs.
   std::vector<std::shared_ptr<const Core::LinAlg::Map>> intersectionmaps;
@@ -368,16 +368,16 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::setup_system_matrix()
   systemmatrix_->assign(0, 0, Core::LinAlg::DataAccess::Share, s->matrix(0, 0));
 
   (*sigtransform_)(s->full_row_map(), s->full_col_map(), s->matrix(0, 1), 1. / timescale,
-      Coupling::Adapter::CouplingMasterConverter(coupsf), systemmatrix_->matrix(0, 1));
+      Coupling::Adapter::CouplingTargetConverter(coupsf), systemmatrix_->matrix(0, 1));
   (*sggtransform_)(s->matrix(1, 1),
       ((1.0 - ftiparam) / (1.0 - stiparam)) * (1. / (scale * timescale)),
-      Coupling::Adapter::CouplingMasterConverter(coupsf),
-      Coupling::Adapter::CouplingMasterConverter(coupsf), *f, true, true);
+      Coupling::Adapter::CouplingTargetConverter(coupsf),
+      Coupling::Adapter::CouplingTargetConverter(coupsf), *f, true, true);
 
   std::shared_ptr<Core::LinAlg::SparseMatrix> lsgi =
       std::make_shared<Core::LinAlg::SparseMatrix>(f->row_map(), 81, false);
   (*sgitransform_)(s->matrix(1, 0), ((1.0 - ftiparam) / (1.0 - stiparam)) * (1. / scale),
-      Coupling::Adapter::CouplingMasterConverter(coupsf), *lsgi);
+      Coupling::Adapter::CouplingTargetConverter(coupsf), *lsgi);
 
   lsgi->complete(s->matrix(1, 0).domain_map(), f->range_map());
 
@@ -405,12 +405,12 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::setup_system_matrix()
 
     Core::LinAlg::SparseMatrix lfmgi(f->row_map(), 81, false);
     (*fmgitransform_)(mmm->full_row_map(), mmm->full_col_map(), fmgi, 1.,
-        Coupling::Adapter::CouplingMasterConverter(coupfa),
+        Coupling::Adapter::CouplingTargetConverter(coupfa),
         // systemmatrix_->Matrix(1,2),
         lfmgi, false, false);
 
     (*fmiitransform_)(mmm->full_row_map(), mmm->full_col_map(), fmii, 1.,
-        Coupling::Adapter::CouplingMasterConverter(coupfa), lfmgi, false, true);
+        Coupling::Adapter::CouplingTargetConverter(coupfa), lfmgi, false, true);
 
     lfmgi.complete(aii.domain_map(), f->range_map());
 
@@ -443,8 +443,10 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::initial_guess(
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::scale_system(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& b)
 {
+  auto* problem = &this->problem();
+
   // should we scale the system?
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -520,7 +522,8 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::unscale_solution(
     Core::LinAlg::BlockSparseMatrixBase& mat, Core::LinAlg::Vector<double>& x,
     Core::LinAlg::Vector<double>& b)
 {
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  auto* problem = &this->problem();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
   const Teuchos::ParameterList& fsimono = fsidyn.sublist("MONOLITHIC SOLVER");
   const bool scaling_infnorm = fsimono.get<bool>("INFNORMSCALING");
 
@@ -701,6 +704,8 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::extract_field_vectors(
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::output()
 {
+  auto* problem = &this->problem();
+
   structure_field()->output();
 
   // output Lagrange multiplier
@@ -708,7 +713,7 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::output()
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =
         structure_field()->interface()->insert_fsi_cond_vector(*lambda_);
 
-    const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+    const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
     const int uprestart = fsidyn.get<int>("RESTARTEVERY");
     const int upres = fsidyn.get<int>("RESULTSEVERY");
     if ((uprestart != 0 && fluid_field()->step() % uprestart == 0) ||
@@ -732,13 +737,14 @@ void FSI::FluidFluidMonolithicStructureSplitNoNOX::output()
 /*----------------------------------------------------------------------*/
 void FSI::FluidFluidMonolithicStructureSplitNoNOX::read_restart(int step)
 {
+  auto* problem = &this->problem();
+
   // read Lagrange multiplier
   {
     std::shared_ptr<Core::LinAlg::Vector<double>> lambdafull =
         std::make_shared<Core::LinAlg::Vector<double>>(*structure_field()->dof_row_map(), true);
-    Core::IO::DiscretizationReader reader =
-        Core::IO::DiscretizationReader(*structure_field()->discretization(),
-            Global::Problem::instance()->input_control_file(), step);
+    Core::IO::DiscretizationReader reader = Core::IO::DiscretizationReader(
+        *structure_field()->discretization(), problem->input_control_file(), step);
     reader.read_vector(lambdafull, "fsilambda");
     lambda_ = structure_field()->interface()->extract_fsi_cond_vector(*lambdafull);
   }

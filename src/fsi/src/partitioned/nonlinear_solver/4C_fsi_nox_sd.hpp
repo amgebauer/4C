@@ -20,6 +20,11 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace FSI::Nonlinear
 {
   //! Use NonlinearCG linesearch
@@ -100,7 +105,8 @@ namespace FSI::Nonlinear
   {
    public:
     //! Constructor
-    SDRelaxation(const Teuchos::RCP<::NOX::Utils>& utils, Teuchos::ParameterList& params);
+    SDRelaxation(const Teuchos::RCP<::NOX::Utils>& utils, Teuchos::ParameterList& params,
+        Global::Problem& problem);
 
 
     // derived
@@ -120,6 +126,8 @@ namespace FSI::Nonlinear
 
     //! Temporary Vector pointer used to compute directional derivatives
     Teuchos::RCP<::NOX::Abstract::Vector> vec_ptr_;
+
+    Global::Problem& problem_;
   };
 
 
@@ -127,11 +135,16 @@ namespace FSI::Nonlinear
   class SDFactory : public ::NOX::LineSearch::UserDefinedFactory
   {
    public:
+    explicit SDFactory(Global::Problem& problem) : problem_(problem) {}
+
     Teuchos::RCP<::NOX::LineSearch::Generic> buildLineSearch(
         const Teuchos::RCP<::NOX::GlobalData>& gd, Teuchos::ParameterList& params) const override
     {
-      return Teuchos::make_rcp<SDRelaxation>(gd->getUtils(), params);
+      return Teuchos::make_rcp<SDRelaxation>(gd->getUtils(), params, problem_);
     }
+
+   private:
+    Global::Problem& problem_;
   };
 
 }  // namespace FSI::Nonlinear

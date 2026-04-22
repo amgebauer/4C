@@ -24,8 +24,8 @@
 #include "4C_linalg_utils_sparse_algebra_create.hpp"
 #include "4C_linalg_utils_sparse_algebra_manipulation.hpp"
 #include "4C_mortar_interface.hpp"
-#include "4C_solid_3D_ele_line.hpp"
-#include "4C_solid_3D_ele_surface.hpp"
+#include "4C_solid_ele_line.hpp"
+#include "4C_solid_ele_surface.hpp"
 
 #include <map>
 #include <set>
@@ -78,17 +78,17 @@ bool FSI::Utils::fluid_ale_nodes_disjoint(
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
-FSI::Utils::SlideAleUtils::SlideAleUtils(std::shared_ptr<Core::FE::Discretization> structdis,
+FSI::Utils::SlideAleUtils::SlideAleUtils(Global::Problem& problem,
+    std::shared_ptr<Core::FE::Discretization> structdis,
     std::shared_ptr<Core::FE::Discretization> fluiddis, Coupling::Adapter::CouplingMortar& coupsf,
     bool structcoupmaster, FSI::SlideALEProj aleproj)
-    : aletype_(aleproj)
+    : problem_(problem), aletype_(aleproj)
 {
   structcoupmaster_ = structcoupmaster;
 
-  coupff_ = std::make_shared<Coupling::Adapter::CouplingMortar>(
-      Global::Problem::instance()->n_dim(), Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+  coupff_ = std::make_shared<Coupling::Adapter::CouplingMortar>(problem_.n_dim(),
+      problem_.mortar_coupling_params(), problem_.contact_dynamic_params(),
+      problem_.spatial_approximation_type());
 
   // declare struct objects in interface
   std::map<int, std::map<int, std::shared_ptr<Core::Elements::Element>>> structelements;
@@ -176,13 +176,13 @@ FSI::Utils::SlideAleUtils::SlideAleUtils(std::shared_ptr<Core::FE::Discretizatio
   // useful displacement vectors
   if (structcoupmaster_)
   {
-    structdofrowmap_ = coupsf.master_dof_map();
-    fluiddofrowmap_ = coupsf.slave_dof_map();
+    structdofrowmap_ = coupsf.target_dof_map();
+    fluiddofrowmap_ = coupsf.source_dof_map();
   }
   else
   {
-    structdofrowmap_ = coupsf.slave_dof_map();
-    fluiddofrowmap_ = coupsf.master_dof_map();
+    structdofrowmap_ = coupsf.source_dof_map();
+    fluiddofrowmap_ = coupsf.target_dof_map();
   }
 
   std::shared_ptr<Core::LinAlg::Map> dofrowmap =
@@ -192,7 +192,7 @@ FSI::Utils::SlideAleUtils::SlideAleUtils(std::shared_ptr<Core::FE::Discretizatio
   iprojhist_ = std::make_shared<Core::LinAlg::Vector<double>>(*fluiddofrowmap_, true);
 
 
-  centerdisptotal_.resize(Global::Problem::instance()->n_dim());
+  centerdisptotal_.resize(problem_.n_dim());
 
   redundant_elements(coupsf, structdis->get_comm());
 
@@ -200,16 +200,14 @@ FSI::Utils::SlideAleUtils::SlideAleUtils(std::shared_ptr<Core::FE::Discretizatio
 
   // coupling condition at the fsi interface: displacements (=number spacial dimensions) are
   // coupled) e.g.: 3D: coupleddof = [1, 1, 1]
-  std::vector<int> coupleddof(Global::Problem::instance()->n_dim(), 1);
+  std::vector<int> coupleddof(problem_.n_dim(), 1);
 
   // this setup only initialize two sets of identical mortar elements (master and slave)
   // -> projection matrix is a unity matrix
   coupff_->setup(fluiddis, fluiddis, nullptr, coupleddof, "FSICoupling", fluiddis->get_comm(),
-      Global::Problem::instance()->function_manager(),
-      Global::Problem::instance()->binning_strategy_params(),
-      Global::Problem::instance()->discretization_map(),
-      Global::Problem::instance()->output_control_file(),
-      Global::Problem::instance()->spatial_approximation_type(), false, true);
+      problem_.function_manager(), problem_.binning_strategy_params(),
+      problem_.discretization_map(), problem_.output_control_file(),
+      problem_.spatial_approximation_type(), false, true);
 }
 
 /*----------------------------------------------------------------------*/
@@ -220,7 +218,7 @@ void FSI::Utils::SlideAleUtils::remeshing(Adapter::FSIStructureWrapper& structur
     MPI_Comm comm)
 {
   std::shared_ptr<Core::LinAlg::Vector<double>> idisptotal = structure.extract_interface_dispnp();
-  const int dim = Global::Problem::instance()->n_dim();
+  const int dim = problem_.n_dim();
 
   // project sliding fluid nodes onto struct interface surface
   slide_projection(structure, fluiddis, idispale, iprojdispale, coupsf, comm);
@@ -293,7 +291,7 @@ void FSI::Utils::SlideAleUtils::evaluate_fluid_mortar(
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::Utils::SlideAleUtils::interpolate_fluid(
     const Core::LinAlg::Vector<double>& uold)
 {
-  std::shared_ptr<Core::LinAlg::Vector<double>> unew = coupff_->master_to_slave(uold);
+  std::shared_ptr<Core::LinAlg::Vector<double>> unew = coupff_->target_to_source(uold);
   unew->replace_map(uold.get_map());
 
   return unew;
@@ -313,7 +311,7 @@ std::vector<double> FSI::Utils::SlideAleUtils::centerdisp(
 
   idispstep->update(-1.0, *idispn, 1.0);
 
-  const int dim = Global::Problem::instance()->n_dim();
+  const int dim = problem_.n_dim();
   // get structure and fluid discretizations  and set stated for element evaluation
   Core::LinAlg::Vector<double> idisptotalcol(*structdis->dof_col_map(), true);
   export_to(*idisptotal, idisptotalcol);
@@ -436,7 +434,7 @@ void FSI::Utils::SlideAleUtils::slide_projection(
 
 )
 {
-  const int dim = Global::Problem::instance()->n_dim();
+  const int dim = problem_.n_dim();
 
   std::shared_ptr<Core::LinAlg::Vector<double>> idispnp = structure.extract_interface_dispnp();
 
@@ -579,19 +577,19 @@ void FSI::Utils::SlideAleUtils::redundant_elements(
   int foffset = 0;
   if (structcoupmaster_)
   {
-    structfullnodemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->master_row_dofs()));
-    structfullelemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->master_row_elements()));
-    fluidfullnodemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->slave_row_dofs()));
-    fluidfullelemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->slave_row_elements()));
+    structfullnodemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->target_row_dofs()));
+    structfullelemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->target_row_elements()));
+    fluidfullnodemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->source_row_dofs()));
+    fluidfullelemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->source_row_elements()));
     soffset = 0;
     foffset = fluidfullelemap_->min_my_gid();
   }
   else
   {
-    fluidfullnodemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->master_row_dofs()));
-    fluidfullelemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->master_row_elements()));
-    structfullnodemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->slave_row_dofs()));
-    structfullelemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->slave_row_elements()));
+    fluidfullnodemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->target_row_dofs()));
+    fluidfullelemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->target_row_elements()));
+    structfullnodemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->source_row_dofs()));
+    structfullelemap_ = Core::LinAlg::allreduce_e_map(*(coupsf.interface()->source_row_elements()));
     soffset = structfullelemap_->min_my_gid();
     foffset = 0;
   }
@@ -601,7 +599,7 @@ void FSI::Utils::SlideAleUtils::redundant_elements(
   std::map<int, std::map<int, std::shared_ptr<Core::Elements::Element>>>::iterator mapit;
   // build redundant version istructslideles_;
   std::map<int, std::shared_ptr<Core::Elements::Element>>::iterator it;
-  int dim = Global::Problem::instance()->n_dim();
+  int dim = problem_.n_dim();
 
   for (int i = 0; i <= maxid_; ++i)
   {

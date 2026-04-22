@@ -27,8 +27,9 @@ FOUR_C_NAMESPACE_OPEN
 // define the order in which the filters handle the Discretizations, which in
 // turn defines the dof number ordering of the Discretizations.
 /*----------------------------------------------------------------------*/
-FSI::Algorithm::Algorithm(MPI_Comm comm)
-    : AlgorithmBase(comm, Global::Problem::instance()->fsi_dynamic_params()),
+FSI::Algorithm::Algorithm(MPI_Comm comm, Global::Problem& problem)
+    : AlgorithmBase(problem, comm, problem.fsi_dynamic_params()),
+      problem_(problem),
       adapterbase_ptr_(nullptr),
       use_old_structure_(false)
 {
@@ -41,17 +42,18 @@ FSI::Algorithm::Algorithm(MPI_Comm comm)
 /*----------------------------------------------------------------------*/
 void FSI::Algorithm::setup()
 {
+  auto& problem = this->problem();
+
   // access the structural discretization
-  std::shared_ptr<Core::FE::Discretization> structdis =
-      Global::Problem::instance()->get_dis("structure");
+  std::shared_ptr<Core::FE::Discretization> structdis = problem.get_dis("structure");
 
   // access structural dynamic params list which will be possibly modified while creating the time
   // integrator
-  const Teuchos::ParameterList& sdyn = Global::Problem::instance()->structural_dynamic_params();
+  const Teuchos::ParameterList& sdyn = problem.structural_dynamic_params();
 
   // access the fsi dynamic params
   Teuchos::ParameterList& fsidyn =
-      const_cast<Teuchos::ParameterList&>(Global::Problem::instance()->fsi_dynamic_params());
+      const_cast<Teuchos::ParameterList&>(problem.fsi_dynamic_params());
 
   // build and register fsi model evaluator
   std::shared_ptr<Solid::ModelEvaluator::Generic> fsi_model_ptr =
@@ -69,7 +71,7 @@ void FSI::Algorithm::setup()
   if (Teuchos::getIntegralValue<Inpar::Solid::IntegrationStrategy>(sdyn, "INT_STRATEGY") ==
       Inpar::Solid::IntegrationStrategy::int_standard)
   {
-    adapterbase_ptr_ = Adapter::build_structure_algorithm(sdyn);
+    adapterbase_ptr_ = Adapter::build_structure_algorithm(problem, sdyn);
     adapterbase_ptr_->init(fsidyn, const_cast<Teuchos::ParameterList&>(sdyn), structdis);
     adapterbase_ptr_->register_model_evaluator("Partitioned Coupling Model", fsi_model_ptr);
     adapterbase_ptr_->setup();
@@ -94,7 +96,7 @@ void FSI::Algorithm::setup()
                    "\n"
                 << std::endl;
 
-    Adapter::StructureBaseAlgorithm structure(Global::Problem::instance()->fsi_dynamic_params(),
+    Adapter::StructureBaseAlgorithm structure(problem, problem.fsi_dynamic_params(),
         const_cast<Teuchos::ParameterList&>(sdyn), structdis);
     structure_ =
         std::dynamic_pointer_cast<Adapter::FSIStructureWrapper>(structure.structure_field());
@@ -113,7 +115,7 @@ void FSI::Algorithm::setup()
         "set INT_STRATEGY to Old in ---STRUCTURAL DYNAMIC section!");
 
   Adapter::FluidMovingBoundaryBaseAlgorithm MBFluidbase(
-      Global::Problem::instance()->fsi_dynamic_params(), "FSICoupling");
+      problem, problem.fsi_dynamic_params(), "FSICoupling");
   fluid_ = MBFluidbase.mb_fluid_field();
 
   coupsf_ = std::make_shared<Coupling::Adapter::Coupling>();
@@ -187,7 +189,7 @@ void FSI::Algorithm::output()
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::Algorithm::struct_to_fluid(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv)
 {
-  return coupsf_->master_to_slave(*iv);
+  return coupsf_->target_to_source(*iv);
 }
 
 
@@ -196,7 +198,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::Algorithm::struct_to_fluid(
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::Algorithm::fluid_to_struct(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv)
 {
-  return coupsf_->slave_to_master(*iv);
+  return coupsf_->source_to_target(*iv);
 }
 
 
@@ -218,7 +220,7 @@ const Coupling::Adapter::Coupling& FSI::Algorithm::structure_fluid_coupling() co
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::Algorithm::struct_to_fluid(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsf_->master_to_slave(*iv);
+  return coupsf_->target_to_source(*iv);
 }
 
 
@@ -227,7 +229,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FSI::Algorithm::struct_to_fluid(
 std::shared_ptr<Core::LinAlg::Vector<double>> FSI::Algorithm::fluid_to_struct(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return coupsf_->slave_to_master(*iv);
+  return coupsf_->source_to_target(*iv);
 }
 
 FOUR_C_NAMESPACE_CLOSE

@@ -87,7 +87,7 @@ MATERIALS:
       FIBER_READER_ID: 24
       MAT_BEHAVIOR: "isotropic"
       TIME_INTEGRATION_HIST_VARS: logarithmic
-      MAX_SUBSTEPPING_HALVE_NUM: 10
+
   - MAT: 23
     MAT_ViscoplasticLawReformulatedJohnsonCook:
       STRAIN_RATE_PREFAC: 1
@@ -95,6 +95,9 @@ MATERIALS:
       INIT_YIELD_STRENGTH: 792
       ISOTROP_HARDEN_PREFAC: 510
       ISOTROP_HARDEN_EXP: 0.26
+      REF_TEMPERATURE: 293.0
+      TEMPERATURE_SENS: 1.03
+      MELT_TEMPERATURE: 1000.0
   - MAT: 24
     ELAST_CoupTransverselyIsotropic:
       ALPHA: 1

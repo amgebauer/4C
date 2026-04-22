@@ -8,6 +8,7 @@
 #include "4C_particle_algorithm.hpp"
 
 #include "4C_comm_mpi_utils.hpp"
+#include "4C_global_data.hpp"
 #include "4C_io.hpp"
 #include "4C_io_pstream.hpp"
 #include "4C_particle_algorithm_constraints.hpp"
@@ -44,7 +45,7 @@ FOUR_C_NAMESPACE_OPEN
  | definitions                                                               |
  *---------------------------------------------------------------------------*/
 Particle::ParticleAlgorithm::ParticleAlgorithm(MPI_Comm comm, const Teuchos::ParameterList& params)
-    : AlgorithmBase(comm, params),
+    : AlgorithmBase(*Global::Problem::instance(), comm, params),
       myrank_(Core::Communication::my_mpi_rank(comm)),
       params_(params),
       numparticlesafterlastloadbalance_(0),
@@ -122,6 +123,9 @@ void Particle::ParticleAlgorithm::setup()
 
   // setup initial particles
   setup_initial_particles();
+
+  // build Dirichlet BC function cache after particles are distributed to containers
+  particletimint_->build_dirichlet_bc_funct_cache(get_comm());
 
   // setup initial rigid bodies
   if (particlerigidbody_) setup_initial_rigid_bodies();

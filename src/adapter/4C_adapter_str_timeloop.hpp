@@ -14,6 +14,11 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace Adapter
 {
   /*! \brief Time loop for stuctural simulations
@@ -30,9 +35,7 @@ namespace Adapter
   {
    public:
     /// constructor
-    explicit StructureTimeLoop(std::shared_ptr<Structure> structure) : StructureWrapper(structure)
-    {
-    }
+    StructureTimeLoop(Global::Problem& problem, std::shared_ptr<Structure> structure);
 
     /// actual time loop
     int integrate() override;
@@ -51,6 +54,10 @@ namespace Adapter
 
     /// wrapper for things that should be done after the output
     void post_output() override {};
+
+   private:
+    /// explicit global problem context
+    Global::Problem& problem_;
   };
 
 }  // namespace Adapter

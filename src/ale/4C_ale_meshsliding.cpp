@@ -34,10 +34,10 @@ ALE::Meshsliding::Meshsliding(std::shared_ptr<Core::FE::Discretization> dis,
 /*-------------------------------------------------------*/
 void ALE::Meshsliding::adapter_mortar(std::vector<int> coupleddof)
 {
-  adaptermeshsliding_ = std::make_shared<Adapter::CouplingNonLinMortar>(
-      Global::Problem::instance()->n_dim(), Global::Problem::instance()->mortar_coupling_params(),
-      Global::Problem::instance()->contact_dynamic_params(),
-      Global::Problem::instance()->spatial_approximation_type());
+  auto& problem = *Global::Problem::instance();
+  adaptermeshsliding_ = std::make_shared<Adapter::CouplingNonLinMortar>(problem, problem.n_dim(),
+      problem.mortar_coupling_params(), problem.contact_dynamic_params(),
+      problem.spatial_approximation_type());
 
   // Setup and Output of Nonlinear meshtying adapter
   adaptermeshsliding_->setup(discret_, discret_, coupleddof, "Mortar");
@@ -63,8 +63,8 @@ std::shared_ptr<Core::LinAlg::SparseOperator> ALE::Meshsliding::setup(
 /*-------------------------------------------------------*/
 void ALE::Meshsliding::compare_num_dof()
 {
-  int numdofmaster = (adaptermeshsliding_->master_dof_map())->num_global_elements();
-  int numdofslave = (adaptermeshsliding_->slave_dof_map())->num_global_elements();
+  int numdofmaster = (adaptermeshsliding_->target_dof_map())->num_global_elements();
+  int numdofslave = (adaptermeshsliding_->source_dof_map())->num_global_elements();
 
   std::cout << std::endl << "number of master dof's:   " << numdofmaster << std::endl;
   std::cout << "number of slave dof's:   " << numdofslave << std::endl << std::endl;
@@ -82,10 +82,10 @@ void ALE::Meshsliding::compare_num_dof()
 void ALE::Meshsliding::dof_row_maps()
 {
   // slave dof rowmap
-  gsdofrowmap_ = adaptermeshsliding_->slave_dof_map();
+  gsdofrowmap_ = adaptermeshsliding_->source_dof_map();
 
   // master dof rowmap
-  gmdofrowmap_ = adaptermeshsliding_->master_dof_map();
+  gmdofrowmap_ = adaptermeshsliding_->target_dof_map();
 }
 
 /*-------------------------------------------------------*/

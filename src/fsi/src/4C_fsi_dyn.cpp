@@ -56,7 +56,7 @@
 #include "4C_poroelast_utils_clonestrategy.hpp"
 #include "4C_poroelast_utils_setup.hpp"
 #include "4C_rebalance_binning_based.hpp"
-#include "4C_solid_3D_ele.hpp"
+#include "4C_solid_ele.hpp"
 #include "4C_utils_enum.hpp"
 #include "4C_utils_parameter_list.hpp"
 #include "4C_utils_result_test.hpp"
@@ -74,9 +74,9 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 // entry point for Fluid on Ale in discretization management
 /*----------------------------------------------------------------------*/
-void fluid_ale_drt()
+void fluid_ale_drt(Global::Problem& global_problem)
 {
-  Global::Problem* problem = Global::Problem::instance();
+  Global::Problem* problem = &global_problem;
 
   MPI_Comm comm = problem->get_dis("fluid")->get_comm();
 
@@ -105,7 +105,7 @@ void fluid_ale_drt()
   if (aledis->num_global_nodes() == 0)
   {
     Core::FE::clone_discretization<ALE::Utils::AleCloneStrategy>(
-        *fluiddis, *aledis, Global::Problem::instance()->cloning_material_map());
+        *fluiddis, *aledis, problem->cloning_material_map());
     aledis->fill_complete();
     // setup material in every ALE element
     Teuchos::ParameterList params;
@@ -121,7 +121,8 @@ void fluid_ale_drt()
           "Use either the ALE cloning functionality or ensure non-overlapping node numbering!");
   }
 
-  std::shared_ptr<FSI::FluidAleAlgorithm> fluid = std::make_shared<FSI::FluidAleAlgorithm>(comm);
+  std::shared_ptr<FSI::FluidAleAlgorithm> fluid =
+      std::make_shared<FSI::FluidAleAlgorithm>(comm, *problem);
   const int restart = problem->restart();
   if (restart)
   {
@@ -130,18 +131,18 @@ void fluid_ale_drt()
   }
   fluid->timeloop();
 
-  Global::Problem::instance()->add_field_test(fluid->mb_fluid_field()->create_field_test());
-  Global::Problem::instance()->test_all(comm);
+  problem->add_field_test(fluid->mb_fluid_field()->create_field_test());
+  problem->test_all(comm);
 }
 
 /*----------------------------------------------------------------------*/
 // entry point for Fluid on XFEM in discretization management
 /*----------------------------------------------------------------------*/
-void fluid_xfem_drt()
+void fluid_xfem_drt(Global::Problem& global_problem)
 {
-  MPI_Comm comm = Global::Problem::instance()->get_dis("structure")->get_comm();
+  Global::Problem* problem = &global_problem;
 
-  Global::Problem* problem = Global::Problem::instance();
+  MPI_Comm comm = problem->get_dis("structure")->get_comm();
 
   std::shared_ptr<Core::FE::Discretization> soliddis = problem->get_dis("structure");
   soliddis->fill_complete();
@@ -160,7 +161,7 @@ void fluid_xfem_drt()
     if (aledis->num_global_nodes() == 0)
     {
       Core::FE::clone_discretization<ALE::Utils::AleCloneStrategy>(
-          *problem->get_dis("fluid"), *aledis, Global::Problem::instance()->cloning_material_map());
+          *problem->get_dis("fluid"), *aledis, problem->cloning_material_map());
       aledis->fill_complete();
       // setup material in every ALE element
       Teuchos::ParameterList params;
@@ -180,9 +181,9 @@ void fluid_xfem_drt()
   if (alefluid)
   {
     // create instance of fluid xfem algorithm, for moving interfaces
-    FSI::FluidXFEMAlgorithm fluidalgo(comm);
+    FSI::FluidXFEMAlgorithm fluidalgo(comm, *problem);
 
-    const int restart = Global::Problem::instance()->restart();
+    const int restart = problem->restart();
     if (restart)
     {
       // read the restart information, set vectors and variables
@@ -200,13 +201,13 @@ void fluid_xfem_drt()
   {
     //--------------------------------------------------------------
     // create instance of fluid basis algorithm
-    const Teuchos::ParameterList& fdyn = Global::Problem::instance()->fluid_dynamic_params();
+    const Teuchos::ParameterList& fdyn = problem->fluid_dynamic_params();
 
-    Adapter::FluidBaseAlgorithm fluidalgo(fdyn, fdyn, "fluid", false);
+    Adapter::FluidBaseAlgorithm fluidalgo(*problem, fdyn, fdyn, "fluid", false);
 
     //--------------------------------------------------------------
     // restart the simulation
-    const int restart = Global::Problem::instance()->restart();
+    const int restart = problem->restart();
     if (restart)
     {
       // read the restart information, set vectors and variables
@@ -227,9 +228,9 @@ void fluid_xfem_drt()
 /*----------------------------------------------------------------------*/
 // entry point for FSI using multidimensional immersed method (FBI)
 /*----------------------------------------------------------------------*/
-void fsi_immersed_drt()
+void fsi_immersed_drt(Global::Problem& global_problem)
 {
-  Global::Problem* problem = Global::Problem::instance();
+  Global::Problem* problem = &global_problem;
 
   std::shared_ptr<Core::FE::Discretization> structdis = problem->get_dis("structure");
   MPI_Comm comm = structdis->get_comm();
@@ -262,13 +263,11 @@ void fsi_immersed_drt()
   if (structdis->has_condition("PointCoupling"))
   {
     structdis->fill_complete(Core::FE::OptionsFillComplete::none());
-    Teuchos::ParameterList binning_params = Global::Problem::instance()->binning_strategy_params();
+    Teuchos::ParameterList binning_params = problem->binning_strategy_params();
     Core::Utils::add_enum_class_to_parameter_list<Core::FE::ShapeFunctionType>(
-        "spatial_approximation_type", Global::Problem::instance()->spatial_approximation_type(),
-        binning_params);
+        "spatial_approximation_type", problem->spatial_approximation_type(), binning_params);
     Core::Rebalance::rebalance_discretizations_by_binning(binning_params,
-        Global::Problem::instance()->output_control_file(), {structdis}, correct_node,
-        determine_relevant_points, true);
+        problem->output_control_file(), {structdis}, correct_node, determine_relevant_points, true);
   }
   else if (not structdis->filled() || not structdis->have_dofs())
   {
@@ -286,15 +285,14 @@ void fsi_immersed_drt()
   dis.push_back(structdis);
 
   // binning strategy is created
-  Teuchos::ParameterList binning_params = Global::Problem::instance()->binning_strategy_params();
+  Teuchos::ParameterList binning_params = problem->binning_strategy_params();
   Core::Utils::add_enum_class_to_parameter_list<Core::FE::ShapeFunctionType>(
-      "spatial_approximation_type", Global::Problem::instance()->spatial_approximation_type(),
-      binning_params);
+      "spatial_approximation_type", problem->spatial_approximation_type(), binning_params);
 
 
   auto binningstrategy = std::make_shared<Core::Binstrategy::BinningStrategy>(binning_params,
-      Global::Problem::instance()->output_control_file(), comm,
-      Core::Communication::my_mpi_rank(comm), correct_node, determine_relevant_points, dis);
+      problem->output_control_file(), comm, Core::Communication::my_mpi_rank(comm), correct_node,
+      determine_relevant_points, dis);
 
   const Teuchos::ParameterList& fbidyn = problem->fbi_params();
 
@@ -325,7 +323,7 @@ void fsi_immersed_drt()
       fsidyn.sublist("PARTITIONED SOLVER"), "PARTITIONED");
   if (method == FSI::PartitionedCouplingMethod::DirichletNeumann)
   {
-    fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, fsidyn);
+    fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, *problem, fsidyn);
     std::dynamic_pointer_cast<FSI::DirichletNeumann>(fsi)->setup();
   }
   else
@@ -336,7 +334,7 @@ void fsi_immersed_drt()
     std::dynamic_pointer_cast<FSI::DirichletNeumannVel>(fsi)->set_binning(binningstrategy);
   }
 
-  const int restart = Global::Problem::instance()->restart();
+  const int restart = problem->restart();
   if (restart)
   {
     // read the restart information, set vectors and variables
@@ -350,18 +348,18 @@ void fsi_immersed_drt()
   fsi->timeloop(fsi);
 
   // create result tests for single fields
-  Global::Problem::instance()->add_field_test(fsi->mb_fluid_field()->create_field_test());
-  Global::Problem::instance()->add_field_test(fsi->structure_field()->create_field_test());
+  problem->add_field_test(fsi->mb_fluid_field()->create_field_test());
+  problem->add_field_test(fsi->structure_field()->create_field_test());
 
   // do the actual testing
-  Global::Problem::instance()->test_all(comm);
+  problem->test_all(comm);
 }
 /*----------------------------------------------------------------------*/
 // entry point for FSI using ALE in discretization management
 /*----------------------------------------------------------------------*/
-void fsi_ale_drt()
+void fsi_ale_drt(Global::Problem& global_problem)
 {
-  Global::Problem* problem = Global::Problem::instance();
+  Global::Problem* problem = &global_problem;
 
   std::shared_ptr<Core::FE::Discretization> structdis = problem->get_dis("structure");
   MPI_Comm comm = structdis->get_comm();
@@ -400,14 +398,12 @@ void fsi_ale_drt()
   if (structdis->has_condition("PointCoupling"))
   {
     structdis->fill_complete(Core::FE::OptionsFillComplete::none());
-    Teuchos::ParameterList binning_params = Global::Problem::instance()->binning_strategy_params();
+    Teuchos::ParameterList binning_params = problem->binning_strategy_params();
     Core::Utils::add_enum_class_to_parameter_list<Core::FE::ShapeFunctionType>(
-        "spatial_approximation_type", Global::Problem::instance()->spatial_approximation_type(),
-        binning_params);
+        "spatial_approximation_type", problem->spatial_approximation_type(), binning_params);
 
     Core::Rebalance::rebalance_discretizations_by_binning(binning_params,
-        Global::Problem::instance()->output_control_file(), {structdis}, correct_node,
-        determine_relevant_points, true);
+        problem->output_control_file(), {structdis}, correct_node, determine_relevant_points, true);
   }
   else if (not structdis->filled() || not structdis->have_dofs())
   {
@@ -431,7 +427,7 @@ void fsi_ale_drt()
   if (aledis->num_global_nodes() == 0)  // empty ale discretization
   {
     Core::FE::clone_discretization<ALE::Utils::AleCloneStrategy>(
-        *fluiddis, *aledis, Global::Problem::instance()->cloning_material_map());
+        *fluiddis, *aledis, problem->cloning_material_map());
     aledis->fill_complete();
     // setup material in every ALE element
     Teuchos::ParameterList params;
@@ -462,14 +458,12 @@ void fsi_ale_drt()
       if (Core::Communication::num_mpi_ranks(structdis->get_comm()) > 1)
       {
         // binning strategy is created and parallel redistribution is performed
-        Teuchos::ParameterList binning_params =
-            Global::Problem::instance()->binning_strategy_params();
+        Teuchos::ParameterList binning_params = problem->binning_strategy_params();
         Core::Utils::add_enum_class_to_parameter_list<Core::FE::ShapeFunctionType>(
-            "spatial_approximation_type", Global::Problem::instance()->spatial_approximation_type(),
-            binning_params);
+            "spatial_approximation_type", problem->spatial_approximation_type(), binning_params);
         Core::Binstrategy::BinningStrategy binningstrategy(binning_params,
-            Global::Problem::instance()->output_control_file(), comm,
-            Core::Communication::my_mpi_rank(comm), correct_node, determine_relevant_points, dis);
+            problem->output_control_file(), comm, Core::Communication::my_mpi_rank(comm),
+            correct_node, determine_relevant_points, dis);
         binningstrategy
             .do_weighted_partitioning_of_bins_and_extend_ghosting_of_discret_to_one_bin_layer(
                 dis, stdelecolmap, stdnodecolmap);
@@ -503,39 +497,39 @@ void fsi_ale_drt()
       // call constructor to initialize the base class
       if (coupling == fsi_iter_monolithicfluidsplit)
       {
-        fsi = std::make_shared<FSI::MonolithicFluidSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MonolithicFluidSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_monolithicstructuresplit)
       {
-        fsi = std::make_shared<FSI::MonolithicStructureSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MonolithicStructureSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_mortar_monolithicstructuresplit)
       {
-        fsi = std::make_shared<FSI::MortarMonolithicStructureSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MortarMonolithicStructureSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_mortar_monolithicfluidsplit)
       {
-        fsi = std::make_shared<FSI::MortarMonolithicFluidSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MortarMonolithicFluidSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_mortar_monolithicfluidsplit_saddlepoint)
       {
-        fsi = std::make_shared<FSI::MortarMonolithicFluidSplitSaddlePoint>(comm, fsidyn);
+        fsi = std::make_shared<FSI::MortarMonolithicFluidSplitSaddlePoint>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_fluidfluid_monolithicfluidsplit)
       {
-        fsi = std::make_shared<FSI::FluidFluidMonolithicFluidSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::FluidFluidMonolithicFluidSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_fluidfluid_monolithicstructuresplit)
       {
-        fsi = std::make_shared<FSI::FluidFluidMonolithicStructureSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::FluidFluidMonolithicStructureSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_sliding_monolithicfluidsplit)
       {
-        fsi = std::make_shared<FSI::SlidingMonolithicFluidSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::SlidingMonolithicFluidSplit>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_sliding_monolithicstructuresplit)
       {
-        fsi = std::make_shared<FSI::SlidingMonolithicStructureSplit>(comm, fsidyn);
+        fsi = std::make_shared<FSI::SlidingMonolithicStructureSplit>(comm, *problem, fsidyn);
       }
       else
       {
@@ -546,7 +540,7 @@ void fsi_ale_drt()
 
       // read the restart information, set vectors and variables ---
       // be careful, dofmaps might be changed here in a redistribute() call
-      const int restart = Global::Problem::instance()->restart();
+      const int restart = problem->restart();
       if (restart)
       {
         fsi->read_restart(restart);
@@ -566,17 +560,17 @@ void fsi_ale_drt()
       fsi->fluid_field()->calculate_error();
 
       // create result tests for single fields
-      Global::Problem::instance()->add_field_test(fsi->ale_field()->create_field_test());
-      Global::Problem::instance()->add_field_test(fsi->fluid_field()->create_field_test());
-      Global::Problem::instance()->add_field_test(fsi->structure_field()->create_field_test());
+      problem->add_field_test(fsi->ale_field()->create_field_test());
+      problem->add_field_test(fsi->fluid_field()->create_field_test());
+      problem->add_field_test(fsi->structure_field()->create_field_test());
 
       // create fsi specific result test
       std::shared_ptr<FSI::FSIResultTest> fsitest =
           std::make_shared<FSI::FSIResultTest>(fsi, fsidyn);
-      Global::Problem::instance()->add_field_test(fsitest);
+      problem->add_field_test(fsitest);
 
       // do the actual testing
-      Global::Problem::instance()->test_all(comm);
+      problem->test_all(comm);
 
       break;
     }
@@ -586,18 +580,19 @@ void fsi_ale_drt()
       std::shared_ptr<FSI::MonolithicNoNOX> fsi;
       if (coupling == fsi_iter_fluidfluid_monolithicfluidsplit_nonox)
       {
-        fsi = std::make_shared<FSI::FluidFluidMonolithicFluidSplitNoNOX>(comm, fsidyn);
+        fsi = std::make_shared<FSI::FluidFluidMonolithicFluidSplitNoNOX>(comm, *problem, fsidyn);
       }
       else if (coupling == fsi_iter_fluidfluid_monolithicstructuresplit_nonox)
       {
-        fsi = std::make_shared<FSI::FluidFluidMonolithicStructureSplitNoNOX>(comm, fsidyn);
+        fsi =
+            std::make_shared<FSI::FluidFluidMonolithicStructureSplitNoNOX>(comm, *problem, fsidyn);
       }
       else
         FOUR_C_THROW("Unsupported monolithic XFFSI scheme");
 
       // read the restart information, set vectors and variables ---
       // be careful, dofmaps might be changed here in a redistribute() call
-      const int restart = Global::Problem::instance()->restart();
+      const int restart = problem->restart();
       if (restart)
       {
         fsi->read_restart(restart);
@@ -617,16 +612,16 @@ void fsi_ale_drt()
       fsi->fluid_field()->calculate_error();
 
       // create result tests for single fields
-      Global::Problem::instance()->add_field_test(fsi->fluid_field()->create_field_test());
-      Global::Problem::instance()->add_field_test(fsi->structure_field()->create_field_test());
+      problem->add_field_test(fsi->fluid_field()->create_field_test());
+      problem->add_field_test(fsi->structure_field()->create_field_test());
 
       // create fsi specific result test
       std::shared_ptr<FSI::FSIResultTest> fsitest =
           std::make_shared<FSI::FSIResultTest>(fsi, fsidyn);
-      Global::Problem::instance()->add_field_test(fsitest);
+      problem->add_field_test(fsitest);
 
       // do the actual testing
-      Global::Problem::instance()->test_all(comm);
+      problem->test_all(comm);
 
       break;
     }
@@ -644,14 +639,14 @@ void fsi_ale_drt()
         case FSI::PartitionedCouplingMethod::DirichletNeumann:
         case FSI::PartitionedCouplingMethod::DirichletNeumannSlideale:
         case FSI::PartitionedCouplingMethod::DirichletNeumannVolCoupl:
-          fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, fsidyn);
+          fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, *problem, fsidyn);
           std::dynamic_pointer_cast<FSI::DirichletNeumann>(fsi)->setup();
           break;
         default:
           FOUR_C_THROW("unsupported partitioned FSI scheme");
           break;
       }
-      const int restart = Global::Problem::instance()->restart();
+      const int restart = problem->restart();
       if (restart)
       {
         // read the restart information, set vectors and variables
@@ -666,11 +661,11 @@ void fsi_ale_drt()
       fsi->timeloop(fsi);
 
       // create result tests for single fields
-      Global::Problem::instance()->add_field_test(fsi->mb_fluid_field()->create_field_test());
-      Global::Problem::instance()->add_field_test(fsi->structure_field()->create_field_test());
+      problem->add_field_test(fsi->mb_fluid_field()->create_field_test());
+      problem->add_field_test(fsi->structure_field()->create_field_test());
 
       // do the actual testing
-      Global::Problem::instance()->test_all(comm);
+      problem->test_all(comm);
 
       break;
     }
@@ -680,9 +675,11 @@ void fsi_ale_drt()
 /*----------------------------------------------------------------------*/
 // entry point for FSI using XFEM in discretization management (also for ale case)
 /*----------------------------------------------------------------------*/
-void xfsi_drt()
+void xfsi_drt(Global::Problem& global_problem)
 {
-  MPI_Comm comm = Global::Problem::instance()->get_dis("structure")->get_comm();
+  Global::Problem* problem = &global_problem;
+
+  MPI_Comm comm = problem->get_dis("structure")->get_comm();
 
   if (Core::Communication::my_mpi_rank(comm) == 0)
   {
@@ -697,7 +694,6 @@ void xfsi_drt()
     std::cout << std::endl << std::endl;
   }
 
-  Global::Problem* problem = Global::Problem::instance();
   const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
 
   std::shared_ptr<Core::FE::Discretization> soliddis = problem->get_dis("structure");
@@ -705,8 +701,8 @@ void xfsi_drt()
 
   FLD::XFluid::setup_fluid_discretization();
 
-  std::shared_ptr<Core::FE::Discretization> fluiddis = Global::Problem::instance()->get_dis(
-      "fluid");  // at the moment, 'fluid'-discretization is used for ale!!!
+  std::shared_ptr<Core::FE::Discretization> fluiddis =
+      problem->get_dis("fluid");  // at the moment, 'fluid'-discretization is used for ale!!!
 
   // CREATE ALE
   const Teuchos::ParameterList& xfdyn = problem->x_fluid_dynamic_params();
@@ -723,7 +719,7 @@ void xfsi_drt()
     if (aledis->num_global_nodes() == 0)  // ALE discretization still empty
     {
       Core::FE::clone_discretization<ALE::Utils::AleCloneStrategy>(
-          *fluiddis, *aledis, Global::Problem::instance()->cloning_material_map());
+          *fluiddis, *aledis, problem->cloning_material_map());
       aledis->fill_complete();
       // setup material in every ALE element
       Teuchos::ParameterList params;
@@ -759,7 +755,7 @@ void xfsi_drt()
 
       // read the restart information, set vectors and variables ---
       // be careful, dofmaps might be changed here in a redistribute() call
-      const int restart = Global::Problem::instance()->restart();
+      const int restart = problem->restart();
       if (restart)
       {
         fsi.read_restart(restart);
@@ -771,15 +767,15 @@ void xfsi_drt()
       // here we go...
       fsi.timeloop();
 
-      Global::Problem::instance()->add_field_test(fsi.fluid_field()->create_field_test());
-      fsi.structure_poro()->test_results(Global::Problem::instance());
+      problem->add_field_test(fsi.fluid_field()->create_field_test());
+      fsi.structure_poro()->test_results(problem);
 
       //    // create FSI specific result test
       //    std::shared_ptr<FSI::FSIResultTest> fsitest = Teuchos::rcp(new
-      //    FSI::FSIResultTest(fsi,fsidyn)); Global::Problem::instance()->AddFieldTest(fsitest);
+      //    FSI::FSIResultTest(fsi, fsidyn)); problem->add_field_test(fsitest);
 
       // do the actual testing
-      Global::Problem::instance()->test_all(comm);
+      problem->test_all(comm);
 
       break;
     }
@@ -799,7 +795,7 @@ void xfsi_drt()
       switch (method)
       {
         case FSI::PartitionedCouplingMethod::DirichletNeumann:
-          fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, fsidyn);
+          fsi = FSI::DirichletNeumannFactory::create_algorithm(comm, *problem, fsidyn);
           std::dynamic_pointer_cast<FSI::DirichletNeumann>(fsi)->setup();
           break;
         default:
@@ -807,7 +803,7 @@ void xfsi_drt()
           break;
       }
 
-      const int restart = Global::Problem::instance()->restart();
+      const int restart = problem->restart();
       if (restart)
       {
         // read the restart information, set vectors and variables
@@ -821,9 +817,9 @@ void xfsi_drt()
 
       fsi->timeloop(fsi);
 
-      Global::Problem::instance()->add_field_test(fsi->mb_fluid_field()->create_field_test());
-      Global::Problem::instance()->add_field_test(fsi->structure_field()->create_field_test());
-      Global::Problem::instance()->test_all(comm);
+      problem->add_field_test(fsi->mb_fluid_field()->create_field_test());
+      problem->add_field_test(fsi->structure_field()->create_field_test());
+      problem->test_all(comm);
 
       break;
     }
@@ -833,9 +829,11 @@ void xfsi_drt()
 /*----------------------------------------------------------------------*/
 // entry point for FPSI using XFEM in discretization management
 /*----------------------------------------------------------------------*/
-void xfpsi_drt()
+void xfpsi_drt(Global::Problem& global_problem)
 {
-  MPI_Comm comm = Global::Problem::instance()->get_dis("structure")->get_comm();
+  Global::Problem* problem = &global_problem;
+
+  MPI_Comm comm = problem->get_dis("structure")->get_comm();
 
   if (Core::Communication::my_mpi_rank(comm) == 0)
   {
@@ -849,16 +847,14 @@ void xfpsi_drt()
     std::cout << "     _/  \\\\_ |       ||       ______| __|__" << std::endl;
     std::cout << std::endl << std::endl;
   }
-  Global::Problem* problem = Global::Problem::instance();
-
   // 1.-Initialization.
   // setup of the discretizations, including clone strategy
   PoroElast::Utils::setup_poro<PoroElast::Utils::PoroelastCloneStrategy>();
 
   // setup of discretization for xfluid
   FLD::XFluid::setup_fluid_discretization();
-  std::shared_ptr<Core::FE::Discretization> fluiddis = Global::Problem::instance()->get_dis(
-      "fluid");  // at the moment, 'fluid'-discretization is used for ale!!!
+  std::shared_ptr<Core::FE::Discretization> fluiddis =
+      problem->get_dis("fluid");  // at the moment, 'fluid'-discretization is used for ale!!!
 
   std::shared_ptr<Core::FE::Discretization> aledis;
   const Teuchos::ParameterList& xfdyn = problem->x_fluid_dynamic_params();
@@ -874,7 +870,7 @@ void xfpsi_drt()
     if (aledis->num_global_nodes() == 0)  // ALE discretization still empty
     {
       Core::FE::clone_discretization<ALE::Utils::AleCloneStrategy>(
-          *fluiddis, *aledis, Global::Problem::instance()->cloning_material_map());
+          *fluiddis, *aledis, problem->cloning_material_map());
       aledis->fill_complete();
       // setup material in every ALE element
       Teuchos::ParameterList params;
@@ -914,8 +910,8 @@ void xfpsi_drt()
       // read the restart information, set vectors and variables ---
 
       // be careful, dofmaps might be changed here in a redistribute() call
-      const int restart = Global::Problem::instance()
-                              ->restart();  // not adapted at the moment .... Todo check it .. ChrAg
+      const int restart =
+          problem->restart();  // not adapted at the moment .... Todo check it .. ChrAg
       if (restart)
       {
         fsi.read_restart(restart);
@@ -931,11 +927,11 @@ void xfpsi_drt()
       // here we go...
       fsi.timeloop();
 
-      Global::Problem::instance()->add_field_test(fsi.fluid_field()->create_field_test());
-      fsi.structure_poro()->test_results(Global::Problem::instance());
+      problem->add_field_test(fsi.fluid_field()->create_field_test());
+      fsi.structure_poro()->test_results(problem);
 
       // do the actual testing
-      Global::Problem::instance()->test_all(comm);
+      problem->test_all(comm);
       break;
     }
     case fsi_iter_monolithicfluidsplit:

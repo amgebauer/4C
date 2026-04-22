@@ -11,8 +11,6 @@
 #include "4C_comm_parobject.hpp"
 #include "4C_mat_anisotropy_utils.hpp"
 
-#include <Teuchos_SerialDenseSolver.hpp>
-
 FOUR_C_NAMESPACE_OPEN
 
 template <unsigned int numfib>

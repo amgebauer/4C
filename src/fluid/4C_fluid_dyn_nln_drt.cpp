@@ -71,7 +71,7 @@ void dyn_fluid_drt(const int restart)
   else
   {
     // create instance of fluid basis algorithm
-    Adapter::FluidBaseAlgorithm fluidalgo(fdyn, fdyn, "fluid", false);
+    Adapter::FluidBaseAlgorithm fluidalgo(*Global::Problem::instance(), fdyn, fdyn, "fluid", false);
 
     // read the restart information, set vectors and variables
     if (restart) fluidalgo.fluid_field()->read_restart(restart);

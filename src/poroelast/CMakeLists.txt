@@ -20,9 +20,8 @@ set(_dependencies
     inpar
     mat
     mortar
-    solid_poro_3D_ele
+    solid_poro_ele
     structure
-    w1
     )
 
 four_c_add_internal_dependency(${AUTO_DEFINED_MODULE_NAME} ${_dependencies})

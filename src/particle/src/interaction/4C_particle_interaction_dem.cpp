@@ -123,10 +123,7 @@ void Particle::ParticleInteractionDEM::set_initial_states()
   set_initial_inertia();
 }
 
-void Particle::ParticleInteractionDEM::pre_evaluate_time_step()
-{
-  TEUCHOS_FUNC_TIME_MONITOR("Particle::ParticleInteractionDEM::pre_evaluate_time_step");
-}
+void Particle::ParticleInteractionDEM::pre_evaluate_time_step() {}
 
 void Particle::ParticleInteractionDEM::evaluate_interactions()
 {

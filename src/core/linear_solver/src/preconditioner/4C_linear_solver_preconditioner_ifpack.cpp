@@ -13,7 +13,6 @@
 #include "4C_utils_exceptions.hpp"
 
 #include <Stratimikos_LinearSolverBuilder_decl.hpp>
-#include <Teko_EpetraInverseOpWrapper.hpp>
 #include <Teuchos_XMLParameterListHelpers.hpp>
 
 FOUR_C_NAMESPACE_OPEN
@@ -42,10 +41,10 @@ void Core::LinearSolver::IFPACKPreconditioner::setup(
 
   Teuchos::ParameterList ifpack_params;
 
-  if (ifpacklist_.sublist("IFPACK Parameters").isParameter("IFPACK_XML_FILE"))
+  if (ifpacklist_.sublist("IFPACK Parameters").isParameter("PRECONDITIONER_XML_FILE"))
   {
     const std::string xmlFileName =
-        ifpacklist_.sublist("IFPACK Parameters").get<std::string>("IFPACK_XML_FILE");
+        ifpacklist_.sublist("IFPACK Parameters").get<std::string>("PRECONDITIONER_XML_FILE");
 
     Teuchos::updateParametersFromXmlFileAndBroadcast(
         xmlFileName, Teuchos::Ptr(&ifpack_params), *comm);
@@ -73,7 +72,7 @@ void Core::LinearSolver::IFPACKPreconditioner::setup(
       Thyra::prec<double>(*precFactory, pmatrix_);
   auto inverseOp = prec->getUnspecifiedPrecOp();
 
-  p_ = std::make_shared<Teko::Epetra::EpetraInverseOpWrapper>(inverseOp);
+  p_ = Utils::get_epetra_inverse_operator_from_thyra(inverseOp);
 }
 
 FOUR_C_NAMESPACE_CLOSE

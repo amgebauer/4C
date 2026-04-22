@@ -15,6 +15,7 @@
 #include "4C_material_parameter_base.hpp"
 #include "4C_scatra_ele.hpp"
 #include "4C_ssi_input.hpp"
+#include "4C_ssi_problem_access.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -64,7 +65,7 @@ void SSI::ScatraStructureCloneStrategy::check_material_type(const int matid)
   // We take the material with the ID specified by the user
   // Here we check first, whether this material is of admissible type
   Core::Materials::MaterialType mtype =
-      Global::Problem::instance()->materials()->parameter_by_id(matid)->type();
+      SSI::Utils::problem_from_instance()->materials()->parameter_by_id(matid)->type();
   if ((mtype != Core::Materials::m_scatra) && (mtype != Core::Materials::m_elchmat) &&
       (mtype != Core::Materials::m_electrode) && (mtype != Core::Materials::m_matlist) &&
       (mtype != Core::Materials::m_matlist_reactions) && (mtype != Core::Materials::m_myocard) &&
@@ -99,7 +100,7 @@ void SSI::ScatraStructureCloneStrategy::set_element_data(
           "discretization, but the STRUCTURE elements that are defined in the input file are "
           "either not meant to be copied to scatra elements or the ImplType is set 'Undefined' "
           "which is not meaningful for the created scatra discretization! Use SOLIDSCATRA, "
-          "WALLSCATRA, SHELLSCATRA or TRUSS3SCATRA elements with meaningful ImplType instead!");
+          "SHELLSCATRA or TRUSS3SCATRA elements with meaningful ImplType instead!");
     }
     else
       trans->set_impl_type(impltype);
@@ -120,7 +121,7 @@ void SSI::ScatraStructureCloneStrategyManifold::set_element_data(
     const int matid, const bool isnurbsdis)
 {
   // determine impl type from manifold condition by identifying the condition for this element
-  auto struct_dis = Global::Problem::instance()->get_dis("structure");
+  auto struct_dis = SSI::Utils::problem_from_instance()->get_dis("structure");
 
   std::vector<const Core::Conditions::Condition*> conditions;
   struct_dis->get_condition("SSISurfaceManifold", conditions);

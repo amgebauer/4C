@@ -30,8 +30,10 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------------*/
 void FSI::Monolithic::init_tim_int_ada(const Teuchos::ParameterList& fsidyn)
 {
+  auto* problem = &this->problem();
+
   // access to structural time adaptivity parameters
-  const Teuchos::ParameterList& sdyn = Global::Problem::instance()->structural_dynamic_params();
+  const Teuchos::ParameterList& sdyn = problem->structural_dynamic_params();
   const Teuchos::ParameterList& sada = sdyn.sublist("TIMEADAPTIVITY");
 
   // access to FSI time adaptivity parameters
@@ -98,7 +100,7 @@ void FSI::Monolithic::init_tim_int_ada(const Teuchos::ParameterList& fsidyn)
   //----------------------------------------------------------------------------
   // write adaptivity file
   //----------------------------------------------------------------------------
-  std::string fileada = Global::Problem::instance()->output_control_file()->file_name();
+  std::string fileada = problem->output_control_file()->file_name();
   fileada.append(".adaptivity");
   logada_ = std::make_shared<std::ofstream>(fileada.c_str());
 
@@ -178,11 +180,13 @@ void FSI::Monolithic::init_tim_int_ada(const Teuchos::ParameterList& fsidyn)
 void FSI::Monolithic::timeloop_ada_dt(
     const std::shared_ptr<NOX::Nln::Interface::RequiredBase> interface)
 {
+  auto* problem = &this->problem();
+
   /*--------------------------------------------------------------------------*/
   /* Initialize some parameters                                               */
   /*--------------------------------------------------------------------------*/
   // get the FSI parameter list
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
 
   // number of maximum allowed time step repetitions
   const int adaptstepmax = fsidyn.sublist("TIMEADAPTIVITY").get<int>("ADAPTSTEPMAX");
@@ -321,11 +325,13 @@ void FSI::Monolithic::print_header_repeated_step() const
 /*----------------------------------------------------------------------------*/
 void FSI::Monolithic::write_ada_file_header() const
 {
+  auto* problem = &this->problem();
+
   // write to adaptivity file
   if (Core::Communication::my_mpi_rank(get_comm()) == 0 and (logada_))
   {
     // get string of type of auxiliary time integration scheme in structure field
-    const Teuchos::ParameterList& sdyn = Global::Problem::instance()->structural_dynamic_params();
+    const Teuchos::ParameterList& sdyn = problem->structural_dynamic_params();
     const Teuchos::ParameterList& sada = sdyn.sublist("TIMEADAPTIVITY");
     const auto strmethod = Teuchos::getIntegralValue<Inpar::Solid::TimAdaKind>(sada, "KIND");
 
@@ -448,6 +454,7 @@ void FSI::Monolithic::time_step_auxiliary()
 void FSI::Monolithic::adapt_time_step_size()
 {
   TEUCHOS_FUNC_TIME_MONITOR("FSI::Monolithic::adapt_time_step_size");
+  auto* problem = &this->problem();
 
   // Increment counter for repetition of time steps
   adaptstep_++;
@@ -567,10 +574,8 @@ void FSI::Monolithic::adapt_time_step_size()
       set_dt(dtnew);
 
       // reset
-      numincreasesteps_ = Global::Problem::instance()
-                              ->fsi_dynamic_params()
-                              .sublist("TIMEADAPTIVITY")
-                              .get<int>("NUMINCREASESTEPS");
+      numincreasesteps_ =
+          problem->fsi_dynamic_params().sublist("TIMEADAPTIVITY").get<int>("NUMINCREASESTEPS");
     }
     else if (numincreasesteps_ > 0)
     {
@@ -611,11 +616,13 @@ void FSI::Monolithic::determine_ada_reason(const double dt)
 double FSI::Monolithic::calculate_time_step_size(
     const double errnorm, const double errtol, const double estorder) const
 {
+  auto* problem = &this->problem();
+
   //----------------------------------------------------------------------------
   // get some parameters first
   //----------------------------------------------------------------------------
   // FSI parameter list
-  const Teuchos::ParameterList& fsidyn = Global::Problem::instance()->fsi_dynamic_params();
+  const Teuchos::ParameterList& fsidyn = problem->fsi_dynamic_params();
 
   // safety factor
   const double safetyfac = fsidyn.sublist("TIMEADAPTIVITY").get<double>("SAFETYFACTOR");

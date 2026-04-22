@@ -24,19 +24,20 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
-Adapter::FluidAle::FluidAle(const Teuchos::ParameterList& prbdyn, std::string condname)
-    : timeparams_(prbdyn)
+Adapter::FluidAle::FluidAle(
+    Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname)
+    : problem_(problem), timeparams_(prbdyn)
 {
   Adapter::FluidBaseAlgorithm fluid(
-      prbdyn, Global::Problem::instance()->fluid_dynamic_params(), "fluid", true, false);
+      problem_, prbdyn, problem_.fluid_dynamic_params(), "fluid", true, false);
   fluid_ = fluid.fluid_field();
-  std::shared_ptr<Adapter::AleBaseAlgorithm> ale = std::make_shared<Adapter::AleBaseAlgorithm>(
-      prbdyn, Global::Problem::instance()->get_dis("ale"));
+  std::shared_ptr<Adapter::AleBaseAlgorithm> ale =
+      std::make_shared<Adapter::AleBaseAlgorithm>(problem_, prbdyn, problem_.get_dis("ale"));
   ale_ = std::dynamic_pointer_cast<Adapter::AleFluidWrapper>(ale->ale_field());
 
   if (ale_ == nullptr) FOUR_C_THROW("Failed to cast to problem-specific ALE-wrapper");
 
-  const int ndim = Global::Problem::instance()->n_dim();
+  const int ndim = problem_.n_dim();
 
   // default parameters for coupling
   double tolerance = 1.e-3;
@@ -45,13 +46,13 @@ Adapter::FluidAle::FluidAle(const Teuchos::ParameterList& prbdyn, std::string co
 
   // set nds_master = 2 in case of HDG discretization
   // (nds = 0 used for trace values, nds = 1 used for interior values)
-  if (Global::Problem::instance()->spatial_approximation_type() == Core::FE::ShapeFunctionType::hdg)
+  if (problem_.spatial_approximation_type() == Core::FE::ShapeFunctionType::hdg)
   {
     nds_master = 2;
   }
 
   // check for matching fluid and ale meshes (==true in default case)
-  if (Global::Problem::instance()->fsi_dynamic_params().get<bool>("MATCHGRID_FLUIDALE"))
+  if (problem_.fsi_dynamic_params().get<bool>("MATCHGRID_FLUIDALE"))
   {
     // the fluid-ale coupling matches
     const Core::LinAlg::Map* fluidnodemap = fluid_field()->discretization()->node_row_map();
@@ -67,8 +68,7 @@ Adapter::FluidAle::FluidAle(const Teuchos::ParameterList& prbdyn, std::string co
         std::make_shared<Coupling::Adapter::Coupling>();
     coupfa_matching->setup_coupling(*fluid_field()->discretization(),
         *ale_field()->discretization(), *fluidnodemap, *alenodemap, ndim,
-        Global::Problem::instance()->fsi_dynamic_params().get<bool>("MATCHALL"), tolerance,
-        nds_master, nds_slave);
+        problem_.fsi_dynamic_params().get<bool>("MATCHALL"), tolerance, nds_master, nds_slave);
     coupfa_ = coupfa_matching;
   }
   else
@@ -97,18 +97,17 @@ Adapter::FluidAle::FluidAle(const Teuchos::ParameterList& prbdyn, std::string co
         &dofsets21, nullptr, false);
 
     // setup coupling adapter
-    coupfa_volmortar->setup(Global::Problem::instance()->volmortar_params(),
-        Global::Problem::instance()->cut_general_params());
+    coupfa_volmortar->setup(problem_.volmortar_params(), problem_.cut_general_params());
 
     // set pointer to coupling adapter
     coupfa_ = coupfa_volmortar;
   }
 
   // Apply initial ALE mesh displacement
-  if (Teuchos::getIntegralValue<ALE::InitialDisp>(Global::Problem::instance()->ale_dynamic_params(),
-          "INITIALDISP") != ALE::initdisp_zero_disp)
+  if (Teuchos::getIntegralValue<ALE::InitialDisp>(problem_.ale_dynamic_params(), "INITIALDISP") !=
+      ALE::initdisp_zero_disp)
   {
-    fluid_field()->set_mesh_map(coupfa_->master_dof_map(), nds_master);
+    fluid_field()->set_mesh_map(coupfa_->target_dof_map(), nds_master);
     std::shared_ptr<Core::LinAlg::Vector<double>> initfluiddisp =
         ale_to_fluid_field(ale_field()->dispn());
     fluid_field()->apply_initial_mesh_displacement(initfluiddisp);
@@ -117,11 +116,10 @@ Adapter::FluidAle::FluidAle(const Teuchos::ParameterList& prbdyn, std::string co
   // initializing the fluid is done later as for xfluids the first cut is done
   // there (coupfa_ cannot be build anymore!!!)
   fluid_field()->init();
-  fluid.set_initial_flow_field(
-      Global::Problem::instance()->fluid_dynamic_params());  // call from base algorithm
+  fluid.set_initial_flow_field(problem_.fluid_dynamic_params());  // call from base algorithm
 
 
-  if (Global::Problem::instance()->fsi_dynamic_params().get<bool>("MATCHGRID_STRUCTALE"))
+  if (problem_.fsi_dynamic_params().get<bool>("MATCHGRID_STRUCTALE"))
   {
     std::shared_ptr<Coupling::Adapter::Coupling> icoupfa =
         std::make_shared<Coupling::Adapter::Coupling>();
@@ -149,12 +147,10 @@ Adapter::FluidAle::FluidAle(const Teuchos::ParameterList& prbdyn, std::string co
     std::pair<int, int> dofsets12(0, 0);
     std::pair<int, int> dofsets21(0, 0);
 
-    icoupfa->init(ndim, Global::Problem::instance()->get_dis("fluid"),
-        Global::Problem::instance()->get_dis("ale"), &coupleddof12, &coupleddof21, &dofsets12,
-        &dofsets21, nullptr, false);
+    icoupfa->init(ndim, problem_.get_dis("fluid"), problem_.get_dis("ale"), &coupleddof12,
+        &coupleddof21, &dofsets12, &dofsets21, nullptr, false);
 
-    icoupfa->setup(Global::Problem::instance()->volmortar_params(),
-        Global::Problem::instance()->cut_general_params());
+    icoupfa->setup(problem_.volmortar_params(), problem_.cut_general_params());
 
     icoupfa_ = icoupfa;
   }
@@ -165,7 +161,7 @@ Adapter::FluidAle::FluidAle(const Teuchos::ParameterList& prbdyn, std::string co
       ale_field()->interface()->au_cond_map(), "ALEUPDATECoupling", ndim, true, nds_master,
       nds_slave);
 
-  fluid_field()->set_mesh_map(coupfa_->master_dof_map(), nds_master);
+  fluid_field()->set_mesh_map(coupfa_->target_dof_map(), nds_master);
 
   // the ale matrix might be build just once
   ale_field()->create_system_matrix();
@@ -208,7 +204,7 @@ void Adapter::FluidAle::output()
   // monolithically from an partitioned fsi scheme (e.g. fsi prestress simulation).
   // TODO (Thon): this is not the nice way, but fluid-ale and xfem problems may have now FSI
   // interface, so we can not do this in general :(
-  if (Global::Problem::instance()->get_problem_type() == Core::ProblemType::fsi)
+  if (problem_.get_problem_type() == Core::ProblemType::fsi)
   {
     // we want to be able to restart monolithically from an partitioned fsi scheme
     const int uprestart = timeparams_.get<int>("RESTARTEVERY");
@@ -257,7 +253,7 @@ void Adapter::FluidAle::nonlinear_solve(std::shared_ptr<Core::LinAlg::Vector<dou
     std::shared_ptr<const Core::LinAlg::Vector<double>> dispnp = fluid_field()->dispnp();
     std::shared_ptr<Core::LinAlg::Vector<double>> audispnp =
         fluid_field()->interface()->extract_au_cond_vector(*dispnp);
-    ale_field()->apply_ale_update_displacements(aucoupfa_->master_to_slave(*audispnp));
+    ale_field()->apply_ale_update_displacements(aucoupfa_->target_to_source(*audispnp));
   }
 
   // Note: We do not look for moving ale boundaries (outside the coupling
@@ -293,7 +289,7 @@ void Adapter::FluidAle::nonlinear_solve_vol_coupl(
     std::shared_ptr<const Core::LinAlg::Vector<double>> dispnp = fluid_field()->dispnp();
     std::shared_ptr<Core::LinAlg::Vector<double>> audispnp =
         fluid_field()->interface()->extract_au_cond_vector(*dispnp);
-    ale_field()->apply_ale_update_displacements(aucoupfa_->master_to_slave(*audispnp));
+    ale_field()->apply_ale_update_displacements(aucoupfa_->target_to_source(*audispnp));
   }
 
   // Note: We do not look for moving ale boundaries (outside the coupling
@@ -402,7 +398,7 @@ std::shared_ptr<Core::Utils::ResultTest> Adapter::FluidAle::create_field_test()
 std::shared_ptr<Core::LinAlg::Vector<double>> Adapter::FluidAle::ale_to_fluid_field(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv) const
 {
-  return coupfa_->slave_to_master(*iv);
+  return coupfa_->source_to_target(*iv);
 }
 
 
@@ -411,7 +407,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> Adapter::FluidAle::ale_to_fluid_fi
 std::shared_ptr<Core::LinAlg::Vector<double>> Adapter::FluidAle::ale_to_fluid_field(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return coupfa_->slave_to_master(*iv);
+  return coupfa_->source_to_target(*iv);
 }
 
 
@@ -420,7 +416,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> Adapter::FluidAle::ale_to_fluid_fi
 std::shared_ptr<Core::LinAlg::Vector<double>> Adapter::FluidAle::fluid_to_ale(
     std::shared_ptr<Core::LinAlg::Vector<double>> iv) const
 {
-  return icoupfa_->master_to_slave(*iv);
+  return icoupfa_->target_to_source(*iv);
 }
 
 
@@ -429,7 +425,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> Adapter::FluidAle::fluid_to_ale(
 std::shared_ptr<Core::LinAlg::Vector<double>> Adapter::FluidAle::fluid_to_ale(
     std::shared_ptr<const Core::LinAlg::Vector<double>> iv) const
 {
-  return icoupfa_->master_to_slave(*iv);
+  return icoupfa_->target_to_source(*iv);
 }
 
 FOUR_C_NAMESPACE_CLOSE

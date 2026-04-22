@@ -19,6 +19,11 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace FSI::Nonlinear
 {
   //! Aikten line search - the simple relaxation.
@@ -32,7 +37,8 @@ namespace FSI::Nonlinear
   {
    public:
     //! Constructor
-    AitkenRelaxation(const Teuchos::RCP<::NOX::Utils>& utils, Teuchos::ParameterList& params);
+    AitkenRelaxation(const Teuchos::RCP<::NOX::Utils>& utils, Teuchos::ParameterList& params,
+        Global::Problem& problem);
 
 
     // derived
@@ -69,6 +75,8 @@ namespace FSI::Nonlinear
 
     //! Printing utilities
     Teuchos::RCP<::NOX::Utils> utils_;
+
+    Global::Problem& problem_;
   };
 
 
@@ -76,11 +84,13 @@ namespace FSI::Nonlinear
   class AitkenFactory : public ::NOX::LineSearch::UserDefinedFactory
   {
    public:
+    explicit AitkenFactory(Global::Problem& problem) : problem_(problem) {}
+
     Teuchos::RCP<::NOX::LineSearch::Generic> buildLineSearch(
         const Teuchos::RCP<::NOX::GlobalData>& gd, Teuchos::ParameterList& params) const override
     {
       if (aitken_ == Teuchos::null)
-        aitken_ = Teuchos::make_rcp<AitkenRelaxation>(gd->getUtils(), params);
+        aitken_ = Teuchos::make_rcp<AitkenRelaxation>(gd->getUtils(), params, problem_);
       else
         aitken_->reset(gd, params);
       return aitken_;
@@ -90,6 +100,7 @@ namespace FSI::Nonlinear
 
    private:
     mutable Teuchos::RCP<AitkenRelaxation> aitken_;
+    Global::Problem& problem_;
   };
 
 }  // namespace FSI::Nonlinear

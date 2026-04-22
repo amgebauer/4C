@@ -140,12 +140,6 @@ void Arteries::TimInt::time_loop(
     bool CoupledTo3D, std::shared_ptr<Teuchos::ParameterList> CouplingTo3DParams)
 {
   coupledTo3D_ = CoupledTo3D;
-  // time measurement: time loop
-  if (!coupledTo3D_)
-  {
-    TEUCHOS_FUNC_TIME_MONITOR(" + time loop");
-  }
-
   while (step_ < stepmax_ and time_ < maxtime_)
   {
     prepare_time_step();

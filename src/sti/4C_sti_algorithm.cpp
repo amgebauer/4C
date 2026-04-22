@@ -26,7 +26,7 @@ STI::Algorithm::Algorithm(MPI_Comm comm, const Teuchos::ParameterList& stidyn,
     const Teuchos::ParameterList& scatradyn, const Teuchos::ParameterList& solverparams_scatra,
     const Teuchos::ParameterList& solverparams_thermo)
     :  // instantiate base class
-      AlgorithmBase(comm, scatradyn),
+      AlgorithmBase(*Global::Problem::instance(), comm, scatradyn),
       scatra_(nullptr),
       thermo_(nullptr),
       strategyscatra_(nullptr),
@@ -45,7 +45,7 @@ STI::Algorithm::Algorithm(MPI_Comm comm, const Teuchos::ParameterList& stidyn,
 
   // initialize scatra time integrator
   scatra_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(
-      *fieldparameters_, *fieldparameters_, solverparams_scatra);
+      *Global::Problem::instance(), *fieldparameters_, *fieldparameters_, solverparams_scatra);
   scatra_->init();
   scatra_->scatra_field()->set_number_of_dof_set_velocity(1);
   scatra_->scatra_field()->set_number_of_dof_set_thermo(2);
@@ -55,7 +55,7 @@ STI::Algorithm::Algorithm(MPI_Comm comm, const Teuchos::ParameterList& stidyn,
   modify_field_parameters_for_thermo_field();
 
   // initialize thermo time integrator
-  thermo_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(
+  thermo_ = std::make_shared<Adapter::ScaTraBaseAlgorithm>(*Global::Problem::instance(),
       *fieldparameters_, *fieldparameters_, solverparams_thermo, "thermo");
   thermo_->init();
   thermo_->scatra_field()->set_number_of_dof_set_velocity(1);
@@ -121,7 +121,7 @@ STI::Algorithm::Algorithm(MPI_Comm comm, const Teuchos::ParameterList& stidyn,
         {
           // consider conditions for slave side only
           if (condition->parameters().get<Inpar::S2I::InterfaceSides>("INTERFACE_SIDE") ==
-              Inpar::S2I::side_slave)
+              Inpar::S2I::side_source)
           {
             // extract ID of current condition
             const int condid = condition->parameters().get<int>("ConditionID");
@@ -197,7 +197,7 @@ void STI::Algorithm::modify_field_parameters_for_thermo_field()
 
     // make sure that interface side underlying Lagrange multiplier definition is slave side
     fieldparameters_->sublist("S2I COUPLING")
-        .set<Inpar::S2I::InterfaceSides>("LMSIDE", Inpar::S2I::InterfaceSides::side_slave);
+        .set<Inpar::S2I::InterfaceSides>("LMSIDE", Inpar::S2I::InterfaceSides::side_source);
   }
 }  // STI::Algorithm::modify_field_parameters_for_thermo_field()
 
@@ -314,7 +314,7 @@ void STI::Algorithm::transfer_scatra_to_thermo(
             std::make_shared<Core::LinAlg::Vector<double>>(
                 *scatra_->scatra_field()->discretization()->dof_row_map(), true);
         strategyscatra_->interface_maps()->insert_vector(
-            *strategyscatra_->coupling_adapter()->master_to_slave(
+            *strategyscatra_->coupling_adapter()->target_to_source(
                 *strategyscatra_->interface_maps()->extract_vector(*scatra, 2)),
             1, *imasterphinp);
         thermo_->scatra_field()->discretization()->set_state(2, "imasterscatra", *imasterphinp);
@@ -333,7 +333,7 @@ void STI::Algorithm::transfer_scatra_to_thermo(
         {
           // consider conditions for slave side only
           if (condition->parameters().get<Inpar::S2I::InterfaceSides>("INTERFACE_SIDE") ==
-              Inpar::S2I::side_slave)
+              Inpar::S2I::side_source)
           {
             // extract ID of current condition
             const int condid = condition->parameters().get<int>("ConditionID");
@@ -381,7 +381,7 @@ void STI::Algorithm::transfer_thermo_to_scatra(
     {
       // consider conditions for slave side only
       if (condition->parameters().get<Inpar::S2I::InterfaceSides>("INTERFACE_SIDE") ==
-          Inpar::S2I::side_slave)
+          Inpar::S2I::side_source)
       {
         // extract ID of current condition
         const int condid = condition->parameters().get<int>("ConditionID");

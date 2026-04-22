@@ -27,6 +27,11 @@ namespace Adapter
   class StructureBaseAlgorithmNew;
 }  // namespace Adapter
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 
 namespace FSI
 {
@@ -52,7 +57,7 @@ namespace FSI
   class Algorithm : public Adapter::AlgorithmBase
   {
    public:
-    explicit Algorithm(MPI_Comm comm);
+    explicit Algorithm(MPI_Comm comm, Global::Problem& problem);
 
 
     /// setup this object
@@ -109,6 +114,11 @@ namespace FSI
     const Coupling::Adapter::Coupling& structure_fluid_coupling() const;
 
    protected:
+    Global::Problem& problem() { return problem_; }
+    const Global::Problem& problem() const { return problem_; }
+
+    Global::Problem& problem_;
+
     /// underlying structure of the FSI problem
     std::shared_ptr<Adapter::FSIStructureWrapper> structure_;
 

@@ -25,7 +25,8 @@ Adapter::StructureFactory::StructureFactory()
 /*----------------------------------------------------------------------------*
  *----------------------------------------------------------------------------*/
 std::shared_ptr<Adapter::StructureBaseAlgorithmNew>
-Adapter::StructureFactory::build_structure_algorithm(const Teuchos::ParameterList& sdyn) const
+Adapter::StructureFactory::build_structure_algorithm(
+    Global::Problem& problem, const Teuchos::ParameterList& sdyn) const
 {
   std::shared_ptr<Adapter::StructureBaseAlgorithmNew> adapterbase = nullptr;
 
@@ -35,7 +36,7 @@ Adapter::StructureFactory::build_structure_algorithm(const Teuchos::ParameterLis
   switch (intstrat)
   {
     case Inpar::Solid::int_standard:
-      adapterbase = std::make_shared<Adapter::StructureBaseAlgorithmNew>();
+      adapterbase = std::make_shared<Adapter::StructureBaseAlgorithmNew>(problem);
       break;
     default:
       FOUR_C_THROW("Unknown integration strategy!");
@@ -48,10 +49,10 @@ Adapter::StructureFactory::build_structure_algorithm(const Teuchos::ParameterLis
 /*----------------------------------------------------------------------------*
  *----------------------------------------------------------------------------*/
 std::shared_ptr<Adapter::StructureBaseAlgorithmNew> Adapter::build_structure_algorithm(
-    const Teuchos::ParameterList& sdyn)
+    Global::Problem& problem, const Teuchos::ParameterList& sdyn)
 {
   StructureFactory factory;
-  return factory.build_structure_algorithm(sdyn);
+  return factory.build_structure_algorithm(problem, sdyn);
 }
 
 FOUR_C_NAMESPACE_CLOSE

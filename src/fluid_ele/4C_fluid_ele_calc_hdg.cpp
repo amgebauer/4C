@@ -14,6 +14,7 @@
 #include "4C_fluid_ele_parameter_timint.hpp"
 #include "4C_fluid_functions.hpp"
 #include "4C_global_data.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_utils_densematrix_multiply.hpp"
 #include "4C_mat_fluid_murnaghantait.hpp"
 #include "4C_mat_newtonianfluid.hpp"
@@ -22,7 +23,6 @@
 
 #include <Teuchos_BLAS.hpp>
 #include <Teuchos_LAPACK.hpp>
-#include <Teuchos_SerialDenseSolver.hpp>
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -510,16 +510,13 @@ int Discret::Elements::FluidEleCalcHDG<distype>::project_field(Discret::Elements
     // Creating and solving a system of the form Ax = b where
     // A is a matrix and x and b are vectors
     // solve mass matrix system, return values in localMat = elevec2 correctly ordered
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
+    Core::LinAlg::SerialDenseSolver inverseMass;
     // Setting A matrix
-    inverseMass.setMatrix(Teuchos::rcpFromRef(local_solver_->massMat.base()));
+    inverseMass.set_matrix(local_solver_->massMat);
     // localMat is, in this case, used both as the RHS and as the unknown vector
     // localMat is placed in the memory where elevec2 was and therefore it takes
     // its place as result vector
-    inverseMass.setVectors(
-        Teuchos::rcpFromRef(localMat.base()), Teuchos::rcpFromRef(localMat.base()));
+    inverseMass.set_vectors(localMat, localMat);
     // Solving
     inverseMass.solve();
   }
@@ -632,13 +629,11 @@ int Discret::Elements::FluidEleCalcHDG<distype>::project_field(Discret::Elements
     }
 
     // Solving step, nothing fancy
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-    inverseMass.setMatrix(Teuchos::rcpFromRef(mass.base()));
+    Core::LinAlg::SerialDenseSolver inverseMass;
+    inverseMass.set_matrix(mass);
     // In this cas trVec is a proper vector and not a matrix used as multiple
     // RHS vectors
-    inverseMass.setVectors(Teuchos::rcpFromRef(trVec.base()), Teuchos::rcpFromRef(trVec.base()));
+    inverseMass.set_vectors(trVec, trVec);
     inverseMass.solve();
 
     // In this case we fill elevec1 with the values of trVec because we have not
@@ -793,7 +788,7 @@ int Discret::Elements::FluidEleCalcHDG<distype>::interpolate_solution_to_nodes(
       for (unsigned int idim = 0; idim < nsd_ - 1; idim++)
       {
         // If the face belongs to the element being considered
-        if (ele->faces()[f]->parent_master_element() == ele)
+        if (ele->faces()[f]->parent_target_element() == ele)
           xsishuffle(idim, i) = locations(idim, i);
         else
           // If the face does not belong to the element being considered it is
@@ -1024,12 +1019,9 @@ int Discret::Elements::FluidEleCalcHDG<distype>::project_force_on_dof_vec_for_hi
         local_solver_->massMat, local_solver_->massPart, local_solver_->massPartW);
 
     // solve mass matrix system, return values in localMat = elevec2 correctly ordered
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-    inverseMass.setMatrix(Teuchos::rcpFromRef(local_solver_->massMat.base()));
-    inverseMass.setVectors(
-        Teuchos::rcpFromRef(localMat.base()), Teuchos::rcpFromRef(localMat.base()));
+    Core::LinAlg::SerialDenseSolver inverseMass;
+    inverseMass.set_matrix(local_solver_->massMat);
+    inverseMass.set_vectors(localMat, localMat);
     inverseMass.solve();
   }
 
@@ -1134,12 +1126,9 @@ int Discret::Elements::FluidEleCalcHDG<distype>::project_initial_field_for_hit(
         local_solver_->massMat, local_solver_->massPart, local_solver_->massPartW);
 
     // solve mass matrix system, return values in localMat = elevec2 correctly ordered
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-    inverseMass.setMatrix(Teuchos::rcpFromRef(local_solver_->massMat.base()));
-    inverseMass.setVectors(
-        Teuchos::rcpFromRef(localMat.base()), Teuchos::rcpFromRef(localMat.base()));
+    Core::LinAlg::SerialDenseSolver inverseMass;
+    inverseMass.set_matrix(local_solver_->massMat);
+    inverseMass.set_vectors(localMat, localMat);
     inverseMass.solve();
   }
 
@@ -1196,11 +1185,9 @@ int Discret::Elements::FluidEleCalcHDG<distype>::project_initial_field_for_hit(
       }
     }
 
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-    inverseMass.setMatrix(Teuchos::rcpFromRef(mass.base()));
-    inverseMass.setVectors(Teuchos::rcpFromRef(trVec.base()), Teuchos::rcpFromRef(trVec.base()));
+    Core::LinAlg::SerialDenseSolver inverseMass;
+    inverseMass.set_matrix(mass);
+    inverseMass.set_vectors(trVec, trVec);
     inverseMass.solve();
 
 
@@ -2241,10 +2228,8 @@ void Discret::Elements::FluidEleCalcHDG<distype>::LocalSolver::eliminate_velocit
 
   // invert mass matrix. Inverse will be stored in massMat, too
   {
-    using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-    using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-    Teuchos::SerialDenseSolver<ordinalType, scalarType> inverseMass;
-    inverseMass.setMatrix(Teuchos::rcpFromRef(massMat.base()));
+    Core::LinAlg::SerialDenseSolver inverseMass;
+    inverseMass.set_matrix(massMat);
     inverseMass.invert();
   }
 

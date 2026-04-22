@@ -9,6 +9,7 @@
 
 #include "4C_linalg_map.hpp"
 #include "4C_linalg_serialdensematrix.hpp"
+#include "4C_linalg_serialdensesolver.hpp"
 #include "4C_linalg_serialdensevector.hpp"
 #include "4C_linalg_sparsematrix.hpp"
 #include "4C_linalg_utils_densematrix_communication.hpp"
@@ -16,8 +17,6 @@
 #include "4C_linalg_utils_sparse_algebra_math.hpp"
 #include "4C_linalg_vector.hpp"
 #include "4C_utils_exceptions.hpp"
-
-#include <Teuchos_SerialDenseSolver.hpp>
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -149,10 +148,8 @@ void Core::LinAlg::KrylovProjector::fill_complete()
 
   // invert wTc-matrix (also done if it's only a scalar - check with Micheal
   // Gee before changing this)
-  using ordinalType = Core::LinAlg::SerialDenseMatrix::ordinalType;
-  using scalarType = Core::LinAlg::SerialDenseMatrix::scalarType;
-  Teuchos::SerialDenseSolver<ordinalType, scalarType> densesolver;
-  densesolver.setMatrix(Teuchos::rcpFromRef(invw_tc_->base()));
+  Core::LinAlg::SerialDenseSolver densesolver;
+  densesolver.set_matrix(*invw_tc_);
   int err = densesolver.invert();
   if (err)
     FOUR_C_THROW(

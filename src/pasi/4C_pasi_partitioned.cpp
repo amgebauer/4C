@@ -29,7 +29,7 @@ FOUR_C_NAMESPACE_OPEN
  | definitions                                                               |
  *---------------------------------------------------------------------------*/
 PaSI::PartitionedAlgo::PartitionedAlgo(MPI_Comm comm, const Teuchos::ParameterList& params)
-    : AlgorithmBase(comm, params), isinit_(false), issetup_(false)
+    : AlgorithmBase(*Global::Problem::instance(), comm, params), isinit_(false), issetup_(false)
 {
   // empty constructor
 }
@@ -258,7 +258,7 @@ void PaSI::PartitionedAlgo::init_structure_field()
       Inpar::Solid::IntegrationStrategy::int_standard)
   {
     // create and init structure base algorithm
-    struct_adapterbase_ptr_ = Adapter::build_structure_algorithm(params);
+    struct_adapterbase_ptr_ = Adapter::build_structure_algorithm(*problem, params);
     struct_adapterbase_ptr_->init(params, const_cast<Teuchos::ParameterList&>(params), structdis);
   }
   else if (Teuchos::getIntegralValue<Inpar::Solid::IntegrationStrategy>(params, "INT_STRATEGY") ==

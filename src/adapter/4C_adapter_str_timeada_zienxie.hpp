@@ -35,8 +35,8 @@ namespace Adapter
   {
    public:
     /// constructor
-    explicit StructureTimeAdaZienXie(std::shared_ptr<Structure> structure)
-        : StructureTimeAda(structure)
+    StructureTimeAdaZienXie(Global::Problem& problem, std::shared_ptr<Structure> structure)
+        : StructureTimeAda(problem, structure)
     {
     }
 

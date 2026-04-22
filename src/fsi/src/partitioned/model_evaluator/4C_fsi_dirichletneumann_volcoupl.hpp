@@ -36,7 +36,7 @@ namespace FSI
      *
      * You will have to use the FSI::DirichletNeumannFactory to create an instance of this class
      */
-    explicit DirichletNeumannVolCoupl(MPI_Comm comm);
+    explicit DirichletNeumannVolCoupl(MPI_Comm comm, Global::Problem& problem);
 
    public:
     /// setup this object
@@ -99,7 +99,7 @@ namespace FSI
     /// destructor
     virtual ~InterfaceCorrector() = default;
 
-    virtual void setup(std::shared_ptr<Adapter::FluidAle> fluidale);
+    virtual void setup(const Global::Problem& problem, std::shared_ptr<Adapter::FluidAle> fluidale);
 
     void set_interface_displacements(std::shared_ptr<Core::LinAlg::Vector<double>>& idisp_struct,
         Coupling::Adapter::Coupling& icoupfs);

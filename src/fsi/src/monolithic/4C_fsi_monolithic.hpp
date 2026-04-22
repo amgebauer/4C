@@ -41,6 +41,11 @@ namespace Core::Nodes
   class Node;
 }
 
+namespace Global
+{
+  class Problem;
+}  // namespace Global
+
 namespace FSI
 {
   class FSIResultTest;
@@ -94,7 +99,8 @@ namespace FSI
   class MonolithicBase : public Adapter::AlgorithmBase
   {
    public:
-    explicit MonolithicBase(MPI_Comm comm, const Teuchos::ParameterList& timeparams);
+    explicit MonolithicBase(
+        MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams);
 
 
     /*!
@@ -160,6 +166,11 @@ namespace FSI
     //@}
 
    protected:
+    Global::Problem& problem() { return problem_; }
+    const Global::Problem& problem() const { return problem_; }
+
+    Global::Problem& problem_;
+
     //! Prepare time steps for the fsi problem
     virtual void prepare_time_step_fsi();
 
@@ -291,7 +302,8 @@ namespace FSI
                      public ::NOX::Direction::UserDefinedFactory
   {
    public:
-    explicit Monolithic(MPI_Comm comm, const Teuchos::ParameterList& timeparams);
+    explicit Monolithic(
+        MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams);
 
     ///
     /*! do the setup for the monolithic system
@@ -976,7 +988,8 @@ namespace FSI
   class BlockMonolithic : public Monolithic
   {
    public:
-    explicit BlockMonolithic(MPI_Comm comm, const Teuchos::ParameterList& timeparams);
+    explicit BlockMonolithic(
+        MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams);
 
     //! @name NOX methods
     //@{

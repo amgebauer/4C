@@ -70,12 +70,6 @@ Arteries::ArtNetExplicitTimeInt::ArtNetExplicitTimeInt(
 void Arteries::ArtNetExplicitTimeInt::init(const Teuchos::ParameterList& globaltimeparams,
     const Teuchos::ParameterList& arteryparams, const std::string& scatra_disname)
 {
-  // time measurement: initialization
-  if (!coupledTo3D_)
-  {
-    TEUCHOS_FUNC_TIME_MONITOR(" + initialization");
-  }
-
   // call base class
   TimInt::init(globaltimeparams, arteryparams, scatra_disname);
 
@@ -260,12 +254,6 @@ void Arteries::ArtNetExplicitTimeInt::init(const Teuchos::ParameterList& globalt
 void Arteries::ArtNetExplicitTimeInt::solve(
     std::shared_ptr<Teuchos::ParameterList> CouplingTo3DParams)
 {
-  // time measurement: Artery
-  if (!coupledTo3D_)
-  {
-    TEUCHOS_FUNC_TIME_MONITOR("   + solving artery");
-  }
-
   // -------------------------------------------------------------------
   // call elements to calculate system matrix
   // -------------------------------------------------------------------
@@ -274,12 +262,6 @@ void Arteries::ArtNetExplicitTimeInt::solve(
   //  const double tcpuele = Teuchos::Time::wallTime();
 
   {
-    // time measurement: element
-    if (!coupledTo3D_)
-    {
-      TEUCHOS_FUNC_TIME_MONITOR("      + element calls");
-    }
-
     // set both system matrix and rhs vector to zero
     sysmat_->zero();
     rhs_->put_scalar(0.0);
@@ -377,11 +359,6 @@ void Arteries::ArtNetExplicitTimeInt::solve(
   // Apply the BCs to the system matrix and rhs
   // -------------------------------------------------------------------
   {
-    // time measurement: application of dbc
-    if (!coupledTo3D_)
-    {
-      TEUCHOS_FUNC_TIME_MONITOR("      + apply DBC");
-    }
     Core::LinAlg::apply_dirichlet_to_system(*sysmat_, *qanp_, *rhs_, *bcval_, *dbctog_);
   }
 
@@ -389,12 +366,6 @@ void Arteries::ArtNetExplicitTimeInt::solve(
   // get cpu time
   const double tcpusolve = Teuchos::Time::wallTime();
   {
-    // time measurement: solver
-    if (!coupledTo3D_)
-    {
-      TEUCHOS_FUNC_TIME_MONITOR("      + solver calls");
-    }
-
     // call solver
     Core::LinAlg::SolverParams solver_params;
     solver_params.refactor = true;

@@ -473,9 +473,9 @@ int Arteries::Utils::ArtJunctionBc::solve(Teuchos::ParameterList& params)
     //--------------------------------------------------------------------
     // Solve for dx
     //--------------------------------------------------------------------
-    solver_.setMatrix(Teuchos::rcpFromRef(Jacobian.base()));
-    solver_.setVectors(Teuchos::rcpFromRef(dx), Teuchos::rcpFromRef(f));
-    solver_.factorWithEquilibration(true);
+    solver_.set_matrix(Jacobian);
+    solver_.set_vectors(dx, f);
+    solver_.factor_with_equilibration(true);
     int err2 = solver_.factor();
     int err = solver_.solve();
 

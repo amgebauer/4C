@@ -66,7 +66,7 @@ void levelset_dyn(int restart)
   // create instance of scalar transport basis algorithm (empty fluid discretization)
   std::shared_ptr<Adapter::ScaTraBaseAlgorithm> scatrabase =
       std::make_shared<Adapter::ScaTraBaseAlgorithm>(
-          levelsetcontrol, scatradyn, problem->solver_params(linsolvernumber));
+          *problem, levelsetcontrol, scatradyn, problem->solver_params(linsolvernumber));
 
   // add proxy of velocity related degrees of freedom to scatra discretization
   std::shared_ptr<Core::DOFSets::DofSetInterface> dofsetaux =

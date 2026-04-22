@@ -23,8 +23,9 @@ FOUR_C_NAMESPACE_OPEN
 
 /*======================================================================*/
 /* constructor */
-Adapter::StructureConstrMerged::StructureConstrMerged(std::shared_ptr<Structure> stru)
-    : FSIStructureWrapper(stru), issetup_(false)
+Adapter::StructureConstrMerged::StructureConstrMerged(
+    Global::Problem& problem, std::shared_ptr<Structure> stru)
+    : FSIStructureWrapper(problem, stru), issetup_(false)
 {
   // do nothing
 }

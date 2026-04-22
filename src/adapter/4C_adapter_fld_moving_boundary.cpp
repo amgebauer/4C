@@ -19,9 +19,9 @@ FOUR_C_NAMESPACE_OPEN
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 Adapter::FluidMovingBoundaryBaseAlgorithm::FluidMovingBoundaryBaseAlgorithm(
-    const Teuchos::ParameterList& prbdyn, std::string condname)
+    Global::Problem& problem, const Teuchos::ParameterList& prbdyn, std::string condname)
 {
-  const Core::ProblemType probtype = Global::Problem::instance()->get_problem_type();
+  const Core::ProblemType probtype = problem.get_problem_type();
 
   // switch between moving domain fluid implementations
   switch (probtype)
@@ -31,28 +31,28 @@ Adapter::FluidMovingBoundaryBaseAlgorithm::FluidMovingBoundaryBaseAlgorithm(
     case Core::ProblemType::fsi_redmodels:
     {
       // std::cout << "using FluidAle as FluidMovingBoundary" << std::endl;
-      fluid_ = std::make_shared<FluidAle>(prbdyn, condname);
+      fluid_ = std::make_shared<FluidAle>(problem, prbdyn, condname);
       break;
     }
     case Core::ProblemType::fluid_xfem:
     case Core::ProblemType::fsi_xfem:
     {
-      const Teuchos::ParameterList xfluid = Global::Problem::instance()->x_fluid_dynamic_params();
+      const Teuchos::ParameterList xfluid = problem.x_fluid_dynamic_params();
       bool alefluid = xfluid.sublist("GENERAL").get<bool>("ALE_XFluid");
       if (!alefluid)  // xfluid
       {
         // std::cout << "using FluidXFEM as FluidMovingBoundary" << endl;
-        fluid_ = std::make_shared<FluidXFEM>(prbdyn, condname);
+        fluid_ = std::make_shared<FluidXFEM>(problem, prbdyn, condname);
       }
       else  // xafluid
       {
-        fluid_ = std::make_shared<FluidAleXFEM>(prbdyn, condname);
+        fluid_ = std::make_shared<FluidAleXFEM>(problem, prbdyn, condname);
       }
       break;
     }
     case Core::ProblemType::fbi:
     {
-      fluid_ = std::make_shared<FBIFluidMB>(prbdyn, condname);
+      fluid_ = std::make_shared<FBIFluidMB>(problem, prbdyn, condname);
       break;
     }
     default:

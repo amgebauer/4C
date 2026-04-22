@@ -57,7 +57,8 @@ namespace FSI
     friend class FSI::FSIResultTest;
 
    public:
-    explicit MortarMonolithicFluidSplit(MPI_Comm comm, const Teuchos::ParameterList& timeparams);
+    explicit MortarMonolithicFluidSplit(
+        MPI_Comm comm, Global::Problem& problem, const Teuchos::ParameterList& timeparams);
 
     /*! do the setup for the monolithic system
 

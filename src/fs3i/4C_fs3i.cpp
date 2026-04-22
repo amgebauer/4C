@@ -14,6 +14,7 @@
 #include "4C_fem_condition_selector.hpp"
 #include "4C_fluid_implicit_integration.hpp"
 #include "4C_fs3i_input.hpp"
+#include "4C_fs3i_problem_access.hpp"
 #include "4C_fsi_dyn.hpp"
 #include "4C_fsi_monolithicfluidsplit.hpp"
 #include "4C_fsi_monolithicstructuresplit.hpp"
@@ -30,13 +31,21 @@
 
 FOUR_C_NAMESPACE_OPEN
 
+namespace
+{
+  const Teuchos::ParameterList& fs3i_dynamic_params_from_problem()
+  {
+    return FS3I::Utils::fs3i_dynamic_params_from_problem();
+  }
+}  // namespace
+
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 FS3I::FS3IBase::FS3IBase()
-    : infperm_(Global::Problem::instance()->f_s3_i_dynamic_params().get<bool>("INF_PERM")),
-      timemax_(Global::Problem::instance()->f_s3_i_dynamic_params().get<double>("MAXTIME")),
-      numstep_(Global::Problem::instance()->f_s3_i_dynamic_params().get<int>("NUMSTEP")),
-      dt_(Global::Problem::instance()->f_s3_i_dynamic_params().get<double>("TIMESTEP")),
+    : infperm_(fs3i_dynamic_params_from_problem().get<bool>("INF_PERM")),
+      timemax_(fs3i_dynamic_params_from_problem().get<double>("MAXTIME")),
+      numstep_(fs3i_dynamic_params_from_problem().get<int>("NUMSTEP")),
+      dt_(fs3i_dynamic_params_from_problem().get<double>("TIMESTEP")),
       time_(0.0),
       step_(0),
       issetup_(false),
@@ -82,10 +91,10 @@ void FS3I::FS3IBase::check_interface_dirichlet_bc()
   std::shared_ptr<Core::FE::Discretization> slavedis =
       scatravec_[1]->scatra_field()->discretization();
 
-  std::shared_ptr<const Core::LinAlg::Map> mastermap = scatracoup_->master_dof_map();
+  std::shared_ptr<const Core::LinAlg::Map> mastermap = scatracoup_->target_dof_map();
   std::shared_ptr<const Core::LinAlg::Map> permmastermap = scatracoup_->perm_master_dof_map();
-  std::shared_ptr<const Core::LinAlg::Map> slavemap = scatracoup_->slave_dof_map();
-  std::shared_ptr<const Core::LinAlg::Map> permslavemap = scatracoup_->perm_slave_dof_map();
+  std::shared_ptr<const Core::LinAlg::Map> slavemap = scatracoup_->source_dof_map();
+  std::shared_ptr<const Core::LinAlg::Map> permslavemap = scatracoup_->perm_source_dof_map();
 
   const std::shared_ptr<const Core::LinAlg::MapExtractor> masterdirichmapex =
       scatravec_[0]->scatra_field()->dirich_maps();
@@ -102,7 +111,7 @@ void FS3I::FS3IBase::check_interface_dirichlet_bc()
     }
   }
   std::shared_ptr<Core::LinAlg::Vector<double>> test_slaveifdirich =
-      scatracoup_->master_to_slave(masterifdirich);
+      scatracoup_->target_to_source(masterifdirich);
 
   const std::shared_ptr<const Core::LinAlg::MapExtractor> slavedirichmapex =
       scatravec_[1]->scatra_field()->dirich_maps();
@@ -119,7 +128,7 @@ void FS3I::FS3IBase::check_interface_dirichlet_bc()
     }
   }
   std::shared_ptr<Core::LinAlg::Vector<double>> test_masterifdirich =
-      scatracoup_->slave_to_master(slaveifdirich);
+      scatracoup_->source_to_target(slaveifdirich);
 
   // check if the locations of non-zero entries do not match
   for (int i = 0; i < slavedis->dof_row_map()->num_my_elements(); ++i)
@@ -155,7 +164,7 @@ void FS3I::FS3IBase::check_interface_dirichlet_bc()
 void FS3I::FS3IBase::check_f_s3_i_inputs()
 {
   // Check FS3I dynamic parameters
-  Global::Problem* problem = Global::Problem::instance();
+  Global::Problem* problem = FS3I::Utils::problem_from_instance();
   const Teuchos::ParameterList& fs3idyn = problem->f_s3_i_dynamic_params();
   const Teuchos::ParameterList& structdynparams = problem->structural_dynamic_params();
   const Teuchos::ParameterList& scatradynparams = problem->scalar_transport_dynamic_params();
@@ -228,8 +237,7 @@ void FS3I::FS3IBase::check_f_s3_i_inputs()
         "in the structure is NOT divergence free!");
   }
 
-  auto pstype = Teuchos::getIntegralValue<Inpar::Solid::PreStress>(
-      Global::Problem::instance()->structural_dynamic_params(), "PRESTRESS");
+  auto pstype = Teuchos::getIntegralValue<Inpar::Solid::PreStress>(structdynparams, "PRESTRESS");
   // is structure calculated dynamic when not prestressing?
   if (Teuchos::getIntegralValue<Inpar::Solid::DynamicType>(structdynparams, "DYNAMICTYPE") ==
           Inpar::Solid::DynamicType::Statics and
@@ -701,7 +709,7 @@ void FS3I::FS3IBase::setup_coupled_scatra_matrix() const
             *coup1, *(scatrafieldexvec_[0]), *(scatrafieldexvec_[0]));
     coupblock1->complete();
     (*fbitransform_)(coupblock1->matrix(1, 1), -1.0,
-        Coupling::Adapter::CouplingMasterConverter(*scatracoup_),
+        Coupling::Adapter::CouplingTargetConverter(*scatracoup_),
         scatrasystemmatrix_->matrix(1, 0));
 
     std::shared_ptr<Core::LinAlg::BlockSparseMatrixBase> coupblock2 =
@@ -720,7 +728,7 @@ void FS3I::FS3IBase::setup_coupled_scatra_matrix() const
 std::shared_ptr<Core::LinAlg::Vector<double>> FS3I::FS3IBase::scatra2_to_scatra1(
     const Core::LinAlg::Vector<double>& iv) const
 {
-  return scatracoup_->slave_to_master(iv);
+  return scatracoup_->source_to_target(iv);
 }
 
 
@@ -729,7 +737,7 @@ std::shared_ptr<Core::LinAlg::Vector<double>> FS3I::FS3IBase::scatra2_to_scatra1
 std::shared_ptr<Core::LinAlg::Vector<double>> FS3I::FS3IBase::scatra1_to_scatra2(
     const Core::LinAlg::Vector<double>& iv) const
 {
-  return scatracoup_->master_to_slave(iv);
+  return scatracoup_->target_to_source(iv);
 }
 
 /*----------------------------------------------------------------------*/
