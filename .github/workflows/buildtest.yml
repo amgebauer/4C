@@ -76,8 +76,6 @@ jobs:
       - name: Test
         run: |
           cd $GITHUB_WORKSPACE/build
-          PYVER=$(python3 -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
-          export PYTHONPATH="$GITHUB_WORKSPACE/build/python_venv_build_test/lib/python${PYVER}/site-packages:$PYTHONPATH"
           ctest -I $TEST_CHUNK -j `nproc` --output-on-failure --output-junit $GITHUB_WORKSPACE/gcc13_assertions_test_report-$TEST_CHUNK.xml
         env:
           TEST_CHUNK: ${{ matrix.test-chunk }}
