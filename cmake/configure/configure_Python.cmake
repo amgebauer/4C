@@ -81,6 +81,20 @@ _execute_process(
   ${PROJECT_SOURCE_DIR}/utilities/four_c_python[build]
   )
 
+# determine site-packages of build environment
+execute_process(
+  COMMAND
+    "${FOUR_C_PYTHON_VENV_BUILD}/bin/python3" -c
+    "import sysconfig; print(sysconfig.get_paths()['purelib'])"
+  OUTPUT_VARIABLE FOUR_C_PYTHON_VENV_BUILD_SITE_PACKAGES
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+# Export site-packages to the parent scope
+set(FOUR_C_PYTHON_VENV_BUILD_SITE_PACKAGES
+    "${FOUR_C_PYTHON_VENV_BUILD_SITE_PACKAGES}"
+    PARENT_SCOPE
+    )
+
 message(
   STATUS
     "Successfully created Python virtual environment in ${FOUR_C_PYTHON_VENV_BUILD} and installed necessary requirements"

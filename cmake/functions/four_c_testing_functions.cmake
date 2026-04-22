@@ -26,7 +26,30 @@ function(require_fixture name_of_test name_of_required_test)
 endfunction()
 
 function(set_environment name_of_test)
-  set_tests_properties(${name_of_test} PROPERTIES ENVIRONMENT "PATH=$ENV{PATH}")
+  if(FOUR_C_WITH_PYTHON)
+    # Add Python virtual environment
+    if(NOT DEFINED FOUR_C_PYTHON_VENV_BUILD OR "${FOUR_C_PYTHON_VENV_BUILD}" STREQUAL "")
+      message(FATAL_ERROR "Could not determine Python virtual environment for testing.")
+    endif()
+
+    # We also need to add the PYTHONPATH with the site-packages of the virtual environment
+    if(NOT DEFINED FOUR_C_PYTHON_VENV_BUILD_SITE_PACKAGES
+       OR "${FOUR_C_PYTHON_VENV_BUILD_SITE_PACKAGES}" STREQUAL ""
+       )
+      message(
+        FATAL_ERROR
+          "Could not determine site-packages directory of Python virtual environment for testing."
+        )
+    endif()
+
+    set_property(
+      TEST ${name_of_test}
+      APPEND
+      PROPERTY ENVIRONMENT_MODIFICATION
+               "PATH=path_list_prepend:${FOUR_C_PYTHON_VENV_BUILD}/bin"
+               "PYTHONPATH=path_list_prepend:${FOUR_C_PYTHON_VENV_BUILD_SITE_PACKAGES}"
+      )
+  endif()
 endfunction()
 
 # set fail expressions to this test (name_of_test)
@@ -235,6 +258,7 @@ function(_add_test_with_options)
   endif()
 
   require_fixture(${_parsed_NAME_OF_TEST} "${_parsed_ADDITIONAL_FIXTURE};test_cleanup")
+  set_environment(${_parsed_NAME_OF_TEST})
   set_processors(${_parsed_NAME_OF_TEST} ${_parsed_TOTAL_PROCS})
   define_setup_fixture(${_parsed_NAME_OF_TEST} ${_parsed_NAME_OF_TEST})
   set_timeout(${_parsed_NAME_OF_TEST} ${_parsed_TIMEOUT})
@@ -532,9 +556,7 @@ function(__four_c_test_restart)
     endif()
 
     set(name_of_restart_check "${name_of_test}-check_restart_step")
-    set(check_command
-        "${FOUR_C_PYTHON_VENV_BUILD}/bin/check-restart-step ${control_file} ${_parsed_ASSERT_RESTART_STEP}"
-        )
+    set(check_command "check-restart-step ${control_file} ${_parsed_ASSERT_RESTART_STEP}")
 
     # Ensure that Python is listed as required dependency
     list(APPEND _parsed_REQUIRED_DEPENDENCIES "Python")
@@ -604,7 +626,7 @@ function(__four_c_test_add_csv_yaml_comparison)
   get_test_property(${_parsed_BASED_ON} _internal_OUTPUT_DIR test_directory)
 
   set(csv_comparison_command
-      "${FOUR_C_PYTHON_VENV_BUILD}/bin/diff-with-tolerance ${test_directory}/${_parsed_RESULT_FILE} ${PROJECT_SOURCE_DIR}/tests/input_files/${_parsed_REFERENCE_FILE} ${_parsed_TOL_R} ${_parsed_TOL_A}"
+      "diff-with-tolerance ${test_directory}/${_parsed_RESULT_FILE} ${PROJECT_SOURCE_DIR}/tests/input_files/${_parsed_REFERENCE_FILE} ${_parsed_TOL_R} ${_parsed_TOL_A}"
       )
 
   # Ensure that Python is listed as required dependency
@@ -841,6 +863,7 @@ function(four_c_test_cut_test num_proc)
 
   require_fixture(${name_of_test} test_cleanup)
   set_fail_expression(${name_of_test})
+  set_environment(${name_of_test})
   set_processors(${name_of_test} ${num_proc})
   set_timeout(${name_of_test})
 endfunction()
@@ -898,10 +921,10 @@ function(
   get_filename_component(name_of_reference_file ${name_of_input_file} NAME_WE)
 
   set(RUNCOMPARISON_SER
-      "${FOUR_C_PYTHON_VENV_BUILD}/bin/post-processing-comparison ${test_directory}/xxx${IDENTIFIER}_SER_${name_of_input_file}${FIELD}*.case ${PROJECT_SOURCE_DIR}/tests/input_files/ref/${name_of_reference_file}${IDENTIFIER}${FIELD}.csv"
+      "post-processing-comparison ${test_directory}/xxx${IDENTIFIER}_SER_${name_of_input_file}${FIELD}*.case ${PROJECT_SOURCE_DIR}/tests/input_files/ref/${name_of_reference_file}${IDENTIFIER}${FIELD}.csv"
       )
   set(RUNCOMPARISON_PAR
-      "${FOUR_C_PYTHON_VENV_BUILD}/bin/post-processing-comparison ${test_directory}/xxx${IDENTIFIER}_PAR_${name_of_input_file}${FIELD}*.case ${PROJECT_SOURCE_DIR}/tests/input_files/ref/${name_of_reference_file}${IDENTIFIER}${FIELD}.csv"
+      "post-processing-comparison ${test_directory}/xxx${IDENTIFIER}_PAR_${name_of_input_file}${FIELD}*.case ${PROJECT_SOURCE_DIR}/tests/input_files/ref/${name_of_reference_file}${IDENTIFIER}${FIELD}.csv"
       )
 
   # specify test case
@@ -988,7 +1011,7 @@ function(__four_c_test_vtk)
 
   set(name_of_test "${_parsed_BASED_ON}-vtk-${_parsed_PVD_RESULT}")
   set(test_command
-      "${FOUR_C_PYTHON_VENV_BUILD}/bin/vtk-compare ${test_directory}/${_parsed_PVD_RESULT} ${PROJECT_SOURCE_DIR}/tests/input_files/${_parsed_PVD_REFERENCE} ${_parsed_TOLERANCE} --points_in_time ${merged_timesteps_to_compare}"
+      "vtk-compare ${test_directory}/${_parsed_PVD_RESULT} ${PROJECT_SOURCE_DIR}/tests/input_files/${_parsed_PVD_REFERENCE} ${_parsed_TOLERANCE} --points_in_time ${merged_timesteps_to_compare}"
       )
 
   # Ensure that Python is listed as required dependency
@@ -1077,7 +1100,7 @@ function(__four_c_test_timings)
 
   set(name_of_test "${_parsed_BASED_ON}-timings")
   set(test_command
-      "${FOUR_C_PYTHON_VENV_BUILD}/bin/check-timings ${test_directory}/${_parsed_TIMINGS_FILE} ${merged_timers_to_compare} --expected-max-time ${merged_times_to_compare} --expected-max-num-calls ${merged_num_calls_to_compare}"
+      "check-timings ${test_directory}/${_parsed_TIMINGS_FILE} ${merged_timers_to_compare} --expected-max-time ${merged_times_to_compare} --expected-max-num-calls ${merged_num_calls_to_compare}"
       )
 
   # Ensure that Python is listed as required dependency
@@ -1291,7 +1314,7 @@ function(four_c_test_restarted_vtk)
     set(result_dir "${sim2_dir}/${_parsed_PVD_RESULTFILENAME}")
 
     set(compare_cmd
-        "${FOUR_C_PYTHON_VENV_BUILD}/bin/vtk-compare ${result_dir} ${ref_path} ${_parsed_TOLERANCE} --points_in_time ${steps_joined}"
+        "vtk-compare ${result_dir} ${ref_path} ${_parsed_TOLERANCE} --points_in_time ${steps_joined}"
         )
     _add_test_with_options(
       NAME_OF_TEST
@@ -1318,11 +1341,14 @@ endfunction()
 ###------------------------------------------------------------------ Final cleanup
 # remove any output files from our tests
 # autogenerated core files (generated by kernel)
-add_test(
-  NAME test_cleanup
-  COMMAND
-    sh -c
-    "if [ -f *_CUTFAIL.pos ]; then mkdir -p ../cut-debug ; cp *_CUTFAIL.pos ../cut-debug/ ; fi ; rm -fr xxx* framework_test_output* core.* tutorials*"
-  )
-set_processors(test_cleanup 1)
-set_tests_properties(test_cleanup PROPERTIES FIXTURES_CLEANUP test_cleanup)
+function(four_c_test_cleanup)
+  add_test(
+    NAME test_cleanup
+    COMMAND
+      sh -c
+      "if [ -f *_CUTFAIL.pos ]; then mkdir -p ../cut-debug ; cp *_CUTFAIL.pos ../cut-debug/ ; fi ; rm -fr xxx* framework_test_output* core.* tutorials*"
+    )
+  set_processors(test_cleanup 1)
+  set_environment(test_cleanup)
+  set_tests_properties(test_cleanup PROPERTIES FIXTURES_CLEANUP test_cleanup)
+endfunction()
