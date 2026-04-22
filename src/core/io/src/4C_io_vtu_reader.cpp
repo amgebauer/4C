@@ -17,6 +17,7 @@
 #include "4C_utils_exceptions.hpp"
 #include "4C_utils_vector2D.hpp"
 
+#include <algorithm>
 #include <type_traits>
 #include <typeindex>
 
@@ -242,17 +243,20 @@ namespace
     return result;
   }
 
-  // Holds information about a single point-set array
+  // Holds information about a single point-set array. Every entry carries the full array
+  // name so the resulting PointSet is referenceable via NODE_SET_NAME (this also applies
+  // to "point_set_<N>" arrays, which additionally keep their numeric ID for NODE_SET_ID).
   struct PointSetEntry
   {
     int id;
-    std::optional<std::string> name;
+    std::string name;
     std::reference_wrapper<vtkDataArray> array;
   };
 
   // Returns all single-component integer PointData arrays as point-set entries.
-  // Arrays named "point_set_<N>" keep their numeric ID (backward compatibility).
-  // All other arrays are assigned IDs starting after the highest numeric ID found.
+  // Arrays named "point_set_<N>" keep their numeric ID; all other arrays are assigned
+  // IDs after the highest numeric ID, in alphabetical order of the array name so that
+  // IDs are reproducible across runs and compilers.
   std::vector<PointSetEntry> get_point_set_arrays(
       const std::unordered_map<std::string, std::reference_wrapper<vtkDataArray>>& data)
   {
@@ -275,12 +279,15 @@ namespace
         {
           int id = std::stoi(suffix);
           max_numeric_id = std::max(max_numeric_id, id);
-          numbered.push_back({id, std::nullopt, array_ref});
+          numbered.push_back({id, array_name, array_ref});
           continue;
         }
       }
       named.push_back({0, array_name, array_ref});
     }
+
+    std::sort(named.begin(), named.end(),
+        [](const PointSetEntry& a, const PointSetEntry& b) { return a.name < b.name; });
 
     int next_id = max_numeric_id + 1;
     for (auto& entry : named)
@@ -389,10 +396,6 @@ Core::IO::MeshInput::RawMesh<3> Core::IO::VTU::read_vtu_file(const std::filesyst
   mesh.points.resize(vtk_mesh->GetNumberOfPoints());
 
   auto point_sets = get_point_set_arrays(point_data);
-  for (const auto& entry : point_sets)
-  {
-    if (entry.name.has_value()) mesh.point_sets[entry.id].name = entry.name;
-  }
   for (const auto& [name, vtk_data] : point_data)
   {
     mesh.point_data.emplace(name, make_empty_field_data_variant(vtk_data.get(), /*reserve=*/true));
@@ -417,7 +420,9 @@ Core::IO::MeshInput::RawMesh<3> Core::IO::VTU::read_vtu_file(const std::filesyst
           mesh.point_data[name]);
     }
 
-    // check whether this point is part of a point-set
+    // check whether this point is part of a point-set. The PointSet entry (and its name)
+    // is created lazily on the first matched point, so arrays that mark no points at all
+    // do not produce empty sets (which would fail assert_valid).
     for (const auto& entry : point_sets)
     {
       bool is_part_of_point_set =
@@ -425,7 +430,9 @@ Core::IO::MeshInput::RawMesh<3> Core::IO::VTU::read_vtu_file(const std::filesyst
 
       if (is_part_of_point_set)
       {
-        mesh.point_sets[entry.id].point_ids.emplace(i);
+        auto& point_set = mesh.point_sets[entry.id];
+        point_set.point_ids.emplace(i);
+        point_set.name = entry.name;
       }
     }
   }
