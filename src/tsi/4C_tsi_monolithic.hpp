@@ -202,7 +202,7 @@ namespace TSI
     void update() override;
 
     //! calculate stresses, strains, energies
-    void prepare_output() override;
+    void prepare_output(bool force_prepare) override;
 
     //! convergence check for Newton solver
     bool convergence_check(int itnum, int itmax, double ittol);

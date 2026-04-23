@@ -2213,12 +2213,11 @@ void TSI::Monolithic::update()
 /*----------------------------------------------------------------------*
  |                                                                      |
  *----------------------------------------------------------------------*/
-void TSI::Monolithic::prepare_output()
+void TSI::Monolithic::prepare_output(bool force_prepare)
 {
   // set temperatures on structure field for evaluating stresses
   apply_thermo_coupling_state(thermo_field()->tempnp());
   // prepare output (i.e. calculate stresses, strains, energies)
-  constexpr bool force_prepare = false;
   structure_field()->prepare_output(force_prepare);
 
   // reset states

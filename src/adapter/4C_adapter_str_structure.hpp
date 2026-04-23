@@ -370,7 +370,14 @@ namespace Adapter
     /// Access to output object
     virtual std::shared_ptr<Core::IO::DiscretizationWriter> disc_writer() = 0;
 
-    /// prepare output (i.e. calculate stresses, strains, energies)
+    /**
+     * @brief Prepare output quantities (i.e., calculate stresses, strains, energies).
+     * @note This has to be done before updating the state since otherwise a potential material
+     * history is overwritten.
+     *
+     * @param force_prepare Flag to force output preparation outside the regular output schedule
+     *          (e.g., for initial output).
+     */
     void prepare_output(bool force_prepare_timestep) override = 0;
 
     // Get restart data
