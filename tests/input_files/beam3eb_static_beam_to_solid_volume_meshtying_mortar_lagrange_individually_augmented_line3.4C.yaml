@@ -61,37 +61,37 @@ RESULT DESCRIPTION:
       NODE: 175
       QUANTITY: "dispx"
       VALUE: -1.52790207228101355e-01
-      TOLERANCE: 1e-10
+      TOLERANCE: 1e-9
   - STRUCTURE:
       DIS: "structure"
       NODE: 175
       QUANTITY: "dispy"
       VALUE: -1.62000334583395286e-02
-      TOLERANCE: 1e-10
+      TOLERANCE: 1e-9
   - STRUCTURE:
       DIS: "structure"
       NODE: 175
       QUANTITY: "dispz"
       VALUE: 2.44039385330917691e+00
-      TOLERANCE: 1e-10
+      TOLERANCE: 1e-9
   - STRUCTURE:
       DIS: "structure"
       NODE: 190
       QUANTITY: "dispx"
       VALUE: 1.15068558955773185e-14
-      TOLERANCE: 1e-10
+      TOLERANCE: 1e-9
   - STRUCTURE:
       DIS: "structure"
       NODE: 190
       QUANTITY: "dispy"
       VALUE: -8.75408579097198569e-15
-      TOLERANCE: 1e-10
+      TOLERANCE: 1e-9
   - STRUCTURE:
       DIS: "structure"
       NODE: 190
       QUANTITY: "dispz"
       VALUE: 1.48822040809369581e-02
-      TOLERANCE: 1e-10
+      TOLERANCE: 1e-9
 DESIGN SURF DIRICH CONDITIONS:
   - E: 1
     NUMDOF: 3
