@@ -47,8 +47,8 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::check_elch_element_paramet
   }
 
   // check stabilization
-  if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization and
-      my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_SUPG)
+  if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization and
+      my::scatrapara_->stab_type() != ScaTra::stabtype_SUPG)
     FOUR_C_THROW(
         "Only SUPG-type stabilization available for electrochemistry problems governed by "
         "Nernst-Planck formulation!");
@@ -199,9 +199,9 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::get_conductivity(
   *----------------------------------------------------------------------*/
 template <Core::FE::CellType distype>
 void Discret::Elements::ScaTraEleCalcElchNP<distype>::calculate_flux(
-    Core::LinAlg::Matrix<nsd_, 1>& q,        //!< flux of species k
-    const Inpar::ScaTra::FluxType fluxtype,  //!< type of flux
-    const int k                              //!< index of current scalar
+    Core::LinAlg::Matrix<nsd_, 1>& q,  //!< flux of species k
+    const ScaTra::FluxType fluxtype,   //!< type of flux
+    const int k                        //!< index of current scalar
 )
 {
   /*
@@ -219,12 +219,12 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::calculate_flux(
   // add different flux contributions as specified by user input
   switch (fluxtype)
   {
-    case Inpar::ScaTra::flux_total:
+    case ScaTra::flux_total:
       // convective flux contribution
       q.update(var_manager()->phinp(k), var_manager()->con_vel(k));
 
       [[fallthrough]];
-    case Inpar::ScaTra::flux_diffusive:
+    case ScaTra::flux_diffusive:
       // diffusive flux contribution
       q.update(-myelch::diff_manager()->get_isotropic_diff(k), var_manager()->grad_phi(k), 1.0);
 
@@ -287,11 +287,10 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::cal_error_compared_to_anal
   const Core::FE::IntPointsAndWeights<nsd_> intpoints(
       ScaTra::DisTypeToGaussRuleForExactSol<distype>::rule);
 
-  const auto errortype =
-      Teuchos::getIntegralValue<Inpar::ScaTra::CalcError>(params, "calcerrorflag");
+  const auto errortype = Teuchos::getIntegralValue<ScaTra::CalcError>(params, "calcerrorflag");
   switch (errortype)
   {
-    case Inpar::ScaTra::calcerror_Kwok_Wu:
+    case ScaTra::calcerror_Kwok_Wu:
     {
       //   References:
       //   Kwok, Yue-Kuen and Wu, Charles C. K.
@@ -402,7 +401,7 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::cal_error_compared_to_anal
       }  // end of loop over integration points
     }  // Kwok and Wu
     break;
-    case Inpar::ScaTra::calcerror_cylinder:
+    case ScaTra::calcerror_cylinder:
     {
       // two-ion system with Butler-Volmer kinetics between two concentric cylinders
       //   G. Bauer, V. Gravemeier, W.A. Wall,
@@ -474,7 +473,7 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::cal_error_compared_to_anal
       }  // end of loop over integration points
     }  // concentric cylinders
     break;
-    case Inpar::ScaTra::calcerror_electroneutrality:
+    case ScaTra::calcerror_electroneutrality:
     {
       // start loop over integration points
       for (int iquad = 0; iquad < intpoints.ip().nquad; iquad++)

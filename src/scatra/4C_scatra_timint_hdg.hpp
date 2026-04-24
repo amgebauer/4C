@@ -57,8 +57,8 @@ namespace ScaTra
         const int step, std::shared_ptr<Core::IO::InputControl> input = nullptr) override;
 
     //! set the initial scalar field phi
-    void set_initial_field(const Inpar::ScaTra::InitialField init,  //!< type of initial field
-        const int startfuncno                                       //!< number of spatial function
+    void set_initial_field(const ScaTra::InitialField init,  //!< type of initial field
+        const int startfuncno                                //!< number of spatial function
         ) override;
 
     //! accessor to interior concentrations
@@ -167,7 +167,7 @@ namespace ScaTra
 
    private:
     //! time algorithm flag actually set (we internally reset it)
-    Inpar::ScaTra::TimeIntegrationScheme timealgoset_;
+    ScaTra::TimeIntegrationScheme timealgoset_;
 
     //! @name time stepping variable
     bool startalgo_;  //!< flag for starting algorithm

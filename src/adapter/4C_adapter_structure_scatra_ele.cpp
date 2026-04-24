@@ -17,9 +17,9 @@ FOUR_C_NAMESPACE_OPEN
 
 /*----------------------------------------------------------------------------*
  *----------------------------------------------------------------------------*/
-Inpar::ScaTra::ImplType Adapter::get_sca_tra_impl_type(Core::Elements::Element* ele)
+ScaTra::ImplType Adapter::get_sca_tra_impl_type(Core::Elements::Element* ele)
 {
-  Inpar::ScaTra::ImplType impltype(Inpar::ScaTra::impltype_undefined);
+  ScaTra::ImplType impltype(ScaTra::impltype_undefined);
 
   // the element type name, needed to cast correctly in the following
   const std::string& eletypename = ele->element_type().name();
@@ -70,7 +70,7 @@ Inpar::ScaTra::ImplType Adapter::get_sca_tra_impl_type(Core::Elements::Element* 
   else
   {
     if (!(eletypename == "Bele3Type")) return impltype;
-    impltype = Inpar::ScaTra::impltype_no_physics;
+    impltype = ScaTra::impltype_no_physics;
   }
 
   return impltype;

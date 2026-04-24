@@ -147,7 +147,7 @@ void ScaTra::ScaTraTimIntElch::setup()
 
   // screen output (has to come after SetInitialField)
   // a safety check for the solver type
-  if ((num_scal() > 1) && (solvtype_ != Inpar::ScaTra::solvertype_nonlinear))
+  if ((num_scal() > 1) && (solvtype_ != ScaTra::solvertype_nonlinear))
     FOUR_C_THROW("Solver type has to be set to >>nonlinear<< for ion transport.");
 
   if (myrank_ == 0)
@@ -675,9 +675,9 @@ void ScaTra::ScaTraTimIntElch::evaluate_error_compared_to_analytical_sol()
 {
   switch (calcerror_)
   {
-    case Inpar::ScaTra::calcerror_no:  // do nothing (the usual case)
+    case ScaTra::calcerror_no:  // do nothing (the usual case)
       break;
-    case Inpar::ScaTra::calcerror_Kwok_Wu:
+    case ScaTra::calcerror_Kwok_Wu:
     {
       //   References:
 
@@ -697,7 +697,7 @@ void ScaTra::ScaTraTimIntElch::evaluate_error_compared_to_analytical_sol()
       Core::Utils::add_enum_class_to_parameter_list<ScaTra::Action>(
           "action", ScaTra::Action::calc_error, eleparams);
       eleparams.set("total time", time_);
-      eleparams.set<Inpar::ScaTra::CalcError>("calcerrorflag", calcerror_);
+      eleparams.set<ScaTra::CalcError>("calcerrorflag", calcerror_);
 
       // set vector values needed by elements
       discret_->set_state("phinp", *phinp_);
@@ -732,7 +732,7 @@ void ScaTra::ScaTraTimIntElch::evaluate_error_compared_to_analytical_sol()
       }
     }
     break;
-    case Inpar::ScaTra::calcerror_cylinder:
+    case ScaTra::calcerror_cylinder:
     {
       //   Reference:
       //   G. Bauer, V. Gravemeier, W.A. Wall, A 3D finite element approach for the coupled
@@ -744,7 +744,7 @@ void ScaTra::ScaTraTimIntElch::evaluate_error_compared_to_analytical_sol()
       Core::Utils::add_enum_class_to_parameter_list<ScaTra::Action>(
           "action", ScaTra::Action::calc_error, eleparams);
       eleparams.set("total time", time_);
-      eleparams.set<Inpar::ScaTra::CalcError>("calcerrorflag", calcerror_);
+      eleparams.set<ScaTra::CalcError>("calcerrorflag", calcerror_);
 
       // set vector values needed by elements
       discret_->set_state("phinp", *phinp_);
@@ -766,7 +766,7 @@ void ScaTra::ScaTraTimIntElch::evaluate_error_compared_to_analytical_sol()
       }
     }
     break;
-    case Inpar::ScaTra::calcerror_electroneutrality:
+    case ScaTra::calcerror_electroneutrality:
     {
       // compute L2 norm of electroneutrality condition
 
@@ -775,7 +775,7 @@ void ScaTra::ScaTraTimIntElch::evaluate_error_compared_to_analytical_sol()
       Core::Utils::add_enum_class_to_parameter_list<ScaTra::Action>(
           "action", ScaTra::Action::calc_error, eleparams);
       eleparams.set("total time", time_);
-      eleparams.set<Inpar::ScaTra::CalcError>("calcerrorflag", calcerror_);
+      eleparams.set<ScaTra::CalcError>("calcerrorflag", calcerror_);
 
       // set vector values needed by elements
       discret_->set_state("phinp", *phinp_);
@@ -1733,16 +1733,16 @@ void ScaTra::ScaTraTimIntElch::valid_parameter_diff_cond()
       FOUR_C_THROW(
           "Natural convection is not supported in the ELCH diffusion-conduction framework!!");
 
-    if (Teuchos::getIntegralValue<Inpar::ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
-            Inpar::ScaTra::solvertype_nonlinear and
-        Teuchos::getIntegralValue<Inpar::ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
-            Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro and
-        Teuchos::getIntegralValue<Inpar::ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
-            Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken and
-        Teuchos::getIntegralValue<Inpar::ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
-            Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit and
-        Teuchos::getIntegralValue<Inpar::ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
-            Inpar::ScaTra::solvertype_nonlinear_multiscale_microtomacro)
+    if (Teuchos::getIntegralValue<ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
+            ScaTra::solvertype_nonlinear and
+        Teuchos::getIntegralValue<ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
+            ScaTra::solvertype_nonlinear_multiscale_macrotomicro and
+        Teuchos::getIntegralValue<ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
+            ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken and
+        Teuchos::getIntegralValue<ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
+            ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit and
+        Teuchos::getIntegralValue<ScaTra::SolverType>(*params_, "SOLVERTYPE") !=
+            ScaTra::solvertype_nonlinear_multiscale_microtomacro)
     {
       FOUR_C_THROW(
           "The only solvertype supported by the ELCH diffusion-conduction framework is the "
@@ -1751,8 +1751,8 @@ void ScaTra::ScaTraTimIntElch::valid_parameter_diff_cond()
 
     if (problem_->get_problem_type() != Core::ProblemType::ssi and
         problem_->get_problem_type() != Core::ProblemType::ssti and
-        Teuchos::getIntegralValue<Inpar::ScaTra::ConvForm>(*params_, "CONVFORM") !=
-            Inpar::ScaTra::convform_convective)
+        Teuchos::getIntegralValue<ScaTra::ConvForm>(*params_, "CONVFORM") !=
+            ScaTra::convform_convective)
       FOUR_C_THROW("Only the convective formulation is supported so far!!");
 
     if (params_->get<bool>("NEUMANNINFLOW"))
@@ -1766,34 +1766,34 @@ void ScaTra::ScaTraTimIntElch::valid_parameter_diff_cond()
           "framework!!");
     }
 
-    if ((Teuchos::getIntegralValue<Inpar::ScaTra::FSSUGRDIFF>(*params_, "FSSUGRDIFF")) !=
-        Inpar::ScaTra::fssugrdiff_no)
+    if ((Teuchos::getIntegralValue<ScaTra::FSSUGRDIFF>(*params_, "FSSUGRDIFF")) !=
+        ScaTra::fssugrdiff_no)
       FOUR_C_THROW(
           "Subgrid diffusivity is not supported by the ELCH diffusion-conduction framework!!");
 
     // Parameters defined in "SCALAR TRANSPORT DYNAMIC"
     Teuchos::ParameterList& scatrastabparams = params_->sublist("STABILIZATION");
 
-    if ((Teuchos::getIntegralValue<Inpar::ScaTra::StabType>(scatrastabparams, "STABTYPE")) !=
-        Inpar::ScaTra::stabtype_no_stabilization)
+    if ((Teuchos::getIntegralValue<ScaTra::StabType>(scatrastabparams, "STABTYPE")) !=
+        ScaTra::stabtype_no_stabilization)
       FOUR_C_THROW(
           "No stabilization is necessary for solving the ELCH diffusion-conduction framework!!");
 
-    if ((Teuchos::getIntegralValue<Inpar::ScaTra::TauType>(scatrastabparams, "DEFINITION_TAU")) !=
-        Inpar::ScaTra::tau_zero)
+    if ((Teuchos::getIntegralValue<ScaTra::TauType>(scatrastabparams, "DEFINITION_TAU")) !=
+        ScaTra::tau_zero)
       FOUR_C_THROW(
           "No stabilization is necessary for solving the ELCH diffusion-conduction framework!!");
 
-    if ((Teuchos::getIntegralValue<Inpar::ScaTra::EvalTau>(scatrastabparams, "EVALUATION_TAU")) !=
-        Inpar::ScaTra::evaltau_integration_point)
+    if ((Teuchos::getIntegralValue<ScaTra::EvalTau>(scatrastabparams, "EVALUATION_TAU")) !=
+        ScaTra::evaltau_integration_point)
       FOUR_C_THROW("Evaluation of stabilization parameter only at Gauss points!!");
 
-    if ((Teuchos::getIntegralValue<Inpar::ScaTra::EvalMat>(scatrastabparams, "EVALUATION_MAT")) !=
-        Inpar::ScaTra::evalmat_integration_point)
+    if ((Teuchos::getIntegralValue<ScaTra::EvalMat>(scatrastabparams, "EVALUATION_MAT")) !=
+        ScaTra::evalmat_integration_point)
       FOUR_C_THROW("Evaluation of material only at Gauss points!!");
 
-    if ((Teuchos::getIntegralValue<Inpar::ScaTra::Consistency>(scatrastabparams, "CONSISTENCY")) !=
-        Inpar::ScaTra::consistency_no)
+    if ((Teuchos::getIntegralValue<ScaTra::Consistency>(scatrastabparams, "CONSISTENCY")) !=
+        ScaTra::consistency_no)
       FOUR_C_THROW("Consistence formulation is not in the ELCH diffusion-conduction framework!!");
 
     if (scatrastabparams.get<bool>("SUGRVEL"))
@@ -3046,7 +3046,7 @@ bool ScaTra::ScaTraTimIntElch::not_finished() const
 void ScaTra::ScaTraTimIntElch::perform_aitken_relaxation(
     Core::LinAlg::Vector<double>& phinp, const Core::LinAlg::Vector<double>& phinp_inc_diff)
 {
-  if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit)
+  if (solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit)
   {
     // safety checks
     if (splitter_macro_ == nullptr)

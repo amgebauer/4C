@@ -10,7 +10,7 @@
 
 #include "4C_config.hpp"
 
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 
 #include <algorithm>
 #include <array>
@@ -25,23 +25,22 @@ namespace Discret::Elements
 {
   constexpr auto get_supported_impl_types()
   {
-    return std::array{Inpar::ScaTra::ImplType::impltype_advreac,
-        Inpar::ScaTra::ImplType::impltype_cardiac_monodomain,
-        Inpar::ScaTra::ImplType::impltype_chemo, Inpar::ScaTra::ImplType::impltype_chemoreac,
-        Inpar::ScaTra::ImplType::impltype_loma, Inpar::ScaTra::ImplType::impltype_poro,
-        Inpar::ScaTra::ImplType::impltype_pororeac, Inpar::ScaTra::ImplType::impltype_pororeacECM,
-        Inpar::ScaTra::ImplType::impltype_multipororeac, Inpar::ScaTra::ImplType::impltype_std,
-        Inpar::ScaTra::ImplType::impltype_undefined};
+    return std::array{ScaTra::ImplType::impltype_advreac,
+        ScaTra::ImplType::impltype_cardiac_monodomain, ScaTra::ImplType::impltype_chemo,
+        ScaTra::ImplType::impltype_chemoreac, ScaTra::ImplType::impltype_loma,
+        ScaTra::ImplType::impltype_poro, ScaTra::ImplType::impltype_pororeac,
+        ScaTra::ImplType::impltype_pororeacECM, ScaTra::ImplType::impltype_multipororeac,
+        ScaTra::ImplType::impltype_std, ScaTra::ImplType::impltype_undefined};
   }
 
-  inline std::map<std::string, Inpar::ScaTra::ImplType> get_impltype_inpar_map()
+  inline std::map<std::string, ScaTra::ImplType> get_impltype_inpar_map()
   {
     constexpr auto supported_impl_types = get_supported_impl_types();
-    std::map<std::string, Inpar::ScaTra::ImplType> impltype_map;
+    std::map<std::string, ScaTra::ImplType> impltype_map;
 
     for (const auto& impltype : supported_impl_types)
     {
-      impltype_map[Inpar::ScaTra::impltype_to_string(impltype)] = impltype;
+      impltype_map[ScaTra::impltype_to_string(impltype)] = impltype;
     }
 
     return impltype_map;

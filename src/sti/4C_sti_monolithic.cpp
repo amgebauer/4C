@@ -1475,7 +1475,7 @@ void STI::Monolithic::solve()
       FOUR_C_THROW("Complete() has not been called on global system matrix yet!");
 
     // perform finite difference check on time integrator level
-    if (scatra_field()->fd_check_type() == Inpar::ScaTra::fdcheck_global) fd_check();
+    if (scatra_field()->fd_check_type() == ScaTra::fdcheck_global) fd_check();
 
     // check termination criterion for Newton-Raphson iteration
     if (exit_newton_raphson()) break;

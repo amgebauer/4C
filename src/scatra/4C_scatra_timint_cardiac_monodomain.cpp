@@ -176,8 +176,8 @@ void ScaTra::TimIntCardiacMonodomain::set_element_specific_scatra_parameters(
   // safety check
   if (params_->get<bool>("SEMIIMPLICIT"))
   {
-    if (Inpar::ScaTra::timeint_gen_alpha ==
-        Teuchos::getIntegralValue<Inpar::ScaTra::TimeIntegrationScheme>(*params_, "TIMEINTEGR"))
+    if (ScaTra::timeint_gen_alpha ==
+        Teuchos::getIntegralValue<ScaTra::TimeIntegrationScheme>(*params_, "TIMEINTEGR"))
     {
       if (params_->get<double>("ALPHA_M") < 1.0 or params_->get<double>("ALPHA_F") < 1.0)
         FOUR_C_THROW(

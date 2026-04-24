@@ -9,10 +9,10 @@
 
 #include "4C_fem_general_cell_type.hpp"
 #include "4C_fem_general_cell_type_traits.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_inpar_structure.hpp"
 #include "4C_io_input_spec_builders.hpp"
 #include "4C_mat_material_factory.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_solid_ele_interface_serializable.hpp"
 #include "4C_solid_ele_line.hpp"
 #include "4C_solid_ele_nullspace.hpp"

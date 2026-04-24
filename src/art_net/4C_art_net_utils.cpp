@@ -133,7 +133,7 @@ void Arteries::ArteryScatraCloneStrategy::set_element_data(
     trans->set_dis_type(oldele->shape());
 
     // we only have one possible impltype
-    Inpar::ScaTra::ImplType impltype = Inpar::ScaTra::impltype_one_d_artery;
+    ScaTra::ImplType impltype = ScaTra::impltype_one_d_artery;
     trans->set_impl_type(impltype);
   }
   else

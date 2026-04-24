@@ -84,16 +84,16 @@ void STI::ScatraThermoCloneStrategy::set_element_data(
   // provide cloned element with physical implementation type
   switch (oldele_transport->impl_type())
   {
-    case Inpar::ScaTra::impltype_elch_diffcond_thermo:
-    case Inpar::ScaTra::impltype_elch_diffcond:
+    case ScaTra::impltype_elch_diffcond_thermo:
+    case ScaTra::impltype_elch_diffcond:
     {
-      newele_transport->set_impl_type(Inpar::ScaTra::impltype_thermo_elch_diffcond);
+      newele_transport->set_impl_type(ScaTra::impltype_thermo_elch_diffcond);
       break;
     }
-    case Inpar::ScaTra::impltype_elch_electrode_thermo:
-    case Inpar::ScaTra::impltype_elch_electrode:
+    case ScaTra::impltype_elch_electrode_thermo:
+    case ScaTra::impltype_elch_electrode:
     {
-      newele_transport->set_impl_type(Inpar::ScaTra::impltype_thermo_elch_electrode);
+      newele_transport->set_impl_type(ScaTra::impltype_thermo_elch_electrode);
       break;
     }
     default:

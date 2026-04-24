@@ -820,7 +820,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_fine_scale_subgr_d
   //----------------------------------------------------------------------
   else
   {
-    if (turbparams_->which_fssgd() == Inpar::ScaTra::fssugrdiff_smagorinsky_all)
+    if (turbparams_->which_fssgd() == ScaTra::fssugrdiff_smagorinsky_all)
     {
       //
       // ALL-SCALE SMAGORINSKY MODEL
@@ -842,7 +842,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_fine_scale_subgr_d
       // subgrid diffusivity = subgrid viscosity / turbulent Prandtl number
       sgdiff = densnp * turbparams_->cs() * turbparams_->cs() * h * h * rateofstrain / tpn_;
     }
-    else if (turbparams_->which_fssgd() == Inpar::ScaTra::fssugrdiff_smagorinsky_small)
+    else if (turbparams_->which_fssgd() == ScaTra::fssugrdiff_smagorinsky_small)
     {
       //
       // FINE-SCALE SMAGORINSKY MODEL
@@ -1515,7 +1515,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_dissipation(
   for (int k = 0; k < numdofpernode_; ++k) ephin_[k].clear();
 
   // get fine-scale values
-  if (turbparams_->which_fssgd() == Inpar::ScaTra::fssugrdiff_smagorinsky_small or
+  if (turbparams_->which_fssgd() == ScaTra::fssugrdiff_smagorinsky_small or
       turbparams_->turb_model() == Inpar::FLUID::multifractal_subgrid_scales)
   {
     // get fine scale scalar field
@@ -1865,11 +1865,11 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_dissipation(
     //---------------------------------------------------------------
 
     // dissipation by supg-stabilization
-    if (scatrapara_->stab_type() == Inpar::ScaTra::stabtype_SUPG)
+    if (scatrapara_->stab_type() == ScaTra::stabtype_SUPG)
     {
       eps_supg -= densnp[0] * sgphi * convelint.dot(gradphi) * fac;  // sgphi_ is negative
     }
-    else if (scatrapara_->stab_type() == Inpar::ScaTra::stabtype_no_stabilization)
+    else if (scatrapara_->stab_type() == ScaTra::stabtype_no_stabilization)
     {
       // nothing to do
     }

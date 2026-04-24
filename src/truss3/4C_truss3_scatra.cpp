@@ -88,7 +88,7 @@ void Discret::Elements::Truss3ScatraType::setup_element_definition(
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
 Discret::Elements::Truss3Scatra::Truss3Scatra(int id, int owner)
-    : Truss3(id, owner), impltype_(Inpar::ScaTra::impltype_undefined)
+    : Truss3(id, owner), impltype_(ScaTra::impltype_undefined)
 {
 }
 
@@ -143,11 +143,11 @@ bool Discret::Elements::Truss3Scatra::read_element(const std::string& eletype,
   auto impltype = container.get<std::string>("TYPE");
 
   if (impltype == "ElchDiffCond")
-    impltype_ = Inpar::ScaTra::impltype_elch_diffcond;
+    impltype_ = ScaTra::impltype_elch_diffcond;
   else if (impltype == "ElchDiffCondMultiScale")
-    impltype_ = Inpar::ScaTra::impltype_elch_diffcond_multiscale;
+    impltype_ = ScaTra::impltype_elch_diffcond_multiscale;
   else if (impltype == "ElchElectrode")
-    impltype_ = Inpar::ScaTra::impltype_elch_electrode;
+    impltype_ = ScaTra::impltype_elch_electrode;
   else
     FOUR_C_THROW("Invalid implementation type for Truss3Scatra elements!");
 

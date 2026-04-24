@@ -65,17 +65,15 @@ void scatra_dyn(int restart)
   scatradis->fill_complete();
 
   // determine coupling type
-  const auto fieldcoupling = Teuchos::getIntegralValue<Inpar::ScaTra::FieldCoupling>(
+  const auto fieldcoupling = Teuchos::getIntegralValue<ScaTra::FieldCoupling>(
       Global::Problem::instance()->scalar_transport_dynamic_params(), "FIELDCOUPLING");
 
   // determine velocity type
-  const auto veltype =
-      Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
+  const auto veltype = Teuchos::getIntegralValue<ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
 
   if (scatradis->num_global_nodes() == 0)
   {
-    if (fieldcoupling != Inpar::ScaTra::coupling_match and
-        veltype != Inpar::ScaTra::velocity_Navier_Stokes)
+    if (fieldcoupling != ScaTra::coupling_match and veltype != ScaTra::velocity_Navier_Stokes)
     {
       FOUR_C_THROW(
           "If you want matching fluid and scatra meshes, do clone you fluid mesh and use "
@@ -84,8 +82,7 @@ void scatra_dyn(int restart)
   }
   else
   {
-    if (fieldcoupling != Inpar::ScaTra::coupling_volmortar and
-        veltype == Inpar::ScaTra::velocity_Navier_Stokes)
+    if (fieldcoupling != ScaTra::coupling_volmortar and veltype == ScaTra::velocity_Navier_Stokes)
     {
       FOUR_C_THROW(
           "If you want non-matching fluid and scatra meshes, "
@@ -95,8 +92,8 @@ void scatra_dyn(int restart)
 
   switch (veltype)
   {
-    case Inpar::ScaTra::velocity_zero:      // zero  (see case 1)
-    case Inpar::ScaTra::velocity_function:  // function
+    case ScaTra::velocity_zero:      // zero  (see case 1)
+    case ScaTra::velocity_function:  // function
     {
       // we directly use the elements from the scalar transport elements section
       if (scatradis->num_global_nodes() == 0)
@@ -192,13 +189,13 @@ void scatra_dyn(int restart)
       scatraonly.scatra_field()->test_results();
       break;
     }
-    case Inpar::ScaTra::velocity_Navier_Stokes:  // Navier_Stokes
+    case ScaTra::velocity_Navier_Stokes:  // Navier_Stokes
     {
       // we use the fluid discretization as layout for the scalar transport discretization
       if (fluiddis->num_global_nodes() == 0) FOUR_C_THROW("Fluid discretization is empty!");
 
       // create scatra elements by cloning from fluid dis in matching case
-      if (fieldcoupling == Inpar::ScaTra::coupling_match)
+      if (fieldcoupling == ScaTra::coupling_match)
       {
         // fill scatra discretization by cloning fluid discretization
         Core::FE::clone_discretization<ScaTra::ScatraFluidCloneStrategy>(
@@ -211,7 +208,7 @@ void scatra_dyn(int restart)
           if (element == nullptr)
             FOUR_C_THROW("Invalid element type!");
           else
-            element->set_impl_type(Inpar::ScaTra::impltype_std);
+            element->set_impl_type(ScaTra::impltype_std);
         }
       }
 
@@ -232,7 +229,7 @@ void scatra_dyn(int restart)
           Global::Problem::instance()->solver_params(linsolvernumber));
 
       // create scatra elements by cloning from fluid dis in matching case
-      if (fieldcoupling == Inpar::ScaTra::coupling_match)
+      if (fieldcoupling == ScaTra::coupling_match)
       {
         // add proxy of fluid transport degrees of freedom to scatra discretization
         if (scatradis->add_dof_set(fluiddis->get_dof_set_proxy()) != 1)
@@ -242,7 +239,7 @@ void scatra_dyn(int restart)
 
       // we create  the aux dofsets before init(...)
       // volmortar adapter init(...) relies on this
-      if (fieldcoupling == Inpar::ScaTra::coupling_volmortar)
+      if (fieldcoupling == ScaTra::coupling_volmortar)
       {
         // allow TRANSPORT conditions, too
         ScaTra::ScatraFluidCloneStrategy clonestrategy;
@@ -295,7 +292,7 @@ void scatra_dyn(int restart)
 
       // redistribution between init(...) and setup()
       // redistribute scatra elements if the scatra discretization is not empty
-      if (fieldcoupling == Inpar::ScaTra::coupling_volmortar)
+      if (fieldcoupling == ScaTra::coupling_volmortar)
       {
         // create vector of discr.
         std::vector<std::shared_ptr<Core::FE::Discretization>> dis;

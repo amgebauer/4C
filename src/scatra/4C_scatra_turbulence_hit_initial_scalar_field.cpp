@@ -28,7 +28,7 @@ namespace ScaTra
    | constructor                                  rasthofer 04/13 |
    *--------------------------------------------------------------*/
   HomoIsoTurbInitialScalarField::HomoIsoTurbInitialScalarField(
-      ScaTraTimIntImpl& timeint, const Inpar::ScaTra::InitialField initfield)
+      ScaTraTimIntImpl& timeint, const ScaTra::InitialField initfield)
       : discret_(timeint.discret_), phinp_(timeint.phinp_), phin_(timeint.phin_), type_(initfield)
   {
     // determine number of modes
@@ -453,14 +453,14 @@ namespace ScaTra
     // remark: k > 0 here
     double energy = 0.0;
 
-    if (type_ == Inpar::ScaTra::initialfield_forced_hit_low_Sc)
+    if (type_ == ScaTra::initialfield_forced_hit_low_Sc)
     {
       if (k > 2.0)
         energy = 0.1 * pow(2.0, 5.0 / 3.0) * pow(k, -5.0 / 3.0);
       else
         energy = 0.1 * 1.0;
     }
-    else if (type_ == Inpar::ScaTra::initialfield_forced_hit_high_Sc)
+    else if (type_ == ScaTra::initialfield_forced_hit_high_Sc)
     {
       if (k > 2.0)
         energy = 0.1 * 2.0 * pow(k, -1.0);

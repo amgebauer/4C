@@ -39,8 +39,8 @@ STI::Algorithm::Algorithm(MPI_Comm comm, const Teuchos::ParameterList& stidyn,
       timer_(std::make_shared<Teuchos::Time>("STI::ALG", true))
 {
   // check input parameters for scatra and thermo fields
-  if (Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(*fieldparameters_, "VELOCITYFIELD") !=
-      Inpar::ScaTra::velocity_zero)
+  if (Teuchos::getIntegralValue<ScaTra::VelocityField>(*fieldparameters_, "VELOCITYFIELD") !=
+      ScaTra::velocity_zero)
     FOUR_C_THROW("Scatra-thermo interaction with convection not yet implemented!");
 
   // initialize scatra time integrator
@@ -168,8 +168,8 @@ void STI::Algorithm::modify_field_parameters_for_thermo_field()
         "Initial field parameters not properly set in input file section SCALAR TRANSPORT "
         "DYNAMIC!");
   }
-  fieldparameters_->set<Inpar::ScaTra::InitialField>(
-      "INITIALFIELD", stiparameters_->get<Inpar::ScaTra::InitialField>("THERMO_INITIALFIELD"));
+  fieldparameters_->set<ScaTra::InitialField>(
+      "INITIALFIELD", stiparameters_->get<ScaTra::InitialField>("THERMO_INITIALFIELD"));
   fieldparameters_->set<int>("INITFUNCNO", stiparameters_->get<int>("THERMO_INITFUNCNO"));
 
   // perform additional manipulations associated with scatra-scatra interface mesh tying

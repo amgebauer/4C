@@ -10,12 +10,12 @@
 #include "4C_comm_utils_factory.hpp"
 #include "4C_fem_general_cell_type_traits.hpp"
 #include "4C_fem_general_utils_local_connectivity_matrices.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_inpar_structure.hpp"
 #include "4C_io_input_spec_builders.hpp"
 #include "4C_mat_fluidporo.hpp"
 #include "4C_mat_fluidporo_multiphase.hpp"
 #include "4C_mat_structporo.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_solid_ele_calc_lib_integration.hpp"
 #include "4C_solid_ele_factory.hpp"
 #include "4C_solid_ele_interface_serializable.hpp"
@@ -51,10 +51,10 @@ namespace Discret::Elements::SolidPoroPressureBasedInternal
               },
               {.description = "Whether to use linear kinematics (small displacements) or nonlinear "
                               "kinematics (large displacements)"}),
-          deprecated_selection<Inpar::ScaTra::ImplType>("TYPE",
+          deprecated_selection<ScaTra::ImplType>("TYPE",
               Discret::Elements::get_impltype_inpar_map(),
               {.description = "Scalar transport implementation type",
-                  .default_value = Inpar::ScaTra::ImplType::impltype_undefined}),
+                  .default_value = ScaTra::ImplType::impltype_undefined}),
       });
     }
 
@@ -74,10 +74,10 @@ namespace Discret::Elements::SolidPoroPressureBasedInternal
               },
               {.description = "Whether to use linear kinematics (small displacements) or nonlinear "
                               "kinematics (large displacements)"}),
-          deprecated_selection<Inpar::ScaTra::ImplType>("TYPE",
+          deprecated_selection<ScaTra::ImplType>("TYPE",
               Discret::Elements::get_impltype_inpar_map(),
               {.description = "Scalar transport implementation type",
-                  .default_value = Inpar::ScaTra::ImplType::impltype_undefined}),
+                  .default_value = ScaTra::ImplType::impltype_undefined}),
           parameter<double>(
               "THICKNESS", {.description = "Reference thickness of the 2D solid element"}),
           parameter<Discret::Elements::PlaneAssumption>("PLANE_ASSUMPTION",
@@ -282,7 +282,7 @@ bool Discret::Elements::SolidPoroPressureBased<dim>::read_element(const std::str
   }
 
   // read scalar transport implementation type
-  poro_ele_property_.impltype = container.get<Inpar::ScaTra::ImplType>("TYPE");
+  poro_ele_property_.impltype = container.get<ScaTra::ImplType>("TYPE");
 
   // possible bodyforce contribution
   bodyforce_contribution_ = get_bodyforce_contribution_from_input();

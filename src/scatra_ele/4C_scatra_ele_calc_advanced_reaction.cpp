@@ -211,7 +211,7 @@ void Discret::Elements::ScaTraEleCalcAdvReac<distype, probdim>::calc_mat_react(
     //----------------------------------------------------------------
     // stabilization of reactive term
     //----------------------------------------------------------------
-    if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+    if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
     {
       double densreataufac = timetaufac_reac * densnp;
       // convective stabilization of reactive term (in convective form)

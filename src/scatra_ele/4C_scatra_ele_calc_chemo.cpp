@@ -123,7 +123,7 @@ void Discret::Elements::ScaTraEleCalcChemo<distype, probdim>::calc_mat_chemo(
         }
       }
 
-      if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+      if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
       {
         FOUR_C_THROW("stabilization for chemotactic problems is not jet implemented!");
       }  // end stabilization
@@ -169,7 +169,7 @@ void Discret::Elements::ScaTraEleCalcChemo<distype, probdim>::calc_rhs_chemo(
       }
 
 
-      if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+      if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
       {
         FOUR_C_THROW("stabilization for chemotactic problems is not jet implemented!");
       }  // end stabilization

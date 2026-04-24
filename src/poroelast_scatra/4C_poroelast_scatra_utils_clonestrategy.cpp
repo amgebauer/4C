@@ -20,7 +20,7 @@
 FOUR_C_NAMESPACE_OPEN
 
 
-Inpar::ScaTra::ImplType PoroElastScaTra::Utils::PoroScatraCloneStrategy::get_impl_type(
+ScaTra::ImplType PoroElastScaTra::Utils::PoroScatraCloneStrategy::get_impl_type(
     Core::Elements::Element* ele  //! element whose ScaTra::ImplType shall be determined
 )
 {
@@ -97,10 +97,10 @@ void PoroElastScaTra::Utils::PoroScatraCloneStrategy::set_element_data(
   trans->set_dis_type(oldele->shape());
 
   // now check whether ImplType is reasonable and if set the ImplType
-  Inpar::ScaTra::ImplType impltype =
+  ScaTra::ImplType impltype =
       PoroElastScaTra::Utils::PoroScatraCloneStrategy::get_impl_type(oldele);
 
-  if (impltype == Inpar::ScaTra::impltype_undefined)
+  if (impltype == ScaTra::impltype_undefined)
     FOUR_C_THROW(
         "PoroScatraCloneStrategy copies scatra discretization from structure discretization, but "
         "the STRUCTURE elements that are defined in the input file are either not meant to be "

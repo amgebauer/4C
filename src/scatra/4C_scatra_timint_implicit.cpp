@@ -70,12 +70,12 @@ ScaTra::ScaTraTimIntImpl::ScaTraTimIntImpl(std::shared_ptr<Core::FE::Discretizat
       strategy_(nullptr),
       additional_model_evaluator_(nullptr),
       isale_(extraparams->get<bool>("isale")),
-      solvtype_(Teuchos::getIntegralValue<Inpar::ScaTra::SolverType>(*params, "SOLVERTYPE")),
+      solvtype_(Teuchos::getIntegralValue<ScaTra::SolverType>(*params, "SOLVERTYPE")),
       equilibrationmethod_(
           Teuchos::getIntegralValue<Core::LinAlg::EquilibrationMethod>(*params, "EQUILIBRATION")),
       matrixtype_(Teuchos::getIntegralValue<Core::LinAlg::MatrixType>(*params, "MATRIXTYPE")),
       incremental_(true),
-      fssgd_(Teuchos::getIntegralValue<Inpar::ScaTra::FSSUGRDIFF>(*params, "FSSUGRDIFF")),
+      fssgd_(Teuchos::getIntegralValue<ScaTra::FSSUGRDIFF>(*params, "FSSUGRDIFF")),
       turbmodel_(Inpar::FLUID::no_model),
       s2ikinetics_(actdis->has_condition("S2IKinetics")),
       s2imeshtying_(actdis->has_condition("S2IMeshtying")),
@@ -88,11 +88,9 @@ ScaTra::ScaTraTimIntImpl::ScaTraTimIntImpl(std::shared_ptr<Core::FE::Discretizat
           problem_->materials()->first_id_by_type(Core::Materials::m_newman_multiscale) != -1),
       micro_scale_(probnum != 0),
       has_external_force_(params_->sublist("EXTERNAL FORCE").get<bool>("EXTERNAL_FORCE")),
-      calcflux_domain_(
-          Teuchos::getIntegralValue<Inpar::ScaTra::FluxType>(*params, "CALCFLUX_DOMAIN")),
+      calcflux_domain_(Teuchos::getIntegralValue<ScaTra::FluxType>(*params, "CALCFLUX_DOMAIN")),
       calcflux_domain_lumped_(params->get<bool>("CALCFLUX_DOMAIN_LUMPED")),
-      calcflux_boundary_(
-          Teuchos::getIntegralValue<Inpar::ScaTra::FluxType>(*params, "CALCFLUX_BOUNDARY")),
+      calcflux_boundary_(Teuchos::getIntegralValue<ScaTra::FluxType>(*params, "CALCFLUX_BOUNDARY")),
       calcflux_boundary_lumped_(params->get<bool>("CALCFLUX_BOUNDARY_LUMPED")),
       writefluxids_(std::make_shared<std::vector<int>>()),
       flux_domain_(nullptr),
@@ -102,16 +100,15 @@ ScaTra::ScaTraTimIntImpl::ScaTraTimIntImpl(std::shared_ptr<Core::FE::Discretizat
       lastfluxoutputstep_(-1),
       output_element_material_id_(
           Global::Problem::instance()->io_params().get<bool>("ELEMENT_MAT_ID")),
-      outputscalars_(
-          Teuchos::getIntegralValue<Inpar::ScaTra::OutputScalarType>(*params, "OUTPUTSCALARS")),
+      outputscalars_(Teuchos::getIntegralValue<ScaTra::OutputScalarType>(*params, "OUTPUTSCALARS")),
       outputgmsh_(params->get<bool>("OUTPUT_GMSH")),
       output_state_matlab_(params->get<bool>("MATLAB_STATE_OUTPUT")),
-      fdcheck_(Teuchos::getIntegralValue<Inpar::ScaTra::FdCheck>(*params, "FDCHECK")),
+      fdcheck_(Teuchos::getIntegralValue<ScaTra::FdCheck>(*params, "FDCHECK")),
       fdcheckeps_(params->get<double>("FDCHECKEPS")),
       fdchecktol_(params->get<double>("FDCHECKTOL")),
       computeintegrals_(
-          Teuchos::getIntegralValue<Inpar::ScaTra::ComputeIntegrals>(*params, "COMPUTEINTEGRALS")),
-      calcerror_(Teuchos::getIntegralValue<Inpar::ScaTra::CalcError>(*params, "CALCERROR")),
+          Teuchos::getIntegralValue<ScaTra::ComputeIntegrals>(*params, "COMPUTEINTEGRALS")),
+      calcerror_(Teuchos::getIntegralValue<ScaTra::CalcError>(*params, "CALCERROR")),
       time_(0.0),
       maxtime_(params->get<double>("MAXTIME")),
       step_(0),
@@ -121,8 +118,7 @@ ScaTra::ScaTraTimIntImpl::ScaTraTimIntImpl(std::shared_ptr<Core::FE::Discretizat
       dtsolve_(0.0),
       iternum_(0),
       iternum_outer_(0),
-      timealgo_(
-          Teuchos::getIntegralValue<Inpar::ScaTra::TimeIntegrationScheme>(*params, "TIMEINTEGR")),
+      timealgo_(Teuchos::getIntegralValue<ScaTra::TimeIntegrationScheme>(*params, "TIMEINTEGR")),
       nsd_(problem_->n_dim()),
       scalarhandler_(nullptr),
       outputscalarstrategy_(nullptr),
@@ -138,7 +134,7 @@ ScaTra::ScaTraTimIntImpl::ScaTraTimIntImpl(std::shared_ptr<Core::FE::Discretizat
       hist_(nullptr),
       densafnp_(nullptr),
       velocity_field_type_(
-          Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(*params, "VELOCITYFIELD")),
+          Teuchos::getIntegralValue<ScaTra::VelocityField>(*params, "VELOCITYFIELD")),
       mean_conc_(nullptr),
       membrane_conc_(nullptr),
       phinp_micro_(nullptr),
@@ -156,7 +152,7 @@ ScaTra::ScaTraTimIntImpl::ScaTraTimIntImpl(std::shared_ptr<Core::FE::Discretizat
       macro_micro_rea_coeff_(0.0),
       discret_(actdis),
       output_(std::move(output)),
-      convform_(Teuchos::getIntegralValue<Inpar::ScaTra::ConvForm>(*params, "CONVFORM")),
+      convform_(Teuchos::getIntegralValue<ScaTra::ConvForm>(*params, "CONVFORM")),
       sysmat_(nullptr),
       zeros_(nullptr),
       dbcmaps_(nullptr),
@@ -248,17 +244,17 @@ void ScaTra::ScaTraTimIntImpl::init()
   // -------------------------------------------------------------------
   switch (solvtype_)
   {
-    case Inpar::ScaTra::solvertype_nonlinear:
-    case Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro:
-    case Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken:
-    case Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit:
-    case Inpar::ScaTra::solvertype_nonlinear_multiscale_microtomacro:
-    case Inpar::ScaTra::solvertype_linear_incremental:
+    case ScaTra::solvertype_nonlinear:
+    case ScaTra::solvertype_nonlinear_multiscale_macrotomicro:
+    case ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken:
+    case ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit:
+    case ScaTra::solvertype_nonlinear_multiscale_microtomacro:
+    case ScaTra::solvertype_linear_incremental:
     {
       incremental_ = true;
     }
     break;
-    case Inpar::ScaTra::solvertype_linear_full:
+    case ScaTra::solvertype_linear_full:
     {
       incremental_ = false;
     }
@@ -345,7 +341,7 @@ void ScaTra::ScaTraTimIntImpl::setup()
   // -------------------------------------------------------------------
   // create empty system matrix (27 adjacent nodes as 'good' guess)
   // -------------------------------------------------------------------
-  if (fssgd_ != Inpar::ScaTra::fssugrdiff_no and not incremental_)
+  if (fssgd_ != ScaTra::fssugrdiff_no and not incremental_)
   {
     // do not save the graph if fine-scale subgrid diffusivity is used in non-incremental case (very
     // special case)
@@ -371,17 +367,17 @@ void ScaTra::ScaTraTimIntImpl::setup()
     phinp_micro_ =
         std::make_shared<Core::LinAlg::Vector<double>>(*discret_->dof_row_map(nds_micro()));
 
-  if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro or
-      solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
-      solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit or
-      solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_microtomacro)
+  if (solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro or
+      solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
+      solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit or
+      solvtype_ == ScaTra::solvertype_nonlinear_multiscale_microtomacro)
   {
     phinp_inc_ = std::make_shared<Core::LinAlg::Vector<double>>(*dofrowmap, true);
-    if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
-        solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit)
+    if (solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
+        solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit)
     {
       phinp_inc_old_ = std::make_shared<Core::LinAlg::Vector<double>>(*dofrowmap, true);
-      if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken)
+      if (solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken)
         omega_.resize(1, 1.);
       else
         omega_.resize(num_dof_per_node(), 1.);
@@ -435,7 +431,7 @@ void ScaTra::ScaTraTimIntImpl::setup()
   // subgrid-diffusivity(-scaling) vector
   // (used either for AVM3 approach or temperature equation
   //  with all-scale subgrid-diffusivity model)
-  if (fssgd_ != Inpar::ScaTra::fssugrdiff_no)
+  if (fssgd_ != ScaTra::fssugrdiff_no)
     subgrdiff_ = std::make_shared<Core::LinAlg::Vector<double>>(*dofrowmap, true);
 
   // -------------------------------------------------------------------
@@ -444,8 +440,7 @@ void ScaTra::ScaTraTimIntImpl::setup()
   // initialize vector for statistics (assume a maximum of 10 conditions)
   sumnormfluxintegral_ = std::make_shared<Core::LinAlg::SerialDenseVector>(10);
 
-  if (calcflux_domain_ != Inpar::ScaTra::flux_none or
-      calcflux_boundary_ != Inpar::ScaTra::flux_none)
+  if (calcflux_domain_ != ScaTra::flux_none or calcflux_boundary_ != ScaTra::flux_none)
   {
     // safety check
     if (not scalarhandler_->equal_num_dof())
@@ -495,7 +490,7 @@ void ScaTra::ScaTraTimIntImpl::setup()
     }
 
     // initialize map extractor associated with boundary segments for flux calculation
-    if (calcflux_boundary_ != Inpar::ScaTra::flux_none)
+    if (calcflux_boundary_ != ScaTra::flux_none)
     {
       std::vector<const Core::Conditions::Condition*> conditions;
       discret_->get_condition("ScaTraFluxCalc", conditions);
@@ -518,8 +513,7 @@ void ScaTra::ScaTraTimIntImpl::setup()
   // -------------------------------------------------------------------
   // set initial field
   // -------------------------------------------------------------------
-  set_initial_field(
-      Teuchos::getIntegralValue<Inpar::ScaTra::InitialField>(*params_, "INITIALFIELD"),
+  set_initial_field(Teuchos::getIntegralValue<ScaTra::InitialField>(*params_, "INITIALFIELD"),
       params_->get<int>("INITFUNCNO"));
 
   // -------------------------------------------------------------------
@@ -535,10 +529,10 @@ void ScaTra::ScaTraTimIntImpl::setup()
   // -------------------------------------------------------------------
   // preparations for total and mean values of transported scalars
   // -------------------------------------------------------------------
-  if (outputscalars_ != Inpar::ScaTra::outputscalars_none)
+  if (outputscalars_ != ScaTra::outputscalars_none)
   {
     // input check
-    if (outputscalars_ == Inpar::ScaTra::outputscalars_entiredomain)
+    if (outputscalars_ == ScaTra::outputscalars_entiredomain)
     {
       std::vector<const Core::Conditions::Condition*> conditions;
       // extract conditions for calculation of total and mean values of transported scalars
@@ -559,13 +553,13 @@ void ScaTra::ScaTraTimIntImpl::setup()
     // build helper class for total and mean scalar output depending on input parameter
     switch (outputscalars_)
     {
-      case Inpar::ScaTra::outputscalars_entiredomain:
+      case ScaTra::outputscalars_entiredomain:
         outputscalarstrategy_ = std::make_shared<OutputScalarsStrategyDomain>(this);
         break;
-      case Inpar::ScaTra::outputscalars_condition:
+      case ScaTra::outputscalars_condition:
         outputscalarstrategy_ = std::make_shared<OutputScalarsStrategyCondition>(this);
         break;
-      case Inpar::ScaTra::outputscalars_entiredomain_condition:
+      case ScaTra::outputscalars_entiredomain_condition:
         outputscalarstrategy_ = std::make_shared<OutputScalarsStrategyDomainAndCondition>(this);
         break;
       default:
@@ -595,7 +589,7 @@ void ScaTra::ScaTraTimIntImpl::setup()
   // -------------------------------------------------------------------
   // preparations for domain integrals
   // -------------------------------------------------------------------
-  if (computeintegrals_ != Inpar::ScaTra::computeintegrals_none)
+  if (computeintegrals_ != ScaTra::computeintegrals_none)
   {
     // initialize domain integral output strategy
     outputdomainintegralstrategy_ = std::make_shared<OutputDomainIntegralStrategy>(this);
@@ -624,9 +618,9 @@ void ScaTra::ScaTraTimIntImpl::setup()
   // -------------------------------------------------------------------
   // preparations for error evaluation
   // -------------------------------------------------------------------
-  if (calcerror_ != Inpar::ScaTra::calcerror_no)
+  if (calcerror_ != ScaTra::calcerror_no)
   {
-    if (calcerror_ == Inpar::ScaTra::calcerror_bycondition)
+    if (calcerror_ == ScaTra::calcerror_bycondition)
     {
       std::vector<const Core::Conditions::Condition*> relerrorconditions;
       discret_->get_condition("ScatraRelError", relerrorconditions);
@@ -640,7 +634,7 @@ void ScaTra::ScaTraTimIntImpl::setup()
       relerrors_ =
           std::make_shared<std::vector<double>>(2 * num_dof_per_node() * relerrorconditions.size());
     }
-    else if (calcerror_ == Inpar::ScaTra::calcerror_AnalyticSeries)
+    else if (calcerror_ == ScaTra::calcerror_AnalyticSeries)
       relerrors_ = std::make_shared<std::vector<double>>(2);  // TODO: Update two n species
     else
     {
@@ -771,7 +765,7 @@ void ScaTra::ScaTraTimIntImpl::init_turbulence_model(
   // necessary only for AVM3 approach:
   // initialize subgrid-diffusivity matrix + respective output
   // -------------------------------------------------------------------
-  if (fssgd_ != Inpar::ScaTra::fssugrdiff_no and turbparams->get<bool>("TURBMODEL_LS"))
+  if (fssgd_ != ScaTra::fssugrdiff_no and turbparams->get<bool>("TURBMODEL_LS"))
   {
     sysmat_sd_ = std::make_shared<Core::LinAlg::SparseMatrix>(*dofrowmap, 27);
 
@@ -787,18 +781,18 @@ void ScaTra::ScaTraTimIntImpl::init_turbulence_model(
 
     if (turbparams->get<std::string>("PHYSICAL_MODEL") != "Multifractal_Subgrid_Scales")
     {
-      if (fssgd_ == Inpar::ScaTra::fssugrdiff_smagorinsky_small and
+      if (fssgd_ == ScaTra::fssugrdiff_smagorinsky_small and
           turbparams->get<Inpar::FLUID::FineSubgridVisc>("FSSUGRVISC") !=
               Inpar::FLUID::FineSubgridVisc::smagorinsky_small)
         FOUR_C_THROW("Same subgrid-viscosity approach expected!");
-      if (fssgd_ == Inpar::ScaTra::fssugrdiff_smagorinsky_all and
+      if (fssgd_ == ScaTra::fssugrdiff_smagorinsky_all and
           turbparams->get<Inpar::FLUID::FineSubgridVisc>("FSSUGRVISC") !=
               Inpar::FLUID::FineSubgridVisc::smagorinsky_all)
         FOUR_C_THROW("Same subgrid-viscosity approach expected!");
     }
   }
   else
-    fssgd_ = Inpar::ScaTra::fssugrdiff_no;  // in case of not "TURBMODEL_LS"
+    fssgd_ = ScaTra::fssugrdiff_no;  // in case of not "TURBMODEL_LS"
 
   // -------------------------------------------------------------------
   // get turbulence model and parameters
@@ -867,7 +861,7 @@ void ScaTra::ScaTraTimIntImpl::init_turbulence_model(
 
     // warning No. 2: if classical (all-scale) turbulence model and fine-scale
     // subgrid-viscosity approach are intended to be used simultaneously
-    if (turbmodel_ == Inpar::FLUID::smagorinsky and fssgd_ != Inpar::ScaTra::fssugrdiff_no)
+    if (turbmodel_ == Inpar::FLUID::smagorinsky and fssgd_ != ScaTra::fssugrdiff_no)
     {
       FOUR_C_THROW(
           "No combination of classical turbulence model and fine-scale subgrid-diffusivity "
@@ -963,12 +957,12 @@ void ScaTra::ScaTraTimIntImpl::set_element_general_parameters(bool calcinitialti
   // set problem number
   eleparams.set<int>("probnum", probnum_);
 
-  eleparams.set<Inpar::ScaTra::ConvForm>("convform", convform_);
+  eleparams.set<ScaTra::ConvForm>("convform", convform_);
 
   eleparams.set<bool>("isale", isale_);
 
   // set flag for writing the flux vector fields
-  eleparams.set<Inpar::ScaTra::FluxType>("calcflux_domain", calcflux_domain_);
+  eleparams.set<ScaTra::FluxType>("calcflux_domain", calcflux_domain_);
 
   //! set vector containing ids of scalars for which flux vectors are calculated
   eleparams.set<std::shared_ptr<std::vector<int>>>("writeflux_ids", writefluxids_);
@@ -979,10 +973,9 @@ void ScaTra::ScaTraTimIntImpl::set_element_general_parameters(bool calcinitialti
   {
     // deactivate stabilization when calculating initial time derivative
     eleparams.sublist("stabilization")
-        .set<Inpar::ScaTra::StabType>(
-            "STABTYPE", Inpar::ScaTra::StabType::stabtype_no_stabilization);
+        .set<ScaTra::StabType>("STABTYPE", ScaTra::StabType::stabtype_no_stabilization);
     eleparams.sublist("stabilization")
-        .set<Inpar::ScaTra::TauType>("DEFINITION_TAU", Inpar::ScaTra::TauType::tau_zero);
+        .set<ScaTra::TauType>("DEFINITION_TAU", ScaTra::TauType::tau_zero);
     // deactivate subgrid-scale velocity
     eleparams.sublist("stabilization").set<bool>("SUGRVEL", false);
     // deactivate subgrid diffusivity
@@ -992,10 +985,10 @@ void ScaTra::ScaTraTimIntImpl::set_element_general_parameters(bool calcinitialti
   // parameters for finite difference check
   if (calcinitialtimederivative)
   {  // deactivate finite difference check when calculating initial time derivative
-    eleparams.set<Inpar::ScaTra::FdCheck>("fdcheck", Inpar::ScaTra::fdcheck_none);
+    eleparams.set<ScaTra::FdCheck>("fdcheck", ScaTra::fdcheck_none);
   }
   else
-    eleparams.set<Inpar::ScaTra::FdCheck>("fdcheck", fdcheck_);
+    eleparams.set<ScaTra::FdCheck>("fdcheck", fdcheck_);
 
   eleparams.set<double>("fdcheckeps", fdcheckeps_);
   eleparams.set<double>("fdchecktol", fdchecktol_);
@@ -1005,11 +998,10 @@ void ScaTra::ScaTraTimIntImpl::set_element_general_parameters(bool calcinitialti
 
   // flag for truly partitioned multi-scale simulation
   eleparams.set<bool>("partitioned_multiscale",
-      solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro or
-          solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
-          solvtype_ ==
-              Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit or
-          solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_microtomacro);
+      solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro or
+          solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
+          solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit or
+          solvtype_ == ScaTra::solvertype_nonlinear_multiscale_microtomacro);
 
   // flag for external force
   eleparams.set<bool>("has_external_force", has_external_force_);
@@ -1058,12 +1050,11 @@ void ScaTra::ScaTraTimIntImpl::set_element_turbulence_parameters(
 
   if (calcinitialtimederivative)
   {
-    eleparams.set<Inpar::ScaTra::FSSUGRDIFF>(
-        "fs subgrid diffusivity", Inpar::ScaTra::fssugrdiff_no);
+    eleparams.set<ScaTra::FSSUGRDIFF>("fs subgrid diffusivity", ScaTra::fssugrdiff_no);
   }
   else
   {
-    eleparams.set<Inpar::ScaTra::FSSUGRDIFF>("fs subgrid diffusivity", fssgd_);
+    eleparams.set<ScaTra::FSSUGRDIFF>("fs subgrid diffusivity", fssgd_);
   }
 
   Discret::Elements::ScaTraEleParameterTurbulence::instance(discret_->name())
@@ -1141,7 +1132,7 @@ void ScaTra::ScaTraTimIntImpl::prepare_time_step()
   // -------------------------------------------------------------------
   //     update velocity field if given by function (it might depend on time)
   // -------------------------------------------------------------------
-  if (velocity_field_type_ == Inpar::ScaTra::velocity_function) set_velocity_field_from_function();
+  if (velocity_field_type_ == ScaTra::velocity_function) set_velocity_field_from_function();
 
   // -------------------------------------------------------------------
   //     update external force given by function (it might depend on time)
@@ -1152,8 +1143,7 @@ void ScaTra::ScaTraTimIntImpl::prepare_time_step()
   //           preparation of AVM3-based scale separation
   // -------------------------------------------------------------------
   if ((step_ == 1 or (turbinflow_ and step_ == numinflowsteps_ + 1)) and
-      (fssgd_ != Inpar::ScaTra::fssugrdiff_no or
-          turbmodel_ == Inpar::FLUID::multifractal_subgrid_scales))
+      (fssgd_ != ScaTra::fssugrdiff_no or turbmodel_ == Inpar::FLUID::multifractal_subgrid_scales))
     avm3_preparation();
 
   // -------------------------------------------------------------------
@@ -1234,13 +1224,13 @@ void ScaTra::ScaTraTimIntImpl::set_velocity_field_from_function()
 
   switch (velocity_field_type_)
   {
-    case Inpar::ScaTra::velocity_zero:
+    case ScaTra::velocity_zero:
     {
       // no action needed in case for zero velocity field
       break;
     }
 
-    case Inpar::ScaTra::velocity_function:
+    case ScaTra::velocity_function:
     {
       const int velfuncno = params_->get<int>("VELFUNCNO");
 
@@ -1463,7 +1453,7 @@ void ScaTra::ScaTraTimIntImpl::set_convective_velocity(
   TEUCHOS_FUNC_TIME_MONITOR("SCATRA: set convective velocity field");
 
   // checks
-  FOUR_C_ASSERT(velocity_field_type_ == Inpar::ScaTra::velocity_Navier_Stokes,
+  FOUR_C_ASSERT(velocity_field_type_ == ScaTra::velocity_Navier_Stokes,
       "Wrong set_velocity_field() called for velocity field type {}!", velocity_field_type_);
   FOUR_C_ASSERT(nds_vel() < discret_->num_dof_sets(), "Too few dof sets on scatra discretization!");
 
@@ -1480,7 +1470,7 @@ void ScaTra::ScaTraTimIntImpl::set_fine_scale_velocity(
   TEUCHOS_FUNC_TIME_MONITOR("SCATRA: set fine scale velocity field");
 
   // checks
-  FOUR_C_ASSERT(velocity_field_type_ == Inpar::ScaTra::velocity_Navier_Stokes,
+  FOUR_C_ASSERT(velocity_field_type_ == ScaTra::velocity_Navier_Stokes,
       "Wrong set_velocity_field() called for velocity field type {}!", velocity_field_type_);
   FOUR_C_ASSERT(nds_vel() < discret_->num_dof_sets(), "Too few dof sets on scatra discretization!");
 
@@ -1493,11 +1483,11 @@ void ScaTra::ScaTraTimIntImpl::set_fine_scale_velocity(
 bool ScaTra::ScaTraTimIntImpl::fine_scale_velocity_field_required() const
 {
   // for smagorinsky_all, the fine scale velocity is not necessary
-  if (fssgd_ == Inpar::ScaTra::fssugrdiff_smagorinsky_all) return false;
+  if (fssgd_ == ScaTra::fssugrdiff_smagorinsky_all) return false;
 
   // in case the fine-scale subgrid-viscosity is turned off in the scalar field, the fine scale
   // velocity is not necessary
-  if (turbmodel_ == Inpar::FLUID::no_model and fssgd_ == Inpar::ScaTra::fssugrdiff_no) return false;
+  if (turbmodel_ == Inpar::FLUID::no_model and fssgd_ == ScaTra::fssugrdiff_no) return false;
 
   // do not communicate the fine scale velocity field before it was calculated, i.e., in the initial
   // step
@@ -1514,7 +1504,7 @@ void ScaTra::ScaTraTimIntImpl::set_velocity_field(const Core::LinAlg::Vector<dou
   TEUCHOS_FUNC_TIME_MONITOR("SCATRA: set velocity field");
 
   // checks
-  FOUR_C_ASSERT(velocity_field_type_ == Inpar::ScaTra::velocity_Navier_Stokes,
+  FOUR_C_ASSERT(velocity_field_type_ == ScaTra::velocity_Navier_Stokes,
       "Wrong set_velocity_field() called for velocity field type {}!", velocity_field_type_);
   FOUR_C_ASSERT(nds_vel() < discret_->num_dof_sets(), "Too few dof sets on scatra discretization!");
 
@@ -1592,30 +1582,30 @@ void ScaTra::ScaTraTimIntImpl::solve()
   // -----------------------------------------------------------------
   // intermediate solution step for homogeneous isotropic turbulence
   // -----------------------------------------------------------------
-  if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear) calc_intermediate_solution();
+  if (solvtype_ == ScaTra::solvertype_nonlinear) calc_intermediate_solution();
 
   // -----------------------------------------------------------------
   //                     solve (non-)linear equation
   // -----------------------------------------------------------------
   switch (solvtype_)
   {
-    case Inpar::ScaTra::solvertype_linear_incremental:
-    case Inpar::ScaTra::solvertype_linear_full:
+    case ScaTra::solvertype_linear_incremental:
+    case ScaTra::solvertype_linear_full:
     {
       linear_solve();
       break;
     }
 
-    case Inpar::ScaTra::solvertype_nonlinear:
+    case ScaTra::solvertype_nonlinear:
     {
       nonlinear_solve();
       break;
     }
 
-    case Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro:
-    case Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken:
-    case Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit:
-    case Inpar::ScaTra::solvertype_nonlinear_multiscale_microtomacro:
+    case ScaTra::solvertype_nonlinear_multiscale_macrotomicro:
+    case ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken:
+    case ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit:
+    case ScaTra::solvertype_nonlinear_multiscale_microtomacro:
     {
       nonlinear_multi_scale_solve();
       break;
@@ -1749,8 +1739,8 @@ void ScaTra::ScaTraTimIntImpl::collect_runtime_output_data()
       *phinp_, Core::IO::OutputEntity::dof, phi_components_);
 
   // convective velocity (written in case of coupled simulations since volmortar is now possible)
-  if (velocity_field_type_ == Inpar::ScaTra::velocity_function or
-      velocity_field_type_ == Inpar::ScaTra::velocity_Navier_Stokes)
+  if (velocity_field_type_ == ScaTra::velocity_function or
+      velocity_field_type_ == ScaTra::velocity_Navier_Stokes)
   {
     auto convel = discret_->get_state(nds_vel(), "convective velocity field");
     if (convel == nullptr) FOUR_C_THROW("Cannot get state vector convective velocity");
@@ -1816,18 +1806,16 @@ void ScaTra::ScaTraTimIntImpl::collect_runtime_output_data()
         micro_conc_multi, Core::IO::OutputEntity::node, {"micro_conc"});
   }
 
-  if (calcflux_domain_ != Inpar::ScaTra::flux_none or
-      calcflux_boundary_ != Inpar::ScaTra::flux_none)
+  if (calcflux_domain_ != ScaTra::flux_none or calcflux_boundary_ != ScaTra::flux_none)
   {
     // for flux output of initial field (before first solve) do:
     // flux_domain_ and flux_boundary_ vectors are initialized when CalcFlux() is called
-    if (step_ == 0 or (calcflux_domain_ != Inpar::ScaTra::flux_none and flux_domain_ == nullptr) or
-        (calcflux_boundary_ != Inpar::ScaTra::flux_none and flux_boundary_ == nullptr))
+    if (step_ == 0 or (calcflux_domain_ != ScaTra::flux_none and flux_domain_ == nullptr) or
+        (calcflux_boundary_ != ScaTra::flux_none and flux_boundary_ == nullptr))
       calc_flux(true);
 
-    if (calcflux_domain_ != Inpar::ScaTra::flux_none)
-      collect_output_flux_data(flux_domain_, "domain");
-    if (calcflux_boundary_ != Inpar::ScaTra::flux_none)
+    if (calcflux_domain_ != ScaTra::flux_none) collect_output_flux_data(flux_domain_, "domain");
+    if (calcflux_boundary_ != ScaTra::flux_none)
       collect_output_flux_data(flux_boundary_, "boundary");
   }
 
@@ -1880,18 +1868,18 @@ void ScaTra::ScaTraTimIntImpl::write_runtime_output()
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
 void ScaTra::ScaTraTimIntImpl::set_initial_field(
-    const Inpar::ScaTra::InitialField init, const int startfuncno)
+    const ScaTra::InitialField init, const int startfuncno)
 {
   switch (init)
   {
-    case Inpar::ScaTra::initfield_zero_field:
+    case ScaTra::initfield_zero_field:
     {
       phin_->put_scalar(0.0);
       phinp_->put_scalar(0.0);
       break;
     }
-    case Inpar::ScaTra::initfield_field_by_function:
-    case Inpar::ScaTra::initfield_disturbed_field_by_function:
+    case ScaTra::initfield_field_by_function:
+    case ScaTra::initfield_disturbed_field_by_function:
     {
       const Core::LinAlg::Map* dofrowmap = discret_->dof_row_map();
 
@@ -1939,7 +1927,7 @@ void ScaTra::ScaTraTimIntImpl::set_initial_field(
       phinp_->update(1.0, *phin_, 0.0);
 
       // add random perturbation for initial field of turbulent flows
-      if (init == Inpar::ScaTra::initfield_disturbed_field_by_function)
+      if (init == ScaTra::initfield_disturbed_field_by_function)
       {
         // random noise is relative to difference of max-min values of initial profile
         double perc =
@@ -1971,7 +1959,7 @@ void ScaTra::ScaTraTimIntImpl::set_initial_field(
       }
       break;
     }
-    case Inpar::ScaTra::initfield_field_by_condition:
+    case ScaTra::initfield_field_by_condition:
     {
       // set initial field for ALL existing scatra fields in condition
       const std::string field = "ScaTra";
@@ -2016,7 +2004,7 @@ void ScaTra::ScaTraTimIntImpl::set_initial_field(
       break;
     }
     // discontinuous 0-1 field for progress variable in 1-D
-    case Inpar::ScaTra::initfield_discontprogvar_1D:
+    case ScaTra::initfield_discontprogvar_1D:
     {
       const Core::LinAlg::Map* dofrowmap = discret_->dof_row_map();
 
@@ -2048,7 +2036,7 @@ void ScaTra::ScaTraTimIntImpl::set_initial_field(
     // reconstructed initial profile for progress variable in x2-direction from
     // Lessani and Papalexandris (2006), also used in Moureau et al. (2007, 2009),
     // for two-dimensional flame-vortex interaction problem (x2=0-200)
-    case Inpar::ScaTra::initfield_flame_vortex_interaction:
+    case ScaTra::initfield_flame_vortex_interaction:
     {
       // locations separating region 1 from region 2 and region 2 from region 3
       const double loc12 = 98.5;
@@ -2104,7 +2092,7 @@ void ScaTra::ScaTraTimIntImpl::set_initial_field(
       break;
     }
     // initial mixture-fraction profile for Rayleigh-Taylor instability
-    case Inpar::ScaTra::initfield_raytaymixfrac:
+    case ScaTra::initfield_raytaymixfrac:
     {
       // define interface thickness, sinusoidal disturbance wave amplitude and pi
       const double delta = 0.002;
@@ -2158,7 +2146,7 @@ void ScaTra::ScaTraTimIntImpl::set_initial_field(
       break;
     }
     // initial field for skew convection of L-shaped domain
-    case Inpar::ScaTra::initfield_Lshapeddomain:
+    case ScaTra::initfield_Lshapeddomain:
     {
       const Core::LinAlg::Map* dofrowmap = discret_->dof_row_map();
 
@@ -2190,7 +2178,7 @@ void ScaTra::ScaTraTimIntImpl::set_initial_field(
       }
       break;
     }
-    case Inpar::ScaTra::initfield_facing_flame_fronts:
+    case ScaTra::initfield_facing_flame_fronts:
     {
       const Core::LinAlg::Map* dofrowmap = discret_->dof_row_map();
 
@@ -2223,7 +2211,7 @@ void ScaTra::ScaTraTimIntImpl::set_initial_field(
       }
       break;
     }
-    case Inpar::ScaTra::initfield_oracles_flame:
+    case ScaTra::initfield_oracles_flame:
     {
       const Core::LinAlg::Map* dofrowmap = discret_->dof_row_map();
 
@@ -2259,8 +2247,8 @@ void ScaTra::ScaTraTimIntImpl::set_initial_field(
       }
       break;
     }
-    case Inpar::ScaTra::initialfield_forced_hit_high_Sc:
-    case Inpar::ScaTra::initialfield_forced_hit_low_Sc:
+    case ScaTra::initialfield_forced_hit_high_Sc:
+    case ScaTra::initialfield_forced_hit_low_Sc:
     {
       // initialize calculation of initial field based on fast Fourier transformation
       HomoIsoTurbInitialScalarField HitInitialScalarField(*this, init);
@@ -2724,9 +2712,9 @@ void ScaTra::ScaTraTimIntImpl::assemble_mat_and_rhs()
 
   // DO THIS AT VERY FIRST!!!
   // compute reconstructed diffusive fluxes for better consistency
-  const auto consistency = Teuchos::getIntegralValue<Inpar::ScaTra::Consistency>(
+  const auto consistency = Teuchos::getIntegralValue<ScaTra::Consistency>(
       params_->sublist("STABILIZATION"), "CONSISTENCY");
-  if (consistency == Inpar::ScaTra::consistency_l2_projection_lumped)
+  if (consistency == ScaTra::consistency_l2_projection_lumped)
   {
     // compute flux approximation and add it to the parameter list
     add_flux_approx_to_parameter_list(eleparams);
@@ -2734,7 +2722,7 @@ void ScaTra::ScaTraTimIntImpl::assemble_mat_and_rhs()
 
   // prepare dynamic Smagorinsky model if required,
   // i.e. calculate turbulent Prandtl number
-  if (timealgo_ != Inpar::ScaTra::timeint_stationary)
+  if (timealgo_ != ScaTra::timeint_stationary)
   {
     dynamic_computation_of_cs();
     dynamic_computation_of_cv();
@@ -2744,8 +2732,7 @@ void ScaTra::ScaTraTimIntImpl::assemble_mat_and_rhs()
 
   // AVM3 separation for incremental solver: get fine-scale part of scalar
   if (incremental_ and step_ > 0 and
-      (fssgd_ != Inpar::ScaTra::fssugrdiff_no or
-          turbmodel_ == Inpar::FLUID::multifractal_subgrid_scales))
+      (fssgd_ != ScaTra::fssugrdiff_no or turbmodel_ == Inpar::FLUID::multifractal_subgrid_scales))
     avm3_separation();
 
   // add state vectors according to time-integration scheme
@@ -2760,7 +2747,7 @@ void ScaTra::ScaTraTimIntImpl::assemble_mat_and_rhs()
   add_problem_specific_parameters_and_vectors(eleparams);
 
   // call loop over elements (with or without subgrid-diffusivity(-scaling) vector)
-  if (fssgd_ != Inpar::ScaTra::fssugrdiff_no)
+  if (fssgd_ != ScaTra::fssugrdiff_no)
     discret_->evaluate(eleparams, sysmat_, nullptr, residual_, subgrdiff_, nullptr);
   else
     discret_->evaluate(eleparams, sysmat_, residual_);
@@ -2787,7 +2774,7 @@ void ScaTra::ScaTraTimIntImpl::assemble_mat_and_rhs()
 
   // AVM3 scaling for non-incremental solver: scaling of normalized AVM3-based
   // fine-scale subgrid-diffusivity matrix by subgrid diffusivity
-  if (not incremental_ and fssgd_ != Inpar::ScaTra::fssugrdiff_no) avm3_scaling(eleparams);
+  if (not incremental_ and fssgd_ != ScaTra::fssugrdiff_no) avm3_scaling(eleparams);
 
   // potential residual scaling and potential addition of Neumann terms
   scaling_and_neumann();  // TODO: do we have to call this function twice??
@@ -2931,7 +2918,7 @@ void ScaTra::ScaTraTimIntImpl::nonlinear_solve()
     assemble_mat_and_rhs();
 
     // perform finite difference check on time integrator level
-    if (fdcheck_ == Inpar::ScaTra::fdcheck_global) fd_check();
+    if (fdcheck_ == ScaTra::fdcheck_global) fd_check();
 
     // project residual such that only part orthogonal to nullspace is considered
     if (projector_ != nullptr) *residual_ = projector_->to_reduced(*residual_);
@@ -3024,9 +3011,9 @@ void ScaTra::ScaTraTimIntImpl::nonlinear_multi_scale_solve()
     phinp_inc_->update(1., *phinp_relaxed, 0.);
 
     // solve micro scale first and macro scale second
-    if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro or
-        solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
-        solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit)
+    if (solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro or
+        solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
+        solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit)
     {
       // backup macro-scale state vector
       const std::shared_ptr<Core::LinAlg::Vector<double>> phinp = phinp_;
@@ -3046,7 +3033,7 @@ void ScaTra::ScaTraTimIntImpl::nonlinear_multi_scale_solve()
     }
 
     // solve macro scale first and micro scale second
-    else if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_microtomacro)
+    else if (solvtype_ == ScaTra::solvertype_nonlinear_multiscale_microtomacro)
     {
       // solve macro-scale problem
       nonlinear_solve();
@@ -3061,8 +3048,8 @@ void ScaTra::ScaTraTimIntImpl::nonlinear_multi_scale_solve()
     // convergence check
     if (strategy_->abort_outer_iter(*this)) break;
 
-    if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
-        solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit)
+    if (solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken or
+        solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken_dofsplit)
     {
       // compute difference between current and previous increments of macro-scale state vector
       Core::LinAlg::Vector<double> phinp_inc_diff(*phinp_inc_);
@@ -3105,21 +3092,21 @@ void ScaTra::ScaTraTimIntImpl::nonlinear_micro_scale_solve()
 /*--------------------------------------------------------------------------*
  *--------------------------------------------------------------------------*/
 std::string ScaTra::ScaTraTimIntImpl::map_tim_int_enum_to_string(
-    const Inpar::ScaTra::TimeIntegrationScheme term)
+    const ScaTra::TimeIntegrationScheme term)
 {
   // length of return std::string is 14 due to usage in formatted screen output
   switch (term)
   {
-    case Inpar::ScaTra::timeint_one_step_theta:
+    case ScaTra::timeint_one_step_theta:
       return "One-Step-Theta";
       break;
-    case Inpar::ScaTra::timeint_bdf2:
+    case ScaTra::timeint_bdf2:
       return "     BDF2     ";
       break;
-    case Inpar::ScaTra::timeint_stationary:
+    case ScaTra::timeint_stationary:
       return "  Stationary  ";
       break;
-    case Inpar::ScaTra::timeint_gen_alpha:
+    case ScaTra::timeint_gen_alpha:
       return "  Gen. Alpha  ";
       break;
     default:

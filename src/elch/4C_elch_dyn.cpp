@@ -52,14 +52,13 @@ void elch_dyn(int restart)
 
   // access the scalar transport parameter list
   const auto& scatradyn = problem->scalar_transport_dynamic_params();
-  const auto veltype =
-      Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
+  const auto veltype = Teuchos::getIntegralValue<ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
 
   // choose algorithm depending on velocity field type
   switch (veltype)
   {
-    case Inpar::ScaTra::velocity_zero:      // zero  (see case 1)
-    case Inpar::ScaTra::velocity_function:  // spatial function
+    case ScaTra::velocity_zero:      // zero  (see case 1)
+    case ScaTra::velocity_function:  // spatial function
     {
       // we directly use the elements from the scalar transport elements section
       if (scatradis->num_global_nodes() == 0)
@@ -120,7 +119,7 @@ void elch_dyn(int restart)
 
       break;
     }
-    case Inpar::ScaTra::velocity_Navier_Stokes:  // Navier_Stokes
+    case ScaTra::velocity_Navier_Stokes:  // Navier_Stokes
     {
       // we use the fluid discretization as layout for the scalar transport discretization
       if (fluiddis->num_global_nodes() == 0) FOUR_C_THROW("Fluid discretization is empty!");
@@ -133,11 +132,11 @@ void elch_dyn(int restart)
             *fluiddis, *scatradis, Global::Problem::instance()->cloning_material_map());
         scatradis->fill_complete();
         // determine implementation type of cloned scatra elements
-        Inpar::ScaTra::ImplType impltype = Inpar::ScaTra::impltype_undefined;
+        ScaTra::ImplType impltype = ScaTra::impltype_undefined;
         if (elchcontrol.get<bool>("DIFFCOND_FORMULATION"))
-          impltype = Inpar::ScaTra::impltype_elch_diffcond;
+          impltype = ScaTra::impltype_elch_diffcond;
         else
-          impltype = Inpar::ScaTra::impltype_elch_NP;
+          impltype = ScaTra::impltype_elch_NP;
 
         // set implementation type
         for (int i = 0; i < scatradis->num_my_col_elements(); ++i)

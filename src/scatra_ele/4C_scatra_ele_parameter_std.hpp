@@ -10,9 +10,9 @@
 
 #include "4C_config.hpp"
 
-#include "4C_inpar_scatra.hpp"
 #include "4C_scatra_cardiac_monodomain_input.hpp"
 #include "4C_scatra_ele_parameter_base.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -41,9 +41,9 @@ namespace Discret
       bool is_ale() const { return is_ale_; };
       bool is_conservative() const { return is_conservative_; };
       bool spherical_coords() const { return sphericalcoords_; };
-      Inpar::ScaTra::FluxType calc_flux_domain() const { return calcflux_domain_; };
+      ScaTra::FluxType calc_flux_domain() const { return calcflux_domain_; };
       std::shared_ptr<std::vector<int>> write_flux_ids() const { return writefluxids_; };
-      Inpar::ScaTra::FdCheck fd_check() const { return fdcheck_; };
+      ScaTra::FdCheck fd_check() const { return fdcheck_; };
       double fd_check_eps() const { return fdcheckeps_; };
       double fd_check_tol() const { return fdchecktol_; };
       int prob_num() const { return probnum_; };
@@ -76,13 +76,13 @@ namespace Discret
 
       //! @name return stabilization parameters
       //! @{
-      Inpar::ScaTra::StabType stab_type() const { return stabtype_; };
-      Inpar::ScaTra::TauType tau_def() const { return whichtau_; };
-      Inpar::ScaTra::CharEleLength char_ele_length() const { return charelelength_; };
+      ScaTra::StabType stab_type() const { return stabtype_; };
+      ScaTra::TauType tau_def() const { return whichtau_; };
+      ScaTra::CharEleLength char_ele_length() const { return charelelength_; };
       double usfemgls_fac() const { return diffreastafac_; };
       bool rb_sub_gr_vel() const { return sgvel_; };
       bool assgd() const { return assgd_; };
-      Inpar::ScaTra::AssgdType assgd_type() const { return whichassgd_; };
+      ScaTra::AssgdType assgd_type() const { return whichassgd_; };
       bool tau_gp() const { return tau_gp_; };
       bool mat_gp() const { return mat_gp_; };
       double tau_value() const { return tau_value_; };
@@ -105,13 +105,13 @@ namespace Discret
       bool sphericalcoords_;
 
       //! flag for writing the flux vector fields
-      Inpar::ScaTra::FluxType calcflux_domain_;
+      ScaTra::FluxType calcflux_domain_;
 
       //! ids of scalars for which flux vectors are written (starting with 1)
       std::shared_ptr<std::vector<int>> writefluxids_;
 
       //! flag for finite difference check
-      Inpar::ScaTra::FdCheck fdcheck_;
+      ScaTra::FdCheck fdcheck_;
 
       //! perturbation magnitude for finite difference check
       double fdcheckeps_;
@@ -171,13 +171,13 @@ namespace Discret
       //! @name stabilization parameters
       //! @{
       //! type of stabilization
-      Inpar::ScaTra::StabType stabtype_;
+      ScaTra::StabType stabtype_;
 
       //! definition of stabilization parameter
-      Inpar::ScaTra::TauType whichtau_;
+      ScaTra::TauType whichtau_;
 
       //! definition of characteristic element length
-      Inpar::ScaTra::CharEleLength charelelength_;
+      ScaTra::CharEleLength charelelength_;
 
       //! parameter to switch between SUPG, GLS and USFEM
       double diffreastafac_;
@@ -189,7 +189,7 @@ namespace Discret
       bool assgd_;
 
       //! definition of artificial diffusion
-      Inpar::ScaTra::AssgdType whichassgd_;
+      ScaTra::AssgdType whichassgd_;
 
       //! flag for evaluation of tau at Gauss point
       bool tau_gp_;

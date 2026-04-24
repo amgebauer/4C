@@ -10,9 +10,9 @@
 
 #include "4C_config.hpp"
 
-#include "4C_inpar_scatra.hpp"
 #include "4C_membrane.hpp"
 #include "4C_membrane_scatra_eletypes.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -213,7 +213,7 @@ namespace Discret
       /*!
       \brief return ScaTra::ImplType
       */
-      const Inpar::ScaTra::ImplType& impl_type() const { return impltype_; };
+      const ScaTra::ImplType& impl_type() const { return impltype_; };
 
       //@}
 
@@ -225,7 +225,7 @@ namespace Discret
 
       //! @{
       //! scalar transport implementation type (physics)
-      Inpar::ScaTra::ImplType impltype_;
+      ScaTra::ImplType impltype_;
       //@}
 
      protected:

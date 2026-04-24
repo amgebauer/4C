@@ -24,51 +24,51 @@ bool Discret::Elements::Transport::read_element(const std::string& eletype,
   // read implementation type
   auto impltype = container.get<std::string>("TYPE");
   if (impltype == "Std")
-    impltype_ = Inpar::ScaTra::impltype_std;
+    impltype_ = ScaTra::impltype_std;
   else if (impltype == "AdvReac")
-    impltype_ = Inpar::ScaTra::impltype_advreac;
+    impltype_ = ScaTra::impltype_advreac;
   else if (impltype == "Chemo")
-    impltype_ = Inpar::ScaTra::impltype_chemo;
+    impltype_ = ScaTra::impltype_chemo;
   else if (impltype == "ChemoReac")
-    impltype_ = Inpar::ScaTra::impltype_chemoreac;
+    impltype_ = ScaTra::impltype_chemoreac;
   else if (impltype == "Aniso")
-    impltype_ = Inpar::ScaTra::impltype_aniso;
+    impltype_ = ScaTra::impltype_aniso;
   else if (impltype == "CardMono")
-    impltype_ = Inpar::ScaTra::impltype_cardiac_monodomain;
+    impltype_ = ScaTra::impltype_cardiac_monodomain;
   else if (impltype == "GR")
-    impltype_ = Inpar::ScaTra::impltype_gr;
+    impltype_ = ScaTra::impltype_gr;
   else if (impltype == "ElchDiffCond")
-    impltype_ = Inpar::ScaTra::impltype_elch_diffcond;
+    impltype_ = ScaTra::impltype_elch_diffcond;
   else if (impltype == "ElchDiffCondMultiScale")
-    impltype_ = Inpar::ScaTra::impltype_elch_diffcond_multiscale;
+    impltype_ = ScaTra::impltype_elch_diffcond_multiscale;
   else if (impltype == "ElchDiffCondThermo")
-    impltype_ = Inpar::ScaTra::impltype_elch_diffcond_thermo;
+    impltype_ = ScaTra::impltype_elch_diffcond_thermo;
   else if (impltype == "ElchScl")
-    impltype_ = Inpar::ScaTra::impltype_elch_scl;
+    impltype_ = ScaTra::impltype_elch_scl;
   else if (impltype == "ElchElectrode")
-    impltype_ = Inpar::ScaTra::impltype_elch_electrode;
+    impltype_ = ScaTra::impltype_elch_electrode;
   else if (impltype == "ElchElectrodeGrowth")
-    impltype_ = Inpar::ScaTra::impltype_elch_electrode_growth;
+    impltype_ = ScaTra::impltype_elch_electrode_growth;
   else if (impltype == "ElchElectrodeThermo")
-    impltype_ = Inpar::ScaTra::impltype_elch_electrode_thermo;
+    impltype_ = ScaTra::impltype_elch_electrode_thermo;
   else if (impltype == "ElchNP")
-    impltype_ = Inpar::ScaTra::impltype_elch_NP;
+    impltype_ = ScaTra::impltype_elch_NP;
   else if (impltype == "Loma")
-    impltype_ = Inpar::ScaTra::impltype_loma;
+    impltype_ = ScaTra::impltype_loma;
   else if (impltype == "Ls")
-    impltype_ = Inpar::ScaTra::impltype_levelset;
+    impltype_ = ScaTra::impltype_levelset;
   else if (impltype == "LsReinit")
-    impltype_ = Inpar::ScaTra::impltype_lsreinit;
+    impltype_ = ScaTra::impltype_lsreinit;
   else if (impltype == "Poro")
-    impltype_ = Inpar::ScaTra::impltype_poro;
+    impltype_ = ScaTra::impltype_poro;
   else if (impltype == "PoroReac")
-    impltype_ = Inpar::ScaTra::impltype_pororeac;
+    impltype_ = ScaTra::impltype_pororeac;
   else if (impltype == "PoroReacECM")
-    impltype_ = Inpar::ScaTra::impltype_pororeacECM;
+    impltype_ = ScaTra::impltype_pororeacECM;
   else if (impltype == "Hdg")
-    impltype_ = Inpar::ScaTra::impltype_std_hdg;
+    impltype_ = ScaTra::impltype_std_hdg;
   else if (impltype == "HdgCardMono")
-    impltype_ = Inpar::ScaTra::impltype_cardiac_monodomain_hdg;
+    impltype_ = ScaTra::impltype_cardiac_monodomain_hdg;
   else
     FOUR_C_THROW("Transport element received invalid implementation type!");
 

@@ -176,7 +176,7 @@ int Discret::Elements::SolidPoroPressureVelocityBasedP1<dim>::evaluate(
       if (la.size() > 1)
       {
         const bool with_scatra =
-            poro_ele_property_.impltype != Inpar::ScaTra::ImplType::impltype_undefined;
+            poro_ele_property_.impltype != ScaTra::ImplType::impltype_undefined;
 
         if (with_scatra)
         {
@@ -255,7 +255,7 @@ int Discret::Elements::SolidPoroPressureVelocityBasedP1<dim>::evaluate(
       if (la.size() > 1)
       {
         const bool with_scatra =
-            poro_ele_property_.impltype != Inpar::ScaTra::ImplType::impltype_undefined;
+            poro_ele_property_.impltype != ScaTra::ImplType::impltype_undefined;
 
         if (with_scatra)
         {
@@ -295,8 +295,7 @@ int Discret::Elements::SolidPoroPressureVelocityBasedP1<dim>::evaluate(
     }
     case Core::Elements::struct_calc_nlnstiffmass:
     {
-      const bool with_scatra =
-          poro_ele_property_.impltype != Inpar::ScaTra::ImplType::impltype_undefined;
+      const bool with_scatra = poro_ele_property_.impltype != ScaTra::ImplType::impltype_undefined;
 
       if (with_scatra)
       {
@@ -381,8 +380,7 @@ int Discret::Elements::SolidPoroPressureVelocityBasedP1<dim>::evaluate(
     }
     case Core::Elements::struct_poro_calc_fluidcoupling:
     {
-      const bool with_scatra =
-          poro_ele_property_.impltype != Inpar::ScaTra::ImplType::impltype_undefined;
+      const bool with_scatra = poro_ele_property_.impltype != ScaTra::ImplType::impltype_undefined;
 
       if (with_scatra)
       {

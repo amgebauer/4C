@@ -718,9 +718,9 @@ void SSTI::SSTIScatraStructureCloneStrategy::set_element_data(
     trans->set_dis_type(oldele->shape());
 
     // now check whether ImplType is reasonable and if set the ImplType
-    Inpar::ScaTra::ImplType impltype = SSI::ScatraStructureCloneStrategy::get_impl_type(oldele);
+    ScaTra::ImplType impltype = SSI::ScatraStructureCloneStrategy::get_impl_type(oldele);
 
-    if (impltype == Inpar::ScaTra::impltype_undefined)
+    if (impltype == ScaTra::impltype_undefined)
     {
       FOUR_C_THROW(
           "ScatraStructureCloneStrategy copies scatra discretization from structure "
@@ -733,10 +733,10 @@ void SSTI::SSTIScatraStructureCloneStrategy::set_element_data(
     else
     {
       // find the appropriate thermo type
-      if (impltype == Inpar::ScaTra::impltype_elch_electrode)
-        trans->set_impl_type(Inpar::ScaTra::impltype_elch_electrode_thermo);
-      else if (impltype == Inpar::ScaTra::impltype_elch_diffcond)
-        trans->set_impl_type(Inpar::ScaTra::impltype_elch_diffcond_thermo);
+      if (impltype == ScaTra::impltype_elch_electrode)
+        trans->set_impl_type(ScaTra::impltype_elch_electrode_thermo);
+      else if (impltype == ScaTra::impltype_elch_diffcond)
+        trans->set_impl_type(ScaTra::impltype_elch_diffcond_thermo);
       else
         FOUR_C_THROW("Something went wrong");
     }

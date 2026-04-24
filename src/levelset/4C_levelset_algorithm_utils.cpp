@@ -70,8 +70,7 @@ void LevelSet::LevelSetAlgorithm::add_problem_specific_parameters_and_vectors(
       discret_->set_state("phin", *phin_);
 
 #ifndef USE_PHIN_FOR_VEL
-      if (useprojectedreinitvel_ == Inpar::ScaTra::vel_reinit_node_based)
-        calc_node_based_reinit_vel();
+      if (useprojectedreinitvel_ == ScaTra::vel_reinit_node_based) calc_node_based_reinit_vel();
 #endif
 
       // add nodal velocity field, if required
@@ -538,7 +537,7 @@ void LevelSet::LevelSetAlgorithm::redistribute(Core::LinAlg::Graph& nodegraph)
   // initialize standard (stabilized) system matrix (and save its graph!)
   // in standard case, but do not save the graph if fine-scale subgrid
   // diffusivity is used in non-incremental case
-  if (fssgd_ != Inpar::ScaTra::fssugrdiff_no and not incremental_)
+  if (fssgd_ != ScaTra::fssugrdiff_no and not incremental_)
     // sysmat_ = Teuchos::rcp(new Core::LinAlg::SparseMatrix(*dofrowmap,27));
     // cf constructor
     sysmat_ = std::make_shared<Core::LinAlg::SparseMatrix>(*dofrowmap, 27, false, true);
@@ -655,7 +654,7 @@ void LevelSet::LevelSetAlgorithm::redistribute(Core::LinAlg::Graph& nodegraph)
     Core::LinAlg::export_to(*old, *initialphireinit_);
   }
 
-  if (fssgd_ != Inpar::ScaTra::fssugrdiff_no)
+  if (fssgd_ != ScaTra::fssugrdiff_no)
   {
     FOUR_C_THROW("No redistribution for AVM3 subgrid stuff.");
   }

@@ -14,8 +14,8 @@
 #include "4C_fs3i_problem_access.hpp"
 #include "4C_fsi_monolithic.hpp"
 #include "4C_global_data.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_scatra_algorithm.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_scatra_timint_implicit.hpp"
 
 #include <Teuchos_StandardParameterEntryValidators.hpp>
@@ -156,7 +156,7 @@ bool FS3I::PartFS3I1Wc::scatra_convergence_check(const int itnum)
   const auto* problem = FS3I::Utils::problem_from_instance();
   const Teuchos::ParameterList& fs3idyn = problem->f_s3_i_dynamic_params();
   auto scatra_solvtype =
-      Teuchos::getIntegralValue<Inpar::ScaTra::SolverType>(fs3idyn, "SCATRA_SOLVERTYPE");
+      Teuchos::getIntegralValue<ScaTra::SolverType>(fs3idyn, "SCATRA_SOLVERTYPE");
 
   double conresnorm(0.0);
   scatrarhs_->norm_2(&conresnorm);
@@ -165,7 +165,7 @@ bool FS3I::PartFS3I1Wc::scatra_convergence_check(const int itnum)
 
   switch (scatra_solvtype)
   {
-    case Inpar::ScaTra::solvertype_linear_incremental:
+    case ScaTra::solvertype_linear_incremental:
     {
       // print the screen info
       if (Core::Communication::my_mpi_rank(get_comm()) == 0)
@@ -179,7 +179,7 @@ bool FS3I::PartFS3I1Wc::scatra_convergence_check(const int itnum)
       return true;
     }
     break;
-    case Inpar::ScaTra::solvertype_nonlinear:
+    case ScaTra::solvertype_nonlinear:
     {
       // some input parameters for the scatra fields
       const Teuchos::ParameterList& scatradyn = problem->scalar_transport_dynamic_params();

@@ -1483,7 +1483,7 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_and_assemble_capacitive_contribution
 /*--------------------------------------------------------------------------------------*
  *--------------------------------------------------------------------------------------*/
 void ScaTra::MeshtyingStrategyS2I::evaluate_mortar_cell(const Core::FE::Discretization& idiscret,
-    Mortar::IntCell& cell, const Inpar::ScaTra::ImplType& impltype, Mortar::Element& slaveelement,
+    Mortar::IntCell& cell, const ScaTra::ImplType& impltype, Mortar::Element& slaveelement,
     Mortar::Element& masterelement, Core::Elements::LocationArray& la_slave,
     Core::Elements::LocationArray& la_master, const Teuchos::ParameterList& params,
     Core::LinAlg::SerialDenseMatrix& cellmatrix1, Core::LinAlg::SerialDenseMatrix& cellmatrix2,
@@ -1502,13 +1502,13 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_mortar_cell(const Core::FE::Discreti
 /*--------------------------------------------------------------------------------------*
  *--------------------------------------------------------------------------------------*/
 void ScaTra::MeshtyingStrategyS2I::evaluate_slave_node(const Core::FE::Discretization& idiscret,
-    const Mortar::Node& slavenode, const double& lumpedarea,
-    const Inpar::ScaTra::ImplType& impltype, Mortar::Element& slaveelement,
-    Mortar::Element& masterelement, Core::Elements::LocationArray& la_slave,
-    Core::Elements::LocationArray& la_master, const Teuchos::ParameterList& params,
-    Core::LinAlg::SerialDenseMatrix& ntsmatrix1, Core::LinAlg::SerialDenseMatrix& ntsmatrix2,
-    Core::LinAlg::SerialDenseMatrix& ntsmatrix3, Core::LinAlg::SerialDenseMatrix& ntsmatrix4,
-    Core::LinAlg::SerialDenseVector& ntsvector1, Core::LinAlg::SerialDenseVector& ntsvector2) const
+    const Mortar::Node& slavenode, const double& lumpedarea, const ScaTra::ImplType& impltype,
+    Mortar::Element& slaveelement, Mortar::Element& masterelement,
+    Core::Elements::LocationArray& la_slave, Core::Elements::LocationArray& la_master,
+    const Teuchos::ParameterList& params, Core::LinAlg::SerialDenseMatrix& ntsmatrix1,
+    Core::LinAlg::SerialDenseMatrix& ntsmatrix2, Core::LinAlg::SerialDenseMatrix& ntsmatrix3,
+    Core::LinAlg::SerialDenseMatrix& ntsmatrix4, Core::LinAlg::SerialDenseVector& ntsvector1,
+    Core::LinAlg::SerialDenseVector& ntsvector2) const
 {
   // evaluate single slave-side node
   ScaTra::MortarCellFactory::mortar_cell_calc(
@@ -1522,11 +1522,11 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_slave_node(const Core::FE::Discretiz
 /*--------------------------------------------------------------------------------------*
  *--------------------------------------------------------------------------------------*/
 void ScaTra::MeshtyingStrategyS2I::evaluate_mortar_element(const Core::FE::Discretization& idiscret,
-    Mortar::Element& element, const Inpar::ScaTra::ImplType& impltype,
-    Core::Elements::LocationArray& la, const Teuchos::ParameterList& params,
-    Core::LinAlg::SerialDenseMatrix& elematrix1, Core::LinAlg::SerialDenseMatrix& elematrix2,
-    Core::LinAlg::SerialDenseMatrix& elematrix3, Core::LinAlg::SerialDenseMatrix& elematrix4,
-    Core::LinAlg::SerialDenseVector& elevector1, Core::LinAlg::SerialDenseVector& elevector2) const
+    Mortar::Element& element, const ScaTra::ImplType& impltype, Core::Elements::LocationArray& la,
+    const Teuchos::ParameterList& params, Core::LinAlg::SerialDenseMatrix& elematrix1,
+    Core::LinAlg::SerialDenseMatrix& elematrix2, Core::LinAlg::SerialDenseMatrix& elematrix3,
+    Core::LinAlg::SerialDenseMatrix& elematrix4, Core::LinAlg::SerialDenseVector& elevector1,
+    Core::LinAlg::SerialDenseVector& elevector2) const
 {
   // evaluate single mortar element
   ScaTra::MortarCellFactory::mortar_cell_calc(
@@ -1580,7 +1580,7 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_mortar_cells(const Core::FE::Discret
     FOUR_C_THROW("Cannot access scatra-scatra interface coupling condition!");
 
   // extract mortar integration cells associated with current condition
-  const std::vector<std::pair<std::shared_ptr<Mortar::IntCell>, Inpar::ScaTra::ImplType>>& cells =
+  const std::vector<std::pair<std::shared_ptr<Mortar::IntCell>, ScaTra::ImplType>>& cells =
       imortarcells_.at(condition->parameters().get<int>("ConditionID"));
 
   // loop over all mortar integration cells
@@ -1691,7 +1691,7 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_nts(
 
     // evaluate current slave-side node
     evaluate_slave_node(idiscret, *slavenode, islavenodeslumpedareas.local_values_as_span()[inode],
-        (Inpar::ScaTra::ImplType)islavenodesimpltypes.get_local_values()[inode], *slaveelement,
+        (ScaTra::ImplType)islavenodesimpltypes.get_local_values()[inode], *slaveelement,
         *masterelement, la_slave, la_master, params, strategy.cell_matrix1(),
         strategy.cell_matrix2(), strategy.cell_matrix3(), strategy.cell_matrix4(),
         strategy.cell_vector1(), strategy.cell_vector2());
@@ -1748,7 +1748,7 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_mortar_elements(const Core::LinAlg::
 
     // evaluate current mortar element
     evaluate_mortar_element(idiscret, *element,
-        (Inpar::ScaTra::ImplType)ieleimpltypes.get_local_values()[ielement], la, params,
+        (ScaTra::ImplType)ieleimpltypes.get_local_values()[ielement], la, params,
         strategy.cell_matrix1(), strategy.cell_matrix2(), strategy.cell_matrix3(),
         strategy.cell_matrix4(), strategy.cell_vector1(), strategy.cell_vector2());
 
@@ -1760,7 +1760,7 @@ void ScaTra::MeshtyingStrategyS2I::evaluate_mortar_elements(const Core::LinAlg::
 /*--------------------------------------------------------------------------------------*
  *--------------------------------------------------------------------------------------*/
 ScaTra::MortarCellInterface* ScaTra::MortarCellFactory::mortar_cell_calc(
-    const Inpar::ScaTra::ImplType& impltype, const Mortar::Element& slaveelement,
+    const ScaTra::ImplType& impltype, const Mortar::Element& slaveelement,
     const Mortar::Element& masterelement, const Inpar::S2I::CouplingType& couplingtype,
     const Inpar::S2I::InterfaceSides& lmside, const std::string& disname)
 {
@@ -1797,7 +1797,7 @@ ScaTra::MortarCellInterface* ScaTra::MortarCellFactory::mortar_cell_calc(
  *--------------------------------------------------------------------------------------*/
 template <Core::FE::CellType distype_s>
 ScaTra::MortarCellInterface* ScaTra::MortarCellFactory::mortar_cell_calc(
-    const Inpar::ScaTra::ImplType& impltype, const Mortar::Element& masterelement,
+    const ScaTra::ImplType& impltype, const Mortar::Element& masterelement,
     const Inpar::S2I::CouplingType& couplingtype, const Inpar::S2I::InterfaceSides& lmside,
     const int& numdofpernode_slave, const std::string& disname)
 {
@@ -1834,7 +1834,7 @@ ScaTra::MortarCellInterface* ScaTra::MortarCellFactory::mortar_cell_calc(
  *--------------------------------------------------------------------------------------*/
 template <Core::FE::CellType distype_s, Core::FE::CellType distype_m>
 ScaTra::MortarCellInterface* ScaTra::MortarCellFactory::mortar_cell_calc(
-    const Inpar::ScaTra::ImplType& impltype, const Inpar::S2I::CouplingType& couplingtype,
+    const ScaTra::ImplType& impltype, const Inpar::S2I::CouplingType& couplingtype,
     const Inpar::S2I::InterfaceSides& lmside, const int& numdofpernode_slave,
     const int& numdofpernode_master, const std::string& disname)
 {
@@ -1842,28 +1842,28 @@ ScaTra::MortarCellInterface* ScaTra::MortarCellFactory::mortar_cell_calc(
   // implementation type
   switch (impltype)
   {
-    case Inpar::ScaTra::impltype_std:
+    case ScaTra::impltype_std:
     {
       return ScaTra::MortarCellCalc<distype_s, distype_m>::instance(
           couplingtype, lmside, numdofpernode_slave, numdofpernode_master, disname);
       break;
     }
 
-    case Inpar::ScaTra::impltype_elch_electrode:
+    case ScaTra::impltype_elch_electrode:
     {
       return ScaTra::MortarCellCalcElch<distype_s, distype_m>::instance(
           couplingtype, lmside, numdofpernode_slave, numdofpernode_master, disname);
       break;
     }
 
-    case Inpar::ScaTra::impltype_elch_electrode_thermo:
+    case ScaTra::impltype_elch_electrode_thermo:
     {
       return ScaTra::MortarCellCalcElchSTIThermo<distype_s, distype_m>::instance(
           couplingtype, lmside, numdofpernode_slave, numdofpernode_master, disname);
       break;
     }
 
-    case Inpar::ScaTra::impltype_thermo_elch_electrode:
+    case ScaTra::impltype_thermo_elch_electrode:
     {
       return ScaTra::MortarCellCalcSTIElch<distype_s, distype_m>::instance(
           couplingtype, lmside, numdofpernode_slave, numdofpernode_master, disname);
@@ -1953,10 +1953,10 @@ void ScaTra::MeshtyingStrategyS2I::setup_meshtying()
           {
             has_capacitive_contributions_ = true;
 
-            auto timeintscheme = Teuchos::getIntegralValue<Inpar::ScaTra::TimeIntegrationScheme>(
+            auto timeintscheme = Teuchos::getIntegralValue<ScaTra::TimeIntegrationScheme>(
                 *(scatratimint_->scatra_parameter_list()), "TIMEINTEGR");
-            if (not(timeintscheme == Inpar::ScaTra::timeint_bdf2 or
-                    timeintscheme == Inpar::ScaTra::timeint_one_step_theta))
+            if (not(timeintscheme == ScaTra::timeint_bdf2 or
+                    timeintscheme == ScaTra::timeint_one_step_theta))
             {
               FOUR_C_THROW(
                   "Solution of capacitive interface contributions, i.e. additional transient terms "
@@ -2300,9 +2300,8 @@ void ScaTra::MeshtyingStrategyS2I::setup_meshtying()
           for (unsigned icell = 0; icell < imortarcells.size(); ++icell)
           {
             imortarcells_[condid][icell] =
-                std::pair<std::shared_ptr<Mortar::IntCell>, Inpar::ScaTra::ImplType>(
-                    imortarcells[icell],
-                    static_cast<Inpar::ScaTra::ImplType>(
+                std::pair<std::shared_ptr<Mortar::IntCell>, ScaTra::ImplType>(imortarcells[icell],
+                    static_cast<ScaTra::ImplType>(
                         impltypes_col.get_local_values()[interface.source_col_elements()->lid(
                             imortarcells[icell]->get_slave_id())]));
           }
@@ -2351,7 +2350,7 @@ void ScaTra::MeshtyingStrategyS2I::setup_meshtying()
               islavenodesimpltypes_[condid];
           islavenodesimpltypes =
               std::make_shared<Core::LinAlg::Vector<int>>(noderowmap_slave, false);
-          islavenodesimpltypes->put_value(Inpar::ScaTra::impltype_undefined);
+          islavenodesimpltypes->put_value(ScaTra::impltype_undefined);
 
           // loop over all slave-side nodes
           for (int inode = 0; inode < noderowmap_slave.num_my_elements(); ++inode)
@@ -2424,7 +2423,7 @@ void ScaTra::MeshtyingStrategyS2I::setup_meshtying()
 
           // initialize vector for physical implementation types of slave-side elements
           Core::LinAlg::Vector<int> islaveelementsimpltypes(elecolmap_slave, false);
-          islaveelementsimpltypes.put_value(Inpar::ScaTra::impltype_undefined);
+          islaveelementsimpltypes.put_value(ScaTra::impltype_undefined);
 
           // loop over all slave-side elements
           for (int ielement = 0; ielement < elecolmap_slave.num_my_elements(); ++ielement)
@@ -3498,7 +3497,7 @@ void ScaTra::MeshtyingStrategyS2I::init_meshtying()
           "layer growth!");
     }
     if (intlayergrowth_evaluation_ == Inpar::S2I::growth_evaluation_monolithic and
-        scatratimint_->method_name() != Inpar::ScaTra::timeint_one_step_theta)
+        scatratimint_->method_name() != ScaTra::timeint_one_step_theta)
     {
       FOUR_C_THROW(
           "Monolithic evaluation of scatra-scatra interface layer growth only implemented for "
@@ -3861,7 +3860,7 @@ void ScaTra::MeshtyingStrategyS2I::solve(const std::shared_ptr<Core::LinAlg::Sol
           extendedmaps_->insert_vector(*growthresidual_, 1, *extendedresidual);
 
           // perform finite-difference check if desired
-          if (scatratimint_->fd_check_type() == Inpar::ScaTra::fdcheck_global_extended)
+          if (scatratimint_->fd_check_type() == ScaTra::fdcheck_global_extended)
             fd_check(*extendedsystemmatrix_, *extendedresidual);
 
           // assemble extended increment vector

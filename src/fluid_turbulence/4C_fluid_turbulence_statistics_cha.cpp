@@ -3085,7 +3085,7 @@ void FLD::TurbulenceStatisticsCha::evaluate_residuals(
       // set parameters required for evaluation of residuals, etc.
       scatraeleparams_.set<double>("time-step length", scatraparams_->get<double>("TIMESTEP"));
       scatraeleparams_.set<int>("fs subgrid diffusivity",
-          Teuchos::getIntegralValue<Inpar::ScaTra::FSSUGRDIFF>(*scatraparams_, "FSSUGRDIFF"));
+          Teuchos::getIntegralValue<ScaTra::FSSUGRDIFF>(*scatraparams_, "FSSUGRDIFF"));
       scatraeleparams_.sublist("TURBULENCE MODEL") =
           scatraextraparams_->sublist("TURBULENCE MODEL");
       scatraeleparams_.sublist("SUBGRID VISCOSITY") =

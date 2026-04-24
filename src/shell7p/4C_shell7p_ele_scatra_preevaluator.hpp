@@ -11,7 +11,7 @@
 #include "4C_config.hpp"
 
 #include "4C_fem_general_element.hpp"
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 
 #include <vector>
 

@@ -12,7 +12,7 @@
 
 #include "4C_fem_general_cell_type.hpp"
 #include "4C_fem_general_cell_type_traits.hpp"
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_solid_ele_calc_displacement_based.hpp"
 #include "4C_solid_ele_calc_displacement_based_linear_kinematics.hpp"
 #include "4C_solid_ele_calc_eas.hpp"
@@ -35,7 +35,7 @@ namespace Discret::Elements
     SolidElementProperties<dim> solid{};
 
     //! scalar transport implementation type (physics)
-    Inpar::ScaTra::ImplType impltype{Inpar::ScaTra::ImplType::impltype_undefined};
+    ScaTra::ImplType impltype{ScaTra::ImplType::impltype_undefined};
   };
 
   namespace Internal

@@ -1099,8 +1099,8 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::prepare_stabilization(
     // Taylor, Hughes, and Zarins
     switch (my::scatrapara_->tau_def())
     {
-      case Inpar::ScaTra::tau_taylor_hughes_zarins:
-      case Inpar::ScaTra::tau_taylor_hughes_zarins_wo_dt:
+      case ScaTra::tau_taylor_hughes_zarins:
+      case ScaTra::tau_taylor_hughes_zarins_wo_dt:
       {
         migrationstab_ = true;
         break;
@@ -1128,8 +1128,8 @@ void Discret::Elements::ScaTraEleCalcElchNP<distype>::prepare_stabilization(
 
       switch (my::scatrapara_->tau_def())
       {
-        case Inpar::ScaTra::tau_taylor_hughes_zarins:
-        case Inpar::ScaTra::tau_taylor_hughes_zarins_wo_dt:
+        case ScaTra::tau_taylor_hughes_zarins:
+        case ScaTra::tau_taylor_hughes_zarins_wo_dt:
         {
           // Calculate derivative of tau w.r.t. electric potential
           calc_tau_der_pot_taylor_hughes_zarins(tauderpot[k], tau[k], densnp[k],

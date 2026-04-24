@@ -7,8 +7,8 @@
 
 #include "4C_fs3i_input.hpp"
 
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_input_spec_builders.hpp"
+#include "4C_scatra_input.hpp"
 FOUR_C_NAMESPACE_OPEN
 
 
@@ -30,13 +30,13 @@ std::vector<Core::IO::InputSpec> FS3I::valid_parameters()
               {.description = "Increment for writing solution", .default_value = 1}),
           parameter<int>(
               "RESTARTEVERY", {.description = "Increment for writing restart", .default_value = 1}),
-          deprecated_selection<Inpar::ScaTra::SolverType>("SCATRA_SOLVERTYPE",
+          deprecated_selection<ScaTra::SolverType>("SCATRA_SOLVERTYPE",
               {
-                  {"linear", Inpar::ScaTra::solvertype_linear_incremental},
-                  {"nonlinear", Inpar::ScaTra::solvertype_nonlinear},
+                  {"linear", ScaTra::solvertype_linear_incremental},
+                  {"nonlinear", ScaTra::solvertype_nonlinear},
               },
               {.description = "type of scalar transport solver",
-                  .default_value = Inpar::ScaTra::solvertype_nonlinear}),
+                  .default_value = ScaTra::solvertype_nonlinear}),
           parameter<bool>(
               "INF_PERM", {.description = "Flag for infinite permeability", .default_value = true}),
           deprecated_selection<std::string>("CONSTHERMPRESS", {"No_energy", "No_mass", "Yes"},
@@ -54,22 +54,22 @@ std::vector<Core::IO::InputSpec> FS3I::valid_parameters()
               {.description = "number of linear solver used for structural problem",
                   .default_value = -1}),
 
-          deprecated_selection<Inpar::ScaTra::ConvForm>("STRUCTSCAL_CONVFORM",
+          deprecated_selection<ScaTra::ConvForm>("STRUCTSCAL_CONVFORM",
               {
-                  {"convective", Inpar::ScaTra::convform_convective},
-                  {"conservative", Inpar::ScaTra::convform_conservative},
+                  {"convective", ScaTra::convform_convective},
+                  {"conservative", ScaTra::convform_conservative},
               },
               {.description = "form of convective term of structure scalar",
-                  .default_value = Inpar::ScaTra::convform_conservative}),
+                  .default_value = ScaTra::convform_conservative}),
 
 
-          deprecated_selection<Inpar::ScaTra::InitialField>("STRUCTSCAL_INITIALFIELD",
+          deprecated_selection<ScaTra::InitialField>("STRUCTSCAL_INITIALFIELD",
               {
-                  {"zero_field", Inpar::ScaTra::initfield_zero_field},
-                  {"field_by_function", Inpar::ScaTra::initfield_field_by_function},
+                  {"zero_field", ScaTra::initfield_zero_field},
+                  {"field_by_function", ScaTra::initfield_field_by_function},
               },
               {.description = "Initial Field for structure scalar transport problem",
-                  .default_value = Inpar::ScaTra::initfield_zero_field}),
+                  .default_value = ScaTra::initfield_zero_field}),
 
           parameter<int>("STRUCTSCAL_INITFUNCNO",
               {.description = "function number for structure scalar transport initial field",
@@ -95,17 +95,17 @@ std::vector<Core::IO::InputSpec> FS3I::valid_parameters()
                   .default_value = coupling_match}),
 
           // type of scalar transport
-          deprecated_selection<Inpar::ScaTra::ImplType>("FLUIDSCAL_SCATRATYPE",
+          deprecated_selection<ScaTra::ImplType>("FLUIDSCAL_SCATRATYPE",
               {
-                  {"Undefined", Inpar::ScaTra::impltype_undefined},
-                  {"ConvectionDiffusion", Inpar::ScaTra::impltype_std},
-                  {"Loma", Inpar::ScaTra::impltype_loma},
-                  {"Advanced_Reaction", Inpar::ScaTra::impltype_advreac},
-                  {"Chemotaxis", Inpar::ScaTra::impltype_chemo},
-                  {"Chemo_Reac", Inpar::ScaTra::impltype_chemoreac},
+                  {"Undefined", ScaTra::impltype_undefined},
+                  {"ConvectionDiffusion", ScaTra::impltype_std},
+                  {"Loma", ScaTra::impltype_loma},
+                  {"Advanced_Reaction", ScaTra::impltype_advreac},
+                  {"Chemotaxis", ScaTra::impltype_chemo},
+                  {"Chemo_Reac", ScaTra::impltype_chemoreac},
               },
               {.description = "Type of scalar transport problem",
-                  .default_value = Inpar::ScaTra::impltype_std}),
+                  .default_value = ScaTra::impltype_std}),
 
           // Restart from FSI instead of FS3I
           parameter<bool>("RESTART_FROM_PART_FSI",
@@ -144,7 +144,7 @@ std::vector<Core::IO::InputSpec> FS3I::valid_parameters()
   /// HACK!
   /// reuse the parameters from scatra
   specs.push_back(group("FS3I DYNAMIC/STRUCTURE SCALAR STABILIZATION",
-      {Inpar::ScaTra::all_specs_for_scatra_stabilization()}, {.required = false}));
+      {ScaTra::all_specs_for_scatra_stabilization()}, {.required = false}));
   return specs;
 }
 

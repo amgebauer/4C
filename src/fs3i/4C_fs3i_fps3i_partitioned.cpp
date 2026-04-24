@@ -18,7 +18,6 @@
 #include "4C_fs3i_problem_access.hpp"
 #include "4C_fsi_utils.hpp"
 #include "4C_global_data.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_control.hpp"
 #include "4C_linalg_utils_sparse_algebra_assemble.hpp"
 #include "4C_linalg_utils_sparse_algebra_create.hpp"
@@ -30,6 +29,7 @@
 #include "4C_poroelast_scatra_utils_clonestrategy.hpp"
 #include "4C_scatra_algorithm.hpp"
 #include "4C_scatra_ele.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_scatra_timint_implicit.hpp"
 #include "4C_scatra_utils_clonestrategy.hpp"
 
@@ -138,7 +138,7 @@ void FS3I::PartFPS3I::init()
 
   // determine type of scalar transport
   const auto impltype_fluid =
-      Teuchos::getIntegralValue<Inpar::ScaTra::ImplType>(fs3idyn, "FLUIDSCAL_SCATRATYPE");
+      Teuchos::getIntegralValue<ScaTra::ImplType>(fs3idyn, "FLUIDSCAL_SCATRATYPE");
 
   //---------------------------------------------------------------------
   // create discretization for fluid-based scalar transport from and
@@ -245,7 +245,7 @@ void FS3I::PartFPS3I::init()
   // and rule out unsupported versions of generalized-alpha time-integration
   // scheme (as well as other inappropriate schemes) for fluid subproblem
   auto scatratimealgo =
-      Teuchos::getIntegralValue<Inpar::ScaTra::TimeIntegrationScheme>(scatradyn, "TIMEINTEGR");
+      Teuchos::getIntegralValue<ScaTra::TimeIntegrationScheme>(scatradyn, "TIMEINTEGR");
   auto fluidtimealgo =
       Teuchos::getIntegralValue<Inpar::FLUID::TimeIntegrationScheme>(fluiddyn, "TIMEINTEGR");
   auto structtimealgo =
@@ -253,7 +253,7 @@ void FS3I::PartFPS3I::init()
 
   if (fluidtimealgo == Inpar::FLUID::timeint_one_step_theta)
   {
-    if (scatratimealgo != Inpar::ScaTra::timeint_one_step_theta or
+    if (scatratimealgo != ScaTra::timeint_one_step_theta or
         structtimealgo != Inpar::Solid::DynamicType::OneStepTheta)
       FOUR_C_THROW(
           "Partitioned FS3I computations should feature consistent time-integration schemes for "
@@ -269,7 +269,7 @@ void FS3I::PartFPS3I::init()
   }
   else if (fluidtimealgo == Inpar::FLUID::timeint_afgenalpha)
   {
-    if (scatratimealgo != Inpar::ScaTra::timeint_gen_alpha or
+    if (scatratimealgo != ScaTra::timeint_gen_alpha or
         structtimealgo != Inpar::Solid::DynamicType::GenAlpha)
       FOUR_C_THROW(
           "Partitioned FS3I computations should feature consistent time-integration schemes for "
@@ -628,12 +628,11 @@ void FS3I::PartFPS3I::set_velocity_fields()
 {
   Global::Problem* problem = FS3I::Utils::problem_from_instance();
   const Teuchos::ParameterList& scatradyn = problem->scalar_transport_dynamic_params();
-  const auto cdvel =
-      Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
+  const auto cdvel = Teuchos::getIntegralValue<ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
   switch (cdvel)
   {
-    case Inpar::ScaTra::velocity_zero:
-    case Inpar::ScaTra::velocity_function:
+    case ScaTra::velocity_zero:
+    case ScaTra::velocity_function:
     {
       for (auto scatra : scatravec_)
       {
@@ -641,7 +640,7 @@ void FS3I::PartFPS3I::set_velocity_fields()
       }
       break;
     }
-    case Inpar::ScaTra::velocity_Navier_Stokes:
+    case ScaTra::velocity_Navier_Stokes:
     {
       std::vector<std::shared_ptr<const Core::LinAlg::Vector<double>>> convel;
       std::vector<std::shared_ptr<const Core::LinAlg::Vector<double>>> vel;

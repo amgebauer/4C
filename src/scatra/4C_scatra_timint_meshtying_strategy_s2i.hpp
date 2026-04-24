@@ -17,10 +17,10 @@
 #include "4C_fem_general_element.hpp"
 #include "4C_fem_general_utils_local_connectivity_matrices.hpp"
 #include "4C_inpar_s2i.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_runtime_csv_writer.hpp"
 #include "4C_linalg_fevector.hpp"
 #include "4C_linalg_serialdensevector.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_scatra_timint_meshtying_strategy_base.hpp"
 
 FOUR_C_NAMESPACE_OPEN
@@ -319,7 +319,7 @@ namespace ScaTra
     std::map<int, std::shared_ptr<Coupling::Adapter::CouplingMortar>> icoupmortar_;
 
     //! mortar integration cells
-    std::map<int, std::vector<std::pair<std::shared_ptr<Mortar::IntCell>, Inpar::ScaTra::ImplType>>>
+    std::map<int, std::vector<std::pair<std::shared_ptr<Mortar::IntCell>, ScaTra::ImplType>>>
         imortarcells_;
 
     //! flag for parallel redistribution of mortar interfaces
@@ -520,7 +520,7 @@ namespace ScaTra
      * @param cellvector2    cell vector 2
      */
     void evaluate_mortar_cell(const Core::FE::Discretization& idiscret, Mortar::IntCell& cell,
-        const Inpar::ScaTra::ImplType& impltype, Mortar::Element& slaveelement,
+        const ScaTra::ImplType& impltype, Mortar::Element& slaveelement,
         Mortar::Element& masterelement, Core::Elements::LocationArray& la_slave,
         Core::Elements::LocationArray& la_master, const Teuchos::ParameterList& params,
         Core::LinAlg::SerialDenseMatrix& cellmatrix1, Core::LinAlg::SerialDenseMatrix& cellmatrix2,
@@ -548,13 +548,12 @@ namespace ScaTra
      * @param ntsvector2     node-to-segment vector 2
      */
     void evaluate_slave_node(const Core::FE::Discretization& idiscret,
-        const Mortar::Node& slavenode, const double& lumpedarea,
-        const Inpar::ScaTra::ImplType& impltype, Mortar::Element& slaveelement,
-        Mortar::Element& masterelement, Core::Elements::LocationArray& la_slave,
-        Core::Elements::LocationArray& la_master, const Teuchos::ParameterList& params,
-        Core::LinAlg::SerialDenseMatrix& ntsmatrix1, Core::LinAlg::SerialDenseMatrix& ntsmatrix2,
-        Core::LinAlg::SerialDenseMatrix& ntsmatrix3, Core::LinAlg::SerialDenseMatrix& ntsmatrix4,
-        Core::LinAlg::SerialDenseVector& ntsvector1,
+        const Mortar::Node& slavenode, const double& lumpedarea, const ScaTra::ImplType& impltype,
+        Mortar::Element& slaveelement, Mortar::Element& masterelement,
+        Core::Elements::LocationArray& la_slave, Core::Elements::LocationArray& la_master,
+        const Teuchos::ParameterList& params, Core::LinAlg::SerialDenseMatrix& ntsmatrix1,
+        Core::LinAlg::SerialDenseMatrix& ntsmatrix2, Core::LinAlg::SerialDenseMatrix& ntsmatrix3,
+        Core::LinAlg::SerialDenseMatrix& ntsmatrix4, Core::LinAlg::SerialDenseVector& ntsvector1,
         Core::LinAlg::SerialDenseVector& ntsvector2) const;
 
     /*!
@@ -573,7 +572,7 @@ namespace ScaTra
      * @param elevector2 element vector 2
      */
     void evaluate_mortar_element(const Core::FE::Discretization& idiscret, Mortar::Element& element,
-        const Inpar::ScaTra::ImplType& impltype, Core::Elements::LocationArray& la,
+        const ScaTra::ImplType& impltype, Core::Elements::LocationArray& la,
         const Teuchos::ParameterList& params, Core::LinAlg::SerialDenseMatrix& elematrix1,
         Core::LinAlg::SerialDenseMatrix& elematrix2, Core::LinAlg::SerialDenseMatrix& elematrix3,
         Core::LinAlg::SerialDenseMatrix& elematrix4, Core::LinAlg::SerialDenseVector& elevector1,
@@ -1055,7 +1054,7 @@ namespace ScaTra
     //! provide instance of mortar cell evaluation class of particular slave-side discretization
     //! type
     static MortarCellInterface* mortar_cell_calc(
-        const Inpar::ScaTra::ImplType&
+        const ScaTra::ImplType&
             impltype,  //!< physical implementation type of mortar integration cell
         const Mortar::Element& slaveelement,           //!< slave-side mortar element
         const Mortar::Element& masterelement,          //!< master-side mortar element
@@ -1070,7 +1069,7 @@ namespace ScaTra
     //! discretization types
     template <Core::FE::CellType distype_s>
     static MortarCellInterface* mortar_cell_calc(
-        const Inpar::ScaTra::ImplType&
+        const ScaTra::ImplType&
             impltype,  //!< physical implementation type of mortar integration cell
         const Mortar::Element& masterelement,          //!< master-side mortar element
         const Inpar::S2I::CouplingType& couplingtype,  //!< flag for meshtying method
@@ -1083,7 +1082,7 @@ namespace ScaTra
     //! provide specific instance of mortar cell evaluation class
     template <Core::FE::CellType distype_s, Core::FE::CellType distype_m>
     static MortarCellInterface* mortar_cell_calc(
-        const Inpar::ScaTra::ImplType&
+        const ScaTra::ImplType&
             impltype,  //!< physical implementation type of mortar integration cell
         const Inpar::S2I::CouplingType& couplingtype,  //!< flag for meshtying method
         const Inpar::S2I::InterfaceSides&

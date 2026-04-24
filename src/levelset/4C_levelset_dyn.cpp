@@ -11,8 +11,8 @@
 #include "4C_fem_discretization.hpp"
 #include "4C_fem_dofset_predefineddofnumber.hpp"
 #include "4C_global_data.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_levelset_algorithm.hpp"
+#include "4C_scatra_input.hpp"
 
 #include <Teuchos_ParameterList.hpp>
 #include <Teuchos_StandardParameterEntryValidators.hpp>
@@ -49,9 +49,8 @@ void levelset_dyn(int restart)
   const Teuchos::ParameterList& scatradyn = problem->scalar_transport_dynamic_params();
 
   // check velocity field
-  const auto veltype =
-      Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
-  if (veltype != Inpar::ScaTra::velocity_function)
+  const auto veltype = Teuchos::getIntegralValue<ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
+  if (veltype != ScaTra::velocity_function)
     FOUR_C_THROW(
         "Other velocity fields than a field given by a function not yet supported for level-set "
         "problems");

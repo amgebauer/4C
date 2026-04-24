@@ -188,8 +188,8 @@ void SSTI::SSTIMono::init(MPI_Comm comm, const Teuchos::ParameterList& sstitimep
     const Teuchos::ParameterList& structparams)
 {
   // check input parameters for scalar transport field
-  if (Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(scatraparams, "VELOCITYFIELD") !=
-      Inpar::ScaTra::velocity_Navier_Stokes)
+  if (Teuchos::getIntegralValue<ScaTra::VelocityField>(scatraparams, "VELOCITYFIELD") !=
+      ScaTra::velocity_Navier_Stokes)
     FOUR_C_THROW("Invalid type of velocity field for scalar-structure interaction!");
 
   // call base class routine

@@ -10,7 +10,7 @@
 
 #include "4C_config.hpp"
 
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 
 #include <map>
 #include <memory>
@@ -49,7 +49,7 @@ namespace SSI
     //!
     //! \param ele     element whose ScaTra::ImplType shall be determined
     //! \return        impltype of the scatra element
-    virtual Inpar::ScaTra::ImplType get_impl_type(Core::Elements::Element* ele);
+    virtual ScaTra::ImplType get_impl_type(Core::Elements::Element* ele);
 
    protected:
     //! check material of cloned element

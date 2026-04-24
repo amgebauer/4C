@@ -12,31 +12,31 @@
 
 FOUR_C_NAMESPACE_OPEN
 
-Inpar::ScaTra::ImplType Discret::Elements::read_scatra_impl_type(
+ScaTra::ImplType Discret::Elements::read_scatra_impl_type(
     const Core::IO::InputParameterContainer& container)
 {
   auto impltype = container.get<std::string>("TYPE");
 
   if (impltype == "Undefined")
-    return Inpar::ScaTra::impltype_undefined;
+    return ScaTra::impltype_undefined;
   else if (impltype == "AdvReac")
-    return Inpar::ScaTra::impltype_advreac;
+    return ScaTra::impltype_advreac;
   else if (impltype == "CardMono")
-    return Inpar::ScaTra::impltype_cardiac_monodomain;
+    return ScaTra::impltype_cardiac_monodomain;
   else if (impltype == "GR")
-    return Inpar::ScaTra::impltype_gr;
+    return ScaTra::impltype_gr;
   else if (impltype == "Chemo")
-    return Inpar::ScaTra::impltype_chemo;
+    return ScaTra::impltype_chemo;
   else if (impltype == "ChemoReac")
-    return Inpar::ScaTra::impltype_chemoreac;
+    return ScaTra::impltype_chemoreac;
   else if (impltype == "ElchDiffCond")
-    return Inpar::ScaTra::impltype_elch_diffcond;
+    return ScaTra::impltype_elch_diffcond;
   else if (impltype == "ElchElectrode")
-    return Inpar::ScaTra::impltype_elch_electrode;
+    return ScaTra::impltype_elch_electrode;
   else if (impltype == "Loma")
-    return Inpar::ScaTra::impltype_loma;
+    return ScaTra::impltype_loma;
   else if (impltype == "Std")
-    return Inpar::ScaTra::impltype_std;
+    return ScaTra::impltype_std;
 
   FOUR_C_THROW("The input type {} is not valid for SOLIDSCATRA elements!", impltype);
 }

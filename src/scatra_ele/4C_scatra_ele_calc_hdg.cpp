@@ -636,16 +636,16 @@ void Discret::Elements::ScaTraEleCalcHDG<distype, probdim>::LocalSolver::compute
   // set the correct stabilization parameter tau depending on the stabilization method
   switch (scatrapara_->stab_type())
   {
-    case (Inpar::ScaTra::stabtype_hdg_centered):
+    case (ScaTra::stabtype_hdg_centered):
       tau = scatrapara_->tau_value();
       break;
-    case (Inpar::ScaTra::stabtype_hdg_upwind):
+    case (ScaTra::stabtype_hdg_upwind):
       if (shapesface_->normal(0, 0) + shapesface_->normal(1, 0) < 0.0)
         tau = 0.0;
       else
         tau = scatrapara_->tau_value();
       break;
-    case (Inpar::ScaTra::stabtype_no_stabilization):
+    case (ScaTra::stabtype_no_stabilization):
       tau = 0.0;
       break;
     default:

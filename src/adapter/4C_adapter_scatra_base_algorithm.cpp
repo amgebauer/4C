@@ -112,20 +112,20 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
       // scatra2 (=structure scalar) get's inputs from FS3I DYNAMIC/STRUCTURE SCALAR STABILIZATION,
       // hence we have to replace it
       scatratimeparams->sublist("STABILIZATION") = prbdyn.sublist("STRUCTURE SCALAR STABILIZATION");
-      scatratimeparams->set<Inpar::ScaTra::ConvForm>(
-          "CONVFORM", prbdyn.get<Inpar::ScaTra::ConvForm>("STRUCTSCAL_CONVFORM"));
+      scatratimeparams->set<ScaTra::ConvForm>(
+          "CONVFORM", prbdyn.get<ScaTra::ConvForm>("STRUCTSCAL_CONVFORM"));
 
       auto initial_field =
-          Teuchos::getIntegralValue<Inpar::ScaTra::InitialField>(prbdyn, "STRUCTSCAL_INITIALFIELD");
+          Teuchos::getIntegralValue<ScaTra::InitialField>(prbdyn, "STRUCTSCAL_INITIALFIELD");
 
       scatratimeparams->set("INITIALFIELD", initial_field);
       // scatra2 get's in initial functions from FS3I DYNAMICS
       switch (initial_field)
       {
-        case Inpar::ScaTra::initfield_zero_field:
+        case ScaTra::initfield_zero_field:
           scatratimeparams->set<int>("INITFUNCNO", -1);
           break;
-        case Inpar::ScaTra::initfield_field_by_function:
+        case ScaTra::initfield_field_by_function:
           scatratimeparams->set<int>("INITFUNCNO", prbdyn.get<int>("STRUCTSCAL_INITFUNCNO"));
           break;
         default:
@@ -164,7 +164,7 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
   // time-integration (or stationary) scheme
   // -------------------------------------------------------------------
   auto timintscheme =
-      Teuchos::getIntegralValue<Inpar::ScaTra::TimeIntegrationScheme>(scatradyn, "TIMEINTEGR");
+      Teuchos::getIntegralValue<ScaTra::TimeIntegrationScheme>(scatradyn, "TIMEINTEGR");
 
   // low Mach number flow
   if (probtype == Core::ProblemType::loma or probtype == Core::ProblemType::thermo_fsi)
@@ -172,7 +172,7 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
     auto lomaparams = std::make_shared<Teuchos::ParameterList>(problem_.loma_control_params());
     switch (timintscheme)
     {
-      case Inpar::ScaTra::timeint_gen_alpha:
+      case ScaTra::timeint_gen_alpha:
       {
         // create instance of time integration class (call the constructor)
         scatra_ = std::make_shared<ScaTra::TimIntLomaGenAlpha>(
@@ -204,7 +204,7 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
 
     switch (timintscheme)
     {
-      case Inpar::ScaTra::timeint_one_step_theta:
+      case ScaTra::timeint_one_step_theta:
       {
         if (elchparams->isSublist("SCL") and
             elchparams->sublist("SCL").get<bool>("ADD_MICRO_MACRO_COUPLING"))
@@ -230,21 +230,21 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
 
         break;
       }
-      case Inpar::ScaTra::timeint_bdf2:
+      case ScaTra::timeint_bdf2:
       {
         // create instance of time integration class (call the constructor)
         scatra_ = std::make_shared<ScaTra::ScaTraTimIntElchBDF2>(
             discret, solver, elchparams, scatratimeparams, extraparams, output);
         break;
       }
-      case Inpar::ScaTra::timeint_gen_alpha:
+      case ScaTra::timeint_gen_alpha:
       {
         // create instance of time integration class (call the constructor)
         scatra_ = std::make_shared<ScaTra::ScaTraTimIntElchGenAlpha>(
             discret, solver, elchparams, scatratimeparams, extraparams, output);
         break;
       }
-      case Inpar::ScaTra::timeint_stationary:
+      case ScaTra::timeint_stationary:
       {
         // create instance of time integration class (call the constructor)
         scatra_ = std::make_shared<ScaTra::ScaTraTimIntElchStationary>(
@@ -263,7 +263,7 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
 
     switch (timintscheme)
     {
-      case Inpar::ScaTra::timeint_one_step_theta:
+      case ScaTra::timeint_one_step_theta:
       {
         // create an instance of time integration class
         scatra_ = std::make_shared<LevelSet::LevelSetTimIntOneStepTheta>(
@@ -293,21 +293,21 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
     {
       switch (timintscheme)
       {
-        case Inpar::ScaTra::timeint_gen_alpha:
+        case ScaTra::timeint_gen_alpha:
         {
           // create instance of time integration class (call the constructor)
           scatra_ = std::make_shared<ScaTra::TimIntCardiacMonodomainGenAlpha>(
               discret, solver, cmonoparams, scatratimeparams, extraparams, output);
           break;
         }
-        case Inpar::ScaTra::timeint_one_step_theta:
+        case ScaTra::timeint_one_step_theta:
         {
           // create instance of time integration class (call the constructor)
           scatra_ = std::make_shared<ScaTra::TimIntCardiacMonodomainOST>(
               discret, solver, cmonoparams, scatratimeparams, extraparams, output);
           break;
         }
-        case Inpar::ScaTra::timeint_bdf2:
+        case ScaTra::timeint_bdf2:
         {
           // create instance of time integration class (call the constructor)
           scatra_ = std::make_shared<ScaTra::TimIntCardiacMonodomainBDF2>(
@@ -324,28 +324,28 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
   {
     switch (timintscheme)
     {
-      case Inpar::ScaTra::timeint_gen_alpha:
+      case ScaTra::timeint_gen_alpha:
       {
         // create instance of time integration class (call the constructor)
         scatra_ = std::make_shared<ScaTra::ScaTraTimIntPoroMultiGenAlpha>(
             discret, solver, nullptr, scatratimeparams, extraparams, output);
         break;
       }
-      case Inpar::ScaTra::timeint_one_step_theta:
+      case ScaTra::timeint_one_step_theta:
       {
         // create instance of time integration class (call the constructor)
         scatra_ = std::make_shared<ScaTra::ScaTraTimIntPoroMultiOST>(
             discret, solver, nullptr, scatratimeparams, extraparams, output);
         break;
       }
-      case Inpar::ScaTra::timeint_bdf2:
+      case ScaTra::timeint_bdf2:
       {
         // create instance of time integration class (call the constructor)
         scatra_ = std::make_shared<ScaTra::ScaTraTimIntPoroMultiBDF2>(
             discret, solver, nullptr, scatratimeparams, extraparams, output);
         break;
       }
-      case Inpar::ScaTra::timeint_stationary:
+      case ScaTra::timeint_stationary:
       {
         // create instance of time integration class (call the constructor)
         scatra_ = std::make_shared<ScaTra::ScaTraTimIntPoroMultiStationary>(
@@ -365,15 +365,15 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
     {
       switch (timintscheme)
       {
-        case Inpar::ScaTra::timeint_one_step_theta:
-        case Inpar::ScaTra::timeint_bdf2:
-        case Inpar::ScaTra::timeint_gen_alpha:
+        case ScaTra::timeint_one_step_theta:
+        case ScaTra::timeint_bdf2:
+        case ScaTra::timeint_gen_alpha:
         {
           scatra_ = std::make_shared<ScaTra::TimIntHDG>(
               discret, solver, scatratimeparams, extraparams, output);
           break;
         }
-        case Inpar::ScaTra::timeint_stationary:
+        case ScaTra::timeint_stationary:
         {
           scatra_ = std::make_shared<ScaTra::TimIntStationaryHDG>(
               discret, solver, scatratimeparams, extraparams, output);
@@ -390,28 +390,28 @@ Adapter::ScaTraBaseAlgorithm::ScaTraBaseAlgorithm(Global::Problem& problem,
     {
       switch (timintscheme)
       {
-        case Inpar::ScaTra::timeint_stationary:
+        case ScaTra::timeint_stationary:
         {
           // create instance of time integration class (call the constructor)
           scatra_ = std::make_shared<ScaTra::TimIntStationary>(
               discret, solver, scatratimeparams, extraparams, output);
           break;
         }
-        case Inpar::ScaTra::timeint_one_step_theta:
+        case ScaTra::timeint_one_step_theta:
         {
           // create instance of time integration class (call the constructor)
           scatra_ = std::make_shared<ScaTra::TimIntOneStepTheta>(
               discret, solver, scatratimeparams, extraparams, output);
           break;
         }
-        case Inpar::ScaTra::timeint_bdf2:
+        case ScaTra::timeint_bdf2:
         {
           // create instance of time integration class (call the constructor)
           scatra_ = std::make_shared<ScaTra::TimIntBDF2>(
               discret, solver, scatratimeparams, extraparams, output);
           break;
         }
-        case Inpar::ScaTra::timeint_gen_alpha:
+        case ScaTra::timeint_gen_alpha:
         {
           // create instance of time integration class (call the constructor)
           scatra_ = std::make_shared<ScaTra::TimIntGenAlpha>(

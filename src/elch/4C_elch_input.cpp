@@ -8,9 +8,9 @@
 #include "4C_elch_input.hpp"
 
 #include "4C_fem_condition_definition.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_input_spec_builders.hpp"
 #include "4C_linalg_sparseoperator.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -182,14 +182,14 @@ std::vector<Core::IO::InputSpec> ElCh::valid_parameters()
           parameter<double>("ADAPTED_TIME_STEP_SIZE",
               {.description = "new time step size.", .default_value = -1.0}),
 
-          deprecated_selection<Inpar::ScaTra::InitialField>("INITIALFIELD",
+          deprecated_selection<ScaTra::InitialField>("INITIALFIELD",
               {
-                  {"zero_field", Inpar::ScaTra::initfield_zero_field},
-                  {"field_by_function", Inpar::ScaTra::initfield_field_by_function},
-                  {"field_by_condition", Inpar::ScaTra::initfield_field_by_condition},
+                  {"zero_field", ScaTra::initfield_zero_field},
+                  {"field_by_function", ScaTra::initfield_field_by_function},
+                  {"field_by_condition", ScaTra::initfield_field_by_condition},
               },
               {.description = "Initial Field for scalar transport problem",
-                  .default_value = Inpar::ScaTra::initfield_zero_field}),
+                  .default_value = ScaTra::initfield_zero_field}),
 
           parameter<int>(
               "INITFUNCNO", {.description = "function number for scalar transport initial field",

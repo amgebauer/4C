@@ -17,13 +17,13 @@
 #include "4C_fem_general_utils_createdis.hpp"
 #include "4C_global_data.hpp"
 #include "4C_global_data_read.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_control.hpp"
 #include "4C_io_input_file.hpp"
 #include "4C_io_input_parameter_container.hpp"
 #include "4C_linalg_utils_sparse_algebra_create.hpp"
 #include "4C_mat_par_bundle.hpp"
 #include "4C_rebalance_binning_based.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_scatra_timint_implicit.hpp"
 #include "4C_scatra_timint_meshtying_strategy_s2i.hpp"
 #include "4C_scatra_utils.hpp"
@@ -81,9 +81,9 @@ void SSI::SSIBase::init(MPI_Comm comm, const Teuchos::ParameterList& globaltimep
     const std::string& struct_disname, const std::string& scatra_disname, const bool is_ale)
 {
   // do some initial checks
-  auto convform = Teuchos::getIntegralValue<Inpar::ScaTra::ConvForm>(scatraparams, "CONVFORM");
+  auto convform = Teuchos::getIntegralValue<ScaTra::ConvForm>(scatraparams, "CONVFORM");
   const bool isintensive = scatraparams.get<bool>("IS_INTENSIVE_SCALAR");
-  if (convform != Inpar::ScaTra::convform_conservative && !isintensive)
+  if (convform != ScaTra::convform_conservative && !isintensive)
   {
     FOUR_C_THROW(
         "Inconsistent scalar transport formulation on a deforming domain: "
@@ -91,7 +91,7 @@ void SSI::SSIBase::init(MPI_Comm comm, const Teuchos::ParameterList& globaltimep
         "therefore the conservative form is required to account for volume changes. "
         "Please set 'CONVFORM' to 'conservative' in the SCALAR TRANSPORT DYNAMIC section.");
   }
-  if (convform == Inpar::ScaTra::convform_conservative && isintensive)
+  if (convform == ScaTra::convform_conservative && isintensive)
   {
     FOUR_C_THROW(
         "Inconsistent scalar transport formulation on a deforming domain: "
@@ -306,10 +306,10 @@ void SSI::SSIBase::init_discretizations(MPI_Comm comm, const std::string& struct
         conditions_to_copy.emplace_back(temp_map);
       }
 
-      const auto output_scalar_type = Teuchos::getIntegralValue<Inpar::ScaTra::OutputScalarType>(
+      const auto output_scalar_type = Teuchos::getIntegralValue<ScaTra::OutputScalarType>(
           problem->scalar_transport_dynamic_params(), "OUTPUTSCALARS");
-      if (output_scalar_type == Inpar::ScaTra::outputscalars_condition or
-          output_scalar_type == Inpar::ScaTra::outputscalars_entiredomain_condition)
+      if (output_scalar_type == ScaTra::outputscalars_condition or
+          output_scalar_type == ScaTra::outputscalars_entiredomain_condition)
       {
         std::map<std::string, std::string> tempmap = {
             std::make_pair("SSISurfaceManifold", "TotalAndMeanScalar")};
@@ -390,8 +390,7 @@ void SSI::SSIBase::init_discretizations(MPI_Comm comm, const std::string& struct
     // structure elements and check the impltype
     for (int i = 0; i < structdis->num_my_col_elements(); ++i)
     {
-      if (clonestrategy.get_impl_type(structdis->l_col_element(i)) !=
-          Inpar::ScaTra::impltype_undefined)
+      if (clonestrategy.get_impl_type(structdis->l_col_element(i)) != ScaTra::impltype_undefined)
       {
         FOUR_C_THROW(
             "A TRANSPORT discretization is read from the input file, which is fine since the "

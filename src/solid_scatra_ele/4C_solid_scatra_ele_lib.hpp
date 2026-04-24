@@ -10,7 +10,7 @@
 
 #include "4C_config.hpp"
 
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 
 
 FOUR_C_NAMESPACE_OPEN
@@ -26,9 +26,9 @@ namespace Discret::Elements
    * @brief Read the scatra implementation type from the a container of data to create the element
    *
    * @param container
-   * @return Inpar::ScaTra::ImplType
+   * @return ScaTra::ImplType
    */
-  Inpar::ScaTra::ImplType read_scatra_impl_type(const Core::IO::InputParameterContainer& container);
+  ScaTra::ImplType read_scatra_impl_type(const Core::IO::InputParameterContainer& container);
 }  // namespace Discret::Elements
 
 FOUR_C_NAMESPACE_CLOSE

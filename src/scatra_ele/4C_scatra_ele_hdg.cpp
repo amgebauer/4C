@@ -15,7 +15,6 @@
 #include "4C_fem_general_utils_gausspoints.hpp"
 #include "4C_fem_general_utils_polynomial.hpp"
 #include "4C_global_data.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_input_spec_builders.hpp"
 #include "4C_mat_list.hpp"
 #include "4C_mat_myocard.hpp"
@@ -23,6 +22,7 @@
 #include "4C_scatra_ele_factory.hpp"
 #include "4C_scatra_ele_hdg_boundary_calc.hpp"
 #include "4C_scatra_ele_interface.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_utils_enum.hpp"
 
 #include <Teuchos_StandardParameterEntryValidators.hpp>

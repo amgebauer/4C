@@ -68,7 +68,7 @@ void LevelSet::LevelSetAlgorithm::set_reinitialization_element_parameters(
   Teuchos::ParameterList eleparams;
 
   // reinitialization equation is given in convective form
-  eleparams.set<Inpar::ScaTra::ConvForm>("convform", Inpar::ScaTra::convform_convective);
+  eleparams.set<ScaTra::ConvForm>("convform", ScaTra::convform_convective);
 
   // no ALE intended
   eleparams.set("isale", false);
@@ -77,7 +77,7 @@ void LevelSet::LevelSetAlgorithm::set_reinitialization_element_parameters(
   eleparams.sublist("stabilization") = params_->sublist("STABILIZATION");
 
   // set flag for writing the flux vector fields
-  eleparams.set<Inpar::ScaTra::FluxType>("calcflux_domain", calcflux_domain_);
+  eleparams.set<ScaTra::FluxType>("calcflux_domain", calcflux_domain_);
 
   // set vector containing IDs of scalars for which flux vectors are calculated
   eleparams.set<std::shared_ptr<std::vector<int>>>("writefluxids", writefluxids_);
@@ -89,30 +89,27 @@ void LevelSet::LevelSetAlgorithm::set_reinitialization_element_parameters(
   if (calcinitialtimederivative)
   {
     eleparams.sublist("REINITIALIZATION")
-        .set<Inpar::ScaTra::StabType>(
-            "STABTYPEREINIT", Inpar::ScaTra::StabType::stabtype_no_stabilization);
+        .set<ScaTra::StabType>("STABTYPEREINIT", ScaTra::StabType::stabtype_no_stabilization);
     eleparams.sublist("REINITIALIZATION").set<bool>("ARTDIFFREINIT", false);
   }
 
   // parameters for finite difference check
-  eleparams.set<Inpar::ScaTra::FdCheck>("fdcheck", fdcheck_);
+  eleparams.set<ScaTra::FdCheck>("fdcheck", fdcheck_);
   eleparams.set<double>("fdcheckeps", fdcheckeps_);
   eleparams.set<double>("fdchecktol", fdchecktol_);
 
   // overwrite some values in general stabilization parameter list by modified values in levelset
   // reinitialization parameter list
   eleparams.sublist("stabilization")
-      .set<Inpar::ScaTra::TauType>(
-          "DEFINITION_TAU", eleparams.sublist("REINITIALIZATION")
-                                .get<Inpar::ScaTra::TauType>("DEFINITION_TAU_REINIT"));
+      .set<ScaTra::TauType>("DEFINITION_TAU",
+          eleparams.sublist("REINITIALIZATION").get<ScaTra::TauType>("DEFINITION_TAU_REINIT"));
   eleparams.sublist("stabilization")
-      .set<Inpar::ScaTra::StabType>("STABTYPE",
-          eleparams.sublist("REINITIALIZATION").get<Inpar::ScaTra::StabType>("STABTYPEREINIT"));
+      .set<ScaTra::StabType>("STABTYPE",
+          eleparams.sublist("REINITIALIZATION").get<ScaTra::StabType>("STABTYPEREINIT"));
   eleparams.sublist("stabilization").set<bool>("SUGRVEL", false);
   eleparams.sublist("stabilization")
-      .set<Inpar::ScaTra::AssgdType>(
-          "DEFINITION_ASSGD", eleparams.sublist("REINITIALIZATION")
-                                  .get<Inpar::ScaTra::AssgdType>("DEFINITION_ARTDIFFREINIT"));
+      .set<ScaTra::AssgdType>("DEFINITION_ASSGD",
+          eleparams.sublist("REINITIALIZATION").get<ScaTra::AssgdType>("DEFINITION_ARTDIFFREINIT"));
 
   // set general parameters first
   Discret::Elements::ScaTraEleParameterStd::instance(discret_->name())->set_parameters(eleparams);

@@ -12,8 +12,8 @@
 
 #include "4C_fluid_turbulence_input.hpp"
 #include "4C_inpar_fluid.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_scatra_ele_parameter_base.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -43,7 +43,7 @@ namespace Discret
       //! @{
       Inpar::FLUID::TurbModelAction turb_model() { return turbmodel_; };
       Inpar::FLUID::ScalarForcing scalar_forcing() { return scalarforcing_; };
-      Inpar::ScaTra::FSSUGRDIFF which_fssgd() { return whichfssgd_; };
+      ScaTra::FSSUGRDIFF which_fssgd() { return whichfssgd_; };
       bool fssgd() { return fssgd_; };
       double cs() { return cs_; };
       double tpn() { return tpn_; };
@@ -96,7 +96,7 @@ namespace Discret
       bool fssgd_;
 
       //! type of AVM3
-      Inpar::ScaTra::FSSUGRDIFF whichfssgd_;
+      ScaTra::FSSUGRDIFF whichfssgd_;
 
       //! parameters for subgrid-diffusivity models
       double cs_;

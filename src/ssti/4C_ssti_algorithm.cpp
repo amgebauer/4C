@@ -462,11 +462,11 @@ Teuchos::ParameterList SSTI::SSTIAlgorithm::clone_thermo_params(
   auto thermoparams_copy = Teuchos::ParameterList(scatraparams);
 
   auto initial_field =
-      Teuchos::getIntegralValue<Inpar::ScaTra::InitialField>(thermoparams, "INITIALFIELD");
+      Teuchos::getIntegralValue<ScaTra::InitialField>(thermoparams, "INITIALFIELD");
   switch (initial_field)
   {
-    case Inpar::ScaTra::initfield_field_by_function:
-    case Inpar::ScaTra::initfield_field_by_condition:
+    case ScaTra::initfield_field_by_function:
+    case ScaTra::initfield_field_by_condition:
     {
       thermoparams_copy.set("INITIALFIELD", initial_field);
       break;
@@ -478,8 +478,8 @@ Teuchos::ParameterList SSTI::SSTIAlgorithm::clone_thermo_params(
   thermoparams_copy.set<int>("INITFUNCNO", thermoparams.get<int>("INITTHERMOFUNCT"));
   thermoparams_copy.sublist("S2I COUPLING").set<bool>("SLAVEONLY", false);
 
-  if (Teuchos::getIntegralValue<Inpar::ScaTra::OutputScalarType>(scatraparams, "OUTPUTSCALARS") !=
-      Inpar::ScaTra::outputscalars_none)
+  if (Teuchos::getIntegralValue<ScaTra::OutputScalarType>(scatraparams, "OUTPUTSCALARS") !=
+      ScaTra::outputscalars_none)
     thermoparams_copy.set<bool>("output_file_name_discretization", true);
 
   // adaptive time stepping only from scatra

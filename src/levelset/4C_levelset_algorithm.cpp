@@ -320,7 +320,7 @@ void LevelSet::LevelSetAlgorithm::solve()
   // -----------------------------------------------------------------
   //                    solve level-set equation
   // -----------------------------------------------------------------
-  if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear)
+  if (solvtype_ == ScaTra::solvertype_nonlinear)
     nonlinear_solve();
   else
     linear_solve();

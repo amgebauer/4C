@@ -13,7 +13,7 @@
 #include "4C_comm_parobjectfactory.hpp"
 #include "4C_fem_general_element.hpp"
 #include "4C_fem_general_elementtype.hpp"
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -227,10 +227,10 @@ namespace Discret
       }
 
       //! set implementation type
-      void set_impl_type(const Inpar::ScaTra::ImplType impltype);
+      void set_impl_type(const ScaTra::ImplType impltype);
 
       //! return implementation type
-      const Inpar::ScaTra::ImplType& impl_type() const { return impltype_; };
+      const ScaTra::ImplType& impl_type() const { return impltype_; };
       //@}
 
       //! @name Input and Creation
@@ -363,7 +363,7 @@ namespace Discret
 
 
       //! implementation type (physics)
-      Inpar::ScaTra::ImplType impltype_;
+      ScaTra::ImplType impltype_;
 
       //! don't want = operator
       Transport& operator=(const Transport& old);

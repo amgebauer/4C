@@ -50,7 +50,7 @@ void ScaTra::TimIntStationary::init()
   const Core::LinAlg::Map* dofrowmap = discret_->dof_row_map();
 
   // fine-scale vector
-  if (fssgd_ != Inpar::ScaTra::fssugrdiff_no)
+  if (fssgd_ != ScaTra::fssugrdiff_no)
     fsphinp_ = std::make_shared<Core::LinAlg::Vector<double>>(*dofrowmap, true);
   if (turbmodel_ != Inpar::FLUID::no_model) FOUR_C_THROW("Turbulence is not stationary problem!");
 
@@ -208,8 +208,7 @@ void ScaTra::TimIntStationary::update()
 
   // compute flux vector field for later output BEFORE time shift of results
   // is performed below !!
-  if (calcflux_domain_ != Inpar::ScaTra::flux_none or
-      calcflux_boundary_ != Inpar::ScaTra::flux_none)
+  if (calcflux_domain_ != ScaTra::flux_none or calcflux_boundary_ != ScaTra::flux_none)
   {
     if (is_result_step() or do_boundary_flux_statistics()) calc_flux(true);
   }
