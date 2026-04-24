@@ -92,6 +92,10 @@ int Discret::Elements::SolidSurface::evaluate_neumann(Teuchos::ParameterList& pa
   }
   else if (type == "orthopressure")
   {
+    FOUR_C_ASSERT_ALWAYS(
+        Global::Problem::instance()->structural_dynamic_params().get<bool>("LOADLIN"),
+        "If you use NEUMANN CONDITIONS with TYPE: \"orthopressure\" You need to set 'LOADLIN: yes' "
+        "in '--STRUCTURAL DYNAMIC' input section to get the truly nonlinear follower-load.");
     ltype = neum_orthopressure;
     config = config_spatial;
   }
@@ -172,10 +176,6 @@ int Discret::Elements::SolidSurface::evaluate_neumann(Teuchos::ParameterList& pa
       {
         std::shared_ptr<const Core::LinAlg::Vector<double>> disp =
             discretization.get_state("displacement new");
-        if (disp == nullptr)
-          FOUR_C_THROW(
-              "Cannot get state vector 'displacement new'\n"
-              "Did you forget to set the 'LOADLIN yes' in '--STRUCTURAL DYNAMIC' input section???");
         std::vector<double> mydisp = Core::FE::extract_values(*disp, lm);
         spatial_configuration(xc, mydisp);
       }
