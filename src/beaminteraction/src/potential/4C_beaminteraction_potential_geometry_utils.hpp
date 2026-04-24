@@ -5,8 +5,8 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef FOUR_C_BEAMINTERACTION_GEOMETRY_UTILS_HPP
-#define FOUR_C_BEAMINTERACTION_GEOMETRY_UTILS_HPP
+#ifndef FOUR_C_BEAMINTERACTION_POTENTIAL_GEOMETRY_UTILS_HPP
+#define FOUR_C_BEAMINTERACTION_POTENTIAL_GEOMETRY_UTILS_HPP
 
 #include "4C_config.hpp"
 
@@ -16,7 +16,7 @@
 FOUR_C_NAMESPACE_OPEN
 
 
-namespace BeamInteraction
+namespace BeamInteraction::Potential
 {
   namespace Geo
   {
@@ -172,7 +172,7 @@ namespace BeamInteraction
         const Core::LinAlg::Matrix<3, 1, T>& b);
 
   }  // namespace Geo
-}  // namespace BeamInteraction
+}  // namespace BeamInteraction::Potential
 
 FOUR_C_NAMESPACE_CLOSE
 

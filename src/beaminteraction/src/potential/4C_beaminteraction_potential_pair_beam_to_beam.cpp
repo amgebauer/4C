@@ -9,7 +9,7 @@
 
 #include "4C_beam3_base.hpp"
 #include "4C_beam3_spatial_discretization_utils.hpp"
-#include "4C_beaminteraction_geometry_utils.hpp"
+#include "4C_beaminteraction_potential_geometry_utils.hpp"
 #include "4C_beaminteraction_potential_input.hpp"
 #include "4C_fem_general_largerotations.hpp"
 #include "4C_fem_general_utils_integration.hpp"
@@ -1368,10 +1368,11 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
        * to determine point on target beam (i.e. parameter coordinate xi_target) */
       iter_projection = 0;
 
-      while (iter_projection < num_initial_values and
-             (not BeamInteraction::Geo::point_to_curve_projection<numnodes, numnodalvalues, T>(
-                 r_source, xi_target, xi_target_initial_guess_values[iter_projection], ele2pos_,
-                 element2()->shape(), ele2length_)))
+      while (
+          iter_projection < num_initial_values and
+          (not BeamInteraction::Potential::Geo::point_to_curve_projection<numnodes, numnodalvalues,
+              T>(r_source, xi_target, xi_target_initial_guess_values[iter_projection], ele2pos_,
+              element2()->shape(), ele2length_)))
       {
         iter_projection++;
       }
@@ -1436,7 +1437,8 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
       }
 
       // mutual angle of tangent vectors at unilateral closest points
-      BeamInteraction::Geo::calc_enclosed_angle(alpha, cos_alpha, r_xi_source, r_xi_target);
+      BeamInteraction::Potential::Geo::calc_enclosed_angle(
+          alpha, cos_alpha, r_xi_source, r_xi_target);
 
       if (alpha < 0.0 or alpha > std::numbers::pi / 2)
         FOUR_C_THROW("alpha={}, should be in [0,pi/2]", Core::FADUtils::cast_to_double(alpha));
@@ -1450,14 +1452,16 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
           numnodalvalues>(
           N_i_target, N_i_xi_target, N_i_xixi_target, N_target, N_xi_target, N_xixi_target);
 
-      BeamInteraction::Geo::calc_linearization_point_to_curve_projection_parameter_coord_target<
-          numnodes, numnodalvalues>(lin_xi_source_targetDofs, lin_xi_target_targetDofs, dist_ul,
-          r_xi_target, r_xixi_target, N_source, N_target, N_xixi_target);
+      BeamInteraction::Potential::Geo::
+          calc_linearization_point_to_curve_projection_parameter_coord_target<numnodes,
+              numnodalvalues>(lin_xi_source_targetDofs, lin_xi_target_targetDofs, dist_ul,
+              r_xi_target, r_xixi_target, N_source, N_target, N_xixi_target);
 
 
-      BeamInteraction::Geo::calc_point_to_curve_projection_parameter_coord_target_partial_derivs(
-          xi_target_partial_r_source, xi_target_partial_r_target, xi_target_partial_r_xi_target,
-          dist_ul, r_xi_target, r_xixi_target);
+      BeamInteraction::Potential::Geo::
+          calc_point_to_curve_projection_parameter_coord_target_partial_derivs(
+              xi_target_partial_r_source, xi_target_partial_r_target, xi_target_partial_r_xi_target,
+              dist_ul, r_xi_target, r_xixi_target);
 
 
       // evaluate all quantities which depend on the applied disk-cylinder potential law
@@ -2045,22 +2049,24 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
   Core::LinAlg::Matrix<3, 1, double> dist_ul(Core::LinAlg::Initialization::zero);
   dist_ul.update(norm_dist_ul, normal_ul);
 
-  BeamInteraction::Geo::calc_point_to_curve_projection_parameter_coord_target_partial2nd_derivs(
-      xi_target_partial_r_source_partial_r_source, xi_target_partial_r_source_partial_r_target,
-      xi_target_partial_r_source_partial_r_xi_target,
-      xi_target_partial_r_source_partial_r_xixi_target, xi_target_partial_r_target_partial_r_source,
-      xi_target_partial_r_target_partial_r_target, xi_target_partial_r_target_partial_r_xi_target,
-      xi_target_partial_r_target_partial_r_xixi_target,
-      xi_target_partial_r_xi_target_partial_r_source,
-      xi_target_partial_r_xi_target_partial_r_target,
-      xi_target_partial_r_xi_target_partial_r_xi_target,
-      xi_target_partial_r_xi_target_partial_r_xixi_target,
-      xi_target_partial_r_xixi_target_partial_r_source,
-      xi_target_partial_r_xixi_target_partial_r_target,
-      xi_target_partial_r_xixi_target_partial_r_xi_target, xi_target_partial_r_source,
-      xi_target_partial_r_target, xi_target_partial_r_xi_target, dist_ul_deriv_r_source,
-      dist_ul_deriv_r_target, dist_ul_deriv_r_xi_target, dist_ul, r_xi_target, r_xixi_target,
-      r_xixixi_target);
+  BeamInteraction::Potential::Geo::
+      calc_point_to_curve_projection_parameter_coord_target_partial2nd_derivs(
+          xi_target_partial_r_source_partial_r_source, xi_target_partial_r_source_partial_r_target,
+          xi_target_partial_r_source_partial_r_xi_target,
+          xi_target_partial_r_source_partial_r_xixi_target,
+          xi_target_partial_r_target_partial_r_source, xi_target_partial_r_target_partial_r_target,
+          xi_target_partial_r_target_partial_r_xi_target,
+          xi_target_partial_r_target_partial_r_xixi_target,
+          xi_target_partial_r_xi_target_partial_r_source,
+          xi_target_partial_r_xi_target_partial_r_target,
+          xi_target_partial_r_xi_target_partial_r_xi_target,
+          xi_target_partial_r_xi_target_partial_r_xixi_target,
+          xi_target_partial_r_xixi_target_partial_r_source,
+          xi_target_partial_r_xixi_target_partial_r_target,
+          xi_target_partial_r_xixi_target_partial_r_xi_target, xi_target_partial_r_source,
+          xi_target_partial_r_target, xi_target_partial_r_xi_target, dist_ul_deriv_r_source,
+          dist_ul_deriv_r_target, dist_ul_deriv_r_xi_target, dist_ul, r_xi_target, r_xixi_target,
+          r_xixixi_target);
 
   double r_xixi_target_dot_v2 = r_xixi_target.dot(t_target_partial_r_xi_target_mult_t_source);
 
