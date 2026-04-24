@@ -10,7 +10,7 @@
 
 #include "4C_config.hpp"
 
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_truss3.hpp"
 
 FOUR_C_NAMESPACE_OPEN
@@ -66,7 +66,7 @@ namespace Discret
       }
 
       /// return ScaTra::ImplType
-      const Inpar::ScaTra::ImplType& impl_type() const { return impltype_; };
+      const ScaTra::ImplType& impl_type() const { return impltype_; };
 
       bool read_element(const std::string& eletype, Core::FE::CellType celltype,
           const Core::IO::InputParameterContainer& container,
@@ -98,7 +98,7 @@ namespace Discret
 
      private:
       //! scalar transport implementation type (physics)
-      Inpar::ScaTra::ImplType impltype_;
+      ScaTra::ImplType impltype_;
 
       //! evaluate elemental specific values
       //!

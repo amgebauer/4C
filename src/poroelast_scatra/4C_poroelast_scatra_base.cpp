@@ -15,9 +15,9 @@
 #include "4C_fem_dofset_gidbased_wrapper.hpp"
 #include "4C_fem_general_utils_createdis.hpp"
 #include "4C_global_data.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_poroelast_base.hpp"
 #include "4C_poroelast_scatra_utils.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_scatra_timint_implicit.hpp"
 
 #include <Teuchos_StandardParameterEntryValidators.hpp>
@@ -43,15 +43,14 @@ PoroElastScaTra::PoroScatraBase::PoroScatraBase(
   // do some checks
   {
     auto timealgo =
-        Teuchos::getIntegralValue<Inpar::ScaTra::TimeIntegrationScheme>(scatradyn, "TIMEINTEGR");
-    if (timealgo != Inpar::ScaTra::timeint_one_step_theta and
-        timealgo != Inpar::ScaTra::timeint_stationary)
+        Teuchos::getIntegralValue<ScaTra::TimeIntegrationScheme>(scatradyn, "TIMEINTEGR");
+    if (timealgo != ScaTra::timeint_one_step_theta and timealgo != ScaTra::timeint_stationary)
       FOUR_C_THROW(
           "scalar transport in porous media is limited in functionality (only one-step-theta "
           "scheme or stationary case possible)");
 
-    auto velfield = scatradyn.get<Inpar::ScaTra::VelocityField>("VELOCITYFIELD");
-    if (velfield != Inpar::ScaTra::velocity_Navier_Stokes)
+    auto velfield = scatradyn.get<ScaTra::VelocityField>("VELOCITYFIELD");
+    if (velfield != ScaTra::velocity_Navier_Stokes)
       FOUR_C_THROW(
           "scalar transport is coupled with the porous medium. Set 'VELOCITYFIELD' to "
           "'Navier_Stokes' in the SCALAR TRANSPORT DYNAMIC section! ");

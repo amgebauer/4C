@@ -10,8 +10,8 @@
 
 #include "4C_config.hpp"
 
-#include "4C_inpar_scatra.hpp"
 #include "4C_poroelast_utils_clonestrategy.hpp"
+#include "4C_scatra_input.hpp"
 
 #include <memory>
 
@@ -48,7 +48,7 @@ namespace PoroElastScaTra
       virtual ~PoroScatraCloneStrategy() = default;
 
       //! return ScaTra::ImplType of the element
-      Inpar::ScaTra::ImplType get_impl_type(
+      ScaTra::ImplType get_impl_type(
           Core::Elements::Element* ele  //! element whose ScaTra::ImplType shall be determined
       );
 

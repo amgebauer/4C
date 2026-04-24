@@ -269,7 +269,7 @@ Discret::Elements::Transport::Transport(int id, int owner)
       name_(),
       vis_map_(),
       numdofpernode_(-1),
-      impltype_(Inpar::ScaTra::impltype_undefined)
+      impltype_(ScaTra::impltype_undefined)
 {
 }
 
@@ -319,8 +319,7 @@ void Discret::Elements::Transport::set_material(
       mat->material_type() == Core::Materials::m_scatra_in_solid_porofluid_pressure_based or
       mat->material_type() == Core::Materials::m_scatra_as_temperature_porofluid_pressure_based or
       mat->material_type() == Core::Materials::m_scatra_gr or
-      (mat->material_type() == Core::Materials::m_electrode and
-          impltype_ == Inpar::ScaTra::impltype_std))
+      (mat->material_type() == Core::Materials::m_electrode and impltype_ == ScaTra::impltype_std))
     numdofpernode_ = 1;  // we only have a single scalar
   else if (mat->material_type() == Core::Materials::m_electrode)
     numdofpernode_ = 2;  // concentration and electric potential
@@ -646,7 +645,7 @@ std::vector<std::shared_ptr<Core::Elements::Element>> Discret::Elements::Transpo
 /*----------------------------------------------------------------------*
  | set implementation type                                   fang 02/15 |
  *----------------------------------------------------------------------*/
-void Discret::Elements::Transport ::set_impl_type(const Inpar::ScaTra::ImplType impltype)
+void Discret::Elements::Transport ::set_impl_type(const ScaTra::ImplType impltype)
 {
   // set implementation type
   impltype_ = impltype;

@@ -186,7 +186,7 @@ int Discret::Elements::ScaTraEleCalc<distype, probdim>::evaluate(Core::Elements:
   sysmat(ele, elemat1, elevec1, elevec2);
 
   // perform finite difference check on element level
-  if (scatrapara_->fd_check() == Inpar::ScaTra::fdcheck_local and
+  if (scatrapara_->fd_check() == ScaTra::fdcheck_local and
       ele->owner() == Core::Communication::my_mpi_rank(discretization.get_comm()))
     fd_check(ele, elemat1, elevec1, elevec2);
 
@@ -378,8 +378,8 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::extract_turbulence_appr
 
   // get fine-scale values
   if ((scatraparatimint_->is_incremental() and
-          (turbparams_->which_fssgd() == Inpar::ScaTra::fssugrdiff_smagorinsky_all or
-              turbparams_->which_fssgd() == Inpar::ScaTra::fssugrdiff_smagorinsky_small)) or
+          (turbparams_->which_fssgd() == ScaTra::fssugrdiff_smagorinsky_all or
+              turbparams_->which_fssgd() == ScaTra::fssugrdiff_smagorinsky_small)) or
       turbparams_->turb_model() == Inpar::FLUID::multifractal_subgrid_scales)
   {
     // get fine scale scalar field
@@ -389,7 +389,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::extract_turbulence_appr
 
     Core::FE::extract_my_values<Core::LinAlg::Matrix<nen_, 1>>(*gfsphinp, fsphinp_, la[0].lm_);
 
-    if (turbparams_->which_fssgd() == Inpar::ScaTra::fssugrdiff_smagorinsky_small or
+    if (turbparams_->which_fssgd() == ScaTra::fssugrdiff_smagorinsky_small or
         turbparams_->turb_model() == Inpar::FLUID::multifractal_subgrid_scales)
     {
       // get number of dofset associated with velocity-related dofs
@@ -716,7 +716,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::sysmat(Core::Elements::
 
       // convective stabilization of convective term (in convective form)
       // transient stabilization of convective term (in convective form)
-      if (scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+      if (scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
         calc_mat_trans_conv_diff_stab(emat, k, timetaufac, densnp[k], sgconv, diff);
 
       //----------------------------------------------------------------
@@ -727,7 +727,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::sysmat(Core::Elements::
       {
         calc_mat_mass(emat, k, fac, densam[k]);
 
-        if (scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+        if (scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
           calc_mat_mass_stab(emat, k, taufac, densam[k], densnp[k], sgconv, diff);
       }
 
@@ -787,7 +787,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::sysmat(Core::Elements::
       //----------------------------------------------------------------
       // stabilization terms
       //----------------------------------------------------------------
-      if (scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+      if (scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
         calc_rhs_trans_conv_diff_stab(erhs, k, rhstaufac, densnp[k], scatrares, sgconv, diff);
 
       //----------------------------------------------------------------
@@ -1613,7 +1613,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_mat_react(
   //----------------------------------------------------------------
   // stabilization of reactive term
   //----------------------------------------------------------------
-  if (scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+  if (scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
   {
     double densreataufac = timetaufac_reac * densnp;
     // convective stabilization of reactive term (in convective form)
@@ -1977,7 +1977,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_rhs_react(
   }
 
   // reactive rhs stabilization
-  if (scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+  if (scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
   {
     vrhs = scatrapara_->usfemgls_fac() * rhstaufac * densnp * reamanager_->get_rea_coeff(k) *
            scatrares;

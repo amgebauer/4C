@@ -11,9 +11,9 @@
 #include "4C_config.hpp"
 
 #include "4C_inpar_fluid.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_linalg_serialdensevector.hpp"
 #include "4C_linalg_vector.hpp"
+#include "4C_scatra_input.hpp"
 
 #include <memory>
 
@@ -36,7 +36,7 @@ namespace ScaTra
     HomoIsoTurbScalarForcing(ScaTraTimIntImpl* timeint);
 
     //! initialize with initial spectrum
-    void set_initial_spectrum(Inpar::ScaTra::InitialField init_field_type);
+    void set_initial_spectrum(ScaTra::InitialField init_field_type);
 
     //! turn on forcing
     void activate_forcing(const bool activate);

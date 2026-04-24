@@ -591,7 +591,7 @@ void Discret::Elements::ScaTraEleCalcElchDiffCond<distype, probdim>::evaluate_el
  *----------------------------------------------------------------------*/
 template <Core::FE::CellType distype, int probdim>
 void Discret::Elements::ScaTraEleCalcElchDiffCond<distype, probdim>::calculate_flux(
-    Core::LinAlg::Matrix<nsd_, 1>& q, const Inpar::ScaTra::FluxType fluxtype, const int k)
+    Core::LinAlg::Matrix<nsd_, 1>& q, const ScaTra::FluxType fluxtype, const int k)
 {
   /*
   * Actually, we compute here a weighted (and integrated) form of the fluxes!
@@ -608,12 +608,12 @@ void Discret::Elements::ScaTraEleCalcElchDiffCond<distype, probdim>::calculate_f
   // add different flux contributions as specified by user input
   switch (fluxtype)
   {
-    case Inpar::ScaTra::flux_total:
+    case ScaTra::flux_total:
       // convective flux contribution
       q.update(var_manager()->phinp(k), var_manager()->con_vel(k));
 
       [[fallthrough]];
-    case Inpar::ScaTra::flux_diffusive:
+    case ScaTra::flux_diffusive:
       // diffusive flux contribution
       q.update(-diff_manager()->get_isotropic_diff(k) * diff_manager()->get_phase_poro_tort(0),
           var_manager()->grad_phi(k), 1.0);
@@ -640,7 +640,7 @@ void Discret::Elements::ScaTraEleCalcElchDiffCond<distype, probdim>::calculate_f
  *----------------------------------------------------------------------*/
 template <Core::FE::CellType distype, int probdim>
 void Discret::Elements::ScaTraEleCalcElchDiffCond<distype, probdim>::calculate_current(
-    Core::LinAlg::Matrix<nsd_, 1>& q, const Inpar::ScaTra::FluxType fluxtype, const double fac)
+    Core::LinAlg::Matrix<nsd_, 1>& q, const ScaTra::FluxType fluxtype, const double fac)
 {
   /*
   * Actually, we compute here a weighted (and integrated) form of the fluxes!
@@ -657,8 +657,8 @@ void Discret::Elements::ScaTraEleCalcElchDiffCond<distype, probdim>::calculate_c
   // add different flux contributions as specified by user input
   switch (fluxtype)
   {
-    case Inpar::ScaTra::flux_total:
-    case Inpar::ScaTra::flux_diffusive:
+    case ScaTra::flux_total:
+    case ScaTra::flux_diffusive:
       // ohmic flux contribution
       q.update(-diff_manager()->get_cond(), var_manager()->grad_pot());
       // diffusion overpotential flux contribution
@@ -686,9 +686,9 @@ void Discret::Elements::ScaTraEleCalcElchDiffCond<distype,
     probdim>::cal_error_compared_to_analyt_solution(const Core::Elements::Element* ele,
     Teuchos::ParameterList& params, Core::LinAlg::SerialDenseVector& errors)
 {
-  switch (Teuchos::getIntegralValue<Inpar::ScaTra::CalcError>(params, "calcerrorflag"))
+  switch (Teuchos::getIntegralValue<ScaTra::CalcError>(params, "calcerrorflag"))
   {
-    case Inpar::ScaTra::calcerror_Kwok_Wu:
+    case ScaTra::calcerror_Kwok_Wu:
     {
       //   References:
       //   Kwok, Yue-Kuen and Wu, Charles C. K.

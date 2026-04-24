@@ -8,7 +8,7 @@
 #include "4C_solid_scatra_ele_factory.hpp"
 
 #include "4C_fem_general_cell_type_traits.hpp"
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_solid_ele_factory_lib.hpp"
 #include "4C_solid_ele_properties.hpp"
 #include "4C_utils_enum.hpp"

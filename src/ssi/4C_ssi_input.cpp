@@ -9,10 +9,10 @@
 
 #include "4C_fem_condition_definition.hpp"
 #include "4C_inpar_s2i.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_input_spec_builders.hpp"
 #include "4C_linalg_equilibrate.hpp"
 #include "4C_linalg_sparseoperator.hpp"
+#include "4C_scatra_input.hpp"
 FOUR_C_NAMESPACE_OPEN
 
 std::vector<Core::IO::InputSpec> SSI::valid_parameters()
@@ -195,14 +195,14 @@ std::vector<Core::IO::InputSpec> SSI::valid_parameters()
                   .default_value = false}),
 
 
-          deprecated_selection<Inpar::ScaTra::InitialField>("INITIALFIELD",
+          deprecated_selection<ScaTra::InitialField>("INITIALFIELD",
               {
-                  {"zero_field", Inpar::ScaTra::initfield_zero_field},
-                  {"field_by_function", Inpar::ScaTra::initfield_field_by_function},
-                  {"field_by_condition", Inpar::ScaTra::initfield_field_by_condition},
+                  {"zero_field", ScaTra::initfield_zero_field},
+                  {"field_by_function", ScaTra::initfield_field_by_function},
+                  {"field_by_condition", ScaTra::initfield_field_by_condition},
               },
               {.description = "Initial field for scalar transport on manifold",
-                  .default_value = Inpar::ScaTra::initfield_zero_field}),
+                  .default_value = ScaTra::initfield_zero_field}),
 
           parameter<int>("INITFUNCNO",
               {.description = "function number for scalar transport on manifold initial field",
@@ -358,10 +358,10 @@ void SSI::set_valid_conditions(std::vector<Core::Conditions::ConditionDefinition
       true, Core::Conditions::geometry_type_surface);
 
   ssisurfacemanifold.add_component(parameter<int>("ConditionID"));
-  ssisurfacemanifold.add_component(deprecated_selection<Inpar::ScaTra::ImplType>("ImplType",
-      {{"Undefined", Inpar::ScaTra::impltype_undefined}, {"Standard", Inpar::ScaTra::impltype_std},
-          {"ElchElectrode", Inpar::ScaTra::impltype_elch_electrode},
-          {"ElchDiffCond", Inpar::ScaTra::impltype_elch_diffcond}},
+  ssisurfacemanifold.add_component(deprecated_selection<ScaTra::ImplType>("ImplType",
+      {{"Undefined", ScaTra::impltype_undefined}, {"Standard", ScaTra::impltype_std},
+          {"ElchElectrode", ScaTra::impltype_elch_electrode},
+          {"ElchDiffCond", ScaTra::impltype_elch_diffcond}},
       {.description = "implementation type"}));
   ssisurfacemanifold.add_component(parameter<double>("thickness"));
 

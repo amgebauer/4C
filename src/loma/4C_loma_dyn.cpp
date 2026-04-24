@@ -59,14 +59,13 @@ void loma_dyn(int restart)
   const Teuchos::ParameterList& fdyn = problem->fluid_dynamic_params();
 
   // identify type of velocity field
-  const auto veltype =
-      Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
+  const auto veltype = Teuchos::getIntegralValue<ScaTra::VelocityField>(scatradyn, "VELOCITYFIELD");
 
   // choose algorithm depending on type of velocity field
   switch (veltype)
   {
-    case Inpar::ScaTra::velocity_zero:      // zero velocity field (see case 1)
-    case Inpar::ScaTra::velocity_function:  // velocity field prescribed by function
+    case ScaTra::velocity_zero:      // zero velocity field (see case 1)
+    case ScaTra::velocity_function:  // velocity field prescribed by function
     {
       // directly use elements from input section 'transport elements'
       if (scatradis->num_global_nodes() == 0)
@@ -118,7 +117,7 @@ void loma_dyn(int restart)
 
       break;
     }
-    case Inpar::ScaTra::velocity_Navier_Stokes:  // Navier_Stokes
+    case ScaTra::velocity_Navier_Stokes:  // Navier_Stokes
     {
       // use fluid discretization as layout for scatra discretization
       if (fluiddis->num_global_nodes() == 0) FOUR_C_THROW("Fluid discretization is empty!");
@@ -145,7 +144,7 @@ void loma_dyn(int restart)
           if (element == nullptr)
             FOUR_C_THROW("Invalid element type!");
           else
-            element->set_impl_type(Inpar::ScaTra::impltype_loma);
+            element->set_impl_type(ScaTra::impltype_loma);
         }
       }
       else

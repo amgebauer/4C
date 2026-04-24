@@ -12,9 +12,9 @@
 
 #include "4C_fem_general_element.hpp"
 #include "4C_fem_general_elementtype.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_linalg_fixedsizematrix.hpp"
 #include "4C_linalg_vector.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_shell7p_ele_calc_interface.hpp"
 #include "4C_structure_new_elements_paramsinterface.hpp"
 
@@ -158,7 +158,7 @@ namespace Discret::Elements
 
     [[nodiscard]] std::shared_ptr<Mat::So3Material> solid_material(int nummat = 0) const;
 
-    [[nodiscard]] const Inpar::ScaTra::ImplType& impl_type() const { return impltype_; };
+    [[nodiscard]] const ScaTra::ImplType& impl_type() const { return impltype_; };
 
     void vis_names(std::map<std::string, int>& names) override;
 
@@ -213,7 +213,7 @@ namespace Discret::Elements
     std::shared_ptr<Shell7pEleCalcInterface> shell_interface_ = nullptr;
 
     //! scalar transport implementation type (physics)
-    Inpar::ScaTra::ImplType impltype_ = Inpar::ScaTra::ImplType::impltype_undefined;
+    ScaTra::ImplType impltype_ = ScaTra::ImplType::impltype_undefined;
   };
 
 }  // namespace Discret::Elements

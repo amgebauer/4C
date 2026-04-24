@@ -9,10 +9,10 @@
 
 #include "4C_fem_condition_definition.hpp"
 #include "4C_inpar_s2i.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_input_spec_builders.hpp"
 #include "4C_linalg_equilibrate.hpp"
 #include "4C_linalg_sparseoperator.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -117,13 +117,13 @@ std::vector<Core::IO::InputSpec> SSTI::valid_parameters()
               {.description = "initial function for thermo field", .default_value = -1}),
           parameter<int>("LINEAR_SOLVER",
               {.description = "linear solver for thermo field", .default_value = -1}),
-          deprecated_selection<Inpar::ScaTra::InitialField>("INITIALFIELD",
+          deprecated_selection<ScaTra::InitialField>("INITIALFIELD",
               {
-                  {"field_by_function", Inpar::ScaTra::InitialField::initfield_field_by_function},
-                  {"field_by_condition", Inpar::ScaTra::InitialField::initfield_field_by_condition},
+                  {"field_by_function", ScaTra::InitialField::initfield_field_by_function},
+                  {"field_by_condition", ScaTra::InitialField::initfield_field_by_condition},
               },
               {.description = "defines, how to set the initial field",
-                  .default_value = Inpar::ScaTra::InitialField::initfield_field_by_function})},
+                  .default_value = ScaTra::InitialField::initfield_field_by_function})},
       {.required = false}));
   return specs;
 }

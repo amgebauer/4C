@@ -10,7 +10,7 @@
 
 #include "4C_config.hpp"
 
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -21,7 +21,7 @@ namespace Core::Elements
 
 namespace Adapter
 {
-  Inpar::ScaTra::ImplType get_sca_tra_impl_type(Core::Elements::Element* ele);
+  ScaTra::ImplType get_sca_tra_impl_type(Core::Elements::Element* ele);
 }  // namespace Adapter
 
 

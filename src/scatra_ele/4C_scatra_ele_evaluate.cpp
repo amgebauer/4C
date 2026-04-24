@@ -54,14 +54,14 @@ int Discret::Elements::Transport::evaluate(Teuchos::ParameterList& params,
   // perform additional operations specific to implementation type
   switch (impltype_)
   {
-    case Inpar::ScaTra::impltype_elch_diffcond:
-    case Inpar::ScaTra::impltype_elch_diffcond_multiscale:
-    case Inpar::ScaTra::impltype_elch_diffcond_thermo:
-    case Inpar::ScaTra::impltype_elch_electrode:
-    case Inpar::ScaTra::impltype_elch_electrode_growth:
-    case Inpar::ScaTra::impltype_elch_electrode_thermo:
-    case Inpar::ScaTra::impltype_elch_NP:
-    case Inpar::ScaTra::impltype_elch_scl:
+    case ScaTra::impltype_elch_diffcond:
+    case ScaTra::impltype_elch_diffcond_multiscale:
+    case ScaTra::impltype_elch_diffcond_thermo:
+    case ScaTra::impltype_elch_electrode:
+    case ScaTra::impltype_elch_electrode_growth:
+    case ScaTra::impltype_elch_electrode_thermo:
+    case ScaTra::impltype_elch_NP:
+    case ScaTra::impltype_elch_scl:
     {
       // adapt number of transported scalars for electrochemistry problems
       numscal -= 1;
@@ -78,34 +78,34 @@ int Discret::Elements::Transport::evaluate(Teuchos::ParameterList& params,
 
       break;
     }
-    case Inpar::ScaTra::impltype_levelset:
-    case Inpar::ScaTra::impltype_lsreinit:
+    case ScaTra::impltype_levelset:
+    case ScaTra::impltype_lsreinit:
     {
       // decide whether reinitialization is active or not
       if (not params.get<bool>("solve reinit eq", false))
-        impltype_ = Inpar::ScaTra::impltype_levelset;
+        impltype_ = ScaTra::impltype_levelset;
       else
-        impltype_ = Inpar::ScaTra::impltype_lsreinit;
+        impltype_ = ScaTra::impltype_lsreinit;
 
       break;
     }
 
-    case Inpar::ScaTra::impltype_std:
-    case Inpar::ScaTra::impltype_thermo_elch_electrode:
-    case Inpar::ScaTra::impltype_thermo_elch_diffcond:
-    case Inpar::ScaTra::impltype_advreac:
-    case Inpar::ScaTra::impltype_chemo:
-    case Inpar::ScaTra::impltype_chemoreac:
-    case Inpar::ScaTra::impltype_aniso:
-    case Inpar::ScaTra::impltype_cardiac_monodomain:
-    case Inpar::ScaTra::impltype_gr:
-    case Inpar::ScaTra::impltype_loma:
-    case Inpar::ScaTra::impltype_poro:
-    case Inpar::ScaTra::impltype_pororeac:
-    case Inpar::ScaTra::impltype_pororeacECM:
-    case Inpar::ScaTra::impltype_multipororeac:
-    case Inpar::ScaTra::impltype_one_d_artery:
-    case Inpar::ScaTra::impltype_no_physics:
+    case ScaTra::impltype_std:
+    case ScaTra::impltype_thermo_elch_electrode:
+    case ScaTra::impltype_thermo_elch_diffcond:
+    case ScaTra::impltype_advreac:
+    case ScaTra::impltype_chemo:
+    case ScaTra::impltype_chemoreac:
+    case ScaTra::impltype_aniso:
+    case ScaTra::impltype_cardiac_monodomain:
+    case ScaTra::impltype_gr:
+    case ScaTra::impltype_loma:
+    case ScaTra::impltype_poro:
+    case ScaTra::impltype_pororeac:
+    case ScaTra::impltype_pororeacECM:
+    case ScaTra::impltype_multipororeac:
+    case ScaTra::impltype_one_d_artery:
+    case ScaTra::impltype_no_physics:
       // do nothing in these cases
       break;
 

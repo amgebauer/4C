@@ -149,7 +149,7 @@ namespace Discret::Elements
     bool vis_data(const std::string& name, std::vector<double>& data) override;
 
     /// return ScaTra::ImplType
-    [[nodiscard]] Inpar::ScaTra::ImplType impl_type() const { return properties_.impltype; }
+    [[nodiscard]] ScaTra::ImplType impl_type() const { return properties_.impltype; }
 
     [[nodiscard]] const SolidElementProperties<dim>& get_solid_element_properties() const
     {

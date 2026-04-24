@@ -59,8 +59,8 @@ Discret::Elements::ScaTraEleCalcElchScl<distype, probdim>::ScaTraEleCalcElchScl(
       Discret::Elements::ScaTraEleUtilsElchScl<distype>::instance(numdofpernode, numscal, disname);
 
   // safety checks for stabilization settings
-  if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization or
-      my::scatrapara_->tau_def() != Inpar::ScaTra::tau_zero)
+  if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization or
+      my::scatrapara_->tau_def() != ScaTra::tau_zero)
   {
     FOUR_C_THROW(
         "No stabilization available for the diffusion-conduction formulation, since we had no "

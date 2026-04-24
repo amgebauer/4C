@@ -13,10 +13,10 @@
 #include "4C_adapter_scatra_wrapper.hpp"
 #include "4C_fem_condition.hpp"
 #include "4C_inpar_fluid.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_discretization_visualization_writer_mesh.hpp"
 #include "4C_io_runtime_csv_writer.hpp"
 #include "4C_linalg_serialdensevector.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_utils_result_test.hpp"
 
 #include <iostream>
@@ -428,7 +428,7 @@ namespace ScaTra
     [[nodiscard]] Core::LinAlg::MatrixType matrix_type() const { return matrixtype_; }
 
     //! Provide enum of the time integration scheme
-    [[nodiscard]] Inpar::ScaTra::TimeIntegrationScheme method_name() const { return timealgo_; }
+    [[nodiscard]] ScaTra::TimeIntegrationScheme method_name() const { return timealgo_; }
 
     //! Provide title of the time integration scheme
     std::string method_title() { return map_tim_int_enum_to_string(method_name()); }
@@ -583,7 +583,7 @@ namespace ScaTra
     [[nodiscard]] std::shared_ptr<Core::LinAlg::Solver> solver() const { return solver_; }
 
     //! return parameters for finite difference check
-    [[nodiscard]] Inpar::ScaTra::FdCheck fd_check_type() const { return fdcheck_; }
+    [[nodiscard]] ScaTra::FdCheck fd_check_type() const { return fdcheck_; }
     [[nodiscard]] double fd_check_eps() const { return fdcheckeps_; }
     [[nodiscard]] double fd_check_tol() const { return fdchecktol_; }
 
@@ -660,7 +660,7 @@ namespace ScaTra
     /*--- set, prepare, and predict ------------------------------------------*/
 
     //! set the initial scalar field phi
-    virtual void set_initial_field(Inpar::ScaTra::InitialField init,  //!< type of initial field
+    virtual void set_initial_field(ScaTra::InitialField init,  //!< type of initial field
         int startfuncno  //!< number of the space-time function
     );
 
@@ -1106,16 +1106,16 @@ namespace ScaTra
     void check_is_init() const;
 
     //! helper function to get algorithm title
-    std::string map_tim_int_enum_to_string(Inpar::ScaTra::TimeIntegrationScheme term  //!< the enum
+    std::string map_tim_int_enum_to_string(ScaTra::TimeIntegrationScheme term  //!< the enum
     );
 
     //! do we need a statistical sampling for boundary flux at the current time step?
     [[nodiscard]] bool do_boundary_flux_statistics() const
     {
       return ((step_ >= samstart_) and (step_ <= samstop_) and
-              ((calcflux_boundary_ == Inpar::ScaTra::flux_total) or
-                  (calcflux_boundary_ == Inpar::ScaTra::flux_diffusive) or
-                  (calcflux_boundary_ == Inpar::ScaTra::flux_convective)));
+              ((calcflux_boundary_ == ScaTra::flux_total) or
+                  (calcflux_boundary_ == ScaTra::flux_diffusive) or
+                  (calcflux_boundary_ == ScaTra::flux_convective)));
     }
 
     //! write state vectors (phinp and convective velocity) to Gmsh postprocessing files
@@ -1258,7 +1258,7 @@ namespace ScaTra
     bool isale_;
 
     //! solvertype and flags for nonlinear (always incremental) and (linear) incremental solver
-    Inpar::ScaTra::SolverType solvtype_;
+    ScaTra::SolverType solvtype_;
 
     //! type of equilibration of global system of scalar transport equations
     const Core::LinAlg::EquilibrationMethod equilibrationmethod_;
@@ -1270,7 +1270,7 @@ namespace ScaTra
     bool incremental_;
 
     //! flag for fine-scale subgrid-viscosity
-    Inpar::ScaTra::FSSUGRDIFF fssgd_;
+    ScaTra::FSSUGRDIFF fssgd_;
 
     //! LOMA-specific parameter: turbulence model
     Inpar::FLUID::TurbModelAction turbmodel_;
@@ -1299,13 +1299,13 @@ namespace ScaTra
     /*--- query and output ---------------------------------------------------*/
 
     //! flag for calculating flux vector field inside domain
-    Inpar::ScaTra::FluxType calcflux_domain_;
+    ScaTra::FluxType calcflux_domain_;
 
     //! flag for approximate domain flux calculation involving matrix lumping
     const bool calcflux_domain_lumped_;
 
     //! flag for calculating flux vector field on boundary
-    Inpar::ScaTra::FluxType calcflux_boundary_;
+    ScaTra::FluxType calcflux_boundary_;
 
     //! flag for approximate boundary flux calculation involving matrix lumping
     const bool calcflux_boundary_lumped_;
@@ -1331,7 +1331,7 @@ namespace ScaTra
     //! boolean to write the material id of each element (input parameter)
     const bool output_element_material_id_;
     //! flag for printing out total and mean values of transported scalars
-    const Inpar::ScaTra::OutputScalarType outputscalars_;
+    const ScaTra::OutputScalarType outputscalars_;
 
     //! boolean to write Gmsh postprocessing files (input parameter)
     const bool outputgmsh_;
@@ -1340,7 +1340,7 @@ namespace ScaTra
     const bool output_state_matlab_;
 
     //! flag for finite difference check
-    const Inpar::ScaTra::FdCheck fdcheck_;
+    const ScaTra::FdCheck fdcheck_;
 
     //! perturbation magnitude for finite difference check
     const double fdcheckeps_;
@@ -1350,10 +1350,10 @@ namespace ScaTra
 
     //! flag for computation of domain and boundary integrals, i.e., of surface areas and volumes
     //! associated with specified nodesets
-    const Inpar::ScaTra::ComputeIntegrals computeintegrals_;
+    const ScaTra::ComputeIntegrals computeintegrals_;
 
     //! flag for calculation of relative error with reference to analytical solution
-    const Inpar::ScaTra::CalcError calcerror_;
+    const ScaTra::CalcError calcerror_;
 
     /*========================================================================*/
     //! @name Time, time-step, and iteration variables
@@ -1387,7 +1387,7 @@ namespace ScaTra
     unsigned iternum_outer_;
 
     //! used time integration scheme
-    Inpar::ScaTra::TimeIntegrationScheme timealgo_;
+    ScaTra::TimeIntegrationScheme timealgo_;
 
     /*========================================================================*/
     //! @name scalar degrees of freedom variables
@@ -1442,7 +1442,7 @@ namespace ScaTra
     std::shared_ptr<Core::LinAlg::MultiVector<double>> fsvel_;
 
     //! type of velocity field
-    const Inpar::ScaTra::VelocityField velocity_field_type_;
+    const ScaTra::VelocityField velocity_field_type_;
 
     //! mean in time at the interface concentration
     std::shared_ptr<const Core::LinAlg::Vector<double>> mean_conc_;
@@ -1509,7 +1509,7 @@ namespace ScaTra
     std::shared_ptr<Core::IO::DiscretizationWriter> output_;
 
     //! form of convective term
-    Inpar::ScaTra::ConvForm convform_;
+    ScaTra::ConvForm convform_;
 
     //! system matrix (either sparse matrix or block sparse matrix)
     std::shared_ptr<Core::LinAlg::SparseOperator> sysmat_;

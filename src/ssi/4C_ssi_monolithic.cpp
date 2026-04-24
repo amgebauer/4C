@@ -501,8 +501,8 @@ void SSI::SsiMono::init(MPI_Comm comm, const Teuchos::ParameterList& globaltimep
     const std::string& struct_disname, const std::string& scatra_disname, bool isAle)
 {
   // check input parameters for scalar transport field
-  if (Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(scatraparams, "VELOCITYFIELD") !=
-      Inpar::ScaTra::velocity_Navier_Stokes)
+  if (Teuchos::getIntegralValue<ScaTra::VelocityField>(scatraparams, "VELOCITYFIELD") !=
+      ScaTra::velocity_Navier_Stokes)
     FOUR_C_THROW("Invalid type of velocity field for scalar-structure interaction!");
 
   if (Teuchos::getIntegralValue<Inpar::Solid::DynamicType>(structparams, "DYNAMICTYPE") ==

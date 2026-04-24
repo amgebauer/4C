@@ -36,14 +36,14 @@ void ScaTra::ScaTraTimIntImpl::calc_flux(const bool writetofile)
 {
   switch (calcflux_domain_)
   {
-    case Inpar::ScaTra::flux_diffusive:
-    case Inpar::ScaTra::flux_total:
+    case ScaTra::flux_diffusive:
+    case ScaTra::flux_total:
     {
       flux_domain_ = calc_flux_in_domain();
       break;
     }
 
-    case Inpar::ScaTra::flux_none:
+    case ScaTra::flux_none:
     {
       // do nothing
       break;
@@ -58,9 +58,9 @@ void ScaTra::ScaTraTimIntImpl::calc_flux(const bool writetofile)
 
   switch (calcflux_boundary_)
   {
-    case Inpar::ScaTra::flux_convective:
-    case Inpar::ScaTra::flux_diffusive:
-    case Inpar::ScaTra::flux_total:
+    case ScaTra::flux_convective:
+    case ScaTra::flux_diffusive:
+    case ScaTra::flux_total:
     {
       // calculate normal flux vector field only for the user-defined boundary conditions:
       flux_boundary_ = calc_flux_at_boundary(writetofile);
@@ -68,7 +68,7 @@ void ScaTra::ScaTraTimIntImpl::calc_flux(const bool writetofile)
       break;
     }
 
-    case Inpar::ScaTra::flux_none:
+    case ScaTra::flux_none:
     {
       // do nothing
       break;
@@ -219,7 +219,7 @@ std::shared_ptr<Core::LinAlg::MultiVector<double>> ScaTra::ScaTraTimIntImpl::cal
   if ((normals_ == nullptr) or isale_)
     normals_ = compute_normal_vectors(std::vector<std::string>(1, "ScaTraFluxCalc"));
 
-  if (calcflux_boundary_ == Inpar::ScaTra::flux_convective)
+  if (calcflux_boundary_ == ScaTra::flux_convective)
   {
     // zero out trueresidual vector -> we do not need this info
     trueresidual_->put_scalar(0.0);
@@ -227,7 +227,7 @@ std::shared_ptr<Core::LinAlg::MultiVector<double>> ScaTra::ScaTraTimIntImpl::cal
   else
   {
     // was the residual already prepared?
-    if ((solvtype_ != Inpar::ScaTra::solvertype_nonlinear) and (lastfluxoutputstep_ != step_))
+    if ((solvtype_ != ScaTra::solvertype_nonlinear) and (lastfluxoutputstep_ != step_))
     {
       lastfluxoutputstep_ = step_;
 
@@ -252,7 +252,7 @@ std::shared_ptr<Core::LinAlg::MultiVector<double>> ScaTra::ScaTraTimIntImpl::cal
       set_element_time_parameter(true);
 
       // AVM3 separation for incremental solver: get fine-scale part of scalar
-      if (incremental_ and (fssgd_ != Inpar::ScaTra::fssugrdiff_no or
+      if (incremental_ and (fssgd_ != ScaTra::fssugrdiff_no or
                                turbmodel_ == Inpar::FLUID::multifractal_subgrid_scales))
         avm3_separation();
 
@@ -274,13 +274,12 @@ std::shared_ptr<Core::LinAlg::MultiVector<double>> ScaTra::ScaTraTimIntImpl::cal
       // undo potential changes
       set_element_time_parameter();
 
-    }  // if ((solvtype_!=Inpar::ScaTra::solvertype_nonlinear) && (lastfluxoutputstep_ != step_))
-  }  // if (writeflux_==Inpar::ScaTra::flux_convective_boundary)
+    }  // if ((solvtype_!=ScaTra::solvertype_nonlinear) && (lastfluxoutputstep_ != step_))
+  }  // if (writeflux_==ScaTra::flux_convective_boundary)
 
   // if desired add the convective flux contribution
   // to the trueresidual_ now.
-  if (calcflux_boundary_ == Inpar::ScaTra::flux_total or
-      calcflux_boundary_ == Inpar::ScaTra::flux_convective)
+  if (calcflux_boundary_ == ScaTra::flux_total or calcflux_boundary_ == ScaTra::flux_convective)
   {
     std::vector<const Core::Conditions::Condition*> cond;
     discret_->get_condition("ScaTraFluxCalc", cond);
@@ -748,7 +747,7 @@ void ScaTra::ScaTraTimIntImpl::compute_time_derivative()
  *-------------------------------------------------------------------------*/
 void ScaTra::ScaTraTimIntImpl::output_total_and_mean_scalars(const int num)
 {
-  if (outputscalars_ != Inpar::ScaTra::outputscalars_none)
+  if (outputscalars_ != ScaTra::outputscalars_none)
   {
     if (outputscalarstrategy_ == nullptr) FOUR_C_THROW("output strategy was not initialized!");
     outputscalarstrategy_->output_total_and_mean_scalars(this, num);
@@ -760,8 +759,8 @@ void ScaTra::ScaTraTimIntImpl::output_total_and_mean_scalars(const int num)
 void ScaTra::ScaTraTimIntImpl::output_domain_or_boundary_integrals(const std::string& condstring)
 {
   // check whether output is applicable
-  if ((computeintegrals_ == Inpar::ScaTra::computeintegrals_initial and step() == 0) or
-      computeintegrals_ == Inpar::ScaTra::computeintegrals_repeated)
+  if ((computeintegrals_ == ScaTra::computeintegrals_initial and step() == 0) or
+      computeintegrals_ == ScaTra::computeintegrals_repeated)
   {
     if (outputdomainintegralstrategy_ == nullptr)
       FOUR_C_THROW("output strategy was not initialized!");
@@ -1989,16 +1988,16 @@ void ScaTra::ScaTraTimIntImpl::evaluate_error_compared_to_analytical_sol()
 {
   switch (calcerror_)
   {
-    case Inpar::ScaTra::calcerror_byfunction:
-    case Inpar::ScaTra::calcerror_spherediffusion:
+    case ScaTra::calcerror_byfunction:
+    case ScaTra::calcerror_spherediffusion:
     {
       // create the parameters for the error calculation
       Teuchos::ParameterList eleparams;
       Core::Utils::add_enum_class_to_parameter_list<ScaTra::Action>(
           "action", ScaTra::Action::calc_error, eleparams);
-      eleparams.set<Inpar::ScaTra::CalcError>("calcerrorflag", calcerror_);
+      eleparams.set<ScaTra::CalcError>("calcerrorflag", calcerror_);
 
-      if (calcerror_ == Inpar::ScaTra::calcerror_byfunction)
+      if (calcerror_ == ScaTra::calcerror_byfunction)
       {
         const int errorfunctnumber = params_->get<int>("CALCERRORNO");
         if (errorfunctnumber < 1)
@@ -2057,7 +2056,7 @@ void ScaTra::ScaTraTimIntImpl::evaluate_error_compared_to_analytical_sol()
       break;
     }
 
-    case Inpar::ScaTra::calcerror_bycondition:
+    case ScaTra::calcerror_bycondition:
     {
       // extract conditions from discretization
       std::vector<const Core::Conditions::Condition*> relerrorconditions;
@@ -2074,8 +2073,7 @@ void ScaTra::ScaTraTimIntImpl::evaluate_error_compared_to_analytical_sol()
         Teuchos::ParameterList eleparams;
         Core::Utils::add_enum_class_to_parameter_list<ScaTra::Action>(
             "action", ScaTra::Action::calc_error, eleparams);
-        eleparams.set<Inpar::ScaTra::CalcError>(
-            "calcerrorflag", Inpar::ScaTra::calcerror_byfunction);
+        eleparams.set<ScaTra::CalcError>("calcerrorflag", ScaTra::calcerror_byfunction);
         const int errorfunctnumber = relerrorconditions[icond]->parameters().get<int>("Function");
         if (errorfunctnumber < 1) FOUR_C_THROW("Invalid function number for error calculation!");
         eleparams.set<int>("error function number", errorfunctnumber);
@@ -2176,7 +2174,7 @@ void ScaTra::ScaTraTimIntImpl::evaluate_error_compared_to_analytical_sol()
       break;
     }
 
-    case Inpar::ScaTra::calcerror_no:
+    case ScaTra::calcerror_no:
     {
       // do nothing
       break;
@@ -2203,7 +2201,7 @@ void ScaTra::ScaTraTimIntImpl::explicit_predictor() const
 void ScaTra::ScaTraTimIntImpl::perform_aitken_relaxation(
     Core::LinAlg::Vector<double>& phinp, const Core::LinAlg::Vector<double>& phinp_inc_diff)
 {
-  if (solvtype_ == Inpar::ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken)
+  if (solvtype_ == ScaTra::solvertype_nonlinear_multiscale_macrotomicro_aitken)
   {
     // compute L2 norm of difference between current and previous increments of macro-scale state
     // vector

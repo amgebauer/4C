@@ -320,7 +320,7 @@ namespace Discret
 
       //!  calculate weighted mass flux (no reactive flux so far) -> elch-specific implementation
       void calculate_flux(Core::LinAlg::Matrix<nsd_, 1>& q,  //!< flux of species k
-          const Inpar::ScaTra::FluxType fluxtype,            //!< type of flux
+          const ScaTra::FluxType fluxtype,                   //!< type of flux
           const int k                                        //!< index of current scalar
           ) override;
 

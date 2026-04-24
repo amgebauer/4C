@@ -40,7 +40,7 @@ ScaTra::TimIntHDG::TimIntHDG(const std::shared_ptr<Core::FE::Discretization>& ac
       intphinp_(nullptr),
       intphin_(nullptr),
       interpolatedPhinp_(nullptr),
-      timealgoset_(Inpar::ScaTra::timeint_gen_alpha),
+      timealgoset_(ScaTra::timeint_gen_alpha),
       startalgo_(true),
       theta_(-1),
       hdgdis_(nullptr),
@@ -98,7 +98,7 @@ void ScaTra::TimIntHDG::setup()
   // stationary are implemented
   switch (timealgo_)
   {
-    case Inpar::ScaTra::timeint_bdf2:
+    case ScaTra::timeint_bdf2:
     {
       FOUR_C_THROW("At the moment only one step theta implemented");
       alphaM_ = 1.5;
@@ -106,14 +106,14 @@ void ScaTra::TimIntHDG::setup()
       gamma_ = 1.0;
       break;
     }
-    case Inpar::ScaTra::timeint_one_step_theta:
+    case ScaTra::timeint_one_step_theta:
     {
       alphaM_ = 1.0;
       alphaF_ = 1.0;
       gamma_ = params_->get<double>("THETA");
       break;
     }
-    case Inpar::ScaTra::timeint_stationary:
+    case ScaTra::timeint_stationary:
     {
       break;
     }
@@ -122,7 +122,7 @@ void ScaTra::TimIntHDG::setup()
   }
 
   timealgoset_ = timealgo_;
-  if (timealgo_ != Inpar::ScaTra::timeint_stationary) timealgo_ = Inpar::ScaTra::timeint_gen_alpha;
+  if (timealgo_ != ScaTra::timeint_stationary) timealgo_ = ScaTra::timeint_gen_alpha;
 
   // call init()-functions of base classes
   // note: this order is important
@@ -150,10 +150,10 @@ void ScaTra::TimIntHDG::set_theta()
   //  integration and values at intermediate time steps
   // -------------------------------------------------------------------
   // starting algorithm
-  if (startalgo_ || (step_ <= 2 && timealgoset_ == Inpar::ScaTra::timeint_bdf2))
+  if (startalgo_ || (step_ <= 2 && timealgoset_ == ScaTra::timeint_bdf2))
   {
     // use backward-Euler-type parameter combination
-    if (step_ <= 1 && timealgoset_ == Inpar::ScaTra::timeint_bdf2)
+    if (step_ <= 1 && timealgoset_ == ScaTra::timeint_bdf2)
     {
       if (myrank_ == 0)
       {
@@ -170,21 +170,21 @@ void ScaTra::TimIntHDG::set_theta()
       // recall original user wish
       switch (timealgoset_)
       {
-        case Inpar::ScaTra::timeint_one_step_theta:
+        case ScaTra::timeint_one_step_theta:
         {
           alphaM_ = alphaF_ = 1.0;
           gamma_ = params_->get<double>("THETA");
           break;
         }
-        case Inpar::ScaTra::timeint_bdf2:
+        case ScaTra::timeint_bdf2:
         {
           alphaF_ = gamma_ = 1.0;
           alphaM_ = 3. / 2.;
           break;
         }
-        case Inpar::ScaTra::timeint_stationary:
+        case ScaTra::timeint_stationary:
         {
-          // Setting the parameters as for Inpar::ScaTra::timeint_one_step_theta with theta = 1
+          // Setting the parameters as for ScaTra::timeint_one_step_theta with theta = 1
           // (basically BDF1 and therefore we only compute the RHS and Dirich at t+1)
           alphaM_ = alphaF_ = gamma_ = 1.0;
           // The time step can not be set to zero because there is plenty of divisions by dt.
@@ -533,12 +533,11 @@ void ScaTra::TimIntHDG::read_restart(const int step, std::shared_ptr<Core::IO::I
 /*----------------------------------------------------------------------*
  |  set initial field for phi                            hoermann 09/15 |
  *----------------------------------------------------------------------*/
-void ScaTra::TimIntHDG::set_initial_field(
-    const Inpar::ScaTra::InitialField init, const int startfuncno)
+void ScaTra::TimIntHDG::set_initial_field(const ScaTra::InitialField init, const int startfuncno)
 {
   switch (init)
   {
-    case Inpar::ScaTra::initfield_zero_field:
+    case ScaTra::initfield_zero_field:
     {
       // set initial field to zero
       phin_->put_scalar(0.0);
@@ -547,7 +546,7 @@ void ScaTra::TimIntHDG::set_initial_field(
       intphinp_->put_scalar(0.0);
       break;
     }
-    case Inpar::ScaTra::initfield_field_by_function:
+    case ScaTra::initfield_field_by_function:
     {
       // set initial field defined by function
       Teuchos::ParameterList eleparams;
@@ -921,8 +920,8 @@ void ScaTra::TimIntHDG::evaluate_error_compared_to_analytical_sol()
 {
   switch (calcerror_)
   {
-    case Inpar::ScaTra::calcerror_byfunction:
-    case Inpar::ScaTra::calcerror_spherediffusion:
+    case ScaTra::calcerror_byfunction:
+    case ScaTra::calcerror_spherediffusion:
     {
       std::shared_ptr<Core::LinAlg::SerialDenseVector> errors = compute_error();
       if (errors == nullptr)
@@ -971,7 +970,7 @@ void ScaTra::TimIntHDG::evaluate_error_compared_to_analytical_sol()
 
       break;
     }
-    case Inpar::ScaTra::calcerror_no:
+    case ScaTra::calcerror_no:
     {
       // do nothing
       break;

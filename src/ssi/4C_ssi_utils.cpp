@@ -160,18 +160,18 @@ Teuchos::ParameterList SSI::Utils::clone_scatra_manifold_params(
 {
   Teuchos::ParameterList scatra_manifold_params(scatraparams);
 
-  auto initial_field = Teuchos::getIntegralValue<Inpar::ScaTra::InitialField>(
-      sublist_manifold_params, "INITIALFIELD");
+  auto initial_field =
+      Teuchos::getIntegralValue<ScaTra::InitialField>(sublist_manifold_params, "INITIALFIELD");
   scatra_manifold_params.set("INITIALFIELD", initial_field);
   switch (initial_field)
   {
-    case Inpar::ScaTra::initfield_zero_field:
-    case Inpar::ScaTra::initfield_field_by_condition:
+    case ScaTra::initfield_zero_field:
+    case ScaTra::initfield_field_by_condition:
     {
       scatra_manifold_params.set<int>("INITFUNCNO", -1);
       break;
     }
-    case Inpar::ScaTra::initfield_field_by_function:
+    case ScaTra::initfield_field_by_function:
     {
       scatra_manifold_params.set<int>("INITFUNCNO", sublist_manifold_params.get<int>("INITFUNCNO"));
       break;
@@ -180,8 +180,8 @@ Teuchos::ParameterList SSI::Utils::clone_scatra_manifold_params(
       FOUR_C_THROW("Initial field type on manifold not supported.");
   }
 
-  if (Teuchos::getIntegralValue<Inpar::ScaTra::OutputScalarType>(scatraparams, "OUTPUTSCALARS") !=
-      Inpar::ScaTra::outputscalars_none)
+  if (Teuchos::getIntegralValue<ScaTra::OutputScalarType>(scatraparams, "OUTPUTSCALARS") !=
+      ScaTra::outputscalars_none)
     scatra_manifold_params.set<bool>("output_file_name_discretization", true);
 
   scatra_manifold_params.set<bool>("OUTPUTSCALARSMEANGRAD", false);
@@ -197,8 +197,8 @@ Teuchos::ParameterList SSI::Utils::modify_scatra_params(const Teuchos::Parameter
 {
   auto scatraparams_mutable = Teuchos::ParameterList(scatraparams);
 
-  if (Teuchos::getIntegralValue<Inpar::ScaTra::OutputScalarType>(scatraparams, "OUTPUTSCALARS") !=
-      Inpar::ScaTra::outputscalars_none)
+  if (Teuchos::getIntegralValue<ScaTra::OutputScalarType>(scatraparams, "OUTPUTSCALARS") !=
+      ScaTra::outputscalars_none)
     scatraparams_mutable.set<bool>("output_file_name_discretization", true);
 
   return scatraparams_mutable;

@@ -13,7 +13,7 @@
 
 #include "4C_fem_general_element.hpp"
 #include "4C_fem_general_utils_integration.hpp"
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -1169,7 +1169,7 @@ namespace ScaTra
 
   //! convert implementation type of scalar transport elements into corresponding string for output
   //! purposes
-  std::string impl_type_to_string(const Inpar::ScaTra::ImplType impltype);
+  std::string impl_type_to_string(const ScaTra::ImplType impltype);
 }  // namespace ScaTra
 
 FOUR_C_NAMESPACE_CLOSE

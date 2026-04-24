@@ -174,8 +174,8 @@ void FS3I::FS3IBase::check_f_s3_i_inputs()
   // (including parameter theta itself in case of one-step-theta scheme)
   // and rule out unsupported versions of generalized-alpha time-integration
   // scheme (as well as other inappropriate schemes) for fluid subproblem
-  auto scatratimealgo = Teuchos::getIntegralValue<Inpar::ScaTra::TimeIntegrationScheme>(
-      scatradynparams, "TIMEINTEGR");
+  auto scatratimealgo =
+      Teuchos::getIntegralValue<ScaTra::TimeIntegrationScheme>(scatradynparams, "TIMEINTEGR");
   auto fluidtimealgo =
       Teuchos::getIntegralValue<Inpar::FLUID::TimeIntegrationScheme>(fluiddynparams, "TIMEINTEGR");
   auto structtimealgo =
@@ -183,7 +183,7 @@ void FS3I::FS3IBase::check_f_s3_i_inputs()
 
   if (fluidtimealgo == Inpar::FLUID::timeint_one_step_theta)
   {
-    if (scatratimealgo != Inpar::ScaTra::timeint_one_step_theta or
+    if (scatratimealgo != ScaTra::timeint_one_step_theta or
         structtimealgo != Inpar::Solid::DynamicType::OneStepTheta)
       FOUR_C_THROW(
           "Partitioned FS3I computations should feature consistent time-integration schemes for "
@@ -200,7 +200,7 @@ void FS3I::FS3IBase::check_f_s3_i_inputs()
   }
   else if (fluidtimealgo == Inpar::FLUID::timeint_afgenalpha)
   {
-    if (scatratimealgo != Inpar::ScaTra::timeint_gen_alpha or
+    if (scatratimealgo != ScaTra::timeint_gen_alpha or
         structtimealgo != Inpar::Solid::DynamicType::GenAlpha)
       FOUR_C_THROW(
           "Partitioned FS3I computations should feature consistent time-integration schemes for "
@@ -227,8 +227,8 @@ void FS3I::FS3IBase::check_f_s3_i_inputs()
   if (scatravec_[0]->scatra_field()->is_incremental() == false)
     FOUR_C_THROW("Incremental formulation required for partitioned FS3I computations!");
 
-  if (Teuchos::getIntegralValue<Inpar::ScaTra::ConvForm>(fs3idyn, "STRUCTSCAL_CONVFORM") ==
-          Inpar::ScaTra::convform_convective and
+  if (Teuchos::getIntegralValue<ScaTra::ConvForm>(fs3idyn, "STRUCTSCAL_CONVFORM") ==
+          ScaTra::convform_convective and
       Teuchos::getIntegralValue<FS3I::VolumeCoupling>(fs3idyn, "STRUCTSCAL_FIELDCOUPLING") ==
           FS3I::coupling_match)
   {

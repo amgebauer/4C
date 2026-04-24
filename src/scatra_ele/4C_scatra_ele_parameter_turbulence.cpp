@@ -39,7 +39,7 @@ Discret::Elements::ScaTraEleParameterTurbulence::ScaTraEleParameterTurbulence(
     : turbmodel_(Inpar::FLUID::no_model),
       scalarforcing_(Inpar::FLUID::scalarforcing_no),
       fssgd_(false),
-      whichfssgd_(Inpar::ScaTra::fssugrdiff_no),
+      whichfssgd_(ScaTra::fssugrdiff_no),
       cs_(0.0),
       tpn_(0.0),
       cs_av_(false),
@@ -101,9 +101,8 @@ void Discret::Elements::ScaTraEleParameterTurbulence::set_parameters(
     scalarforcing_ = Inpar::FLUID::scalarforcing_no;
 
   // set flag for fine-scale subgrid diffusivity and perform some checks
-  whichfssgd_ =
-      Teuchos::getIntegralValue<Inpar::ScaTra::FSSUGRDIFF>(parameters, "fs subgrid diffusivity");
-  if (whichfssgd_ == Inpar::ScaTra::fssugrdiff_artificial)
+  whichfssgd_ = Teuchos::getIntegralValue<ScaTra::FSSUGRDIFF>(parameters, "fs subgrid diffusivity");
+  if (whichfssgd_ == ScaTra::fssugrdiff_artificial)
   {
     fssgd_ = true;
 
@@ -113,8 +112,8 @@ void Discret::Elements::ScaTraEleParameterTurbulence::set_parameters(
           "Artificial fine-scale subgrid-diffusivity approach only in combination with "
           "non-incremental solver so far!");
   }
-  else if (whichfssgd_ == Inpar::ScaTra::fssugrdiff_smagorinsky_all or
-           whichfssgd_ == Inpar::ScaTra::fssugrdiff_smagorinsky_small)
+  else if (whichfssgd_ == ScaTra::fssugrdiff_smagorinsky_all or
+           whichfssgd_ == ScaTra::fssugrdiff_smagorinsky_small)
   {
     fssgd_ = true;
 
@@ -129,7 +128,7 @@ void Discret::Elements::ScaTraEleParameterTurbulence::set_parameters(
   if (not turbulencelist.get<bool>("TURBMODEL_LS"))
   {
     fssgd_ = false;
-    whichfssgd_ = Inpar::ScaTra::fssugrdiff_no;
+    whichfssgd_ = ScaTra::fssugrdiff_no;
     turbmodel_ = Inpar::FLUID::no_model;
   }
 

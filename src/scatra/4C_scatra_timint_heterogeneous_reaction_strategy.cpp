@@ -123,7 +123,7 @@ void ScaTra::HeterogeneousReactionStrategy::setup_meshtying()
       if (element == nullptr) FOUR_C_THROW("Invalid element type!");
 
       if (element->material()->material_type() == Core::Materials::m_matlist_reactions)
-        element->set_impl_type(Inpar::ScaTra::impltype_advreac);
+        element->set_impl_type(ScaTra::impltype_advreac);
       else
         FOUR_C_THROW("Invalid material type for HeterogeneousReactionStrategy!");
     }  // loop over all column elements

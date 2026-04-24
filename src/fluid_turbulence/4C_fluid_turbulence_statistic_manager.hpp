@@ -11,8 +11,8 @@
 #include "4C_config.hpp"
 
 #include "4C_inpar_fluid.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_linalg_vector.hpp"
+#include "4C_scatra_input.hpp"
 
 #include <Teuchos_ParameterList.hpp>
 

@@ -45,8 +45,8 @@ void ScaTra::MeshtyingStrategyArtery::init_meshtying()
       Global::Problem::instance()->poro_multi_phase_scatra_dynamic_params();
   const Teuchos::ParameterList& scatra_params =
       Global::Problem::instance()->scalar_transport_dynamic_params();
-  if (Teuchos::getIntegralValue<Inpar::ScaTra::VelocityField>(scatra_params, "VELOCITYFIELD") !=
-      Inpar::ScaTra::velocity_zero)
+  if (Teuchos::getIntegralValue<ScaTra::VelocityField>(scatra_params, "VELOCITYFIELD") !=
+      ScaTra::velocity_zero)
     FOUR_C_THROW("set your velocity field to zero!");
 
   // Translate updated porofluid input format to old scatra format

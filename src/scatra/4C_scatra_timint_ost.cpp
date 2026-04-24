@@ -60,8 +60,7 @@ void ScaTra::TimIntOneStepTheta::setup()
   const Core::LinAlg::Map* dofrowmap = discret_->dof_row_map();
 
   // fine-scale vector at time n+1
-  if (fssgd_ != Inpar::ScaTra::fssugrdiff_no or
-      turbmodel_ == Inpar::FLUID::multifractal_subgrid_scales)
+  if (fssgd_ != ScaTra::fssugrdiff_no or turbmodel_ == Inpar::FLUID::multifractal_subgrid_scales)
     fsphinp_ = std::make_shared<Core::LinAlg::Vector<double>>(*dofrowmap, true);
 
   // -------------------------------------------------------------------
@@ -90,7 +89,7 @@ void ScaTra::TimIntOneStepTheta::setup()
       homisoturb_forcing_ = std::make_shared<ScaTra::HomoIsoTurbScalarForcing>(this);
       // initialize forcing algorithm
       homisoturb_forcing_->set_initial_spectrum(
-          Teuchos::getIntegralValue<Inpar::ScaTra::InitialField>(*params_, "INITIALFIELD"));
+          Teuchos::getIntegralValue<ScaTra::InitialField>(*params_, "INITIALFIELD"));
     }
   }
 
@@ -269,8 +268,7 @@ void ScaTra::TimIntOneStepTheta::update()
 
   // compute flux vector field for later output BEFORE time shift of results
   // is performed below !!
-  if (calcflux_domain_ != Inpar::ScaTra::flux_none or
-      calcflux_boundary_ != Inpar::ScaTra::flux_none)
+  if (calcflux_domain_ != ScaTra::flux_none or calcflux_boundary_ != ScaTra::flux_none)
   {
     if (is_result_step() or do_boundary_flux_statistics()) calc_flux(true);
   }
@@ -349,8 +347,7 @@ void ScaTra::TimIntOneStepTheta::read_restart(
 
   read_restart_problem_specific(step, *reader);
 
-  if (fssgd_ != Inpar::ScaTra::fssugrdiff_no or
-      turbmodel_ == Inpar::FLUID::multifractal_subgrid_scales)
+  if (fssgd_ != ScaTra::fssugrdiff_no or turbmodel_ == Inpar::FLUID::multifractal_subgrid_scales)
     avm3_preparation();
 
   // read restart on micro scale in multi-scale simulations if necessary

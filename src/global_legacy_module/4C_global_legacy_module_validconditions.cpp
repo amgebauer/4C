@@ -23,7 +23,6 @@
 #include "4C_fsi_input.hpp"
 #include "4C_inpar_fluid.hpp"
 #include "4C_inpar_s2i.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_inpar_structure.hpp"
 #include "4C_inpar_xfem.hpp"
 #include "4C_io_input_spec_builders.hpp"
@@ -33,6 +32,7 @@
 #include "4C_porofluid_pressure_based_elast_scatra_input.hpp"
 #include "4C_red_airways_input.hpp"
 #include "4C_scatra_cardiac_monodomain_input.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_ssi_input.hpp"
 #include "4C_ssti_input.hpp"
 #include "4C_sti_input.hpp"
@@ -829,7 +829,7 @@ std::vector<Core::Conditions::ConditionDefinition> Global::valid_conditions()
   // Finally, add the problem-specific conditions from the various modules
   Mortar::set_valid_conditions(condlist);
   Inpar::S2I::set_valid_conditions(condlist);
-  Inpar::ScaTra::set_valid_conditions(condlist);
+  ScaTra::set_valid_conditions(condlist);
   ElCh::set_valid_conditions(condlist);
   Inpar::FLUID::set_valid_conditions(condlist);
   ALE::set_valid_conditions(condlist);

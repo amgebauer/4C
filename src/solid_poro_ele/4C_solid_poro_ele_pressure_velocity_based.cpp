@@ -10,12 +10,12 @@
 #include "4C_comm_utils_factory.hpp"
 #include "4C_fem_general_cell_type_traits.hpp"
 #include "4C_fem_general_utils_local_connectivity_matrices.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_inpar_structure.hpp"
 #include "4C_io_input_parameter_container.hpp"
 #include "4C_io_input_spec_builders.hpp"
 #include "4C_mat_fluidporo.hpp"
 #include "4C_mat_structporo.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_solid_ele_factory.hpp"
 #include "4C_solid_ele_interface_serializable.hpp"
 #include "4C_solid_ele_line.hpp"
@@ -63,10 +63,10 @@ namespace Discret::Elements::SolidPoroPressureVelocityBasedInternal
               "POROANISONODALCOEFFS2", {.size = Core::FE::num_nodes(celltype)}),
           parameter<std::optional<std::vector<double>>>(
               "POROANISONODALCOEFFS3", {.size = Core::FE::num_nodes(celltype)}),
-          deprecated_selection<Inpar::ScaTra::ImplType>("TYPE",
+          deprecated_selection<ScaTra::ImplType>("TYPE",
               Discret::Elements::get_impltype_inpar_map(),
               {.description = "Scalar transport implementation type",
-                  .default_value = Inpar::ScaTra::ImplType::impltype_undefined}),
+                  .default_value = ScaTra::ImplType::impltype_undefined}),
       });
     }
 
@@ -97,10 +97,10 @@ namespace Discret::Elements::SolidPoroPressureVelocityBasedInternal
               "POROANISONODALCOEFFS2", {.size = Core::FE::num_nodes(celltype)}),
           parameter<std::optional<std::vector<double>>>(
               "POROANISONODALCOEFFS3", {.size = Core::FE::num_nodes(celltype)}),
-          deprecated_selection<Inpar::ScaTra::ImplType>("TYPE",
+          deprecated_selection<ScaTra::ImplType>("TYPE",
               Discret::Elements::get_impltype_inpar_map(),
               {.description = "Scalar transport implementation type",
-                  .default_value = Inpar::ScaTra::ImplType::impltype_undefined}),
+                  .default_value = ScaTra::ImplType::impltype_undefined}),
           parameter<double>(
               "THICKNESS", {.description = "Reference thickness of the 2D solid element"}),
           parameter<Discret::Elements::PlaneAssumption>("PLANE_ASSUMPTION",
@@ -309,14 +309,13 @@ bool Discret::Elements::SolidPoroPressureVelocityBased<dim>::read_element(
   }
 
   // read scalar transport implementation type
-  poro_ele_property_.impltype = container.get<Inpar::ScaTra::ImplType>("TYPE");
+  poro_ele_property_.impltype = container.get<ScaTra::ImplType>("TYPE");
 
 
   read_anisotropic_permeability_directions_from_element_line_definition(container);
   read_anisotropic_permeability_nodal_coeffs_from_element_line_definition(container);
 
-  const bool with_scatra =
-      poro_ele_property_.impltype != Inpar::ScaTra::ImplType::impltype_undefined;
+  const bool with_scatra = poro_ele_property_.impltype != ScaTra::ImplType::impltype_undefined;
   SolidIntegrationRules<dim> rules =
       Core::FE::cell_type_switch<Discret::Elements::ImplementedSolidCellTypes<dim>>(celltype_,
           [](auto celltype_t) -> SolidIntegrationRules<dim>
@@ -450,8 +449,7 @@ void Discret::Elements::SolidPoroPressureVelocityBased<dim>::unpack(
     extract_from_pack(buffer, anisotropic_permeability_property_.nodal_coeffs_[i]);
 
   // reset solid and poro interfaces
-  const bool with_scatra =
-      poro_ele_property_.impltype != Inpar::ScaTra::ImplType::impltype_undefined;
+  const bool with_scatra = poro_ele_property_.impltype != ScaTra::ImplType::impltype_undefined;
   SolidIntegrationRules<dim> rules =
       Core::FE::cell_type_switch<Discret::Elements::ImplementedSolidCellTypes<dim>>(celltype_,
           [](auto celltype_t) -> SolidIntegrationRules<dim>

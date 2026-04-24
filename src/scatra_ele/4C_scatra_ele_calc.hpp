@@ -257,9 +257,9 @@ namespace Discret
 
       //!  calculate weighted mass flux (no reactive flux so far)
       virtual void calculate_flux(Core::LinAlg::Matrix<3, nen_>& flux,  //!< flux to be computed
-          const Core::Elements::Element* ele,      //!< the element we are dealing with
-          const Inpar::ScaTra::FluxType fluxtype,  //!< type of flux
-          const int k                              //!< index of current scalar
+          const Core::Elements::Element* ele,  //!< the element we are dealing with
+          const ScaTra::FluxType fluxtype,     //!< type of flux
+          const int k                          //!< index of current scalar
       );
 
       //! calculate domain integral, i.e., surface area or volume of domain element

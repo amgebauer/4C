@@ -75,11 +75,11 @@ void ScaTra::ScaTraTimIntElchSCL::setup()
   auto sdyn_micro =
       std::make_shared<Teuchos::ParameterList>(problem->scalar_transport_dynamic_params());
 
-  auto initial_field_type = Teuchos::getIntegralValue<Inpar::ScaTra::InitialField>(
-      elchparams_->sublist("SCL"), "INITIALFIELD");
-  if (!(initial_field_type == Inpar::ScaTra::initfield_zero_field ||
-          initial_field_type == Inpar::ScaTra::initfield_field_by_function ||
-          initial_field_type == Inpar::ScaTra::initfield_field_by_condition))
+  auto initial_field_type =
+      Teuchos::getIntegralValue<ScaTra::InitialField>(elchparams_->sublist("SCL"), "INITIALFIELD");
+  if (!(initial_field_type == ScaTra::initfield_zero_field ||
+          initial_field_type == ScaTra::initfield_field_by_function ||
+          initial_field_type == ScaTra::initfield_field_by_condition))
     FOUR_C_THROW("input type not supported");
 
   sdyn_micro->set("INITIALFIELD", initial_field_type);

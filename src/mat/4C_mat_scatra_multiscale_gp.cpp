@@ -123,10 +123,10 @@ void Mat::ScatraMultiScaleGP::init()
           "Must have one-dimensional micro scale in multi-scale simulations of scalar transport "
           "problems!");
     }
-    if (Teuchos::getIntegralValue<Inpar::ScaTra::TimeIntegrationScheme>(sdyn_macro, "TIMEINTEGR") !=
-            Inpar::ScaTra::timeint_one_step_theta or
-        Teuchos::getIntegralValue<Inpar::ScaTra::TimeIntegrationScheme>(
-            *sdyn_micro, "TIMEINTEGR") != Inpar::ScaTra::timeint_one_step_theta)
+    if (Teuchos::getIntegralValue<ScaTra::TimeIntegrationScheme>(sdyn_macro, "TIMEINTEGR") !=
+            ScaTra::timeint_one_step_theta or
+        Teuchos::getIntegralValue<ScaTra::TimeIntegrationScheme>(*sdyn_micro, "TIMEINTEGR") !=
+            ScaTra::timeint_one_step_theta)
     {
       FOUR_C_THROW(
           "Multi-scale calculations for scalar transport only implemented for one-step-theta time "
@@ -639,7 +639,7 @@ void Mat::ScatraMultiScaleGP::calculate_ddet_f_dt(ScaTra::TimIntOneStepTheta& mi
 
   switch (microtimint.method_name())
   {
-    case Inpar::ScaTra::TimeIntegrationScheme::timeint_one_step_theta:
+    case ScaTra::TimeIntegrationScheme::timeint_one_step_theta:
     {
       const double theta = microtimint.scatra_parameter_list()->get<double>("THETA");
 

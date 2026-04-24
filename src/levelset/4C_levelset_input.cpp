@@ -8,8 +8,8 @@
 #include "4C_levelset_input.hpp"
 
 #include "4C_fem_condition_definition.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_io_input_spec_builders.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -90,33 +90,33 @@ std::vector<Core::IO::InputSpec> LevelSet::valid_parameters()
           parameter<double>("THETAREINIT",
               {.description = "theta for time discretization of reinitialization equation",
                   .default_value = 1.0}),
-          deprecated_selection<Inpar::ScaTra::StabType>("STABTYPEREINIT",
+          deprecated_selection<ScaTra::StabType>("STABTYPEREINIT",
               {
-                  {"no_stabilization", Inpar::ScaTra::stabtype_no_stabilization},
-                  {"SUPG", Inpar::ScaTra::stabtype_SUPG},
-                  {"GLS", Inpar::ScaTra::stabtype_GLS},
-                  {"USFEM", Inpar::ScaTra::stabtype_USFEM},
+                  {"no_stabilization", ScaTra::stabtype_no_stabilization},
+                  {"SUPG", ScaTra::stabtype_SUPG},
+                  {"GLS", ScaTra::stabtype_GLS},
+                  {"USFEM", ScaTra::stabtype_USFEM},
               },
               {.description =
                       "Type of stabilization (if any). No stabilization is only reasonable for "
                       "low-Peclet-number.",
-                  .default_value = Inpar::ScaTra::stabtype_SUPG}),
+                  .default_value = ScaTra::stabtype_SUPG}),
           // this parameter selects the tau definition applied
-          deprecated_selection<Inpar::ScaTra::TauType>("DEFINITION_TAU_REINIT",
+          deprecated_selection<ScaTra::TauType>("DEFINITION_TAU_REINIT",
               {
-                  {"Taylor_Hughes_Zarins", Inpar::ScaTra::tau_taylor_hughes_zarins},
-                  {"Taylor_Hughes_Zarins_wo_dt", Inpar::ScaTra::tau_taylor_hughes_zarins_wo_dt},
-                  {"Franca_Valentin", Inpar::ScaTra::tau_franca_valentin},
-                  {"Franca_Valentin_wo_dt", Inpar::ScaTra::tau_franca_valentin_wo_dt},
-                  {"Shakib_Hughes_Codina", Inpar::ScaTra::tau_shakib_hughes_codina},
-                  {"Shakib_Hughes_Codina_wo_dt", Inpar::ScaTra::tau_shakib_hughes_codina_wo_dt},
-                  {"Codina", Inpar::ScaTra::tau_codina},
-                  {"Codina_wo_dt", Inpar::ScaTra::tau_codina_wo_dt},
-                  {"Exact_1D", Inpar::ScaTra::tau_exact_1d},
-                  {"Zero", Inpar::ScaTra::tau_zero},
+                  {"Taylor_Hughes_Zarins", ScaTra::tau_taylor_hughes_zarins},
+                  {"Taylor_Hughes_Zarins_wo_dt", ScaTra::tau_taylor_hughes_zarins_wo_dt},
+                  {"Franca_Valentin", ScaTra::tau_franca_valentin},
+                  {"Franca_Valentin_wo_dt", ScaTra::tau_franca_valentin_wo_dt},
+                  {"Shakib_Hughes_Codina", ScaTra::tau_shakib_hughes_codina},
+                  {"Shakib_Hughes_Codina_wo_dt", ScaTra::tau_shakib_hughes_codina_wo_dt},
+                  {"Codina", ScaTra::tau_codina},
+                  {"Codina_wo_dt", ScaTra::tau_codina_wo_dt},
+                  {"Exact_1D", ScaTra::tau_exact_1d},
+                  {"Zero", ScaTra::tau_zero},
               },
               {.description = "Definition of tau",
-                  .default_value = Inpar::ScaTra::tau_taylor_hughes_zarins}),
+                  .default_value = ScaTra::tau_taylor_hughes_zarins}),
           // this parameter governs whether all-scale subgrid diffusivity is included
           deprecated_selection<LevelSet::ArtDiff>("ARTDIFFREINIT",
               {
@@ -128,21 +128,20 @@ std::vector<Core::IO::InputSpec> LevelSet::valid_parameters()
                               "discontinuity-capturing) term",
                   .default_value = LevelSet::artdiff_none}),
           // this parameter selects the all-scale subgrid-diffusivity definition applied
-          deprecated_selection<Inpar::ScaTra::AssgdType>("DEFINITION_ARTDIFFREINIT",
+          deprecated_selection<ScaTra::AssgdType>("DEFINITION_ARTDIFFREINIT",
               {
-                  {"artificial_linear", Inpar::ScaTra::assgd_artificial},
-                  {"artificial_linear_reinit", Inpar::ScaTra::assgd_lin_reinit},
-                  {"Hughes_etal_86_nonlinear", Inpar::ScaTra::assgd_hughes},
-                  {"Tezduyar_Park_86_nonlinear", Inpar::ScaTra::assgd_tezduyar},
-                  {"Tezduyar_Park_86_nonlinear_wo_phizero",
-                      Inpar::ScaTra::assgd_tezduyar_wo_phizero},
-                  {"doCarmo_Galeao_91_nonlinear", Inpar::ScaTra::assgd_docarmo},
-                  {"Almeida_Silva_97_nonlinear", Inpar::ScaTra::assgd_almeida},
-                  {"YZbeta_nonlinear", Inpar::ScaTra::assgd_yzbeta},
-                  {"Codina_nonlinear", Inpar::ScaTra::assgd_codina},
+                  {"artificial_linear", ScaTra::assgd_artificial},
+                  {"artificial_linear_reinit", ScaTra::assgd_lin_reinit},
+                  {"Hughes_etal_86_nonlinear", ScaTra::assgd_hughes},
+                  {"Tezduyar_Park_86_nonlinear", ScaTra::assgd_tezduyar},
+                  {"Tezduyar_Park_86_nonlinear_wo_phizero", ScaTra::assgd_tezduyar_wo_phizero},
+                  {"doCarmo_Galeao_91_nonlinear", ScaTra::assgd_docarmo},
+                  {"Almeida_Silva_97_nonlinear", ScaTra::assgd_almeida},
+                  {"YZbeta_nonlinear", ScaTra::assgd_yzbeta},
+                  {"Codina_nonlinear", ScaTra::assgd_codina},
               },
               {.description = "Definition of (all-scale) subgrid diffusivity",
-                  .default_value = Inpar::ScaTra::assgd_artificial}),
+                  .default_value = ScaTra::assgd_artificial}),
 
 
           deprecated_selection<LevelSet::SmoothedSignType>("SMOOTHED_SIGN_TYPE",

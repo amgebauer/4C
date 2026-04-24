@@ -92,9 +92,9 @@ void Discret::Elements::ScaTraEleCalcElchElectrode<distype, probdim>::get_conduc
  *----------------------------------------------------------------------*/
 template <Core::FE::CellType distype, int probdim>
 void Discret::Elements::ScaTraEleCalcElchElectrode<distype, probdim>::calculate_current(
-    Core::LinAlg::Matrix<nsd_, 1>& q,        //!< flux of species k
-    const Inpar::ScaTra::FluxType fluxtype,  //!< type of flux
-    const double fac                         //!< integration factor
+    Core::LinAlg::Matrix<nsd_, 1>& q,  //!< flux of species k
+    const ScaTra::FluxType fluxtype,   //!< type of flux
+    const double fac                   //!< integration factor
 )
 {
   /*
@@ -112,8 +112,8 @@ void Discret::Elements::ScaTraEleCalcElchElectrode<distype, probdim>::calculate_
 
   switch (fluxtype)
   {
-    case Inpar::ScaTra::flux_diffusive:
-    case Inpar::ScaTra::flux_total:
+    case ScaTra::flux_diffusive:
+    case ScaTra::flux_total:
     {
       // ohmic contribution to current density
       q.update(-diff_manager()->get_cond(), var_manager()->grad_pot());
@@ -261,9 +261,9 @@ void Discret::Elements::ScaTraEleCalcElchElectrode<distype,
  *---------------------------------------------------------------------*/
 template <Core::FE::CellType distype, int probdim>
 void Discret::Elements::ScaTraEleCalcElchElectrode<distype, probdim>::calculate_flux(
-    Core::LinAlg::Matrix<nsd_, 1>& q,        //!< flux of species k
-    const Inpar::ScaTra::FluxType fluxtype,  //!< type of flux
-    const int k                              //!< index of current scalar
+    Core::LinAlg::Matrix<nsd_, 1>& q,  //!< flux of species k
+    const ScaTra::FluxType fluxtype,   //!< type of flux
+    const int k                        //!< index of current scalar
 )
 {
   /*
@@ -276,8 +276,8 @@ void Discret::Elements::ScaTraEleCalcElchElectrode<distype, probdim>::calculate_
   // add convective flux contribution
   switch (fluxtype)
   {
-    case Inpar::ScaTra::flux_diffusive:
-    case Inpar::ScaTra::flux_total:
+    case ScaTra::flux_diffusive:
+    case ScaTra::flux_total:
     {
       // diffusive flux contribution
       q.update(-diff_manager()->get_isotropic_diff(k), var_manager()->grad_phi(k));

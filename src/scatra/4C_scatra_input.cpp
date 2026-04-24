@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 
 #include "4C_art_net_input.hpp"
 #include "4C_fem_condition_definition.hpp"
@@ -22,7 +22,7 @@
 
 FOUR_C_NAMESPACE_OPEN
 
-std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
+std::vector<Core::IO::InputSpec> ScaTra::valid_parameters()
 {
   using namespace Core::IO::InputSpecBuilders;
 
@@ -30,7 +30,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
   specs.push_back(group("SCALAR TRANSPORT DYNAMIC",
       {
 
-          deprecated_selection<Inpar::ScaTra::SolverType>("SOLVERTYPE",
+          deprecated_selection<ScaTra::SolverType>("SOLVERTYPE",
               {
                   {"linear_full", solvertype_linear_full},
                   {"linear_incremental", solvertype_linear_incremental},
@@ -48,7 +48,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
                   .default_value = solvertype_linear_full}),
 
 
-          deprecated_selection<Inpar::ScaTra::TimeIntegrationScheme>("TIMEINTEGR",
+          deprecated_selection<ScaTra::TimeIntegrationScheme>("TIMEINTEGR",
               {
                   {"Stationary", timeint_stationary},
                   {"One_Step_Theta", timeint_one_step_theta},
@@ -78,7 +78,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
           parameter<int>("MATID",
               {.description = "Material ID for automatic mesh generation", .default_value = -1}),
 
-          deprecated_selection<Inpar::ScaTra::VelocityField>("VELOCITYFIELD",
+          deprecated_selection<ScaTra::VelocityField>("VELOCITYFIELD",
               {
                   {"zero", velocity_zero},
                   {"function", velocity_function},
@@ -93,7 +93,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
 
 
 
-          deprecated_selection<Inpar::ScaTra::InitialField>("INITIALFIELD",
+          deprecated_selection<ScaTra::InitialField>("INITIALFIELD",
               {
                   {"zero_field", initfield_zero_field},
                   {"field_by_function", initfield_field_by_function},
@@ -119,7 +119,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
           parameter<bool>("SPHERICALCOORDS",
               {.description = "use of spherical coordinates", .default_value = false}),
 
-          deprecated_selection<Inpar::ScaTra::CalcError>("CALCERROR",
+          deprecated_selection<ScaTra::CalcError>("CALCERROR",
               {
                   {"No", calcerror_no},
                   {"Kwok_Wu", calcerror_Kwok_Wu},
@@ -137,7 +137,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
               {.description = "function number for scalar transport error computation",
                   .default_value = -1}),
 
-          deprecated_selection<Inpar::ScaTra::FluxType>("CALCFLUX_DOMAIN",
+          deprecated_selection<ScaTra::FluxType>("CALCFLUX_DOMAIN",
               {
                   {"No", flux_none},
                   {"total", flux_total},
@@ -151,7 +151,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
                       "perform approximate domain flux calculation involving matrix lumping",
                   .default_value = true}),
 
-          deprecated_selection<Inpar::ScaTra::FluxType>("CALCFLUX_BOUNDARY",
+          deprecated_selection<ScaTra::FluxType>("CALCFLUX_BOUNDARY",
               {
                   {"No", flux_none},
                   {"total", flux_total},
@@ -175,7 +175,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
               }),
 
 
-          deprecated_selection<Inpar::ScaTra::OutputScalarType>("OUTPUTSCALARS",
+          deprecated_selection<ScaTra::OutputScalarType>("OUTPUTSCALARS",
               {
                   {"none", outputscalars_none},
                   {"entire_domain", outputscalars_entiredomain},
@@ -196,7 +196,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
               {.description = "Do you want to write the state solution to Matlab file?",
                   .default_value = false}),
 
-          deprecated_selection<Inpar::ScaTra::ConvForm>("CONVFORM",
+          deprecated_selection<ScaTra::ConvForm>("CONVFORM",
               {
                   {"convective", convform_convective},
                   {"conservative", convform_conservative},
@@ -226,7 +226,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
                               "form must be used to account for volume changes.",
                   .default_value = false}),
 
-          deprecated_selection<Inpar::ScaTra::FSSUGRDIFF>("FSSUGRDIFF",
+          deprecated_selection<ScaTra::FSSUGRDIFF>("FSSUGRDIFF",
               {
                   {"No", fssugrdiff_no},
                   {"artificial", fssugrdiff_artificial},
@@ -246,7 +246,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
                   .default_value = Inpar::FLUID::no_meshtying}),
 
           // Type of coupling strategy between the two fields
-          deprecated_selection<Inpar::ScaTra::FieldCoupling>("FIELDCOUPLING",
+          deprecated_selection<ScaTra::FieldCoupling>("FIELDCOUPLING",
               {
                   {"matching", coupling_match},
                   {"volmortar", coupling_volmortar},
@@ -278,7 +278,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
               {.description = "Include natural convection effects", .default_value = false}),
 
           // parameters for finite difference check
-          deprecated_selection<Inpar::ScaTra::FdCheck>("FDCHECK",
+          deprecated_selection<ScaTra::FdCheck>("FDCHECK",
               {
                   {"none", fdcheck_none},
                   {"global", fdcheck_global},
@@ -297,7 +297,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
 
           // parameter for optional computation of domain and boundary integrals, i.e., of surface
           // areas and volumes associated with specified nodesets
-          deprecated_selection<Inpar::ScaTra::ComputeIntegrals>("COMPUTEINTEGRALS",
+          deprecated_selection<ScaTra::ComputeIntegrals>("COMPUTEINTEGRALS",
               {
                   {"none", computeintegrals_none},
                   {"initial", computeintegrals_initial},
@@ -456,8 +456,7 @@ std::vector<Core::IO::InputSpec> Inpar::ScaTra::valid_parameters()
 
 
 
-void Inpar::ScaTra::set_valid_conditions(
-    std::vector<Core::Conditions::ConditionDefinition>& condlist)
+void ScaTra::set_valid_conditions(std::vector<Core::Conditions::ConditionDefinition>& condlist)
 {
   using namespace Core::IO::InputSpecBuilders;
 
@@ -677,78 +676,78 @@ void Inpar::ScaTra::set_valid_conditions(
   }
 }
 
-std::string Inpar::ScaTra::impltype_to_string(ImplType impltype)
+std::string ScaTra::impltype_to_string(ImplType impltype)
 {
   switch (impltype)
   {
-    case Inpar::ScaTra::impltype_undefined:
+    case ScaTra::impltype_undefined:
       return "Undefined";
-    case Inpar::ScaTra::impltype_std:
+    case ScaTra::impltype_std:
       return "Std";
-    case Inpar::ScaTra::impltype_loma:
+    case ScaTra::impltype_loma:
       return "Loma";
-    case Inpar::ScaTra::impltype_elch_NP:
+    case ScaTra::impltype_elch_NP:
       return "ElchNP";
-    case Inpar::ScaTra::impltype_elch_electrode:
+    case ScaTra::impltype_elch_electrode:
       return "ElchElectrode";
-    case Inpar::ScaTra::impltype_elch_electrode_growth:
+    case ScaTra::impltype_elch_electrode_growth:
       return "ElchElectrodeGrowth";
-    case Inpar::ScaTra::impltype_elch_electrode_thermo:
+    case ScaTra::impltype_elch_electrode_thermo:
       return "ElchElectrodeThermo";
-    case Inpar::ScaTra::impltype_elch_diffcond:
+    case ScaTra::impltype_elch_diffcond:
       return "ElchDiffCond";
-    case Inpar::ScaTra::impltype_elch_diffcond_multiscale:
+    case ScaTra::impltype_elch_diffcond_multiscale:
       return "ElchDiffCondMultiScale";
-    case Inpar::ScaTra::impltype_elch_diffcond_thermo:
+    case ScaTra::impltype_elch_diffcond_thermo:
       return "ElchDiffCondThermo";
-    case Inpar::ScaTra::impltype_elch_scl:
+    case ScaTra::impltype_elch_scl:
       return "ElchScl";
-    case Inpar::ScaTra::impltype_thermo_elch_electrode:
+    case ScaTra::impltype_thermo_elch_electrode:
       return "ThermoElchElectrode";
-    case Inpar::ScaTra::impltype_thermo_elch_diffcond:
+    case ScaTra::impltype_thermo_elch_diffcond:
       return "ThermoElchDiffCond";
-    case Inpar::ScaTra::impltype_lsreinit:
+    case ScaTra::impltype_lsreinit:
       return "LsReinit";
-    case Inpar::ScaTra::impltype_levelset:
+    case ScaTra::impltype_levelset:
       return "Ls";
-    case Inpar::ScaTra::impltype_poro:
+    case ScaTra::impltype_poro:
       return "Poro";
-    case Inpar::ScaTra::impltype_advreac:
+    case ScaTra::impltype_advreac:
       return "Advanced_Reaction";
-    case Inpar::ScaTra::impltype_multipororeac:
+    case ScaTra::impltype_multipororeac:
       return "PoroMultiReac";
-    case Inpar::ScaTra::impltype_pororeac:
+    case ScaTra::impltype_pororeac:
       return "PoroReac";
-    case Inpar::ScaTra::impltype_pororeacECM:
+    case ScaTra::impltype_pororeacECM:
       return "PoroReacECM";
-    case Inpar::ScaTra::impltype_aniso:
+    case ScaTra::impltype_aniso:
       return "Aniso";
-    case Inpar::ScaTra::impltype_cardiac_monodomain:
+    case ScaTra::impltype_cardiac_monodomain:
       return "CardMono";
-    case Inpar::ScaTra::impltype_gr:
+    case ScaTra::impltype_gr:
       return "GR";
-    case Inpar::ScaTra::impltype_chemo:
+    case ScaTra::impltype_chemo:
       return "Chemotaxis";
-    case Inpar::ScaTra::impltype_chemoreac:
+    case ScaTra::impltype_chemoreac:
       return "Chemo_Reac";
-    case Inpar::ScaTra::impltype_std_hdg:
+    case ScaTra::impltype_std_hdg:
       return "Hdg";
-    case Inpar::ScaTra::impltype_cardiac_monodomain_hdg:
+    case ScaTra::impltype_cardiac_monodomain_hdg:
       return "HdgCardMono";
-    case Inpar::ScaTra::impltype_one_d_artery:
+    case ScaTra::impltype_one_d_artery:
       return "OneDArtery";
-    case Inpar::ScaTra::impltype_no_physics:
+    case ScaTra::impltype_no_physics:
       return "NoPhysics";
   }
 
   FOUR_C_THROW("Unknown implementation type given: {}", impltype);
 }
 
-Core::IO::InputSpec Inpar::ScaTra::all_specs_for_scatra_stabilization()
+Core::IO::InputSpec ScaTra::all_specs_for_scatra_stabilization()
 {
   using namespace Core::IO::InputSpecBuilders;
   return all_of({// this parameter governs type of stabilization
-      deprecated_selection<Inpar::ScaTra::StabType>("STABTYPE",
+      deprecated_selection<ScaTra::StabType>("STABTYPE",
           {
               {"no_stabilization", stabtype_no_stabilization},
               {"SUPG", stabtype_SUPG},
@@ -773,7 +772,7 @@ Core::IO::InputSpec Inpar::ScaTra::all_specs_for_scatra_stabilization()
                             .default_value = false}),
 
       // this parameter selects the tau definition applied
-      deprecated_selection<Inpar::ScaTra::TauType>("DEFINITION_TAU",
+      deprecated_selection<ScaTra::TauType>("DEFINITION_TAU",
           {
               {"Taylor_Hughes_Zarins", tau_taylor_hughes_zarins},
               {"Taylor_Hughes_Zarins_wo_dt", tau_taylor_hughes_zarins_wo_dt},
@@ -793,11 +792,11 @@ Core::IO::InputSpec Inpar::ScaTra::all_specs_for_scatra_stabilization()
 
       // this parameter selects the characteristic element length for tau for all
       // stabilization parameter definitions requiring such a length
-      parameter<Inpar::ScaTra::CharEleLength>("CHARELELENGTH",
+      parameter<ScaTra::CharEleLength>("CHARELELENGTH",
           {.description = "Characteristic element length for tau", .default_value = streamlength}),
 
       // this parameter selects the all-scale subgrid-diffusivity definition applied
-      deprecated_selection<Inpar::ScaTra::AssgdType>("DEFINITION_ASSGD",
+      deprecated_selection<ScaTra::AssgdType>("DEFINITION_ASSGD",
           {
               {"artificial_linear", assgd_artificial},
               {"artificial_linear_reinit", assgd_lin_reinit},
@@ -813,7 +812,7 @@ Core::IO::InputSpec Inpar::ScaTra::all_specs_for_scatra_stabilization()
               .default_value = assgd_artificial}),
 
       // this parameter selects the location where tau is evaluated
-      deprecated_selection<Inpar::ScaTra::EvalTau>("EVALUATION_TAU",
+      deprecated_selection<ScaTra::EvalTau>("EVALUATION_TAU",
           {
               {"element_center", evaltau_element_center},
               {"integration_point", evaltau_integration_point},
@@ -823,7 +822,7 @@ Core::IO::InputSpec Inpar::ScaTra::all_specs_for_scatra_stabilization()
 
       // this parameter selects the location where the material law is evaluated
       // (does not fit here very well, but parameter transfer is easier)
-      deprecated_selection<Inpar::ScaTra::EvalMat>("EVALUATION_MAT",
+      deprecated_selection<ScaTra::EvalMat>("EVALUATION_MAT",
           {
               {"element_center", evalmat_element_center},
               {"integration_point", evalmat_integration_point},
@@ -832,7 +831,7 @@ Core::IO::InputSpec Inpar::ScaTra::all_specs_for_scatra_stabilization()
               .default_value = evalmat_element_center}),
 
       // this parameter selects methods for improving consistency of stabilization terms
-      deprecated_selection<Inpar::ScaTra::Consistency>("CONSISTENCY",
+      deprecated_selection<ScaTra::Consistency>("CONSISTENCY",
           {
               {"no", consistency_no},
               {"L2_projection_lumped", consistency_l2_projection_lumped},

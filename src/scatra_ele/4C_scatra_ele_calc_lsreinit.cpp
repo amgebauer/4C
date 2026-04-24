@@ -452,7 +452,7 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_hyperbo
   // the stabilization parameter
   double tau = 0.0;
 
-  if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+  if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
   {
     if (not my::scatrapara_->tau_gp())
     {
@@ -626,7 +626,7 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_hyperbo
     // subgrid-scale velocity vector in gausspoint
     // Core::LinAlg::Matrix<nsd_,1> sgvelint(true);
 
-    if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+    if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
     {
       if (my::scatrapara_->tau_gp())
         // calculation of stabilization parameter at integration point
@@ -655,7 +655,7 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_hyperbo
 
 #ifdef MODIFIED_EQ
       // recompute tau to get adaption to artificial diffusion
-      if (my::scatrapara_->StabType() != Inpar::ScaTra::stabtype_no_stabilization)
+      if (my::scatrapara_->StabType() != ScaTra::stabtype_no_stabilization)
       {
         if (my::scatrapara_->TauGP())
           // calculation of stabilization parameter at integration point
@@ -700,7 +700,7 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_hyperbo
     Core::LinAlg::Matrix<nen_, 1> sgconv(Core::LinAlg::Initialization::zero);
     if (lsreinitparams_->lin_form() == LevelSet::newton)
     {
-      if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+      if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
         my::calc_mat_mass_stab(emat, 0, taufac, 1.0, 1.0, sgconv, diff);
     }
 
@@ -715,7 +715,7 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_hyperbo
     // transient stabilization of convective term (in convective form)
     if (lsreinitparams_->lin_form() == LevelSet::newton)
     {
-      if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+      if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
         my::calc_mat_trans_conv_diff_stab(emat, 0, timetaufac, 1.0, sgconv, diff);
     }
 
@@ -762,7 +762,7 @@ void Discret::Elements::ScaTraEleCalcLsReinit<distype, prob_dim>::sysmat_hyperbo
 #endif
 
     // linearization of stabilization terms
-    if (my::scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+    if (my::scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
       my::calc_rhs_trans_conv_diff_stab(erhs, 0, rhstaufac, 1.0, scatrares, sgconv, diff);
 
   }  // end: loop all Gauss points

@@ -47,12 +47,12 @@ int Discret::Elements::TransportBoundary::evaluate(Teuchos::ParameterList& param
   // perform additional operations specific to implementation type
   switch (parent_element()->impl_type())
   {
-    case Inpar::ScaTra::impltype_elch_diffcond:
-    case Inpar::ScaTra::impltype_elch_diffcond_thermo:
-    case Inpar::ScaTra::impltype_elch_electrode:
-    case Inpar::ScaTra::impltype_elch_electrode_growth:
-    case Inpar::ScaTra::impltype_elch_electrode_thermo:
-    case Inpar::ScaTra::impltype_elch_NP:
+    case ScaTra::impltype_elch_diffcond:
+    case ScaTra::impltype_elch_diffcond_thermo:
+    case ScaTra::impltype_elch_electrode:
+    case ScaTra::impltype_elch_electrode_growth:
+    case ScaTra::impltype_elch_electrode_thermo:
+    case ScaTra::impltype_elch_NP:
     {
       // adapt number of transported scalars for electrochemistry problems
       numscal -= 1;
@@ -67,20 +67,20 @@ int Discret::Elements::TransportBoundary::evaluate(Teuchos::ParameterList& param
       break;
     }
 
-    case Inpar::ScaTra::impltype_std:
-    case Inpar::ScaTra::impltype_advreac:
-    case Inpar::ScaTra::impltype_chemo:
-    case Inpar::ScaTra::impltype_chemoreac:
-    case Inpar::ScaTra::impltype_aniso:
-    case Inpar::ScaTra::impltype_cardiac_monodomain:
-    case Inpar::ScaTra::impltype_gr:
-    case Inpar::ScaTra::impltype_levelset:
-    case Inpar::ScaTra::impltype_loma:
-    case Inpar::ScaTra::impltype_poro:
-    case Inpar::ScaTra::impltype_pororeac:
-    case Inpar::ScaTra::impltype_thermo_elch_diffcond:
-    case Inpar::ScaTra::impltype_thermo_elch_electrode:
-    case Inpar::ScaTra::impltype_multipororeac:
+    case ScaTra::impltype_std:
+    case ScaTra::impltype_advreac:
+    case ScaTra::impltype_chemo:
+    case ScaTra::impltype_chemoreac:
+    case ScaTra::impltype_aniso:
+    case ScaTra::impltype_cardiac_monodomain:
+    case ScaTra::impltype_gr:
+    case ScaTra::impltype_levelset:
+    case ScaTra::impltype_loma:
+    case ScaTra::impltype_poro:
+    case ScaTra::impltype_pororeac:
+    case ScaTra::impltype_thermo_elch_diffcond:
+    case ScaTra::impltype_thermo_elch_electrode:
+    case ScaTra::impltype_multipororeac:
       // do nothing in these cases
       break;
 

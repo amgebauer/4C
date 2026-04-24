@@ -113,7 +113,7 @@ int Discret::Elements::ScaTraEleCalc<distype, probdim>::evaluate_action(
       Core::FE::extract_my_values<Core::LinAlg::Matrix<nen_, 1>>(*phinp, ephinp_, lm);
 
       // access control parameter for flux calculation
-      Inpar::ScaTra::FluxType fluxtype = scatrapara_->calc_flux_domain();
+      ScaTra::FluxType fluxtype = scatrapara_->calc_flux_domain();
       std::shared_ptr<std::vector<int>> writefluxids = scatrapara_->write_flux_ids();
 
       // we always get an 3D flux vector for each node
@@ -1034,7 +1034,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_initial_time_deriv
       //----------------------------------------------------------------
       // the stabilization term is deactivated in calc_initial_time_derivative() on time integrator
       // level
-      if (scatrapara_->stab_type() != Inpar::ScaTra::stabtype_no_stabilization)
+      if (scatrapara_->stab_type() != ScaTra::stabtype_no_stabilization)
       {
         // subgrid-scale velocity (dummy)
         Core::LinAlg::Matrix<nen_, 1> sgconv(Core::LinAlg::Initialization::zero);
@@ -1123,7 +1123,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::integrate_shape_functio
 template <Core::FE::CellType distype, int probdim>
 void Discret::Elements::ScaTraEleCalc<distype, probdim>::calculate_flux(
     Core::LinAlg::Matrix<3, nen_>& flux, const Core::Elements::Element* ele,
-    const Inpar::ScaTra::FluxType fluxtype, const int k)
+    const ScaTra::FluxType fluxtype, const int k)
 {
   /*
   * Actually, we compute here a weighted (and integrated) form of the fluxes!
@@ -1186,12 +1186,12 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calculate_flux(
     // add different flux contributions as specified by user input
     switch (fluxtype)
     {
-      case Inpar::ScaTra::flux_total:
+      case ScaTra::flux_total:
         // convective flux contribution
         q.update(densnp[k] * scatravarmanager_->phinp(k), convelint);
 
         [[fallthrough]];
-      case Inpar::ScaTra::flux_diffusive:
+      case ScaTra::flux_diffusive:
         // diffusive flux contribution
         q.update(-(diffmanager_->get_isotropic_diff(k)), gradphi, 1.0);
 
@@ -1643,11 +1643,10 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::cal_error_compared_to_a
   const Core::FE::IntPointsAndWeights<nsd_ele_> intpoints(
       ScaTra::DisTypeToGaussRuleForExactSol<distype>::rule);
 
-  const auto errortype =
-      Teuchos::getIntegralValue<Inpar::ScaTra::CalcError>(params, "calcerrorflag");
+  const auto errortype = Teuchos::getIntegralValue<ScaTra::CalcError>(params, "calcerrorflag");
   switch (errortype)
   {
-    case Inpar::ScaTra::calcerror_byfunction:
+    case ScaTra::calcerror_byfunction:
     {
       const int errorfunctno = params.get<int>("error function number");
 
@@ -1736,7 +1735,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::cal_error_compared_to_a
     }
     break;
 
-    case Inpar::ScaTra::calcerror_spherediffusion:
+    case ScaTra::calcerror_spherediffusion:
     {
       FOUR_C_ASSERT_ALWAYS(nsd_ == 3, "Sphere diffusion only implemented for 3D!");
       // analytical solution

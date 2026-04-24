@@ -132,7 +132,7 @@ int Discret::Elements::ScaTraEleCalcElch<distype, probdim>::evaluate_action(
         if (my::scatrapara_->mat_gp()) get_material_params(ele, densn, densnp, densam, visc, iquad);
 
         // access control parameter for flux calculation
-        Inpar::ScaTra::FluxType fluxtype = my::scatrapara_->calc_flux_domain();
+        ScaTra::FluxType fluxtype = my::scatrapara_->calc_flux_domain();
         std::shared_ptr<std::vector<int>> writefluxids = my::scatrapara_->write_flux_ids();
 
         // do a loop for systems of transported scalars

@@ -51,8 +51,7 @@ std::map<std::string, std::string> SSI::ScatraStructureCloneStrategyManifold::co
 
 /*----------------------------------------------------------------------*
  *----------------------------------------------------------------------*/
-Inpar::ScaTra::ImplType SSI::ScatraStructureCloneStrategy::get_impl_type(
-    Core::Elements::Element* ele)
+ScaTra::ImplType SSI::ScatraStructureCloneStrategy::get_impl_type(Core::Elements::Element* ele)
 {
   return Adapter::get_sca_tra_impl_type(ele);
 }
@@ -92,8 +91,8 @@ void SSI::ScatraStructureCloneStrategy::set_element_data(
     trans->set_dis_type(oldele->shape());
 
     // now check whether ImplType is reasonable and if set the ImplType
-    Inpar::ScaTra::ImplType impltype = SSI::ScatraStructureCloneStrategy::get_impl_type(oldele);
-    if (impltype == Inpar::ScaTra::impltype_undefined)
+    ScaTra::ImplType impltype = SSI::ScatraStructureCloneStrategy::get_impl_type(oldele);
+    if (impltype == ScaTra::impltype_undefined)
     {
       FOUR_C_THROW(
           "ScatraStructureCloneStrategy copies scatra discretization from structure "
@@ -126,19 +125,19 @@ void SSI::ScatraStructureCloneStrategyManifold::set_element_data(
   std::vector<const Core::Conditions::Condition*> conditions;
   struct_dis->get_condition("SSISurfaceManifold", conditions);
 
-  auto impltype = Inpar::ScaTra::impltype_undefined;
+  auto impltype = ScaTra::impltype_undefined;
   for (auto* condition : conditions)
   {
     auto cond_eles = condition->geometry();
     if (cond_eles.find(oldele->id()) != cond_eles.end())
     {
-      impltype = condition->parameters().get<Inpar::ScaTra::ImplType>("ImplType");
+      impltype = condition->parameters().get<ScaTra::ImplType>("ImplType");
       continue;
     }
   }
 
-  if (impltype != Inpar::ScaTra::impltype_elch_electrode and
-      impltype != Inpar::ScaTra::impltype_elch_diffcond and impltype != Inpar::ScaTra::impltype_std)
+  if (impltype != ScaTra::impltype_elch_electrode and impltype != ScaTra::impltype_elch_diffcond and
+      impltype != ScaTra::impltype_std)
     FOUR_C_THROW("Scatra Impltype not supported for SSI with transport on manifolds");
 
   auto* trans = dynamic_cast<Discret::Elements::Transport*>(newele.get());

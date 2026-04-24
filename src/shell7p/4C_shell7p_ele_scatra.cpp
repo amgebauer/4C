@@ -386,19 +386,19 @@ bool Discret::Elements::Shell7pScatra::read_element(const std::string& eletype,
   auto impltype = container.get<std::string>("TYPE");
 
   if (impltype == "Undefined")
-    impltype_ = Inpar::ScaTra::impltype_undefined;
+    impltype_ = ScaTra::impltype_undefined;
   else if (impltype == "AdvReac")
-    impltype_ = Inpar::ScaTra::impltype_advreac;
+    impltype_ = ScaTra::impltype_advreac;
   else if (impltype == "CardMono")
-    impltype_ = Inpar::ScaTra::impltype_cardiac_monodomain;
+    impltype_ = ScaTra::impltype_cardiac_monodomain;
   else if (impltype == "Chemo")
-    impltype_ = Inpar::ScaTra::impltype_chemo;
+    impltype_ = ScaTra::impltype_chemo;
   else if (impltype == "ChemoReac")
-    impltype_ = Inpar::ScaTra::impltype_chemoreac;
+    impltype_ = ScaTra::impltype_chemoreac;
   else if (impltype == "Loma")
-    impltype_ = Inpar::ScaTra::impltype_loma;
+    impltype_ = ScaTra::impltype_loma;
   else if (impltype == "Std")
-    impltype_ = Inpar::ScaTra::impltype_std;
+    impltype_ = ScaTra::impltype_std;
   else
     FOUR_C_THROW("Invalid implementation type for Shell7pScatra elements!");
 

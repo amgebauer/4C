@@ -14,7 +14,7 @@
 #include "4C_adapter_fld_base_algorithm.hpp"
 #include "4C_adapter_scatra_base_algorithm.hpp"
 #include "4C_coupling_adapter_volmortar.hpp"
-#include "4C_inpar_scatra.hpp"
+#include "4C_scatra_input.hpp"
 
 FOUR_C_NAMESPACE_OPEN
 
@@ -74,7 +74,7 @@ namespace Adapter
     void setup_field_coupling(const std::string fluid_disname, const std::string scatra_disname);
 
     /// flag for type of field coupling (i.e. matching or volmortar)
-    Inpar::ScaTra::FieldCoupling fieldcoupling_;
+    ScaTra::FieldCoupling fieldcoupling_;
 
     //! volume coupling (using mortar) adapter
     std::shared_ptr<Coupling::Adapter::MortarVolCoupl> volcoupl_fluidscatra_;

@@ -84,130 +84,130 @@ namespace ScaTra
    | convert implementation type of scalar transport elements into corresponding string for output
    purposes   fang 02/15 |
    *---------------------------------------------------------------------------------------------------------------------*/
-  std::string impl_type_to_string(const Inpar::ScaTra::ImplType impltype)
+  std::string impl_type_to_string(const ScaTra::ImplType impltype)
   {
     // determine implementation type
     std::string impltypestring;
     switch (impltype)
     {
-      case Inpar::ScaTra::impltype_std:
+      case ScaTra::impltype_std:
       {
         impltypestring = "Standard scalar transport";
         break;
       }
-      case Inpar::ScaTra::impltype_thermo_elch_electrode:
+      case ScaTra::impltype_thermo_elch_electrode:
       {
         impltypestring = "Heat transport within electrodes";
         break;
       }
-      case Inpar::ScaTra::impltype_thermo_elch_diffcond:
+      case ScaTra::impltype_thermo_elch_diffcond:
       {
         impltypestring = "Heat transport within concentrated electrolytes";
         break;
       }
-      case Inpar::ScaTra::impltype_advreac:
+      case ScaTra::impltype_advreac:
       {
         impltypestring = "Advanced reactions";
         break;
       }
-      case Inpar::ScaTra::impltype_chemo:
+      case ScaTra::impltype_chemo:
       {
         impltypestring = "Chemotaxis";
         break;
       }
-      case Inpar::ScaTra::impltype_chemoreac:
+      case ScaTra::impltype_chemoreac:
       {
         impltypestring = "Advanced reactions AND chemotaxis";
         break;
       }
-      case Inpar::ScaTra::impltype_aniso:
+      case ScaTra::impltype_aniso:
       {
         impltypestring = "Anisotropic scalar transport";
         break;
       }
-      case Inpar::ScaTra::impltype_cardiac_monodomain:
+      case ScaTra::impltype_cardiac_monodomain:
       {
         impltypestring = "Cardiac monodomain";
         break;
       }
-      case Inpar::ScaTra::impltype_gr:
+      case ScaTra::impltype_gr:
       {
         impltypestring = "Growth and remodeling";
         break;
       }
-      case Inpar::ScaTra::impltype_elch_diffcond:
+      case ScaTra::impltype_elch_diffcond:
       {
         impltypestring = "Electrochemistry for diffusion-conduction formulation";
         break;
       }
-      case Inpar::ScaTra::impltype_elch_diffcond_multiscale:
+      case ScaTra::impltype_elch_diffcond_multiscale:
       {
         impltypestring =
             "Electrochemistry for diffusion-conduction formulation within a multi-scale framework";
         break;
       }
-      case Inpar::ScaTra::impltype_elch_diffcond_thermo:
+      case ScaTra::impltype_elch_diffcond_thermo:
       {
         impltypestring =
             "Electrochemistry for diffusion-conduction formulation with thermal effects";
         break;
       }
-      case Inpar::ScaTra::impltype_elch_electrode:
+      case ScaTra::impltype_elch_electrode:
       {
         impltypestring = "Electrochemistry for electrodes";
         break;
       }
-      case Inpar::ScaTra::impltype_elch_electrode_growth:
+      case ScaTra::impltype_elch_electrode_growth:
       {
         impltypestring = "Electrochemistry for electrodes exhibiting lithium plating and stripping";
         break;
       }
-      case Inpar::ScaTra::impltype_elch_electrode_thermo:
+      case ScaTra::impltype_elch_electrode_thermo:
       {
         impltypestring = "Electrochemistry for electrodes with thermal effects";
         break;
       }
-      case Inpar::ScaTra::impltype_elch_NP:
+      case ScaTra::impltype_elch_NP:
       {
         impltypestring = "Electrochemistry for Nernst-Planck formulation";
         break;
       }
-      case Inpar::ScaTra::impltype_loma:
+      case ScaTra::impltype_loma:
       {
         impltypestring = "Low Mach number flow";
         break;
       }
-      case Inpar::ScaTra::impltype_levelset:
+      case ScaTra::impltype_levelset:
       {
         impltypestring = "Levelset without reinitialization";
         break;
       }
-      case Inpar::ScaTra::impltype_lsreinit:
+      case ScaTra::impltype_lsreinit:
       {
         impltypestring = "Levelset with reinitialization";
         break;
       }
-      case Inpar::ScaTra::impltype_poro:
+      case ScaTra::impltype_poro:
       {
         impltypestring = "Scalar transport in porous media";
         break;
       }
-      case Inpar::ScaTra::impltype_pororeac:
+      case ScaTra::impltype_pororeac:
       {
         impltypestring = "Reactive scalar transport in porous media";
         break;
       }
-      case Inpar::ScaTra::impltype_one_d_artery:
+      case ScaTra::impltype_one_d_artery:
       {
         impltypestring = "Scalar Transport in 1D artery";
         break;
       }
-      case Inpar::ScaTra::impltype_no_physics:
+      case ScaTra::impltype_no_physics:
       {
         impltypestring = "Dummy with no physics";
         break;
       }
-      case Inpar::ScaTra::impltype_undefined:
+      case ScaTra::impltype_undefined:
       {
         impltypestring = "Undefined";
         break;

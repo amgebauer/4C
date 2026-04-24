@@ -12,9 +12,9 @@
 
 #include "4C_fem_general_element.hpp"
 #include "4C_fem_general_elementtype.hpp"
-#include "4C_inpar_scatra.hpp"
 #include "4C_inpar_structure.hpp"
 #include "4C_linalg_serialdensematrix.hpp"
+#include "4C_scatra_input.hpp"
 #include "4C_solid_ele_factory.hpp"
 #include "4C_solid_poro_ele_factory.hpp"
 #include "4C_solid_poro_ele_properties.hpp"
@@ -184,7 +184,7 @@ namespace Discret::Elements
 
     Inpar::Solid::KinemType get_ele_kinematic_type() { return solid_ele_property_.kintype; }
 
-    Inpar::ScaTra::ImplType get_impl_type() { return poro_ele_property_.impltype; }
+    ScaTra::ImplType get_impl_type() { return poro_ele_property_.impltype; }
 
     std::optional<Core::LinAlg::Tensor<double, dim>> get_possible_bodyforce_contribution()
     {

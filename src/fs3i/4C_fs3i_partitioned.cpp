@@ -111,7 +111,7 @@ void FS3I::PartFS3I::init()
   //  FOUR_C_THROW("At least two material lists required for partitioned FS3I!");
 
   // determine type of scalar transport
-  const auto impltype_fluid = Teuchos::getIntegralValue<Inpar::ScaTra::ImplType>(
+  const auto impltype_fluid = Teuchos::getIntegralValue<ScaTra::ImplType>(
       problem->f_s3_i_dynamic_params(), "FLUIDSCAL_SCATRATYPE");
 
   //---------------------------------------------------------------------
@@ -158,7 +158,7 @@ void FS3I::PartFS3I::init()
           "If you have specified the fluid-scalar by TRANSPORT ELEMENTS use "
           "FLUIDSCAL_FIELDCOUPLING 'volume_nonmatching'!");
 
-    if (not(impltype_fluid == Inpar::ScaTra::impltype_undefined))
+    if (not(impltype_fluid == ScaTra::impltype_undefined))
       FOUR_C_THROW(
           "Be aware that your FLUIDSCAL_SCATRATYPE will be ignored and the impltype from the "
           "TRANSPORT ELEMENTS section will be utilized. Use FLUIDSCAL_SCATRATYPE 'Undefined'!");
@@ -209,8 +209,7 @@ void FS3I::PartFS3I::init()
     // is the set ImplType for the STRUCTURE Elements reasonable in case they are not cloned?
     for (int i = 0; i < structdis->num_my_col_elements(); ++i)
     {
-      if (Adapter::get_sca_tra_impl_type(structdis->l_col_element(i)) !=
-          Inpar::ScaTra::impltype_undefined)
+      if (Adapter::get_sca_tra_impl_type(structdis->l_col_element(i)) != ScaTra::impltype_undefined)
       {
         FOUR_C_THROW(
             "Be aware that the ImplType defined for the STRUCTURE Elements will be ignored and the "

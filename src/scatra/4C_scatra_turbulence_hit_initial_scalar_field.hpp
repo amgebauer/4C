@@ -10,8 +10,8 @@
 
 #include "4C_config.hpp"
 
-#include "4C_inpar_scatra.hpp"
 #include "4C_linalg_vector.hpp"
+#include "4C_scatra_input.hpp"
 
 #include <memory>
 
@@ -33,8 +33,7 @@ namespace ScaTra
   {
    public:
     //! constructor
-    HomoIsoTurbInitialScalarField(
-        ScaTraTimIntImpl& timeint, const Inpar::ScaTra::InitialField initfield);
+    HomoIsoTurbInitialScalarField(ScaTraTimIntImpl& timeint, const ScaTra::InitialField initfield);
 
     //! calculate initial field
     void calculate_initial_field();
@@ -62,7 +61,7 @@ namespace ScaTra
     std::shared_ptr<Core::LinAlg::Vector<double>> phin_;
 
     //! type of energy spectrum for initialization
-    Inpar::ScaTra::InitialField type_;
+    ScaTra::InitialField type_;
 
     //! number of resolved mode
     int nummodes_;

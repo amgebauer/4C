@@ -34,9 +34,9 @@ Discret::Elements::ScaTraEleParameterStd::ScaTraEleParameterStd(
     : is_ale_(false),
       is_conservative_(false),
       sphericalcoords_(false),
-      calcflux_domain_(Inpar::ScaTra::flux_none),
+      calcflux_domain_(ScaTra::flux_none),
       writefluxids_(nullptr),
-      fdcheck_(Inpar::ScaTra::fdcheck_none),
+      fdcheck_(ScaTra::fdcheck_none),
       fdcheckeps_(0.),
       fdchecktol_(0.),
       nds_disp_(-1),
@@ -54,13 +54,13 @@ Discret::Elements::ScaTraEleParameterStd::ScaTraEleParameterStd(
       intlayergrowth_itemax_(0),
       partitioned_multiscale_(false),
       has_external_force_(false),
-      stabtype_(Inpar::ScaTra::stabtype_no_stabilization),
-      whichtau_(Inpar::ScaTra::tau_zero),
-      charelelength_(Inpar::ScaTra::streamlength),
+      stabtype_(ScaTra::stabtype_no_stabilization),
+      whichtau_(ScaTra::tau_zero),
+      charelelength_(ScaTra::streamlength),
       diffreastafac_(0.0),
       sgvel_(false),
       assgd_(false),
-      whichassgd_(Inpar::ScaTra::assgd_artificial),
+      whichassgd_(ScaTra::assgd_artificial),
       tau_gp_(false),
       mat_gp_(false),
       tau_value_(0.),
@@ -93,74 +93,72 @@ void Discret::Elements::ScaTraEleParameterStd::set_parameters(Teuchos::Parameter
   is_ale_ = parameters.get<bool>("isale", false);
 
   // set flag for conservative form
-  const auto convform = Teuchos::getIntegralValue<Inpar::ScaTra::ConvForm>(parameters, "convform");
+  const auto convform = Teuchos::getIntegralValue<ScaTra::ConvForm>(parameters, "convform");
 
   is_conservative_ = false;
-  if (convform == Inpar::ScaTra::convform_conservative) is_conservative_ = true;
+  if (convform == ScaTra::convform_conservative) is_conservative_ = true;
 
   // flag for writing the flux vector fields
-  calcflux_domain_ =
-      Teuchos::getIntegralValue<Inpar::ScaTra::FluxType>(parameters, "calcflux_domain");
+  calcflux_domain_ = Teuchos::getIntegralValue<ScaTra::FluxType>(parameters, "calcflux_domain");
 
   //! vector containing ids of scalars for which flux vectors are calculated
-  if (calcflux_domain_ != Inpar::ScaTra::flux_none)
+  if (calcflux_domain_ != ScaTra::flux_none)
     writefluxids_ = parameters.get<std::shared_ptr<std::vector<int>>>("writeflux_ids");
 
   // set parameters for stabilization
   Teuchos::ParameterList& stablist = parameters.sublist("stabilization");
 
   // get definition for stabilization parameter tau
-  whichtau_ = Teuchos::getIntegralValue<Inpar::ScaTra::TauType>(stablist, "DEFINITION_TAU");
+  whichtau_ = Teuchos::getIntegralValue<ScaTra::TauType>(stablist, "DEFINITION_TAU");
 
   // set correct stationary definition for stabilization parameter automatically
   // and ensure that exact stabilization parameter is only used in stationary case
   if (scatraparatimint_->is_stationary())
   {
-    if (whichtau_ == Inpar::ScaTra::tau_taylor_hughes_zarins)
-      whichtau_ = Inpar::ScaTra::tau_taylor_hughes_zarins_wo_dt;
-    else if (whichtau_ == Inpar::ScaTra::tau_franca_valentin)
-      whichtau_ = Inpar::ScaTra::tau_franca_valentin_wo_dt;
-    else if (whichtau_ == Inpar::ScaTra::tau_shakib_hughes_codina)
-      whichtau_ = Inpar::ScaTra::tau_shakib_hughes_codina_wo_dt;
-    else if (whichtau_ == Inpar::ScaTra::tau_codina)
-      whichtau_ = Inpar::ScaTra::tau_codina_wo_dt;
-    else if (whichtau_ == Inpar::ScaTra::tau_franca_madureira_valentin)
-      whichtau_ = Inpar::ScaTra::tau_franca_madureira_valentin_wo_dt;
+    if (whichtau_ == ScaTra::tau_taylor_hughes_zarins)
+      whichtau_ = ScaTra::tau_taylor_hughes_zarins_wo_dt;
+    else if (whichtau_ == ScaTra::tau_franca_valentin)
+      whichtau_ = ScaTra::tau_franca_valentin_wo_dt;
+    else if (whichtau_ == ScaTra::tau_shakib_hughes_codina)
+      whichtau_ = ScaTra::tau_shakib_hughes_codina_wo_dt;
+    else if (whichtau_ == ScaTra::tau_codina)
+      whichtau_ = ScaTra::tau_codina_wo_dt;
+    else if (whichtau_ == ScaTra::tau_franca_madureira_valentin)
+      whichtau_ = ScaTra::tau_franca_madureira_valentin_wo_dt;
   }
   else
   {
-    if (whichtau_ == Inpar::ScaTra::tau_exact_1d)
+    if (whichtau_ == ScaTra::tau_exact_1d)
       FOUR_C_THROW("exact stabilization parameter only available for stationary case");
   }
 
-  if (whichtau_ == Inpar::ScaTra::tau_numerical_value)
+  if (whichtau_ == ScaTra::tau_numerical_value)
     tau_value_ = parameters.sublist("stabilization").get<double>("TAU_VALUE");
 
   // get characteristic element length for stabilization parameter definition
-  charelelength_ =
-      Teuchos::getIntegralValue<Inpar::ScaTra::CharEleLength>(stablist, "CHARELELENGTH");
+  charelelength_ = Teuchos::getIntegralValue<ScaTra::CharEleLength>(stablist, "CHARELELENGTH");
 
   // set (sign) factor for diffusive and reactive stabilization terms
   // (factor is zero for SUPG) and overwrite tau definition when there
   // is no stabilization
-  stabtype_ = Teuchos::getIntegralValue<Inpar::ScaTra::StabType>(stablist, "STABTYPE");
+  stabtype_ = Teuchos::getIntegralValue<ScaTra::StabType>(stablist, "STABTYPE");
   switch (stabtype_)
   {
-    case Inpar::ScaTra::stabtype_no_stabilization:
-      whichtau_ = Inpar::ScaTra::tau_zero;
+    case ScaTra::stabtype_no_stabilization:
+      whichtau_ = ScaTra::tau_zero;
       break;
-    case Inpar::ScaTra::stabtype_SUPG:
+    case ScaTra::stabtype_SUPG:
       diffreastafac_ = 0.0;
       break;
-    case Inpar::ScaTra::stabtype_GLS:
+    case ScaTra::stabtype_GLS:
       diffreastafac_ = 1.0;
       break;
-    case Inpar::ScaTra::stabtype_USFEM:
+    case ScaTra::stabtype_USFEM:
       diffreastafac_ = -1.0;
       break;
-    case Inpar::ScaTra::stabtype_hdg_centered:
-    case Inpar::ScaTra::stabtype_hdg_upwind:
-      if (whichtau_ != Inpar::ScaTra::tau_numerical_value or tau_value_ <= 0.0)
+    case ScaTra::stabtype_hdg_centered:
+    case ScaTra::stabtype_hdg_upwind:
+      if (whichtau_ != ScaTra::tau_numerical_value or tau_value_ <= 0.0)
         FOUR_C_THROW(
             "Wrong definition for tau for hdg stabilization, only tau_numerical_value is allowed "
             "with tau>0");
@@ -175,14 +173,14 @@ void Discret::Elements::ScaTraEleParameterStd::set_parameters(Teuchos::Parameter
   assgd_ = stablist.get<bool>("ASSUGRDIFF");
 
   // select type of all-scale subgrid diffusivity if included
-  whichassgd_ = Teuchos::getIntegralValue<Inpar::ScaTra::AssgdType>(stablist, "DEFINITION_ASSGD");
+  whichassgd_ = Teuchos::getIntegralValue<ScaTra::AssgdType>(stablist, "DEFINITION_ASSGD");
 
   // set flags for potential evaluation of tau and material law at int. point
-  const auto tauloc = Teuchos::getIntegralValue<Inpar::ScaTra::EvalTau>(stablist, "EVALUATION_TAU");
-  tau_gp_ = (tauloc == Inpar::ScaTra::evaltau_integration_point);  // set true/false
+  const auto tauloc = Teuchos::getIntegralValue<ScaTra::EvalTau>(stablist, "EVALUATION_TAU");
+  tau_gp_ = (tauloc == ScaTra::evaltau_integration_point);  // set true/false
 
-  const auto matloc = Teuchos::getIntegralValue<Inpar::ScaTra::EvalMat>(stablist, "EVALUATION_MAT");
-  mat_gp_ = (matloc == Inpar::ScaTra::evalmat_integration_point);  // set true/false
+  const auto matloc = Teuchos::getIntegralValue<ScaTra::EvalMat>(stablist, "EVALUATION_MAT");
+  mat_gp_ = (matloc == ScaTra::evalmat_integration_point);  // set true/false
 
   // check for illegal combinations
   if (sgvel_ or assgd_)
@@ -195,7 +193,7 @@ void Discret::Elements::ScaTraEleParameterStd::set_parameters(Teuchos::Parameter
   }
 
   // get quantities for finite difference check
-  fdcheck_ = Teuchos::getIntegralValue<Inpar::ScaTra::FdCheck>(parameters, "fdcheck");
+  fdcheck_ = Teuchos::getIntegralValue<ScaTra::FdCheck>(parameters, "fdcheck");
   fdcheckeps_ = parameters.get<double>("fdcheckeps");
   fdchecktol_ = parameters.get<double>("fdchecktol");
 

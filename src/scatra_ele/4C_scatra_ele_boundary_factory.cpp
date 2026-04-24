@@ -30,8 +30,8 @@ FOUR_C_NAMESPACE_OPEN
  |                                                 (public) rasthofer 11/13 |
  *--------------------------------------------------------------------------*/
 Discret::Elements::ScaTraBoundaryInterface* Discret::Elements::ScaTraBoundaryFactory::provide_impl(
-    const Core::Elements::Element* ele, const Inpar::ScaTra::ImplType impltype,
-    const int numdofpernode, const int numscal, const std::string& disname)
+    const Core::Elements::Element* ele, const ScaTra::ImplType impltype, const int numdofpernode,
+    const int numscal, const std::string& disname)
 {
   // number of space dimensions
   const int ndim = disname != "scatra_micro" ? Global::Problem::instance()->n_dim() : 1;
@@ -124,72 +124,71 @@ Discret::Elements::ScaTraBoundaryInterface* Discret::Elements::ScaTraBoundaryFac
  *-------------------------------------------------------------------------------------------*/
 template <Core::FE::CellType distype, int probdim>
 Discret::Elements::ScaTraBoundaryInterface*
-Discret::Elements::ScaTraBoundaryFactory::define_problem_type(
-    const Inpar::ScaTra::ImplType impltype, const int numdofpernode, const int numscal,
-    const std::string& disname)
+Discret::Elements::ScaTraBoundaryFactory::define_problem_type(const ScaTra::ImplType impltype,
+    const int numdofpernode, const int numscal, const std::string& disname)
 {
   switch (impltype)
   {
-    case Inpar::ScaTra::impltype_advreac:
-    case Inpar::ScaTra::impltype_aniso:
-    case Inpar::ScaTra::impltype_cardiac_monodomain:
-    case Inpar::ScaTra::impltype_gr:
-    case Inpar::ScaTra::impltype_chemo:
-    case Inpar::ScaTra::impltype_chemoreac:
-    case Inpar::ScaTra::impltype_levelset:
-    case Inpar::ScaTra::impltype_std:
-    case Inpar::ScaTra::impltype_thermo_elch_diffcond:
-    case Inpar::ScaTra::impltype_multipororeac:
+    case ScaTra::impltype_advreac:
+    case ScaTra::impltype_aniso:
+    case ScaTra::impltype_cardiac_monodomain:
+    case ScaTra::impltype_gr:
+    case ScaTra::impltype_chemo:
+    case ScaTra::impltype_chemoreac:
+    case ScaTra::impltype_levelset:
+    case ScaTra::impltype_std:
+    case ScaTra::impltype_thermo_elch_diffcond:
+    case ScaTra::impltype_multipororeac:
     {
       return Discret::Elements::ScaTraEleBoundaryCalcStd<distype, probdim>::instance(
           numdofpernode, numscal, disname);
       break;
     }
-    case Inpar::ScaTra::impltype_loma:
+    case ScaTra::impltype_loma:
     {
       return Discret::Elements::ScaTraEleBoundaryCalcLoma<distype, probdim>::instance(
           numdofpernode, numscal, disname);
       break;
     }
-    case Inpar::ScaTra::impltype_elch_electrode:
+    case ScaTra::impltype_elch_electrode:
     {
       return Discret::Elements::ScaTraEleBoundaryCalcElchElectrode<distype, probdim>::instance(
           numdofpernode, numscal, disname);
       break;
     }
-    case Inpar::ScaTra::impltype_elch_electrode_thermo:
+    case ScaTra::impltype_elch_electrode_thermo:
     {
       return Discret::Elements::ScaTraEleBoundaryCalcElchElectrodeSTIThermo<distype,
           probdim>::instance(numdofpernode, numscal, disname);
       break;
     }
-    case Inpar::ScaTra::impltype_elch_diffcond:
-    case Inpar::ScaTra::impltype_elch_diffcond_thermo:
+    case ScaTra::impltype_elch_diffcond:
+    case ScaTra::impltype_elch_diffcond_thermo:
     {
       return Discret::Elements::ScaTraEleBoundaryCalcElchDiffCond<distype, probdim>::instance(
           numdofpernode, numscal, disname);
       break;
     }
-    case Inpar::ScaTra::impltype_elch_NP:
+    case ScaTra::impltype_elch_NP:
     {
       return Discret::Elements::ScaTraEleBoundaryCalcElchNP<distype, probdim>::instance(
           numdofpernode, numscal, disname);
       break;
     }
-    case Inpar::ScaTra::impltype_poro:
-    case Inpar::ScaTra::impltype_pororeac:
+    case ScaTra::impltype_poro:
+    case ScaTra::impltype_pororeac:
     {
       return Discret::Elements::ScaTraEleBoundaryCalcPoro<distype, probdim>::instance(
           numdofpernode, numscal, disname);
       break;
     }
-    case Inpar::ScaTra::impltype_thermo_elch_electrode:
+    case ScaTra::impltype_thermo_elch_electrode:
     {
       return Discret::Elements::ScaTraEleBoundaryCalcSTIElectrode<distype, probdim>::instance(
           numdofpernode, numscal, disname);
       break;
     }
-    case Inpar::ScaTra::impltype_elch_electrode_growth:
+    case ScaTra::impltype_elch_electrode_growth:
     {
       return Discret::Elements::ScaTraEleBoundaryCalcElchElectrodeGrowth<distype,
           probdim>::instance(numdofpernode, numscal, disname);

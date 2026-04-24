@@ -35,42 +35,42 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau(
   //----------------------------------------------------------------------
   switch (scatrapara_->tau_def())
   {
-    case Inpar::ScaTra::tau_taylor_hughes_zarins:
-    case Inpar::ScaTra::tau_taylor_hughes_zarins_wo_dt:
+    case ScaTra::tau_taylor_hughes_zarins:
+    case ScaTra::tau_taylor_hughes_zarins_wo_dt:
     {
       calc_tau_taylor_hughes_zarins(tau, diffus, reacoeff, densnp, convelint);
       break;
     }
-    case Inpar::ScaTra::tau_franca_valentin:
-    case Inpar::ScaTra::tau_franca_valentin_wo_dt:
+    case ScaTra::tau_franca_valentin:
+    case ScaTra::tau_franca_valentin_wo_dt:
     {
       calc_tau_franca_valentin(tau, diffus, reacoeff, densnp, convelint, vol);
       break;
     }
-    case Inpar::ScaTra::tau_shakib_hughes_codina:
-    case Inpar::ScaTra::tau_shakib_hughes_codina_wo_dt:
+    case ScaTra::tau_shakib_hughes_codina:
+    case ScaTra::tau_shakib_hughes_codina_wo_dt:
     {
       calc_tau_franca_shakib_codina(tau, diffus, reacoeff, densnp, convelint, vol);
       break;
     }
-    case Inpar::ScaTra::tau_codina:
-    case Inpar::ScaTra::tau_codina_wo_dt:
+    case ScaTra::tau_codina:
+    case ScaTra::tau_codina_wo_dt:
     {
       calc_tau_codina(tau, diffus, reacoeff, densnp, convelint, vol);
       break;
     }
-    case Inpar::ScaTra::tau_franca_madureira_valentin:
-    case Inpar::ScaTra::tau_franca_madureira_valentin_wo_dt:
+    case ScaTra::tau_franca_madureira_valentin:
+    case ScaTra::tau_franca_madureira_valentin_wo_dt:
     {
       calc_tau_franca_madureira_valentin(tau, diffus, reacoeff, densnp, vol);
       break;
     }
-    case Inpar::ScaTra::tau_exact_1d:
+    case ScaTra::tau_exact_1d:
     {
       calc_tau_1d_exact(tau, diffus, reacoeff, densnp, convelint, vol);
       break;
     }
-    case Inpar::ScaTra::tau_zero:
+    case ScaTra::tau_zero:
     {
       // set tau's to zero (-> no stabilization effect)
       tau = 0.0;
@@ -161,7 +161,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_taylor_hughes_
   // due to time factor and reaction coefficient (reaction coefficient
   // ensured to be zero in get_material_params for non-reactive material)
   double sigma_tot = reacoeff;
-  if (scatrapara_->tau_def() == Inpar::ScaTra::tau_taylor_hughes_zarins)
+  if (scatrapara_->tau_def() == ScaTra::tau_taylor_hughes_zarins)
     sigma_tot += 1.0 / scatraparatimint_->dt();
 
   // computation of various values derived from covariant metric tensor
@@ -242,7 +242,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_franca_valenti
   // due to time factor and reaction coefficient (reaction coefficient
   // ensured to be zero in get_material_params for non-reactive material)
   double sigma_tot = reacoeff;
-  if (scatrapara_->tau_def() == Inpar::ScaTra::tau_franca_valentin)
+  if (scatrapara_->tau_def() == ScaTra::tau_franca_valentin)
     sigma_tot += 1.0 / scatraparatimint_->time_fac();
 
   // calculate characteristic element length
@@ -253,7 +253,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_franca_valenti
   const double epe = mk * densnp * vel_norm * h;
   // relating viscous to reactive part
   double epe1 = 0.0;
-  if (scatrapara_->tau_def() == Inpar::ScaTra::tau_franca_valentin or reacoeff != 0.0)
+  if (scatrapara_->tau_def() == ScaTra::tau_franca_valentin or reacoeff != 0.0)
     epe1 = 2.0 * diffus / (mk * densnp * sigma_tot * ((h) * (h)));
 
   // respective "switching" parameters
@@ -318,7 +318,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_franca_shakib_
   // due to time factor and reaction coefficient (reaction coefficient
   // ensured to be zero in get_material_params for non-reactive material)
   double sigma_tot = reacoeff;
-  if (scatrapara_->tau_def() == Inpar::ScaTra::tau_shakib_hughes_codina)
+  if (scatrapara_->tau_def() == ScaTra::tau_shakib_hughes_codina)
     sigma_tot += 1.0 / scatraparatimint_->dt();
 
   // calculate characteristic element length
@@ -381,8 +381,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_codina(
   // due to time factor and reaction coefficient (reaction coefficient
   // ensured to be zero in get_material_params for non-reactive material)
   double sigma_tot = reacoeff;
-  if (scatrapara_->tau_def() == Inpar::ScaTra::tau_codina)
-    sigma_tot += 1.0 / scatraparatimint_->dt();
+  if (scatrapara_->tau_def() == ScaTra::tau_codina) sigma_tot += 1.0 / scatraparatimint_->dt();
 
   // calculate characteristic element length
   const double h = calc_char_ele_length(vol, vel_norm, convelint);
@@ -429,7 +428,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_franca_madurei
   // due to time factor and reaction coefficient (reaction coefficient
   // ensured to be zero in get_material_params for non-reactive material)
   double sigma_tot = reacoeff;
-  if (scatrapara_->tau_def() == Inpar::ScaTra::tau_franca_madureira_valentin)
+  if (scatrapara_->tau_def() == ScaTra::tau_franca_madureira_valentin)
     sigma_tot += 1.0 / scatraparatimint_->time_fac();
 
   // calculate characteristic element length
@@ -441,7 +440,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_franca_madurei
 
   // parameter relating reactive to diffusive part
   double epe = 0.0;
-  if (scatrapara_->tau_def() == Inpar::ScaTra::tau_franca_madureira_valentin or reacoeff != 0.0)
+  if (scatrapara_->tau_def() == ScaTra::tau_franca_madureira_valentin or reacoeff != 0.0)
     epe = 2.0 * diffus / (mk * densnp * sigma_tot * ((h) * (h)));
 
   // respective "switching" parameter
@@ -453,7 +452,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_tau_franca_madurei
   // Darcy flow
   const double c_u = 1.0;
 
-  if (scatrapara_->tau_def() == Inpar::ScaTra::tau_franca_madureira_valentin or reacoeff != 0.0)
+  if (scatrapara_->tau_def() == ScaTra::tau_franca_madureira_valentin or reacoeff != 0.0)
     tau = ((h) * (h)) / (c_u * ((h) * (h)) * densnp * sigma_tot * xi + (2.0 * diffus / mk));
 
   return;
@@ -524,7 +523,7 @@ double Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_char_ele_length(
   {
     // a) streamlength due to Tezduyar et al. (1992) -> default
     // normed velocity vector
-    case Inpar::ScaTra::streamlength:
+    case ScaTra::streamlength:
     {
       Core::LinAlg::Matrix<nsd_, 1> velino(Core::LinAlg::Initialization::zero);
       if (vel_norm >= 1e-6)
@@ -544,14 +543,14 @@ double Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_char_ele_length(
     break;
 
     // b) volume-equivalent diameter (warning: 3-D formula!)
-    case Inpar::ScaTra::volume_equivalent_diameter:
+    case ScaTra::volume_equivalent_diameter:
     {
       h = std::pow((6. * vol / std::numbers::pi), (1.0 / 3.0)) / sqrt(3.0);
     }
     break;
 
     // c) cubic/square root of element volume/area or element length (3-/2-/1-D)
-    case Inpar::ScaTra::root_of_volume:
+    case ScaTra::root_of_volume:
     {
       // cast dimension to a double variable -> pow()
       const double dim = double(nsd_ele_);
@@ -596,7 +595,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_artificial_diff(
   double artdiff = 0.0;
 
   // classical linear artificial all-scale subgrid diffusivity
-  if (scatrapara_->assgd_type() == Inpar::ScaTra::assgd_artificial)
+  if (scatrapara_->assgd_type() == ScaTra::assgd_artificial)
   {
     // get element-type constant
     const double mk = ScaTra::mk<distype>();
@@ -616,11 +615,11 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_artificial_diff(
     // compute subgrid diffusivity
     artdiff = xi * 0.5 * densnp * vel_norm * h;
   }
-  else if (scatrapara_->assgd_type() == Inpar::ScaTra::assgd_lin_reinit)
+  else if (scatrapara_->assgd_type() == ScaTra::assgd_lin_reinit)
   {
     artdiff = 0.005 * h;
   }
-  else if (scatrapara_->assgd_type() == Inpar::ScaTra::assgd_codina)
+  else if (scatrapara_->assgd_type() == ScaTra::assgd_codina)
   {
     double alpha =
         std::max(0.0, (0.7 - 2.0 * diffmanager_->get_isotropic_diff(k) / convelint.norm2() / h));
@@ -629,7 +628,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_artificial_diff(
     const double grad_norm = gradphi.norm2();
     if (grad_norm > 1e-8) artdiff = 0.5 * alpha * h * std::abs(scatrares) / grad_norm;
   }
-  else if (scatrapara_->assgd_type() == Inpar::ScaTra::assgd_yzbeta)
+  else if (scatrapara_->assgd_type() == ScaTra::assgd_yzbeta)
   {
     // phiref is the tuning parameter for this form of artificial diffusion
     const double phiref = 0.01;
@@ -694,7 +693,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_artificial_diff(
       double specific_term = 0.0;
       switch (scatrapara_->assgd_type())
       {
-        case Inpar::ScaTra::assgd_hughes:
+        case ScaTra::assgd_hughes:
         {
           if (eid_ == 0)
           {
@@ -752,8 +751,8 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_artificial_diff(
           specific_term = conv_phi;
         }
         break;
-        case Inpar::ScaTra::assgd_tezduyar:
-        case Inpar::ScaTra::assgd_tezduyar_wo_phizero:
+        case ScaTra::assgd_tezduyar:
+        case ScaTra::assgd_tezduyar_wo_phizero:
         {
           // velocity norm
           const double vel_norm = convelint.norm2();
@@ -769,7 +768,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_artificial_diff(
           // (so far, only exact formula for stationary 1-D implemented)
 
           // compute sigma (version 1 according to John and Knobloch (2007))
-          if (scatrapara_->assgd_type() == Inpar::ScaTra::assgd_tezduyar_wo_phizero)
+          if (scatrapara_->assgd_type() == ScaTra::assgd_tezduyar_wo_phizero)
           {
             if (vel_norm > 1e-10) sigma = (h / vel_norm) * (1.0 - (vel_norm_bhpar / vel_norm));
           }
@@ -786,8 +785,8 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_artificial_diff(
           specific_term = conv_phi;
         }
         break;
-        case Inpar::ScaTra::assgd_docarmo:
-        case Inpar::ScaTra::assgd_almeida:
+        case ScaTra::assgd_docarmo:
+        case ScaTra::assgd_almeida:
         {
           // velocity norm
           const double vel_norm = convelint.norm2();
@@ -798,7 +797,7 @@ void Discret::Elements::ScaTraEleCalc<distype, probdim>::calc_artificial_diff(
           // parameter zeta differentiating approaches by doCarmo and Galeao (1991)
           // and Almeida and Silva (1997)
           double zeta = 0.0;
-          if (scatrapara_->assgd_type() == Inpar::ScaTra::assgd_docarmo)
+          if (scatrapara_->assgd_type() == ScaTra::assgd_docarmo)
             zeta = 1.0;
           else
           {

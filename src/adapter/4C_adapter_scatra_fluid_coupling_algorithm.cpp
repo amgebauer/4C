@@ -31,7 +31,7 @@ Adapter::ScaTraFluidCouplingAlgorithm::ScaTraFluidCouplingAlgorithm(Global::Prob
           false),  // false -> no immediate initialization of fluid time integration
       ScaTraBaseAlgorithm(problem, prbdyn, problem.scalar_transport_dynamic_params(), solverparams,
           scatra_disname, isale),
-      fieldcoupling_(Teuchos::getIntegralValue<Inpar::ScaTra::FieldCoupling>(
+      fieldcoupling_(Teuchos::getIntegralValue<ScaTra::FieldCoupling>(
           problem.scalar_transport_dynamic_params(), "FIELDCOUPLING")),
       volcoupl_fluidscatra_(nullptr),
       params_(prbdyn),
@@ -96,14 +96,14 @@ void Adapter::ScaTraFluidCouplingAlgorithm::setup()
   // time integration scheme
   switch (scatra_field()->method_name())
   {
-    case Inpar::ScaTra::timeint_stationary:
+    case ScaTra::timeint_stationary:
     {
       if (fluid_field()->tim_int_scheme() != Inpar::FLUID::timeint_stationary)
         if (Core::Communication::my_mpi_rank(get_comm()) == 0)
           FOUR_C_THROW("Fluid and scatra time integration schemes do not match!");
       break;
     }
-    case Inpar::ScaTra::timeint_one_step_theta:
+    case ScaTra::timeint_one_step_theta:
     {
       if (fluid_field()->tim_int_scheme() != Inpar::FLUID::timeint_one_step_theta)
         if (Core::Communication::my_mpi_rank(get_comm()) == 0)
@@ -111,7 +111,7 @@ void Adapter::ScaTraFluidCouplingAlgorithm::setup()
                     << std::endl;
       break;
     }
-    case Inpar::ScaTra::timeint_bdf2:
+    case ScaTra::timeint_bdf2:
     {
       if (fluid_field()->tim_int_scheme() != Inpar::FLUID::timeint_bdf2)
         if (Core::Communication::my_mpi_rank(get_comm()) == 0)
@@ -119,7 +119,7 @@ void Adapter::ScaTraFluidCouplingAlgorithm::setup()
                     << std::endl;
       break;
     }
-    case Inpar::ScaTra::timeint_gen_alpha:
+    case ScaTra::timeint_gen_alpha:
     {
       if (fluid_field()->tim_int_scheme() != Inpar::FLUID::timeint_npgenalpha and
           fluid_field()->tim_int_scheme() != Inpar::FLUID::timeint_afgenalpha)
@@ -137,7 +137,7 @@ void Adapter::ScaTraFluidCouplingAlgorithm::setup()
 
   // if applicable, provide scatra data to the turbulence statistics
   if (fluid_field()->turbulence_statistic_manager() != nullptr and
-      scatra_field()->method_name() != Inpar::ScaTra::timeint_stationary)
+      scatra_field()->method_name() != ScaTra::timeint_stationary)
   {
     // Now, the statistics manager has access to the scatra time integration
     fluid_field()->turbulence_statistic_manager()->add_scatra_field(scatra_field());
@@ -151,7 +151,7 @@ void Adapter::ScaTraFluidCouplingAlgorithm::setup()
   if (fluid_field()->vreman() != nullptr) scatra_field()->access_vreman(fluid_field()->vreman());
 
   // safety check:
-  if (volcoupl_fluidscatra_ == nullptr and fieldcoupling_ == Inpar::ScaTra::coupling_volmortar)
+  if (volcoupl_fluidscatra_ == nullptr and fieldcoupling_ == ScaTra::coupling_volmortar)
     FOUR_C_THROW("Something went terrible wrong. Sorry about this!");
 
   set_is_setup(true);
@@ -167,7 +167,7 @@ void Adapter::ScaTraFluidCouplingAlgorithm::setup_field_coupling(
   std::shared_ptr<Core::FE::Discretization> fluiddis = problem.get_dis(fluid_disname);
   std::shared_ptr<Core::FE::Discretization> scatradis = problem.get_dis(scatra_disname);
 
-  if (fieldcoupling_ == Inpar::ScaTra::coupling_volmortar)
+  if (fieldcoupling_ == ScaTra::coupling_volmortar)
   {
     // Scheme: non matching meshes --> volumetric mortar coupling...
     volcoupl_fluidscatra_ = std::make_shared<Coupling::Adapter::MortarVolCoupl>();
@@ -186,10 +186,10 @@ Adapter::ScaTraFluidCouplingAlgorithm::fluid_to_scatra(
 {
   switch (fieldcoupling_)
   {
-    case Inpar::ScaTra::coupling_match:
+    case ScaTra::coupling_match:
       return fluidvector;
       break;
-    case Inpar::ScaTra::coupling_volmortar:
+    case ScaTra::coupling_volmortar:
       return volcoupl_fluidscatra_->apply_vector_mapping21(*fluidvector);
       break;
     default:
@@ -207,10 +207,10 @@ Adapter::ScaTraFluidCouplingAlgorithm::scatra_to_fluid(
 {
   switch (fieldcoupling_)
   {
-    case Inpar::ScaTra::coupling_match:
+    case ScaTra::coupling_match:
       return scatravector;
       break;
-    case Inpar::ScaTra::coupling_volmortar:
+    case ScaTra::coupling_volmortar:
       return volcoupl_fluidscatra_->apply_vector_mapping12(*scatravector);
       break;
     default:
