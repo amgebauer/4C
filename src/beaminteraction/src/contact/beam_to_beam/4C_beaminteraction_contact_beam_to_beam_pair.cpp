@@ -79,7 +79,7 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::setup()
   maxactivegap_ = get_max_active_dist();
 
   // In case we want to apply a segment-based integration at the endpoints of the physical beam (in
-  // order to avoid strong discontinuities in the integrand) we have to check, if a master beam
+  // order to avoid strong discontinuities in the integrand) we have to check, if a target beam
   // element node coincides with a beams endpoint!
   bool determine_neighbors = false;
   if (params()->beam_to_beam_contact_params()->end_point_penalty()) determine_neighbors = true;
@@ -169,8 +169,8 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::setup()
 
   if (l2 + 1.0e-8 < l1 / intintervals)
     FOUR_C_THROW(
-        "Length of second (master) beam has to be larger than length of one integration interval "
-        "on first (slave) beam!");
+        "Length of second (target) beam has to be larger than length of one integration interval "
+        "on first (source) beam!");
 
   if (gausspoints.nquad > 10) FOUR_C_THROW("So far, not more than 10 Gauss points are allowed!");
 
@@ -605,15 +605,15 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::get_activ
     std::vector<std::pair<double, double>> curintsegpairs;
     int size = inversepairs.size();
 
-    // All segment pairs for which the segment on the slave beam 1 intersects with the considered
+    // All segment pairs for which the segment on the source beam 1 intersects with the considered
     // integration interval are filtered out and stored in the vector curintsegpairs. These pairs
     // are relevant for the integration procedure on the current interval.
     for (int k = 0; k < size; k++)
     {
       double eta1_segleft = (inversepairs[size - 1 - k]).first;
       double eta1_segright = eta1_segleft + l1;
-      // Since the vector inversepairs is sorted with respect to the location of the slave segment
-      // (the slave segment with the lowest bounding parameter coordinates eta1_segleft and
+      // Since the vector inversepairs is sorted with respect to the location of the source segment
+      // (the source segment with the lowest bounding parameter coordinates eta1_segleft and
       // eta1_segright lie on the last position of the vector inversepairs), it is sufficient to
       // start with the last element and leave the k-loop as soon as we have found the first segment
       // pair without intersection. This procedure only works, if we delete a segment pair as soon
@@ -624,7 +624,7 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::get_activ
         // store relevant pairs in new vector
         curintsegpairs.push_back(inversepairs[size - 1 - k]);
 
-        //(*) In case eta1_segright (the largest parameter coordinate lying within the slave
+        //(*) In case eta1_segright (the largest parameter coordinate lying within the source
         // segment) is smaller than eta1_max(the upper bound of the integration interval), the
         // considered segment will not be relevant for the next integration interval at i+1 and can
         // be deleted.
@@ -650,12 +650,12 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::get_activ
         // integration points in parameter space and weights
         const double xi = gausspoints.qxg[numgp][0];
 
-        // Get Gauss point coordinate at slave element
-        double eta1_slave = 0.0;
+        // Get Gauss point coordinate at source element
+        double eta1_source = 0.0;
 
         // standard case of equidistant intervals
         // map from segment coordinate xi to element coordinate eta
-        eta1_slave = eta1_min + (1.0 + xi) / intintervals;
+        eta1_source = eta1_min + (1.0 + xi) / intintervals;
 
 
         for (int k = 0; k < (int)curintsegpairs.size(); k++)
@@ -666,30 +666,30 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::get_activ
           // TODO: This procedure can also be made more efficient by deleting all segments of
           // curintsegpairs which are not relevant for the following Gauss points anymore (see
           // intersection of integration intervals and segment pairs)
-          if (BeamInteraction::within_interval(eta1_slave, eta1_segleft, eta1_segright))
+          if (BeamInteraction::within_interval(eta1_source, eta1_segleft, eta1_segright))
           {
             double eta2_segleft = (curintsegpairs[k]).second;
-            double eta2_master = 0.0;
+            double eta2_target = 0.0;
             bool pairactive = false;
 
             double gap_dummy = 0.0;
             double alpha_dummy = 0.0;
 
-            bool solutionwithinsegment = point_to_line_projection(eta1_slave, eta2_segleft, l2,
-                eta2_master, gap_dummy, alpha_dummy, pairactive, true);
+            bool solutionwithinsegment = point_to_line_projection(eta1_source, eta2_segleft, l2,
+                eta2_target, gap_dummy, alpha_dummy, pairactive, true);
 
             if (solutionwithinsegment)
             {
               if (pairactive)
               {
-                TYPE eta1 = eta1_slave;
-                TYPE eta2 = eta2_master;
-                int leftpoint_id1 = BeamInteraction::get_segment_id(eta1_slave, numseg1_);
-                int leftpoint_id2 = BeamInteraction::get_segment_id(eta2_master, numseg2_);
+                TYPE eta1 = eta1_source;
+                TYPE eta2 = eta2_target;
+                int leftpoint_id1 = BeamInteraction::get_segment_id(eta1_source, numseg1_);
+                int leftpoint_id2 = BeamInteraction::get_segment_id(eta2_target, numseg2_);
                 std::pair<TYPE, TYPE> closestpoint(std::make_pair(eta1, eta2));
                 std::pair<int, int> integration_ids = std::make_pair(numgp, interval);
                 std::pair<int, int> leftpoint_ids = std::make_pair(leftpoint_id1, leftpoint_id2);
-                TYPE jacobi = get_jacobi_at_xi(element1(), eta1_slave) * jacobi_interval;
+                TYPE jacobi = get_jacobi_at_xi(element1(), eta1_source) * jacobi_interval;
 
                 const double parallel_pp =
                     params()->beam_to_beam_contact_params()->beam_to_beam_line_penalty_param();
@@ -704,7 +704,7 @@ void BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::get_activ
                         closestpoint, leftpoint_ids, integration_ids, parallel_pp, jacobi));
               }
               // We can leave the k-loop as soon as we have found a valid projection for the given
-              // Gauss point eta1_slave
+              // Gauss point eta1_source
               break;
             }
           }
@@ -2318,7 +2318,7 @@ bool BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::closest_p
  *----------------------------------------------------------------------*/
 template <unsigned int numnodes, unsigned int numnodalvalues>
 bool BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::point_to_line_projection(
-    double& eta1_slave, double& eta_left2, double& l2, double& eta2_master, double& gap,
+    double& eta1_source, double& eta_left2, double& l2, double& eta2_target, double& gap,
     double& alpha, bool& pairactive, bool smallanglepair, bool invertpairs,
     bool orthogonalprojection)
 {
@@ -2384,7 +2384,7 @@ bool BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::point_to_
     double residual0 = 0.0;
     int iter = 0;
 
-    TYPE eta1 = eta1_slave;
+    TYPE eta1 = eta1_source;
     TYPE eta2 = startingpoints[numstartpoint];
     double eta2_old = Core::FADUtils::cast_to_double(eta2);
 
@@ -2418,9 +2418,9 @@ bool BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::point_to_
       if (inversion_possible)
       {
         // In the case of ENDPOINTPENALTY it can be necessary to make an
-        // invere projection (from the master beam onto the slave beam). In this case, the local
+        // inverse projection (from the target beam onto the source beam). In this case, the local
         // variables (e.g. r1, r1_xi...) inside point_to_line_projection() with index 1 represent
-        // the master beam which has the global index 2. In order to get the right nodal positions
+        // the target beam which has the global index 2. In order to get the right nodal positions
         // ele2pos_ for the local variables r1, r1_xi, r1_xixi, we have to invert the arguments of
         // the function call compute_coords_and_derivs()!
         if (!invertpairs)
@@ -2558,7 +2558,7 @@ bool BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::point_to_
 
       eta2_old = Core::FADUtils::cast_to_double(eta2);
 
-      // update master element coordinate of contact point
+      // update target element coordinate of contact point
       eta2 += -f / df;
 
 #ifdef FADCHECKS
@@ -2652,7 +2652,7 @@ bool BeamInteraction::BeamToBeamContactPair<numnodes, numnodalvalues>::point_to_
         }
         if (check_contact_status(gap_test) and relevant_angle) pairactive = true;
 
-        eta2_master = Core::FADUtils::cast_to_double(eta2);
+        eta2_target = Core::FADUtils::cast_to_double(eta2);
 
         // Here, we perform an additional security check: If a unique CCP solution exists, the
         // Newton scheme should find it with the first starting point. Otherwise, the problem may be
@@ -2687,7 +2687,7 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
     double& l1, double& l2, double& eta1_min, double& eta2_min, double& g_min, double& alpha_g_min,
     bool& pointtolinesolfound)
 {
-  // Calculate initial length of slave element
+  // Calculate initial length of source element
   Core::LinAlg::Matrix<3, 1, double> lengthvec1(Core::LinAlg::Initialization::zero);
   for (int i = 0; i < 3; i++)
   {
@@ -2697,7 +2697,7 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
   double length1 = lengthvec1.norm2();
 
   int n = 1;
-  // subdivide the slave segment by n+1 test points until the distance between the
+  // subdivide the source segment by n+1 test points until the distance between the
   // test points is smaller than half of the cross-section radius
   while (l1 / 2 * length1 / n > r2_ / 2)
   {
@@ -2709,15 +2709,15 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
 
   for (int i = 0; i < n + 1; i++)
   {
-    double eta1_slave = eta_left1 + i * l1 / n;
+    double eta1_source = eta_left1 + i * l1 / n;
     double eta2_segleft = eta_left2;
-    double eta2_master = 0.0;
+    double eta2_target = 0.0;
     bool pairactive = false;
     double gap = 0.0;
     double alpha = 0.0;
 
     bool solutionwithinsegment = point_to_line_projection(
-        eta1_slave, eta2_segleft, l2, eta2_master, gap, alpha, pairactive, true);
+        eta1_source, eta2_segleft, l2, eta2_target, gap, alpha, pairactive, true);
 
     if (solutionwithinsegment)
     {
@@ -2726,8 +2726,8 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
       {
         g_min = gap;
         alpha_g_min = alpha;
-        eta1_closestpoint = eta1_slave;
-        eta2_closestpoint = eta2_master;
+        eta1_closestpoint = eta1_source;
+        eta2_closestpoint = eta2_target;
       }  // search also for the second-smallest gap
     }
   }
@@ -2737,15 +2737,15 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
   // if we have a boundary minimum on the left, we also investigate the left neighbor point
   if (fabs(eta1_closestpoint - eta_left1) < 1.0e-10)
   {
-    double eta1_slave = eta_left1 - l1 / n;
+    double eta1_source = eta_left1 - l1 / n;
     double eta2_segleft = eta_left2;
-    double eta2_master = 0.0;
+    double eta2_target = 0.0;
     bool pairactive = false;
     double gap = 0.0;
     double alpha = 0.0;
 
     bool solutionwithinsegment = point_to_line_projection(
-        eta1_slave, eta2_segleft, l2, eta2_master, gap, alpha, pairactive, true);
+        eta1_source, eta2_segleft, l2, eta2_target, gap, alpha, pairactive, true);
 
     if (solutionwithinsegment)
     {
@@ -2754,8 +2754,8 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
         cp_at_right_neighbor = true;
         g_min = gap;
         alpha_g_min = alpha;
-        eta1_closestpoint = eta1_slave;
-        eta2_closestpoint = eta2_master;
+        eta1_closestpoint = eta1_source;
+        eta2_closestpoint = eta2_target;
       }  // search also for the second-smallest gap
     }
   }
@@ -2763,15 +2763,15 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
   // if we have a boundary minimum on the right, we also investigate the right neighbor point
   if (fabs(eta1_closestpoint - (eta_left1 + l1)) < 1.0e-10)
   {
-    double eta1_slave = eta_left1 + (n + 1) * l1 / n;
+    double eta1_source = eta_left1 + (n + 1) * l1 / n;
     double eta2_segleft = eta_left2;
-    double eta2_master = 0.0;
+    double eta2_target = 0.0;
     bool pairactive = false;
     double gap = 0.0;
     double alpha = 0.0;
 
     bool solutionwithinsegment = point_to_line_projection(
-        eta1_slave, eta2_segleft, l2, eta2_master, gap, alpha, pairactive, true);
+        eta1_source, eta2_segleft, l2, eta2_target, gap, alpha, pairactive, true);
 
     if (solutionwithinsegment)
     {
@@ -2784,8 +2784,8 @@ void BeamInteraction::BeamToBeamContactPair<numnodes,
 
         g_min = gap;
         alpha_g_min = alpha;
-        eta1_closestpoint = eta1_slave;
-        eta2_closestpoint = eta2_master;
+        eta1_closestpoint = eta1_source;
+        eta2_closestpoint = eta2_target;
       }  // search also for the second-smallest gap
     }
   }
@@ -4270,8 +4270,8 @@ bool BeamInteraction::BeamToBeamContactPair<numnodes,
     }
   }
 
-  // check, if df=0: This can happen e.g. when the master beam 2 describes a circle geometry and the
-  // projectiong slave point coincides with the cetern of the circle
+  // check, if df=0: This can happen e.g. when the target beam 2 describes a circle geometry and the
+  // projectiong source point coincides with the cetern of the circle
 
   if (fabs(Core::FADUtils::cast_to_double(df)) < COLLINEARTOL)
     return false;

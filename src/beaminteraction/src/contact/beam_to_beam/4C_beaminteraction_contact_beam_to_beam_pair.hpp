@@ -191,11 +191,11 @@ namespace BeamInteraction
     //! bound for search of small angle contact segment pairs
     double deltasmallangle_;
 
-    //! Indicates if the left / right node of the slave element 1 coincides with the endpoint of the
-    //! physical beam (true) or not (false)
+    //! Indicates if the left / right node of the source element 1 coincides with the endpoint of
+    //! the physical beam (true) or not (false)
     std::pair<bool, bool> boundarynode1_;
 
-    //! Indicates if the left / right node of the master element 2 coincides with the endpoint of
+    //! Indicates if the left / right node of the target element 2 coincides with the endpoint of
     //! the physical beam (true) or not (false)
     std::pair<bool, bool> boundarynode2_;
 
@@ -281,10 +281,10 @@ namespace BeamInteraction
         int segid1, int segid2);
 
     /*!
-    \brief Find closest point eta2_master on a line for a given slave point eta1_slave
+    \brief Find closest point eta2_target on a line for a given source point eta1_source
     */
-    bool point_to_line_projection(double& eta1_slave, double& eta_left2, double& l2,
-        double& eta2_master, double& gap, double& alpha, bool& pairactive, bool smallanglepair,
+    bool point_to_line_projection(double& eta1_source, double& eta_left2, double& l2,
+        double& eta2_target, double& gap, double& alpha, bool& pairactive, bool smallanglepair,
         bool invertpairs = false, bool orthogonalprojection = false);
 
     /*!
