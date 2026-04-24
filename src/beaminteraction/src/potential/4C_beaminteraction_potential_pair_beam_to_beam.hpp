@@ -244,55 +244,56 @@ namespace BeamInteraction
      *
      */
     bool evaluate_full_disk_cylinder_potential(T& interaction_potential_GP,
-        Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_slave_GP,
-        Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_master_GP,
-        Core::LinAlg::Matrix<3, 1, T> const& r_slave,
-        Core::LinAlg::Matrix<3, 1, T> const& r_xi_slave,
-        Core::LinAlg::Matrix<3, 1, T> const& t1_slave,
-        Core::LinAlg::Matrix<3, 1, T> const& r_master,
-        Core::LinAlg::Matrix<3, 1, T> const& r_xi_master,
-        Core::LinAlg::Matrix<3, 1, T> const& r_xixi_master,
-        Core::LinAlg::Matrix<3, 1, T> const& t1_master, T alpha, T cos_alpha,
+        Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_source_GP,
+        Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_target_GP,
+        Core::LinAlg::Matrix<3, 1, T> const& r_source,
+        Core::LinAlg::Matrix<3, 1, T> const& r_xi_source,
+        Core::LinAlg::Matrix<3, 1, T> const& t1_source,
+        Core::LinAlg::Matrix<3, 1, T> const& r_target,
+        Core::LinAlg::Matrix<3, 1, T> const& r_xi_target,
+        Core::LinAlg::Matrix<3, 1, T> const& r_xixi_target,
+        Core::LinAlg::Matrix<3, 1, T> const& t1_target, T alpha, T cos_alpha,
         Core::LinAlg::Matrix<3, 1, T> const& dist_ul,
-        Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_slave,
-        Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_master,
-        Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_xi_master,
+        Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_source,
+        Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_target,
+        Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_xi_target,
         double prefactor_visualization_data,
-        Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_slave_GP,
-        Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_master_GP,
-        Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_slave_GP,
-        Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_master_GP,
+        Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_source_GP,
+        Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_target_GP,
+        Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_source_GP,
+        Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_target_GP,
         double rho1rho2_JacFac_GaussWeight,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_slave,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_slave,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_master,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xi_master);
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_source,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_source,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_target,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xi_target);
 
     /** \brief Evaluate all quantities for the simple disk-cylinder potential law */
     bool evaluate_simple_disk_cylinder_potential(Core::LinAlg::Matrix<3, 1, T> const& dist_ul,
-        T norm_dist_ul, T alpha, T cos_alpha, Core::LinAlg::Matrix<3, 1, T> const& r_slave,
-        Core::LinAlg::Matrix<3, 1, T> const& r_xi_slave, T norm_r_xi_slave,
-        Core::LinAlg::Matrix<3, 1, T> const& t_slave, Core::LinAlg::Matrix<3, 1, T> const& r_master,
-        Core::LinAlg::Matrix<3, 1, T> const& r_xi_master, T norm_r_xi_master,
-        Core::LinAlg::Matrix<3, 1, T> const& r_xixi_master,
-        Core::LinAlg::Matrix<3, 1, T> const& t_master, T xi_master,
-        Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_slave,
-        Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_master,
-        Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_xi_master,
+        T norm_dist_ul, T alpha, T cos_alpha, Core::LinAlg::Matrix<3, 1, T> const& r_source,
+        Core::LinAlg::Matrix<3, 1, T> const& r_xi_source, T norm_r_xi_source,
+        Core::LinAlg::Matrix<3, 1, T> const& t_source,
+        Core::LinAlg::Matrix<3, 1, T> const& r_target,
+        Core::LinAlg::Matrix<3, 1, T> const& r_xi_target, T norm_r_xi_target,
+        Core::LinAlg::Matrix<3, 1, T> const& r_xixi_target,
+        Core::LinAlg::Matrix<3, 1, T> const& t_target, T xi_target,
+        Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_source,
+        Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_target,
+        Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_xi_target,
         std::optional<double> potential_reduction_length, double length_prior_right,
         double length_prior_left, T& interaction_potential_GP,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_slave,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_slave,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_master,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xi_master,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xixi_master,
-        Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_slave_GP,
-        Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_master_GP,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_source,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_source,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_target,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xi_target,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xixi_target,
+        Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_source_GP,
+        Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_target_GP,
         double prefactor_visualization_data, double rho1rho2_JacFac_GaussWeight,
-        Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_slave_GP,
-        Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_master_GP,
-        Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_slave_GP,
-        Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_master_GP,
+        Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_source_GP,
+        Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_target_GP,
+        Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_source_GP,
+        Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_target_GP,
         Core::LinAlg::SerialDenseMatrix* stiffmat11, Core::LinAlg::SerialDenseMatrix* stiffmat12,
         Core::LinAlg::SerialDenseMatrix* stiffmat21, Core::LinAlg::SerialDenseMatrix* stiffmat22);
 
@@ -342,18 +343,18 @@ namespace BeamInteraction
         Core::LinAlg::SerialDenseMatrix& stiffmat21,
         Core::LinAlg::SerialDenseMatrix& stiffmat22) const;
 
-    /** \brief add contributions from linearization of parameter coordinate on master beam xi_master
+    /** \brief add contributions from linearization of parameter coordinate on target beam xi_target
      *         if determined via point-to-curve projection
      *         using automatic differentiation based on Sacado::Fad package
      *
      */
-    void add_stiffmat_contributions_xi_master_automatic_differentiation_if_required(
+    void add_stiffmat_contributions_xi_target_automatic_differentiation_if_required(
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, double> const& force_pot1,
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, double> const& force_pot2,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, double> const&
-            lin_xi_master_slaveDofs,
+            lin_xi_source_targetDofs,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, double> const&
-            lin_xi_master_masterDofs,
+            lin_xi_target_targetDofs,
         Core::LinAlg::SerialDenseMatrix& stiffmat11, Core::LinAlg::SerialDenseMatrix& stiffmat12,
         Core::LinAlg::SerialDenseMatrix& stiffmat21,
         Core::LinAlg::SerialDenseMatrix& stiffmat22) const
@@ -361,20 +362,20 @@ namespace BeamInteraction
       // this is a dummy since for type double, no automatic differentiation is required
     }
 
-    /** \brief add contributions from linearization of parameter coordinate on master beam xi_master
+    /** \brief add contributions from linearization of parameter coordinate on target beam xi_target
      *         if determined via point-to-curve projection
      *         using automatic differentiation based on Sacado::Fad package
      *
      */
-    void add_stiffmat_contributions_xi_master_automatic_differentiation_if_required(
+    void add_stiffmat_contributions_xi_target_automatic_differentiation_if_required(
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, Sacado::Fad::DFad<double>> const&
             force_pot1,
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, Sacado::Fad::DFad<double>> const&
             force_pot2,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_slaveDofs,
+            lin_xi_source_targetDofs,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_masterDofs,
+            lin_xi_target_targetDofs,
         Core::LinAlg::SerialDenseMatrix& stiffmat11, Core::LinAlg::SerialDenseMatrix& stiffmat12,
         Core::LinAlg::SerialDenseMatrix& stiffmat21,
         Core::LinAlg::SerialDenseMatrix& stiffmat22) const;
@@ -388,9 +389,9 @@ namespace BeamInteraction
         Sacado::Fad::DFad<double> const& interaction_potential,
         Sacado::Fad::DFad<double> const& potential_reduction_factor,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_slaveDofs,
+            lin_xi_source_targetDofs,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_masterDofs) const;
+            lin_xi_target_targetDofs) const;
 
     /** \brief compute discrete force vectors using automatic differentiation
      *
@@ -403,9 +404,9 @@ namespace BeamInteraction
         Sacado::Fad::DFad<double> const& interaction_potential,
         Sacado::Fad::DFad<double> const& potential_reduction_factor,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_slaveDofs,
+            lin_xi_source_targetDofs,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_masterDofs) const;
+            lin_xi_target_targetDofs) const;
 
     /** \brief compute discrete force vectors using automatic differentiation
      *
@@ -416,9 +417,9 @@ namespace BeamInteraction
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, double>& force_pot2,
         double const& interaction_potential, double const& potential_reduction_factor,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, double> const&
-            lin_xi_master_slaveDofs,
+            lin_xi_source_targetDofs,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, double> const&
-            lin_xi_master_masterDofs) const
+            lin_xi_target_targetDofs) const
     {
       // this is a dummy since for type double, no automatic differentiation is available
     }
@@ -429,28 +430,28 @@ namespace BeamInteraction
      *
      */
     void evaluate_stiffpot_analytic_contributions_single_length_specific_small_sep_approx_simple(
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_slave,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_slave,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_master,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_master,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xixi_master,
-        double const& xi_master, Core::LinAlg::Matrix<3, 1, double> const& r_xi_slave,
-        Core::LinAlg::Matrix<3, 1, double> const& r_xi_master,
-        Core::LinAlg::Matrix<3, 1, double> const& r_xixi_master, double const& norm_dist_ul,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_source,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_source,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_target,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_target,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xixi_target,
+        double const& xi_target, Core::LinAlg::Matrix<3, 1, double> const& r_xi_source,
+        Core::LinAlg::Matrix<3, 1, double> const& r_xi_target,
+        Core::LinAlg::Matrix<3, 1, double> const& r_xixi_target, double const& norm_dist_ul,
         Core::LinAlg::Matrix<3, 1, double> const& normal_ul, double const& pot_red_fac,
-        double const& pot_red_fac_deriv_xi_master, double const& pot_red_fac_2ndderiv_xi_master,
+        double const& pot_red_fac_deriv_xi_target, double const& pot_red_fac_2ndderiv_xi_target,
         double const& pot_ia, double const& pot_ia_deriv_gap_ul,
         double const& pot_ia_deriv_cos_alpha, double const& pot_ia_2ndderiv_gap_ul,
         double const& pot_ia_deriv_gap_ul_deriv_cos_alpha, double const& pot_ia_2ndderiv_cos_alpha,
-        Core::LinAlg::Matrix<3, 1, double> const& gap_ul_deriv_r_slave,
-        Core::LinAlg::Matrix<3, 1, double> const& gap_ul_deriv_r_master,
-        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_slave,
-        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_master,
-        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_xi_slave,
-        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_xi_master,
-        Core::LinAlg::Matrix<1, 3, double> const& xi_master_partial_r_slave,
-        Core::LinAlg::Matrix<1, 3, double> const& xi_master_partial_r_master,
-        Core::LinAlg::Matrix<1, 3, double> const& xi_master_partial_r_xi_master,
+        Core::LinAlg::Matrix<3, 1, double> const& gap_ul_deriv_r_source,
+        Core::LinAlg::Matrix<3, 1, double> const& gap_ul_deriv_r_target,
+        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_source,
+        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_target,
+        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_xi_source,
+        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_xi_target,
+        Core::LinAlg::Matrix<1, 3, double> const& xi_target_partial_r_source,
+        Core::LinAlg::Matrix<1, 3, double> const& xi_target_partial_r_target,
+        Core::LinAlg::Matrix<1, 3, double> const& xi_target_partial_r_xi_target,
         Core::LinAlg::SerialDenseMatrix& stiffmat11, Core::LinAlg::SerialDenseMatrix& stiffmat12,
         Core::LinAlg::SerialDenseMatrix& stiffmat21,
         Core::LinAlg::SerialDenseMatrix& stiffmat22) const;
@@ -459,38 +460,38 @@ namespace BeamInteraction
      *
      */
     void evaluate_stiffpot_analytic_contributions_single_length_specific_small_sep_approx_simple(
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_slave,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_slave,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_source,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_source,
         Core::LinAlg::Matrix<1, numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            N_i_master,
+            N_i_target,
         Core::LinAlg::Matrix<1, numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            N_i_xi_master,
+            N_i_xi_target,
         Core::LinAlg::Matrix<1, numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            N_i_xixi_master,
-        Sacado::Fad::DFad<double> const& xi_master,
-        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& r_xi_slave,
-        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& r_xi_master,
-        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& r_xixi_master,
+            N_i_xixi_target,
+        Sacado::Fad::DFad<double> const& xi_target,
+        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& r_xi_source,
+        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& r_xi_target,
+        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& r_xixi_target,
         Sacado::Fad::DFad<double> const& norm_dist_ul,
         Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& normal_ul,
         Sacado::Fad::DFad<double> const& pot_red_fac,
-        Sacado::Fad::DFad<double> const& pot_red_fac_deriv_xi_master,
-        Sacado::Fad::DFad<double> const& pot_red_fac_2ndderiv_xi_master,
+        Sacado::Fad::DFad<double> const& pot_red_fac_deriv_xi_target,
+        Sacado::Fad::DFad<double> const& pot_red_fac_2ndderiv_xi_target,
         Sacado::Fad::DFad<double> const& pot_ia,
         Sacado::Fad::DFad<double> const& pot_ia_deriv_gap_ul,
         Sacado::Fad::DFad<double> const& pot_ia_deriv_cos_alpha,
         Sacado::Fad::DFad<double> const& pot_ia_2ndderiv_gap_ul,
         Sacado::Fad::DFad<double> const& pot_ia_deriv_gap_ul_deriv_cos_alpha,
         Sacado::Fad::DFad<double> const& pot_ia_2ndderiv_cos_alpha,
-        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& gap_ul_deriv_r_slave,
-        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& gap_ul_deriv_r_master,
-        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& cos_alpha_deriv_r_slave,
-        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& cos_alpha_deriv_r_master,
-        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& cos_alpha_deriv_r_xi_slave,
-        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& cos_alpha_deriv_r_xi_master,
-        Core::LinAlg::Matrix<1, 3, Sacado::Fad::DFad<double>> const& xi_master_partial_r_slave,
-        Core::LinAlg::Matrix<1, 3, Sacado::Fad::DFad<double>> const& xi_master_partial_r_master,
-        Core::LinAlg::Matrix<1, 3, Sacado::Fad::DFad<double>> const& xi_master_partial_r_xi_master,
+        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& gap_ul_deriv_r_source,
+        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& gap_ul_deriv_r_target,
+        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& cos_alpha_deriv_r_source,
+        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& cos_alpha_deriv_r_target,
+        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& cos_alpha_deriv_r_xi_source,
+        Core::LinAlg::Matrix<3, 1, Sacado::Fad::DFad<double>> const& cos_alpha_deriv_r_xi_target,
+        Core::LinAlg::Matrix<1, 3, Sacado::Fad::DFad<double>> const& xi_target_partial_r_source,
+        Core::LinAlg::Matrix<1, 3, Sacado::Fad::DFad<double>> const& xi_target_partial_r_target,
+        Core::LinAlg::Matrix<1, 3, Sacado::Fad::DFad<double>> const& xi_target_partial_r_xi_target,
         Core::LinAlg::SerialDenseMatrix& stiffmat11, Core::LinAlg::SerialDenseMatrix& stiffmat12,
         Core::LinAlg::SerialDenseMatrix& stiffmat21,
         Core::LinAlg::SerialDenseMatrix& stiffmat22) const
@@ -534,18 +535,18 @@ namespace BeamInteraction
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, Sacado::Fad::DFad<double>>&
             ele2centerlinedofvec);
 
-    /** \brief set primary variables including xi_master for FAD if required
+    /** \brief set primary variables including xi_target for FAD if required
      *
      */
     void set_automatic_differentiation_variables_if_required(
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, double>& ele1centerlinedofvec,
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, double>& ele2centerlinedofvec,
-        double& xi_master)
+        double& xi_target)
     {
       // do nothing in case of type double (analytic differentiation)
     }
 
-    /** \brief set primary variables including xi_master for FAD if required
+    /** \brief set primary variables including xi_target for FAD if required
      *
      */
     void set_automatic_differentiation_variables_if_required(
@@ -553,7 +554,7 @@ namespace BeamInteraction
             ele1centerlinedofvec,
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, Sacado::Fad::DFad<double>>&
             ele2centerlinedofvec,
-        Sacado::Fad::DFad<double>& xi_master);
+        Sacado::Fad::DFad<double>& xi_target);
 
     /** \brief estimate whether the elements' separation is much more than the cutoff distance
      *
@@ -565,13 +566,13 @@ namespace BeamInteraction
      */
     bool are_elements_much_more_separated_than_cutoff_distance();
 
-    /** \brief exchange master/slave allocation for the evaluation of the two-half-pass approach
+    /** \brief exchange target/source allocation for the evaluation of the two-half-pass approach
      *
      *   All private members need to be exchanged to allow reusing the function to evaluate the
      *   residual force vectors and stiffness matrices for the second half-pass.
      */
 
-    void exchange_master_slave_allocation_for_two_half_pass();
+    void exchange_source_target_allocation_for_two_half_pass();
 
     //@}
 

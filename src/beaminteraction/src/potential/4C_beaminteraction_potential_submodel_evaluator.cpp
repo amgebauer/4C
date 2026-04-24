@@ -1035,9 +1035,9 @@ void BeamInteraction::SubmodelEvaluator::BeamPotential::write_output_runtime_bea
   }
 
   /* Note: - each UID set is not unique due to the fact that each GP produces two force
-   *         vectors (one on the slave side, one on the master side)
+   *         vectors (one on the source side, one on the target side)
    *       - in case of the single length specific approach (SBIP) the uid for the GP refers
-   *         to the slave beam element */
+   *         to the source beam element */
   // get and prepare storage for uid_0_beam_1_gid values
   std::vector<int> uid_0_beam_1_gid;
   uid_0_beam_1_gid.reserve(num_row_points);
@@ -1108,7 +1108,7 @@ void BeamInteraction::SubmodelEvaluator::BeamPotential::write_output_runtime_bea
     for (unsigned int ipoint = 0; ipoint < num_interacting_points_per_element; ++ipoint)
     {
       // ignore point pairs with zero forces
-      /* (e.g. if no valid point-to-curve projection in master-slave approach or
+      /* (e.g. if no valid point-to-curve projection in source-target approach or
        * contribution is neglected on element pair level due to cutoff value) */
       if (potential_forces_ele1_this_pair[ipoint].norm2() < 1e-16 and
           potential_forces_ele2_this_pair[ipoint].norm2() < 1e-16 and

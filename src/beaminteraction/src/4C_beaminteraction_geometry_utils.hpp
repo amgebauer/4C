@@ -35,11 +35,11 @@ namespace BeamInteraction
      *
      */
     template <unsigned int numnodes, unsigned int numnodalvalues, typename T>
-    bool point_to_curve_projection(Core::LinAlg::Matrix<3, 1, T> const& r_slave, T& xi_master,
-        double const& xi_master_initial_guess,
+    bool point_to_curve_projection(Core::LinAlg::Matrix<3, 1, T> const& r_source, T& xi_target,
+        double const& xi_target_initial_guess,
         const Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>&
-            master_centerline_dof_values,
-        const Core::FE::CellType& master_distype, double master_ele_ref_length);
+            target_centerline_dof_values,
+        const Core::FE::CellType& target_distype, double target_ele_ref_length);
 
     /** \brief evaluates residual of orthogonality condition for so-called unilateral closest-point
      *         projection, i.e. a point-to-curve projection
@@ -48,7 +48,7 @@ namespace BeamInteraction
     template <typename T>
     void evaluate_point_to_curve_orthogonality_condition(T& f,
         const Core::LinAlg::Matrix<3, 1, T>& delta_r, const double norm_delta_r,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xi_master);
+        const Core::LinAlg::Matrix<3, 1, T>& r_xi_target);
 
     /** \brief evaluates Jacobian of orthogonality condition for so-called unilateral closest-point
      *         projection, i.e. a point-to-curve projection
@@ -57,111 +57,111 @@ namespace BeamInteraction
     template <typename T>
     bool evaluate_linearization_point_to_curve_orthogonality_condition(T& df,
         const Core::LinAlg::Matrix<3, 1, T>& delta_r, const double norm_delta_r,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xi_master,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_master);
+        const Core::LinAlg::Matrix<3, 1, T>& r_xi_target,
+        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_target);
 
-    /** \brief compute linearization of parameter coordinate on master if determined by a
+    /** \brief compute linearization of parameter coordinate on target if determined by a
      *         point-to-curve projection
      *
      */
     template <unsigned int numnodes, unsigned int numnodalvalues, typename T>
-    void calc_linearization_point_to_curve_projection_parameter_coord_master(
-        Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, T>& lin_xi_master_slaveDofs,
-        Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, T>& lin_xi_master_masterDofs,
+    void calc_linearization_point_to_curve_projection_parameter_coord_target(
+        Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, T>& lin_xi_target_sourceDofs,
+        Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, T>& lin_xi_target_targetDofs,
         const Core::LinAlg::Matrix<3, 1, T>& delta_r,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xi_master,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_master,
-        const Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, double>& N_slave,
-        const Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T>& N_master,
-        const Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T>& N_xi_master);
+        const Core::LinAlg::Matrix<3, 1, T>& r_xi_target,
+        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_target,
+        const Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, double>& N_source,
+        const Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T>& N_target,
+        const Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T>& N_xi_target);
 
     /** \brief point-to-curve projection:
-     *         partial derivatives of the parameter coordinate on master xi_master with respect to
-     *         centerline position of slave point, master point and centerline tangent of master
+     *         partial derivatives of the parameter coordinate on target xi_target with respect to
+     *         centerline position of source point, target point and centerline tangent of target
      *
      */
     template <typename T>
-    void calc_point_to_curve_projection_parameter_coord_master_partial_derivs(
-        Core::LinAlg::Matrix<1, 3, T>& xi_master_partial_r_slave,
-        Core::LinAlg::Matrix<1, 3, T>& xi_master_partial_r_master,
-        Core::LinAlg::Matrix<1, 3, T>& xi_master_partial_r_xi_master,
+    void calc_point_to_curve_projection_parameter_coord_target_partial_derivs(
+        Core::LinAlg::Matrix<1, 3, T>& xi_target_partial_r_source,
+        Core::LinAlg::Matrix<1, 3, T>& xi_target_partial_r_target,
+        Core::LinAlg::Matrix<1, 3, T>& xi_target_partial_r_xi_target,
         const Core::LinAlg::Matrix<3, 1, T>& delta_r,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xi_master,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_master);
+        const Core::LinAlg::Matrix<3, 1, T>& r_xi_target,
+        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_target);
 
     /** \brief point-to-curve projection:
-     *         partial second derivatives of the parameter coordinate on master xi_master with
-     *         respect to centerline position of slave point, master point and centerline tangent of
-     *         master
+     *         partial second derivatives of the parameter coordinate on target xi_target with
+     *         respect to centerline position of source point, target point and centerline tangent
+     * of target
      *
      */
     template <typename T>
-    void calc_point_to_curve_projection_parameter_coord_master_partial2nd_derivs(
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_slave_partial_r_slave,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_slave_partial_r_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_slave_partial_r_xi_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_slave_partial_r_xixi_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_master_partial_r_slave,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_master_partial_r_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_master_partial_r_xi_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_master_partial_r_xixi_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_xi_master_partial_r_slave,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_xi_master_partial_r_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_xi_master_partial_r_xi_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_xi_master_partial_r_xixi_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_xixi_master_partial_r_slave,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_xixi_master_partial_r_master,
-        Core::LinAlg::Matrix<3, 3, T>& xi_master_partial_r_xixi_master_partial_r_xi_master,
-        const Core::LinAlg::Matrix<1, 3, T>& xi_master_partial_r_slave,
-        const Core::LinAlg::Matrix<1, 3, T>& xi_master_partial_r_master,
-        const Core::LinAlg::Matrix<1, 3, T>& xi_master_partial_r_xi_master,
-        const Core::LinAlg::Matrix<3, 3, T>& delta_r_deriv_r_slave,
-        const Core::LinAlg::Matrix<3, 3, T>& delta_r_deriv_r_master,
-        const Core::LinAlg::Matrix<3, 3, T>& delta_r_deriv_r_xi_master,
+    void calc_point_to_curve_projection_parameter_coord_target_partial2nd_derivs(
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_source_partial_r_source,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_source_partial_r_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_source_partial_r_xi_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_source_partial_r_xixi_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_target_partial_r_source,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_target_partial_r_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_target_partial_r_xi_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_target_partial_r_xixi_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_xi_target_partial_r_source,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_xi_target_partial_r_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_xi_target_partial_r_xi_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_xi_target_partial_r_xixi_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_xixi_target_partial_r_source,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_xixi_target_partial_r_target,
+        Core::LinAlg::Matrix<3, 3, T>& xi_target_partial_r_xixi_target_partial_r_xi_target,
+        const Core::LinAlg::Matrix<1, 3, T>& xi_target_partial_r_source,
+        const Core::LinAlg::Matrix<1, 3, T>& xi_target_partial_r_target,
+        const Core::LinAlg::Matrix<1, 3, T>& xi_target_partial_r_xi_target,
+        const Core::LinAlg::Matrix<3, 3, T>& delta_r_deriv_r_source,
+        const Core::LinAlg::Matrix<3, 3, T>& delta_r_deriv_r_target,
+        const Core::LinAlg::Matrix<3, 3, T>& delta_r_deriv_r_xi_target,
         const Core::LinAlg::Matrix<3, 1, T>& delta_r,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xi_master,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_master,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xixixi_master);
+        const Core::LinAlg::Matrix<3, 1, T>& r_xi_target,
+        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_target,
+        const Core::LinAlg::Matrix<3, 1, T>& r_xixixi_target);
 
     /** \brief point-to-curve projection:
      *         partial derivative of the orthogonality condition with respect to parameter
-     * coordinate on master xi_master
+     * coordinate on target xi_target
      *
      */
     template <typename T>
-    void calc_ptc_projection_orthogonality_condition_partial_deriv_parameter_coord_master(
-        T& orthogon_condition_partial_xi_master, const Core::LinAlg::Matrix<3, 1, T>& delta_r,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xi_master,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_master);
+    void calc_ptc_projection_orthogonality_condition_partial_deriv_parameter_coord_target(
+        T& orthogon_condition_partial_xi_target, const Core::LinAlg::Matrix<3, 1, T>& delta_r,
+        const Core::LinAlg::Matrix<3, 1, T>& r_xi_target,
+        const Core::LinAlg::Matrix<3, 1, T>& r_xixi_target);
 
     /** \brief point-to-curve projection:
      *         partial derivative of the orthogonality condition with respect to centerline position
-     *         on slave
+     *         on source
      *
      */
     template <typename T>
-    void calc_ptc_projection_orthogonality_condition_partial_deriv_cl_pos_slave(
-        Core::LinAlg::Matrix<1, 3, T>& orthogon_condition_partial_r_slave,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xi_master);
+    void calc_ptc_projection_orthogonality_condition_partial_deriv_cl_pos_source(
+        Core::LinAlg::Matrix<1, 3, T>& orthogon_condition_partial_r_source,
+        const Core::LinAlg::Matrix<3, 1, T>& r_xi_target);
 
     /** \brief point-to-curve projection:
      *         partial derivative of the orthogonality condition with respect to centerline position
-     *         on master
+     *         on target
      *
      */
     template <typename T>
-    void calc_ptc_projection_orthogonality_condition_partial_deriv_cl_pos_master(
-        Core::LinAlg::Matrix<1, 3, T>& orthogon_condition_partial_r_master,
-        const Core::LinAlg::Matrix<3, 1, T>& r_xi_master);
+    void calc_ptc_projection_orthogonality_condition_partial_deriv_cl_pos_target(
+        Core::LinAlg::Matrix<1, 3, T>& orthogon_condition_partial_r_target,
+        const Core::LinAlg::Matrix<3, 1, T>& r_xi_target);
 
     /** \brief point-to-curve projection:
      *         partial derivative of the orthogonality condition with respect to centerline tangent
-     *         on master
+     *         on target
      *
      */
     template <typename T>
-    void calc_ptc_projection_orthogonality_condition_partial_deriv_cl_tangent_master(
-        Core::LinAlg::Matrix<1, 3, T>& orthogon_condition_partial_r_xi_master,
+    void calc_ptc_projection_orthogonality_condition_partial_deriv_cl_tangent_target(
+        Core::LinAlg::Matrix<1, 3, T>& orthogon_condition_partial_r_xi_target,
         const Core::LinAlg::Matrix<3, 1, T>& delta_r);
 
     /** \brief calculate angle enclosed by two vectors a and b

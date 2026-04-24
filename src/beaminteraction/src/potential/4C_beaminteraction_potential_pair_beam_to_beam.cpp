@@ -60,11 +60,11 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::setu
   ele1pos_.clear();
   ele2pos_.clear();
 
-  /* take care of how to assign the role of master and slave (only applicable to
+  /* take care of how to assign the role of target and source (only applicable to
    * "SingleLengthSpecific" approach). Immediately before this setup(), the element with smaller GID
-   * has been assigned as element1_, i.e., slave. */
-  if (params()->choice_master_slave ==
-      BeamInteraction::Potential::MasterSlaveChoice::higher_eleGID_is_slave)
+   * has been assigned as element1_, i.e., source. */
+  if (params()->choice_source_target ==
+      BeamInteraction::Potential::SourceTargetChoice::higher_eleGID_is_source)
   {
     // interchange order, i.e., role of elements
     Core::Elements::Element const* tmp_ele_ptr = element1();
@@ -177,18 +177,18 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::eval
 
       if (params()->two_half_pass)
       {
-        exchange_master_slave_allocation_for_two_half_pass();
+        exchange_source_target_allocation_for_two_half_pass();
 
         // evaluate switched pair contribution a second time for two-half-pass approach
         // interaction potential is averaged
         // Note: the residual vectors and stiffness matrices need to be switched to correctly
-        // account for the changed master/slave role
+        // account for the changed target/source role
         evaluate_fpotand_stiffpot_single_length_specific_small_sep_approx(
             force_pot2, force_pot1, stiffmat22, stiffmat21, stiffmat12, stiffmat11);
 
-        // revert to original master/slave allocation (necessary for next evaluation within same
+        // revert to original target/source allocation (necessary for next evaluation within same
         // time step)
-        exchange_master_slave_allocation_for_two_half_pass();
+        exchange_source_target_allocation_for_two_half_pass();
       }
       break;
     }
@@ -1126,7 +1126,7 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
   // get potential reduction length
   const std::optional<double> potential_reduction_length = params()->potential_reduction_length;
 
-  // get length from current master beam element to beam edge
+  // get length from current target beam element to beam edge
   double length_prior_left = 0.0;
   double length_prior_right = 0.0;
 
@@ -1140,21 +1140,21 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
              length_prior_right) < 0.0))
     {
       FOUR_C_THROW(
-          "ERROR: Master beam endpoint reduction strategy would interfere on current master beam "
+          "ERROR: Target beam endpoint reduction strategy would interfere on current target beam "
           "element! Potential reduction would overlap due to too small prior element lengths on "
           "both sides");
     }
   }
 
-  /* parameter coordinate of the closest point on the master beam,
+  /* parameter coordinate of the closest point on the target beam,
    * determined via point-to-curve projection */
-  T xi_master = 0.0;
+  T xi_target = 0.0;
 
   // prepare differentiation via FAD if desired
-  /* xi_master is used as additional, auxiliary primary Dof
-   * since there is no closed-form expression for how xi_master depends on the 'real' primary Dofs.
+  /* xi_target is used as additional, auxiliary primary Dof
+   * since there is no closed-form expression for how xi_target depends on the 'real' primary Dofs.
    * It is determined iteratively via point-to-curve projection */
-  set_automatic_differentiation_variables_if_required(ele1pos_, ele2pos_, xi_master);
+  set_automatic_differentiation_variables_if_required(ele1pos_, ele2pos_, xi_target);
 
 
   // number of integration segments per element
@@ -1176,7 +1176,7 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
   double rho1rho2_JacFac_GaussWeight = 0.0;
 
   const unsigned int num_initial_values = 9;
-  const std::array<double, num_initial_values> xi_master_initial_guess_values = {
+  const std::array<double, num_initial_values> xi_target_initial_guess_values = {
       0.0, -1.0, 1.0, -0.5, 0.5, -0.75, -0.25, 0.25, 0.75};
 
   unsigned int iter_projection = 0;
@@ -1184,50 +1184,50 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
   // vectors for shape functions and their derivatives
   // Attention: these are individual shape function values, NOT shape function matrices
   // values at all Gauss points are stored in advance (more efficient espec. for many segments)
-  std::vector<Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double>> N_i_slave(
+  std::vector<Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double>> N_i_source(
       numgp_persegment);  // = N1_i
-  std::vector<Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double>> N_i_xi_slave(
+  std::vector<Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double>> N_i_xi_source(
       numgp_persegment);  // = N1_i,xi
 
-  Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> N_i_master(
+  Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> N_i_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> N_i_xi_master(
+  Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> N_i_xi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> N_i_xixi_master(
+  Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> N_i_xixi_target(
       Core::LinAlg::Initialization::zero);
 
   // assembled shape function matrices: Todo maybe avoid these matrices
-  Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, double> N_slave(
+  Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, double> N_source(
       Core::LinAlg::Initialization::zero);
 
-  Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T> N_master(
+  Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T> N_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T> N_xi_master(
+  Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T> N_xi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T> N_xixi_master(
+  Core::LinAlg::Matrix<3, 3 * numnodes * numnodalvalues, T> N_xixi_target(
       Core::LinAlg::Initialization::zero);
 
 
-  // coords and derivatives of the slave Gauss point and projected point on master element
-  Core::LinAlg::Matrix<3, 1, T> r_slave(
-      Core::LinAlg::Initialization::zero);  // centerline position vector on slave
-  Core::LinAlg::Matrix<3, 1, T> r_xi_slave(
-      Core::LinAlg::Initialization::zero);  // centerline tangent vector on slave
-  Core::LinAlg::Matrix<3, 1, T> t_slave(
-      Core::LinAlg::Initialization::zero);  // unit centerline tangent vector on slave
-  Core::LinAlg::Matrix<3, 1, T> r_master(
-      Core::LinAlg::Initialization::zero);  // centerline position vector on master
-  Core::LinAlg::Matrix<3, 1, T> r_xi_master(
-      Core::LinAlg::Initialization::zero);  // centerline tangent vector on master
-  Core::LinAlg::Matrix<3, 1, T> r_xixi_master(
-      Core::LinAlg::Initialization::zero);  // 2nd deriv of master curve
-  Core::LinAlg::Matrix<3, 1, T> t_master(
-      Core::LinAlg::Initialization::zero);  // unit centerline tangent vector on master
+  // coords and derivatives of the source Gauss point and projected point on target element
+  Core::LinAlg::Matrix<3, 1, T> r_source(
+      Core::LinAlg::Initialization::zero);  // centerline position vector on source
+  Core::LinAlg::Matrix<3, 1, T> r_xi_source(
+      Core::LinAlg::Initialization::zero);  // centerline tangent vector on source
+  Core::LinAlg::Matrix<3, 1, T> t_source(
+      Core::LinAlg::Initialization::zero);  // unit centerline tangent vector on source
+  Core::LinAlg::Matrix<3, 1, T> r_target(
+      Core::LinAlg::Initialization::zero);  // centerline position vector on target
+  Core::LinAlg::Matrix<3, 1, T> r_xi_target(
+      Core::LinAlg::Initialization::zero);  // centerline tangent vector on target
+  Core::LinAlg::Matrix<3, 1, T> r_xixi_target(
+      Core::LinAlg::Initialization::zero);  // 2nd deriv of target curve
+  Core::LinAlg::Matrix<3, 1, T> t_target(
+      Core::LinAlg::Initialization::zero);  // unit centerline tangent vector on target
 
-  T norm_r_xi_slave = 0.0;
-  T norm_r_xi_master = 0.0;
+  T norm_r_xi_source = 0.0;
+  T norm_r_xi_target = 0.0;
 
-  Core::LinAlg::Matrix<3, 1, T> dist_ul(Core::LinAlg::Initialization::zero);  // = r_slave-r_master
+  Core::LinAlg::Matrix<3, 1, T> dist_ul(Core::LinAlg::Initialization::zero);  // = r_source-r_target
   T norm_dist_ul = 0.0;
 
   T alpha = 0.0;      // mutual angle of tangent vectors
@@ -1235,23 +1235,23 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
 
   T interaction_potential_GP = 0.0;
 
-  // components from variation of parameter coordinate on master beam
-  Core::LinAlg::Matrix<1, 3, T> xi_master_partial_r_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<1, 3, T> xi_master_partial_r_master(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<1, 3, T> xi_master_partial_r_xi_master(Core::LinAlg::Initialization::zero);
+  // components from variation of parameter coordinate on target beam
+  Core::LinAlg::Matrix<1, 3, T> xi_target_partial_r_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<1, 3, T> xi_target_partial_r_target(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<1, 3, T> xi_target_partial_r_xi_target(Core::LinAlg::Initialization::zero);
 
 
-  // linearization of parameter coordinate on master resulting from point-to-curve projection
-  Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, T> lin_xi_master_slaveDofs(
+  // linearization of parameter coordinate on target resulting from point-to-curve projection
+  Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, T> lin_xi_source_targetDofs(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, T> lin_xi_master_masterDofs(
+  Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, T> lin_xi_target_targetDofs(
       Core::LinAlg::Initialization::zero);
 
   /* contribution of one Gauss point (required for automatic differentiation with contributions
-   * from xi_master) */
-  Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T> force_pot_slave_GP(
+   * from xi_target) */
+  Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T> force_pot_source_GP(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T> force_pot_master_GP(
+  Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T> force_pot_target_GP(
       Core::LinAlg::Initialization::zero);
 
   // evaluate charge/particle densities from DLINE charge condition specified in input file
@@ -1322,13 +1322,13 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
     double jacobifactor_segment =
         0.5 * (integration_segment_upper_limit - integration_segment_lower_limit);
 
-    // Evaluate shape functions at Gauss points of slave element and store values
+    // Evaluate shape functions at Gauss points of source element and store values
     Discret::Utils::Beam::evaluate_shape_functions_and_derivs_all_gps<numnodes, numnodalvalues>(
-        gausspoints, N_i_slave, N_i_xi_slave, beam_element1()->shape(), ele1length_,
+        gausspoints, N_i_source, N_i_xi_source, beam_element1()->shape(), ele1length_,
         integration_segment_lower_limit, integration_segment_upper_limit);
 
     // loop over gauss points of element 1
-    // so far, element 1 is always treated as the slave element!
+    // so far, element 1 is always treated as the source element!
     for (int igp = 0; igp < numgp_persegment; ++igp)
     {
       // add zero-initialized visualization data for this Gauss point
@@ -1349,28 +1349,28 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
                         (1.0 + xi_GP_tilde) * integration_segment_upper_limit);
 
 
-      // compute coord vector and tangent vector on slave side
-      compute_centerline_position(r_slave, N_i_slave[igp], ele1pos_);
-      compute_centerline_tangent(r_xi_slave, N_i_xi_slave[igp], ele1pos_);
+      // compute coord vector and tangent vector on source side
+      compute_centerline_position(r_source, N_i_source[igp], ele1pos_);
+      compute_centerline_tangent(r_xi_source, N_i_xi_source[igp], ele1pos_);
 
-      norm_r_xi_slave = Core::FADUtils::vector_norm(r_xi_slave);
+      norm_r_xi_source = Core::FADUtils::vector_norm(r_xi_source);
 
-      t_slave.update(1.0 / norm_r_xi_slave, r_xi_slave);
+      t_source.update(1.0 / norm_r_xi_source, r_xi_source);
 
       // store for visualization
-      centerline_coords_gp_1_.back() = Core::FADUtils::cast_to_double<T, 3, 1>(r_slave);
+      centerline_coords_gp_1_.back() = Core::FADUtils::cast_to_double<T, 3, 1>(r_source);
 
       rho1rho2_JacFac_GaussWeight = rho1 * rho2 * jacobifactor_segment *
                                     beam_element1()->get_jacobi_fac_at_xi(xi_GP) *
                                     gausspoints.qwgt[igp];
 
       /* point-to-curve projection, i.e. 'unilateral' closest-point projection
-       * to determine point on master beam (i.e. parameter coordinate xi_master) */
+       * to determine point on target beam (i.e. parameter coordinate xi_target) */
       iter_projection = 0;
 
       while (iter_projection < num_initial_values and
              (not BeamInteraction::Geo::point_to_curve_projection<numnodes, numnodalvalues, T>(
-                 r_slave, xi_master, xi_master_initial_guess_values[iter_projection], ele2pos_,
+                 r_source, xi_target, xi_target_initial_guess_values[iter_projection], ele2pos_,
                  element2()->shape(), ele2length_)))
       {
         iter_projection++;
@@ -1379,7 +1379,7 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
       if (iter_projection == num_initial_values)
       {
         std::cout << "\nWARNING: Point-to-Curve Projection ultimately failed at "
-                     "xi_slave="
+                     "xi_source="
                   << xi_GP << " of ele pair " << element1()->id() << " & " << element2()->id()
                   << "\nFallback strategy: Assume invalid projection and skip this GP..."
                   << std::endl;
@@ -1387,38 +1387,38 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
       }
 
       // Todo: specify tolerance value in a more central place
-      if (Core::FADUtils::norm(xi_master) > 1.0 + 1.0e-10)
+      if (Core::FADUtils::norm(xi_target) > 1.0 + 1.0e-10)
       {
         continue;
       }
       // ensure no end node is utilized to prevent a possible doubled potential contribution
-      else if (Core::FADUtils::norm(xi_master) >= 1.0 - 1.0e-10)
+      else if (Core::FADUtils::norm(xi_target) >= 1.0 - 1.0e-10)
       {
         FOUR_C_THROW(
-            "Point-to-curve projection yields xi_master= {}. This is a critical case "
+            "Point-to-curve projection yields xi_target= {}. This is a critical case "
             "since it is very close to the element boundary!",
-            Core::FADUtils::cast_to_double(xi_master));
+            Core::FADUtils::cast_to_double(xi_target));
       }
 
       Discret::Utils::Beam::evaluate_shape_functions_and_derivs_and2nd_derivs_at_xi<numnodes,
-          numnodalvalues>(xi_master, N_i_master, N_i_xi_master, N_i_xixi_master,
+          numnodalvalues>(xi_target, N_i_target, N_i_xi_target, N_i_xixi_target,
           beam_element2()->shape(), ele2length_);
 
-      // compute coord vector and tangent vector on master side
-      compute_centerline_position(r_master, N_i_master, ele2pos_);
-      compute_centerline_tangent(r_xi_master, N_i_xi_master, ele2pos_);
-      compute_centerline_tangent(r_xixi_master, N_i_xixi_master, ele2pos_);
+      // compute coord vector and tangent vector on target side
+      compute_centerline_position(r_target, N_i_target, ele2pos_);
+      compute_centerline_tangent(r_xi_target, N_i_xi_target, ele2pos_);
+      compute_centerline_tangent(r_xixi_target, N_i_xixi_target, ele2pos_);
 
 
-      norm_r_xi_master = Core::FADUtils::vector_norm(r_xi_master);
+      norm_r_xi_target = Core::FADUtils::vector_norm(r_xi_target);
 
-      t_master.update(1.0 / norm_r_xi_master, r_xi_master);
+      t_target.update(1.0 / norm_r_xi_target, r_xi_target);
 
       // store for visualization
-      centerline_coords_gp_2_.back() = Core::FADUtils::cast_to_double<T, 3, 1>(r_master);
+      centerline_coords_gp_2_.back() = Core::FADUtils::cast_to_double<T, 3, 1>(r_target);
 
       // distance vector between unilateral closest points
-      dist_ul.update(1.0, r_slave, -1.0, r_master);
+      dist_ul.update(1.0, r_source, -1.0, r_target);
 
       norm_dist_ul = Core::FADUtils::vector_norm(dist_ul);
 
@@ -1436,7 +1436,7 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
       }
 
       // mutual angle of tangent vectors at unilateral closest points
-      BeamInteraction::Geo::calc_enclosed_angle(alpha, cos_alpha, r_xi_slave, r_xi_master);
+      BeamInteraction::Geo::calc_enclosed_angle(alpha, cos_alpha, r_xi_source, r_xi_target);
 
       if (alpha < 0.0 or alpha > std::numbers::pi / 2)
         FOUR_C_THROW("alpha={}, should be in [0,pi/2]", Core::FADUtils::cast_to_double(alpha));
@@ -1444,20 +1444,20 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
       // Todo: maybe avoid this assembly of shape fcns into matrices
       // Fixme: at least, do this only in case of FAD-based linearization
       Discret::Utils::Beam::assemble_shape_functions<numnodes, numnodalvalues>(
-          N_i_slave[igp], N_slave);
+          N_i_source[igp], N_source);
 
       Discret::Utils::Beam::assemble_shape_functions_and_derivs_and2nd_derivs<numnodes,
           numnodalvalues>(
-          N_i_master, N_i_xi_master, N_i_xixi_master, N_master, N_xi_master, N_xixi_master);
+          N_i_target, N_i_xi_target, N_i_xixi_target, N_target, N_xi_target, N_xixi_target);
 
-      BeamInteraction::Geo::calc_linearization_point_to_curve_projection_parameter_coord_master<
-          numnodes, numnodalvalues>(lin_xi_master_slaveDofs, lin_xi_master_masterDofs, dist_ul,
-          r_xi_master, r_xixi_master, N_slave, N_master, N_xixi_master);
+      BeamInteraction::Geo::calc_linearization_point_to_curve_projection_parameter_coord_target<
+          numnodes, numnodalvalues>(lin_xi_source_targetDofs, lin_xi_target_targetDofs, dist_ul,
+          r_xi_target, r_xixi_target, N_source, N_target, N_xixi_target);
 
 
-      BeamInteraction::Geo::calc_point_to_curve_projection_parameter_coord_master_partial_derivs(
-          xi_master_partial_r_slave, xi_master_partial_r_master, xi_master_partial_r_xi_master,
-          dist_ul, r_xi_master, r_xixi_master);
+      BeamInteraction::Geo::calc_point_to_curve_projection_parameter_coord_target_partial_derivs(
+          xi_target_partial_r_source, xi_target_partial_r_target, xi_target_partial_r_xi_target,
+          dist_ul, r_xi_target, r_xixi_target);
 
 
       // evaluate all quantities which depend on the applied disk-cylinder potential law
@@ -1466,13 +1466,13 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
       if (params()->strategy ==
           BeamInteraction::Potential::Strategy::single_length_specific_small_separations)
       {
-        if (not evaluate_full_disk_cylinder_potential(interaction_potential_GP, force_pot_slave_GP,
-                force_pot_master_GP, r_slave, r_xi_slave, t_slave, r_master, r_xi_master,
-                r_xixi_master, t_master, alpha, cos_alpha, dist_ul, xi_master_partial_r_slave,
-                xi_master_partial_r_master, xi_master_partial_r_xi_master,
+        if (not evaluate_full_disk_cylinder_potential(interaction_potential_GP, force_pot_source_GP,
+                force_pot_target_GP, r_source, r_xi_source, t_source, r_target, r_xi_target,
+                r_xixi_target, t_target, alpha, cos_alpha, dist_ul, xi_target_partial_r_source,
+                xi_target_partial_r_target, xi_target_partial_r_xi_target,
                 prefactor_visualization_data, forces_pot_gp_1_.back(), forces_pot_gp_2_.back(),
                 moments_pot_gp_1_.back(), moments_pot_gp_2_.back(), rho1rho2_JacFac_GaussWeight,
-                N_i_slave[igp], N_i_xi_slave[igp], N_i_master, N_i_xi_master))
+                N_i_source[igp], N_i_xi_source[igp], N_i_target, N_i_xi_target))
           continue;
       }
       // reduced, simpler variant of the disk-cylinder interaction potential
@@ -1480,12 +1480,12 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
                                          single_length_specific_small_separations_simple)
       {
         if (not evaluate_simple_disk_cylinder_potential(dist_ul, norm_dist_ul, alpha, cos_alpha,
-                r_slave, r_xi_slave, norm_r_xi_slave, t_slave, r_master, r_xi_master,
-                norm_r_xi_master, r_xixi_master, t_master, xi_master, xi_master_partial_r_slave,
-                xi_master_partial_r_master, xi_master_partial_r_xi_master,
+                r_source, r_xi_source, norm_r_xi_source, t_source, r_target, r_xi_target,
+                norm_r_xi_target, r_xixi_target, t_target, xi_target, xi_target_partial_r_source,
+                xi_target_partial_r_target, xi_target_partial_r_xi_target,
                 potential_reduction_length, length_prior_right, length_prior_left,
-                interaction_potential_GP, N_i_slave[igp], N_i_xi_slave[igp], N_i_master,
-                N_i_xi_master, N_i_xixi_master, force_pot_slave_GP, force_pot_master_GP,
+                interaction_potential_GP, N_i_source[igp], N_i_xi_source[igp], N_i_target,
+                N_i_xi_target, N_i_xixi_target, force_pot_source_GP, force_pot_target_GP,
                 prefactor_visualization_data, rho1rho2_JacFac_GaussWeight, forces_pot_gp_1_.back(),
                 forces_pot_gp_2_.back(), moments_pot_gp_1_.back(), moments_pot_gp_2_.back(),
                 stiffmat11, stiffmat12, stiffmat21, stiffmat22))
@@ -1493,19 +1493,19 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
       }
 
       // apply constant prefactor
-      force_pot_slave_GP.scale(prefactor);
-      force_pot_master_GP.scale(prefactor);
+      force_pot_source_GP.scale(prefactor);
+      force_pot_target_GP.scale(prefactor);
 
       // sum contributions from all Gauss points
-      force_pot1.update(1.0, force_pot_slave_GP, 1.0);
-      force_pot2.update(1.0, force_pot_master_GP, 1.0);
+      force_pot1.update(1.0, force_pot_source_GP, 1.0);
+      force_pot2.update(1.0, force_pot_target_GP, 1.0);
 
       if (stiffmat11 != nullptr and stiffmat12 != nullptr and stiffmat21 != nullptr and
           stiffmat22 != nullptr)
       {
-        add_stiffmat_contributions_xi_master_automatic_differentiation_if_required(
-            force_pot_slave_GP, force_pot_master_GP, lin_xi_master_slaveDofs,
-            lin_xi_master_masterDofs, *stiffmat11, *stiffmat12, *stiffmat21, *stiffmat22);
+        add_stiffmat_contributions_xi_target_automatic_differentiation_if_required(
+            force_pot_source_GP, force_pot_target_GP, lin_xi_source_targetDofs,
+            lin_xi_target_targetDofs, *stiffmat11, *stiffmat12, *stiffmat21, *stiffmat22);
       }
 
       // do this scaling down here, because the value without the prefactors is meant to be used
@@ -1536,28 +1536,28 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
 template <unsigned int numnodes, unsigned int numnodalvalues, typename T>
 void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
     evaluate_stiffpot_analytic_contributions_single_length_specific_small_sep_approx_simple(
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_slave,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_slave,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_master,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_master,
-        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xixi_master,
-        double const& xi_master, Core::LinAlg::Matrix<3, 1, double> const& r_xi_slave,
-        Core::LinAlg::Matrix<3, 1, double> const& r_xi_master,
-        Core::LinAlg::Matrix<3, 1, double> const& r_xixi_master, double const& norm_dist_ul,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_source,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_source,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_target,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_target,
+        Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xixi_target,
+        double const& xi_target, Core::LinAlg::Matrix<3, 1, double> const& r_xi_source,
+        Core::LinAlg::Matrix<3, 1, double> const& r_xi_target,
+        Core::LinAlg::Matrix<3, 1, double> const& r_xixi_target, double const& norm_dist_ul,
         Core::LinAlg::Matrix<3, 1, double> const& normal_ul, double const& pot_red_fac,
-        double const& pot_red_fac_deriv_xi_master, double const& pot_red_fac_2ndderiv_xi_master,
+        double const& pot_red_fac_deriv_xi_target, double const& pot_red_fac_2ndderiv_xi_target,
         double const& pot_ia, double const& pot_ia_deriv_gap_ul,
         double const& pot_ia_deriv_cos_alpha, double const& pot_ia_2ndderiv_gap_ul,
         double const& pot_ia_deriv_gap_ul_deriv_cos_alpha, double const& pot_ia_2ndderiv_cos_alpha,
-        Core::LinAlg::Matrix<3, 1, double> const& gap_ul_deriv_r_slave,
-        Core::LinAlg::Matrix<3, 1, double> const& gap_ul_deriv_r_master,
-        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_slave,
-        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_master,
-        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_xi_slave,
-        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_xi_master,
-        Core::LinAlg::Matrix<1, 3, double> const& xi_master_partial_r_slave,
-        Core::LinAlg::Matrix<1, 3, double> const& xi_master_partial_r_master,
-        Core::LinAlg::Matrix<1, 3, double> const& xi_master_partial_r_xi_master,
+        Core::LinAlg::Matrix<3, 1, double> const& gap_ul_deriv_r_source,
+        Core::LinAlg::Matrix<3, 1, double> const& gap_ul_deriv_r_target,
+        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_source,
+        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_target,
+        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_xi_source,
+        Core::LinAlg::Matrix<3, 1, double> const& cos_alpha_deriv_r_xi_target,
+        Core::LinAlg::Matrix<1, 3, double> const& xi_target_partial_r_source,
+        Core::LinAlg::Matrix<1, 3, double> const& xi_target_partial_r_target,
+        Core::LinAlg::Matrix<1, 3, double> const& xi_target_partial_r_xi_target,
         Core::LinAlg::SerialDenseMatrix& stiffmat11, Core::LinAlg::SerialDenseMatrix& stiffmat12,
         Core::LinAlg::SerialDenseMatrix& stiffmat21,
         Core::LinAlg::SerialDenseMatrix& stiffmat22) const
@@ -1570,21 +1570,21 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
   Core::LinAlg::Matrix<3, 3, double> unit_matrix(Core::LinAlg::Initialization::zero);
   for (unsigned int i = 0; i < 3; ++i) unit_matrix(i, i) = 1.0;
 
-  Core::LinAlg::Matrix<3, 3, double> dist_ul_deriv_r_slave(unit_matrix);
-  Core::LinAlg::Matrix<3, 3, double> dist_ul_deriv_r_master(unit_matrix);
-  dist_ul_deriv_r_master.scale(-1.0);
-  Core::LinAlg::Matrix<3, 3, double> dist_ul_deriv_r_xi_master(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 3, double> dist_ul_deriv_r_source(unit_matrix);
+  Core::LinAlg::Matrix<3, 3, double> dist_ul_deriv_r_target(unit_matrix);
+  dist_ul_deriv_r_target.scale(-1.0);
+  Core::LinAlg::Matrix<3, 3, double> dist_ul_deriv_r_xi_target(Core::LinAlg::Initialization::zero);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      dist_ul_deriv_r_slave(irow, icol) -= r_xi_master(irow) * xi_master_partial_r_slave(icol);
+      dist_ul_deriv_r_source(irow, icol) -= r_xi_target(irow) * xi_target_partial_r_source(icol);
 
-      dist_ul_deriv_r_master(irow, icol) -= r_xi_master(irow) * xi_master_partial_r_master(icol);
+      dist_ul_deriv_r_target(irow, icol) -= r_xi_target(irow) * xi_target_partial_r_target(icol);
 
-      dist_ul_deriv_r_xi_master(irow, icol) -=
-          r_xi_master(irow) * xi_master_partial_r_xi_master(icol);
+      dist_ul_deriv_r_xi_target(irow, icol) -=
+          r_xi_target(irow) * xi_target_partial_r_xi_target(icol);
     }
   }
 
@@ -1601,226 +1601,230 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
 
 
   // second derivatives of the unilateral gap
-  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_slave_deriv_r_slave(
+  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_source_deriv_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_slave_deriv_r_master(
+  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_source_deriv_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_slave_deriv_r_xi_master(
-      Core::LinAlg::Initialization::zero);
-
-  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_master_deriv_r_slave(
-      Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_master_deriv_r_master(
-      Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_master_deriv_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_source_deriv_r_xi_target(
       Core::LinAlg::Initialization::zero);
 
+  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_target_deriv_r_source(
+      Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_target_deriv_r_target(
+      Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_target_deriv_r_xi_target(
+      Core::LinAlg::Initialization::zero);
 
-  gap_ul_deriv_r_slave_deriv_r_slave.multiply(1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_slave);
-  gap_ul_deriv_r_slave_deriv_r_master.multiply(
-      1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_master);
-  gap_ul_deriv_r_slave_deriv_r_xi_master.multiply(
-      1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_xi_master);
 
-  gap_ul_deriv_r_master_deriv_r_slave.multiply(
-      -1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_slave);
-  gap_ul_deriv_r_master_deriv_r_master.multiply(
-      -1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_master);
-  gap_ul_deriv_r_master_deriv_r_xi_master.multiply(
-      -1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_xi_master);
+  gap_ul_deriv_r_source_deriv_r_source.multiply(
+      1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_source);
+  gap_ul_deriv_r_source_deriv_r_target.multiply(
+      1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_target);
+  gap_ul_deriv_r_source_deriv_r_xi_target.multiply(
+      1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_xi_target);
 
-  // add contributions from linearization of (variation of r_master) according to the chain
+  gap_ul_deriv_r_target_deriv_r_source.multiply(
+      -1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_source);
+  gap_ul_deriv_r_target_deriv_r_target.multiply(
+      -1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_target);
+  gap_ul_deriv_r_target_deriv_r_xi_target.multiply(
+      -1.0, normal_ul_deriv_dist_ul, dist_ul_deriv_r_xi_target);
+
+  // add contributions from linearization of (variation of r_target) according to the chain
   // rule
-  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_xi_master_deriv_r_slave(
+  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_xi_target_deriv_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_xi_master_deriv_r_master(
+  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_xi_target_deriv_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_xi_master_deriv_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> gap_ul_deriv_r_xi_target_deriv_r_xi_target(
       Core::LinAlg::Initialization::zero);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      gap_ul_deriv_r_xi_master_deriv_r_slave(irow, icol) -=
-          normal_ul(irow) * xi_master_partial_r_slave(icol);
+      gap_ul_deriv_r_xi_target_deriv_r_source(irow, icol) -=
+          normal_ul(irow) * xi_target_partial_r_source(icol);
 
-      gap_ul_deriv_r_xi_master_deriv_r_master(irow, icol) -=
-          normal_ul(irow) * xi_master_partial_r_master(icol);
+      gap_ul_deriv_r_xi_target_deriv_r_target(irow, icol) -=
+          normal_ul(irow) * xi_target_partial_r_target(icol);
 
-      gap_ul_deriv_r_xi_master_deriv_r_xi_master(irow, icol) -=
-          normal_ul(irow) * xi_master_partial_r_xi_master(icol);
+      gap_ul_deriv_r_xi_target_deriv_r_xi_target(irow, icol) -=
+          normal_ul(irow) * xi_target_partial_r_xi_target(icol);
     }
   }
 
 
   // second derivatives of cos(alpha)
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_slave_deriv_r_slave(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_source_deriv_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_slave_deriv_r_xi_slave(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_source_deriv_r_xi_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_slave_deriv_r_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_source_deriv_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_slave_deriv_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_source_deriv_r_xi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_slave_deriv_r_xixi_master(
-      Core::LinAlg::Initialization::zero);
-
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_slave_deriv_r_slave(
-      Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_slave_deriv_r_xi_slave(
-      Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_slave_deriv_r_master(
-      Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_slave_deriv_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_source_deriv_r_xixi_target(
       Core::LinAlg::Initialization::zero);
 
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_master_deriv_r_slave(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_source_deriv_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_master_deriv_r_xi_slave(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_source_deriv_r_xi_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_master_deriv_r_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_source_deriv_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_master_deriv_r_xi_master(
-      Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_master_deriv_r_xixi_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_source_deriv_r_xi_target(
       Core::LinAlg::Initialization::zero);
 
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_master_deriv_r_slave(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_target_deriv_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_master_deriv_r_xi_slave(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_target_deriv_r_xi_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_master_deriv_r_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_target_deriv_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_master_deriv_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_target_deriv_r_xi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_master_deriv_r_xixi_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_target_deriv_r_xixi_target(
+      Core::LinAlg::Initialization::zero);
+
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_target_deriv_r_source(
+      Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_target_deriv_r_xi_source(
+      Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_target_deriv_r_target(
+      Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_target_deriv_r_xi_target(
+      Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xi_target_deriv_r_xixi_target(
       Core::LinAlg::Initialization::zero);
 
 
   // auxiliary and intermediate quantities required for second derivatives of cos(alpha)
 
-  double norm_r_xi_slave_inverse = 1.0 / Core::FADUtils::vector_norm(r_xi_slave);
-  double norm_r_xi_master_inverse = 1.0 / Core::FADUtils::vector_norm(r_xi_master);
+  double norm_r_xi_source_inverse = 1.0 / Core::FADUtils::vector_norm(r_xi_source);
+  double norm_r_xi_target_inverse = 1.0 / Core::FADUtils::vector_norm(r_xi_target);
 
-  Core::LinAlg::Matrix<3, 1, double> t_slave(Core::LinAlg::Initialization::zero);
-  t_slave.update(norm_r_xi_slave_inverse, r_xi_slave);
-  Core::LinAlg::Matrix<3, 1, double> t_master(Core::LinAlg::Initialization::zero);
-  t_master.update(norm_r_xi_master_inverse, r_xi_master);
+  Core::LinAlg::Matrix<3, 1, double> t_source(Core::LinAlg::Initialization::zero);
+  t_source.update(norm_r_xi_source_inverse, r_xi_source);
+  Core::LinAlg::Matrix<3, 1, double> t_target(Core::LinAlg::Initialization::zero);
+  t_target.update(norm_r_xi_target_inverse, r_xi_target);
 
-  double t_slave_dot_t_master = t_slave.dot(t_master);
-  double signum_tangentsscalarproduct = Core::FADUtils::signum(t_slave_dot_t_master);
+  double t_source_dot_t_target = t_source.dot(t_target);
+  double signum_tangentsscalarproduct = Core::FADUtils::signum(t_source_dot_t_target);
 
-  Core::LinAlg::Matrix<3, 3, double> t_slave_tensorproduct_t_slave(
+  Core::LinAlg::Matrix<3, 3, double> t_source_tensorproduct_t_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> t_slave_tensorproduct_t_master(
+  Core::LinAlg::Matrix<3, 3, double> t_source_tensorproduct_t_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> t_master_tensorproduct_t_master(
+  Core::LinAlg::Matrix<3, 3, double> t_target_tensorproduct_t_target(
       Core::LinAlg::Initialization::zero);
 
   for (unsigned int i = 0; i < 3; ++i)
     for (unsigned int j = 0; j < 3; ++j)
     {
-      t_slave_tensorproduct_t_slave(i, j) = t_slave(i) * t_slave(j);
-      t_slave_tensorproduct_t_master(i, j) = t_slave(i) * t_master(j);
-      t_master_tensorproduct_t_master(i, j) = t_master(i) * t_master(j);
+      t_source_tensorproduct_t_source(i, j) = t_source(i) * t_source(j);
+      t_source_tensorproduct_t_target(i, j) = t_source(i) * t_target(j);
+      t_target_tensorproduct_t_target(i, j) = t_target(i) * t_target(j);
     }
 
-  Core::LinAlg::Matrix<3, 3, double> t_slave_partial_r_xi_slave(Core::LinAlg::Initialization::zero);
-  t_slave_partial_r_xi_slave.update(norm_r_xi_slave_inverse, unit_matrix,
-      -1.0 * norm_r_xi_slave_inverse, t_slave_tensorproduct_t_slave);
-
-  Core::LinAlg::Matrix<3, 3, double> t_master_partial_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> t_source_partial_r_xi_source(
       Core::LinAlg::Initialization::zero);
-  t_master_partial_r_xi_master.update(norm_r_xi_master_inverse, unit_matrix,
-      -1.0 * norm_r_xi_master_inverse, t_master_tensorproduct_t_master);
+  t_source_partial_r_xi_source.update(norm_r_xi_source_inverse, unit_matrix,
+      -1.0 * norm_r_xi_source_inverse, t_source_tensorproduct_t_source);
 
-
-  Core::LinAlg::Matrix<3, 1, double> t_slave_partial_r_xi_slave_mult_t_master(
+  Core::LinAlg::Matrix<3, 3, double> t_target_partial_r_xi_target(
       Core::LinAlg::Initialization::zero);
-  t_slave_partial_r_xi_slave_mult_t_master.multiply(t_slave_partial_r_xi_slave, t_master);
+  t_target_partial_r_xi_target.update(norm_r_xi_target_inverse, unit_matrix,
+      -1.0 * norm_r_xi_target_inverse, t_target_tensorproduct_t_target);
+
+
+  Core::LinAlg::Matrix<3, 1, double> t_source_partial_r_xi_source_mult_t_target(
+      Core::LinAlg::Initialization::zero);
+  t_source_partial_r_xi_source_mult_t_target.multiply(t_source_partial_r_xi_source, t_target);
 
   for (unsigned int i = 0; i < 3; ++i)
     for (unsigned int j = 0; j < 3; ++j)
-      cos_alpha_deriv_r_xi_slave_deriv_r_xi_slave(i, j) -=
-          norm_r_xi_slave_inverse * t_slave_partial_r_xi_slave_mult_t_master(i) * t_slave(j);
+      cos_alpha_deriv_r_xi_source_deriv_r_xi_source(i, j) -=
+          norm_r_xi_source_inverse * t_source_partial_r_xi_source_mult_t_target(i) * t_source(j);
 
-  cos_alpha_deriv_r_xi_slave_deriv_r_xi_slave.update(
-      -1.0 * norm_r_xi_slave_inverse * t_slave_dot_t_master, t_slave_partial_r_xi_slave, 1.0);
+  cos_alpha_deriv_r_xi_source_deriv_r_xi_source.update(
+      -1.0 * norm_r_xi_source_inverse * t_source_dot_t_target, t_source_partial_r_xi_source, 1.0);
 
   Core::LinAlg::Matrix<3, 3, double> tmp_mat(Core::LinAlg::Initialization::zero);
-  tmp_mat.multiply(t_slave_tensorproduct_t_master, t_slave_partial_r_xi_slave);
-  cos_alpha_deriv_r_xi_slave_deriv_r_xi_slave.update(-1.0 * norm_r_xi_slave_inverse, tmp_mat, 1.0);
+  tmp_mat.multiply(t_source_tensorproduct_t_target, t_source_partial_r_xi_source);
+  cos_alpha_deriv_r_xi_source_deriv_r_xi_source.update(
+      -1.0 * norm_r_xi_source_inverse, tmp_mat, 1.0);
 
 
-  cos_alpha_deriv_r_xi_slave_deriv_r_xi_master.update(
-      norm_r_xi_slave_inverse, t_master_partial_r_xi_master, 1.0);
+  cos_alpha_deriv_r_xi_source_deriv_r_xi_target.update(
+      norm_r_xi_source_inverse, t_target_partial_r_xi_target, 1.0);
 
-  tmp_mat.multiply(t_slave_tensorproduct_t_slave, t_master_partial_r_xi_master);
-  cos_alpha_deriv_r_xi_slave_deriv_r_xi_master.update(-1.0 * norm_r_xi_slave_inverse, tmp_mat, 1.0);
+  tmp_mat.multiply(t_source_tensorproduct_t_source, t_target_partial_r_xi_target);
+  cos_alpha_deriv_r_xi_source_deriv_r_xi_target.update(
+      -1.0 * norm_r_xi_source_inverse, tmp_mat, 1.0);
 
 
 
-  Core::LinAlg::Matrix<3, 1, double> t_master_partial_r_xi_master_mult_t_slave(
+  Core::LinAlg::Matrix<3, 1, double> t_target_partial_r_xi_target_mult_t_source(
       Core::LinAlg::Initialization::zero);
-  t_master_partial_r_xi_master_mult_t_slave.multiply(t_master_partial_r_xi_master, t_slave);
+  t_target_partial_r_xi_target_mult_t_source.multiply(t_target_partial_r_xi_target, t_source);
 
   for (unsigned int i = 0; i < 3; ++i)
     for (unsigned int j = 0; j < 3; ++j)
-      cos_alpha_deriv_r_xi_master_deriv_r_xi_master(i, j) -=
-          norm_r_xi_master_inverse * t_master_partial_r_xi_master_mult_t_slave(i) * t_master(j);
+      cos_alpha_deriv_r_xi_target_deriv_r_xi_target(i, j) -=
+          norm_r_xi_target_inverse * t_target_partial_r_xi_target_mult_t_source(i) * t_target(j);
 
-  cos_alpha_deriv_r_xi_master_deriv_r_xi_master.update(
-      -1.0 * norm_r_xi_master_inverse * t_slave_dot_t_master, t_master_partial_r_xi_master, 1.0);
+  cos_alpha_deriv_r_xi_target_deriv_r_xi_target.update(
+      -1.0 * norm_r_xi_target_inverse * t_source_dot_t_target, t_target_partial_r_xi_target, 1.0);
 
   tmp_mat.clear();
-  tmp_mat.multiply_tn(t_slave_tensorproduct_t_master, t_master_partial_r_xi_master);
-  cos_alpha_deriv_r_xi_master_deriv_r_xi_master.update(
-      -1.0 * norm_r_xi_master_inverse, tmp_mat, 1.0);
+  tmp_mat.multiply_tn(t_source_tensorproduct_t_target, t_target_partial_r_xi_target);
+  cos_alpha_deriv_r_xi_target_deriv_r_xi_target.update(
+      -1.0 * norm_r_xi_target_inverse, tmp_mat, 1.0);
 
 
-  cos_alpha_deriv_r_xi_master_deriv_r_xi_slave.update(
-      norm_r_xi_master_inverse, t_slave_partial_r_xi_slave, 1.0);
+  cos_alpha_deriv_r_xi_target_deriv_r_xi_source.update(
+      norm_r_xi_target_inverse, t_source_partial_r_xi_source, 1.0);
 
-  tmp_mat.multiply(t_master_tensorproduct_t_master, t_slave_partial_r_xi_slave);
-  cos_alpha_deriv_r_xi_master_deriv_r_xi_slave.update(
-      -1.0 * norm_r_xi_master_inverse, tmp_mat, 1.0);
+  tmp_mat.multiply(t_target_tensorproduct_t_target, t_source_partial_r_xi_source);
+  cos_alpha_deriv_r_xi_target_deriv_r_xi_source.update(
+      -1.0 * norm_r_xi_target_inverse, tmp_mat, 1.0);
 
 
-  // add contributions from variation of master parameter coordinate xi_master
-  // to [.]_deriv_r_xi_master_[.] expressions (according to chain rule)
+  // add contributions from variation of target parameter coordinate xi_target
+  // to [.]_deriv_r_xi_target_[.] expressions (according to chain rule)
   Core::LinAlg::Matrix<1, 3, double> tmp_vec;
-  tmp_vec.multiply_tn(r_xixi_master, cos_alpha_deriv_r_xi_master_deriv_r_xi_slave);
+  tmp_vec.multiply_tn(r_xixi_target, cos_alpha_deriv_r_xi_target_deriv_r_xi_source);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_slave_deriv_r_xi_slave(irow, icol) +=
-          xi_master_partial_r_slave(irow) * tmp_vec(icol);
+      cos_alpha_deriv_r_source_deriv_r_xi_source(irow, icol) +=
+          xi_target_partial_r_source(irow) * tmp_vec(icol);
 
-      cos_alpha_deriv_r_master_deriv_r_xi_slave(irow, icol) +=
-          xi_master_partial_r_master(irow) * tmp_vec(icol);
+      cos_alpha_deriv_r_target_deriv_r_xi_source(irow, icol) +=
+          xi_target_partial_r_target(irow) * tmp_vec(icol);
 
-      cos_alpha_deriv_r_xi_master_deriv_r_xi_slave(irow, icol) +=
-          xi_master_partial_r_xi_master(irow) * tmp_vec(icol);
+      cos_alpha_deriv_r_xi_target_deriv_r_xi_source(irow, icol) +=
+          xi_target_partial_r_xi_target(irow) * tmp_vec(icol);
     }
   }
 
-  tmp_vec.multiply_tn(r_xixi_master, cos_alpha_deriv_r_xi_master_deriv_r_xi_master);
+  tmp_vec.multiply_tn(r_xixi_target, cos_alpha_deriv_r_xi_target_deriv_r_xi_target);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_slave_deriv_r_xi_master(irow, icol) +=
-          xi_master_partial_r_slave(irow) * tmp_vec(icol);
+      cos_alpha_deriv_r_source_deriv_r_xi_target(irow, icol) +=
+          xi_target_partial_r_source(irow) * tmp_vec(icol);
 
-      cos_alpha_deriv_r_master_deriv_r_xi_master(irow, icol) +=
-          xi_master_partial_r_master(irow) * tmp_vec(icol);
+      cos_alpha_deriv_r_target_deriv_r_xi_target(irow, icol) +=
+          xi_target_partial_r_target(irow) * tmp_vec(icol);
 
-      cos_alpha_deriv_r_xi_master_deriv_r_xi_master(irow, icol) +=
-          xi_master_partial_r_xi_master(irow) * tmp_vec(icol);
+      cos_alpha_deriv_r_xi_target_deriv_r_xi_target(irow, icol) +=
+          xi_target_partial_r_xi_target(irow) * tmp_vec(icol);
     }
   }
 
@@ -1829,311 +1833,312 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_slave_deriv_r_xixi_master(irow, icol) +=
-          xi_master_partial_r_slave(irow) * t_master_partial_r_xi_master_mult_t_slave(icol);
+      cos_alpha_deriv_r_source_deriv_r_xixi_target(irow, icol) +=
+          xi_target_partial_r_source(irow) * t_target_partial_r_xi_target_mult_t_source(icol);
 
-      cos_alpha_deriv_r_master_deriv_r_xixi_master(irow, icol) +=
-          xi_master_partial_r_master(irow) * t_master_partial_r_xi_master_mult_t_slave(icol);
+      cos_alpha_deriv_r_target_deriv_r_xixi_target(irow, icol) +=
+          xi_target_partial_r_target(irow) * t_target_partial_r_xi_target_mult_t_source(icol);
 
-      cos_alpha_deriv_r_xi_master_deriv_r_xixi_master(irow, icol) +=
-          xi_master_partial_r_xi_master(irow) * t_master_partial_r_xi_master_mult_t_slave(icol);
+      cos_alpha_deriv_r_xi_target_deriv_r_xixi_target(irow, icol) +=
+          xi_target_partial_r_xi_target(irow) * t_target_partial_r_xi_target_mult_t_source(icol);
     }
   }
 
 
-  // add contributions from linearization of master parameter coordinate xi_master
-  // to [.]_deriv_r_xi_master expressions (according to chain rule)
+  // add contributions from linearization of target parameter coordinate xi_target
+  // to [.]_deriv_r_xi_target expressions (according to chain rule)
   Core::LinAlg::Matrix<3, 1, double> tmp_vec2;
-  tmp_vec2.multiply(cos_alpha_deriv_r_slave_deriv_r_xi_master, r_xixi_master);
+  tmp_vec2.multiply(cos_alpha_deriv_r_source_deriv_r_xi_target, r_xixi_target);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_slave_deriv_r_slave(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_slave(icol);
+      cos_alpha_deriv_r_source_deriv_r_source(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_source(icol);
 
-      cos_alpha_deriv_r_slave_deriv_r_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_master(icol);
+      cos_alpha_deriv_r_source_deriv_r_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_target(icol);
 
-      cos_alpha_deriv_r_slave_deriv_r_xi_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_xi_master(icol);
+      cos_alpha_deriv_r_source_deriv_r_xi_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_xi_target(icol);
     }
   }
 
 
-  tmp_vec2.multiply(cos_alpha_deriv_r_xi_slave_deriv_r_xi_master, r_xixi_master);
+  tmp_vec2.multiply(cos_alpha_deriv_r_xi_source_deriv_r_xi_target, r_xixi_target);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_xi_slave_deriv_r_slave(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_slave(icol);
+      cos_alpha_deriv_r_xi_source_deriv_r_source(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_source(icol);
 
-      cos_alpha_deriv_r_xi_slave_deriv_r_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_master(icol);
+      cos_alpha_deriv_r_xi_source_deriv_r_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_target(icol);
 
-      cos_alpha_deriv_r_xi_slave_deriv_r_xi_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_xi_master(icol);
+      cos_alpha_deriv_r_xi_source_deriv_r_xi_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_xi_target(icol);
     }
   }
 
 
-  tmp_vec2.multiply(cos_alpha_deriv_r_master_deriv_r_xi_master, r_xixi_master);
+  tmp_vec2.multiply(cos_alpha_deriv_r_target_deriv_r_xi_target, r_xixi_target);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_master_deriv_r_slave(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_slave(icol);
+      cos_alpha_deriv_r_target_deriv_r_source(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_source(icol);
 
-      cos_alpha_deriv_r_master_deriv_r_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_master(icol);
+      cos_alpha_deriv_r_target_deriv_r_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_target(icol);
 
-      cos_alpha_deriv_r_master_deriv_r_xi_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_xi_master(icol);
+      cos_alpha_deriv_r_target_deriv_r_xi_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_xi_target(icol);
     }
   }
 
 
-  tmp_vec2.multiply(cos_alpha_deriv_r_xi_master_deriv_r_xi_master, r_xixi_master);
+  tmp_vec2.multiply(cos_alpha_deriv_r_xi_target_deriv_r_xi_target, r_xixi_target);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_xi_master_deriv_r_slave(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_slave(icol);
+      cos_alpha_deriv_r_xi_target_deriv_r_source(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_source(icol);
 
-      cos_alpha_deriv_r_xi_master_deriv_r_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_master(icol);
+      cos_alpha_deriv_r_xi_target_deriv_r_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_target(icol);
 
-      cos_alpha_deriv_r_xi_master_deriv_r_xi_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_xi_master(icol);
+      cos_alpha_deriv_r_xi_target_deriv_r_xi_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_xi_target(icol);
     }
   }
 
 
-  // add contributions from linearization of master parameter coordinate xi_master
-  // also to [.]_deriv_r_xixi_master expressions (according to chain rule)
-  Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> N_i_xixixi_master(
+  // add contributions from linearization of target parameter coordinate xi_target
+  // also to [.]_deriv_r_xixi_target expressions (according to chain rule)
+  Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> N_i_xixixi_target(
       Core::LinAlg::Initialization::zero);
 
   Discret::Utils::Beam::evaluate_shape_function3rd_derivs_at_xi<numnodes, numnodalvalues>(
-      xi_master, N_i_xixixi_master, beam_element2()->shape(), ele2length_);
+      xi_target, N_i_xixixi_target, beam_element2()->shape(), ele2length_);
 
-  Core::LinAlg::Matrix<3, 1, double> r_xixixi_master(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, double> r_xixixi_target(Core::LinAlg::Initialization::zero);
 
   Discret::Utils::Beam::calc_interpolation<numnodes, numnodalvalues, 3>(
-      Core::FADUtils::cast_to_double(ele2pos_), N_i_xixixi_master, r_xixixi_master);
+      Core::FADUtils::cast_to_double(ele2pos_), N_i_xixixi_target, r_xixixi_target);
 
-  tmp_vec2.multiply(cos_alpha_deriv_r_slave_deriv_r_xixi_master, r_xixixi_master);
-
-  for (unsigned int irow = 0; irow < 3; ++irow)
-  {
-    for (unsigned int icol = 0; icol < 3; ++icol)
-    {
-      cos_alpha_deriv_r_slave_deriv_r_slave(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_slave(icol);
-
-      cos_alpha_deriv_r_slave_deriv_r_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_master(icol);
-
-      cos_alpha_deriv_r_slave_deriv_r_xi_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_xi_master(icol);
-    }
-  }
-
-  tmp_vec2.multiply(cos_alpha_deriv_r_master_deriv_r_xixi_master, r_xixixi_master);
+  tmp_vec2.multiply(cos_alpha_deriv_r_source_deriv_r_xixi_target, r_xixixi_target);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_master_deriv_r_slave(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_slave(icol);
+      cos_alpha_deriv_r_source_deriv_r_source(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_source(icol);
 
-      cos_alpha_deriv_r_master_deriv_r_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_master(icol);
+      cos_alpha_deriv_r_source_deriv_r_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_target(icol);
 
-      cos_alpha_deriv_r_master_deriv_r_xi_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_xi_master(icol);
+      cos_alpha_deriv_r_source_deriv_r_xi_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_xi_target(icol);
     }
   }
 
-  tmp_vec2.multiply(cos_alpha_deriv_r_xi_master_deriv_r_xixi_master, r_xixixi_master);
+  tmp_vec2.multiply(cos_alpha_deriv_r_target_deriv_r_xixi_target, r_xixixi_target);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_xi_master_deriv_r_slave(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_slave(icol);
+      cos_alpha_deriv_r_target_deriv_r_source(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_source(icol);
 
-      cos_alpha_deriv_r_xi_master_deriv_r_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_master(icol);
+      cos_alpha_deriv_r_target_deriv_r_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_target(icol);
 
-      cos_alpha_deriv_r_xi_master_deriv_r_xi_master(irow, icol) +=
-          tmp_vec2(irow) * xi_master_partial_r_xi_master(icol);
+      cos_alpha_deriv_r_target_deriv_r_xi_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_xi_target(icol);
+    }
+  }
+
+  tmp_vec2.multiply(cos_alpha_deriv_r_xi_target_deriv_r_xixi_target, r_xixixi_target);
+
+  for (unsigned int irow = 0; irow < 3; ++irow)
+  {
+    for (unsigned int icol = 0; icol < 3; ++icol)
+    {
+      cos_alpha_deriv_r_xi_target_deriv_r_source(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_source(icol);
+
+      cos_alpha_deriv_r_xi_target_deriv_r_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_target(icol);
+
+      cos_alpha_deriv_r_xi_target_deriv_r_xi_target(irow, icol) +=
+          tmp_vec2(irow) * xi_target_partial_r_xi_target(icol);
     }
   }
 
 
-  // add contributions from linearization of (variation of r_xi_master) according to the chain
+  // add contributions from linearization of (variation of r_xi_target) according to the chain
   // rule
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xixi_master_deriv_r_slave(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xixi_target_deriv_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xixi_master_deriv_r_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xixi_target_deriv_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xixi_master_deriv_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> cos_alpha_deriv_r_xixi_target_deriv_r_xi_target(
       Core::LinAlg::Initialization::zero);
 
   for (unsigned int irow = 0; irow < 3; ++irow)
   {
     for (unsigned int icol = 0; icol < 3; ++icol)
     {
-      cos_alpha_deriv_r_xixi_master_deriv_r_slave(irow, icol) +=
-          t_master_partial_r_xi_master_mult_t_slave(irow) * xi_master_partial_r_slave(icol);
+      cos_alpha_deriv_r_xixi_target_deriv_r_source(irow, icol) +=
+          t_target_partial_r_xi_target_mult_t_source(irow) * xi_target_partial_r_source(icol);
 
-      cos_alpha_deriv_r_xixi_master_deriv_r_master(irow, icol) +=
-          t_master_partial_r_xi_master_mult_t_slave(irow) * xi_master_partial_r_master(icol);
+      cos_alpha_deriv_r_xixi_target_deriv_r_target(irow, icol) +=
+          t_target_partial_r_xi_target_mult_t_source(irow) * xi_target_partial_r_target(icol);
 
-      cos_alpha_deriv_r_xixi_master_deriv_r_xi_master(irow, icol) +=
-          t_master_partial_r_xi_master_mult_t_slave(irow) * xi_master_partial_r_xi_master(icol);
+      cos_alpha_deriv_r_xixi_target_deriv_r_xi_target(irow, icol) +=
+          t_target_partial_r_xi_target_mult_t_source(irow) * xi_target_partial_r_xi_target(icol);
     }
   }
 
 
-  // contributions from linarization of the (variation of master parameter coordinate xi_master)
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_slave_partial_r_slave(
+  // contributions from linarization of the (variation of target parameter coordinate xi_target)
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_source_partial_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_slave_partial_r_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_source_partial_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_slave_partial_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_source_partial_r_xi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_slave_partial_r_xixi_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_source_partial_r_xixi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_master_partial_r_slave(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_target_partial_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_master_partial_r_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_target_partial_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_master_partial_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_target_partial_r_xi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_master_partial_r_xixi_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_target_partial_r_xixi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_xi_master_partial_r_slave(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_xi_target_partial_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_xi_master_partial_r_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_xi_target_partial_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_xi_master_partial_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_xi_target_partial_r_xi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_xi_master_partial_r_xixi_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_xi_target_partial_r_xixi_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_xixi_master_partial_r_slave(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_xixi_target_partial_r_source(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_xixi_master_partial_r_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_xixi_target_partial_r_target(
       Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 3, double> xi_master_partial_r_xixi_master_partial_r_xi_master(
+  Core::LinAlg::Matrix<3, 3, double> xi_target_partial_r_xixi_target_partial_r_xi_target(
       Core::LinAlg::Initialization::zero);
 
   Core::LinAlg::Matrix<3, 1, double> dist_ul(Core::LinAlg::Initialization::zero);
   dist_ul.update(norm_dist_ul, normal_ul);
 
-  BeamInteraction::Geo::calc_point_to_curve_projection_parameter_coord_master_partial2nd_derivs(
-      xi_master_partial_r_slave_partial_r_slave, xi_master_partial_r_slave_partial_r_master,
-      xi_master_partial_r_slave_partial_r_xi_master,
-      xi_master_partial_r_slave_partial_r_xixi_master, xi_master_partial_r_master_partial_r_slave,
-      xi_master_partial_r_master_partial_r_master, xi_master_partial_r_master_partial_r_xi_master,
-      xi_master_partial_r_master_partial_r_xixi_master,
-      xi_master_partial_r_xi_master_partial_r_slave, xi_master_partial_r_xi_master_partial_r_master,
-      xi_master_partial_r_xi_master_partial_r_xi_master,
-      xi_master_partial_r_xi_master_partial_r_xixi_master,
-      xi_master_partial_r_xixi_master_partial_r_slave,
-      xi_master_partial_r_xixi_master_partial_r_master,
-      xi_master_partial_r_xixi_master_partial_r_xi_master, xi_master_partial_r_slave,
-      xi_master_partial_r_master, xi_master_partial_r_xi_master, dist_ul_deriv_r_slave,
-      dist_ul_deriv_r_master, dist_ul_deriv_r_xi_master, dist_ul, r_xi_master, r_xixi_master,
-      r_xixixi_master);
+  BeamInteraction::Geo::calc_point_to_curve_projection_parameter_coord_target_partial2nd_derivs(
+      xi_target_partial_r_source_partial_r_source, xi_target_partial_r_source_partial_r_target,
+      xi_target_partial_r_source_partial_r_xi_target,
+      xi_target_partial_r_source_partial_r_xixi_target, xi_target_partial_r_target_partial_r_source,
+      xi_target_partial_r_target_partial_r_target, xi_target_partial_r_target_partial_r_xi_target,
+      xi_target_partial_r_target_partial_r_xixi_target,
+      xi_target_partial_r_xi_target_partial_r_source,
+      xi_target_partial_r_xi_target_partial_r_target,
+      xi_target_partial_r_xi_target_partial_r_xi_target,
+      xi_target_partial_r_xi_target_partial_r_xixi_target,
+      xi_target_partial_r_xixi_target_partial_r_source,
+      xi_target_partial_r_xixi_target_partial_r_target,
+      xi_target_partial_r_xixi_target_partial_r_xi_target, xi_target_partial_r_source,
+      xi_target_partial_r_target, xi_target_partial_r_xi_target, dist_ul_deriv_r_source,
+      dist_ul_deriv_r_target, dist_ul_deriv_r_xi_target, dist_ul, r_xi_target, r_xixi_target,
+      r_xixixi_target);
 
-  double r_xixi_master_dot_v2 = r_xixi_master.dot(t_master_partial_r_xi_master_mult_t_slave);
+  double r_xixi_target_dot_v2 = r_xixi_target.dot(t_target_partial_r_xi_target_mult_t_source);
 
-  cos_alpha_deriv_r_slave_deriv_r_slave.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_slave_partial_r_slave, 1.0);
+  cos_alpha_deriv_r_source_deriv_r_source.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_source_partial_r_source, 1.0);
 
-  cos_alpha_deriv_r_slave_deriv_r_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_slave_partial_r_master, 1.0);
+  cos_alpha_deriv_r_source_deriv_r_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_source_partial_r_target, 1.0);
 
-  cos_alpha_deriv_r_slave_deriv_r_xi_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_slave_partial_r_xi_master, 1.0);
+  cos_alpha_deriv_r_source_deriv_r_xi_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_source_partial_r_xi_target, 1.0);
 
-  cos_alpha_deriv_r_slave_deriv_r_xixi_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_slave_partial_r_xixi_master, 1.0);
-
-
-  cos_alpha_deriv_r_master_deriv_r_slave.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_master_partial_r_slave, 1.0);
-
-  cos_alpha_deriv_r_master_deriv_r_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_master_partial_r_master, 1.0);
-
-  cos_alpha_deriv_r_master_deriv_r_xi_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_master_partial_r_xi_master, 1.0);
-
-  cos_alpha_deriv_r_master_deriv_r_xixi_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_master_partial_r_xixi_master, 1.0);
+  cos_alpha_deriv_r_source_deriv_r_xixi_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_source_partial_r_xixi_target, 1.0);
 
 
-  cos_alpha_deriv_r_xi_master_deriv_r_slave.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_xi_master_partial_r_slave, 1.0);
+  cos_alpha_deriv_r_target_deriv_r_source.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_target_partial_r_source, 1.0);
 
-  cos_alpha_deriv_r_xi_master_deriv_r_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_xi_master_partial_r_master, 1.0);
+  cos_alpha_deriv_r_target_deriv_r_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_target_partial_r_target, 1.0);
 
-  cos_alpha_deriv_r_xi_master_deriv_r_xi_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_xi_master_partial_r_xi_master, 1.0);
+  cos_alpha_deriv_r_target_deriv_r_xi_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_target_partial_r_xi_target, 1.0);
 
-  cos_alpha_deriv_r_xi_master_deriv_r_xixi_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_xi_master_partial_r_xixi_master, 1.0);
-
-
-  cos_alpha_deriv_r_xixi_master_deriv_r_slave.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_xixi_master_partial_r_slave, 1.0);
-
-  cos_alpha_deriv_r_xixi_master_deriv_r_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_xixi_master_partial_r_master, 1.0);
-
-  cos_alpha_deriv_r_xixi_master_deriv_r_xi_master.update(
-      r_xixi_master_dot_v2, xi_master_partial_r_xixi_master_partial_r_xi_master, 1.0);
+  cos_alpha_deriv_r_target_deriv_r_xixi_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_target_partial_r_xixi_target, 1.0);
 
 
-  cos_alpha_deriv_r_slave_deriv_r_slave.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_slave_deriv_r_xi_slave.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_slave_deriv_r_master.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_slave_deriv_r_xi_master.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_slave_deriv_r_xixi_master.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_target_deriv_r_source.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_xi_target_partial_r_source, 1.0);
 
-  cos_alpha_deriv_r_xi_slave_deriv_r_slave.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_xi_slave_deriv_r_xi_slave.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_xi_slave_deriv_r_master.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_xi_slave_deriv_r_xi_master.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_target_deriv_r_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_xi_target_partial_r_target, 1.0);
 
-  cos_alpha_deriv_r_master_deriv_r_slave.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_master_deriv_r_xi_slave.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_master_deriv_r_master.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_master_deriv_r_xi_master.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_master_deriv_r_xixi_master.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_target_deriv_r_xi_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_xi_target_partial_r_xi_target, 1.0);
 
-  cos_alpha_deriv_r_xi_master_deriv_r_slave.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_xi_master_deriv_r_xi_slave.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_xi_master_deriv_r_master.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_xi_master_deriv_r_xi_master.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_xi_master_deriv_r_xixi_master.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_target_deriv_r_xixi_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_xi_target_partial_r_xixi_target, 1.0);
 
-  cos_alpha_deriv_r_xixi_master_deriv_r_slave.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_xixi_master_deriv_r_master.scale(signum_tangentsscalarproduct);
-  cos_alpha_deriv_r_xixi_master_deriv_r_xi_master.scale(signum_tangentsscalarproduct);
+
+  cos_alpha_deriv_r_xixi_target_deriv_r_source.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_xixi_target_partial_r_source, 1.0);
+
+  cos_alpha_deriv_r_xixi_target_deriv_r_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_xixi_target_partial_r_target, 1.0);
+
+  cos_alpha_deriv_r_xixi_target_deriv_r_xi_target.update(
+      r_xixi_target_dot_v2, xi_target_partial_r_xixi_target_partial_r_xi_target, 1.0);
+
+
+  cos_alpha_deriv_r_source_deriv_r_source.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_source_deriv_r_xi_source.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_source_deriv_r_target.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_source_deriv_r_xi_target.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_source_deriv_r_xixi_target.scale(signum_tangentsscalarproduct);
+
+  cos_alpha_deriv_r_xi_source_deriv_r_source.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_source_deriv_r_xi_source.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_source_deriv_r_target.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_source_deriv_r_xi_target.scale(signum_tangentsscalarproduct);
+
+  cos_alpha_deriv_r_target_deriv_r_source.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_target_deriv_r_xi_source.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_target_deriv_r_target.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_target_deriv_r_xi_target.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_target_deriv_r_xixi_target.scale(signum_tangentsscalarproduct);
+
+  cos_alpha_deriv_r_xi_target_deriv_r_source.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_target_deriv_r_xi_source.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_target_deriv_r_target.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_target_deriv_r_xi_target.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xi_target_deriv_r_xixi_target.scale(signum_tangentsscalarproduct);
+
+  cos_alpha_deriv_r_xixi_target_deriv_r_source.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xixi_target_deriv_r_target.scale(signum_tangentsscalarproduct);
+  cos_alpha_deriv_r_xixi_target_deriv_r_xi_target.scale(signum_tangentsscalarproduct);
 
 
   // assemble all pre-computed terms into the stiffness matrices
@@ -2147,331 +2152,332 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
       {
         for (unsigned int icolumndim = 0; icolumndim < num_spatial_dimensions; ++icolumndim)
         {
-          // variation of xi_master * linearization of (pot_red_fac_deriv_xi_master * pot_ia)
+          // variation of xi_target * linearization of (pot_red_fac_deriv_xi_target * pot_ia)
           stiffmat11(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              N_i_slave(irowdofperdim) * xi_master_partial_r_slave(irowdim) *
-              (pot_red_fac_2ndderiv_xi_master * xi_master_partial_r_slave(icolumndim) *
-                      N_i_slave(icolumndofperdim) * pot_ia +
-                  pot_red_fac_deriv_xi_master *
-                      (pot_ia_deriv_gap_ul * gap_ul_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_xi_slave(icolumndim) *
-                              N_i_xi_slave(icolumndofperdim)));
+              N_i_source(irowdofperdim) * xi_target_partial_r_source(irowdim) *
+              (pot_red_fac_2ndderiv_xi_target * xi_target_partial_r_source(icolumndim) *
+                      N_i_source(icolumndofperdim) * pot_ia +
+                  pot_red_fac_deriv_xi_target *
+                      (pot_ia_deriv_gap_ul * gap_ul_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_xi_source(icolumndim) *
+                              N_i_xi_source(icolumndofperdim)));
 
           stiffmat12(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              N_i_slave(irowdofperdim) * xi_master_partial_r_slave(irowdim) *
-              (pot_red_fac_2ndderiv_xi_master *
-                      (xi_master_partial_r_master(icolumndim) * N_i_master(icolumndofperdim) +
-                          xi_master_partial_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)) *
+              N_i_source(irowdofperdim) * xi_target_partial_r_source(irowdim) *
+              (pot_red_fac_2ndderiv_xi_target *
+                      (xi_target_partial_r_target(icolumndim) * N_i_target(icolumndofperdim) +
+                          xi_target_partial_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)) *
                       pot_ia +
-                  pot_red_fac_deriv_xi_master *
-                      (pot_ia_deriv_gap_ul * gap_ul_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)));
+                  pot_red_fac_deriv_xi_target *
+                      (pot_ia_deriv_gap_ul * gap_ul_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)));
 
           stiffmat21(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              (N_i_master(irowdofperdim) * xi_master_partial_r_master(irowdim) +
-                  N_i_xi_master(irowdofperdim) * xi_master_partial_r_xi_master(irowdim)) *
-              (pot_red_fac_2ndderiv_xi_master * xi_master_partial_r_slave(icolumndim) *
-                      N_i_slave(icolumndofperdim) * pot_ia +
-                  pot_red_fac_deriv_xi_master *
-                      (pot_ia_deriv_gap_ul * gap_ul_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_xi_slave(icolumndim) *
-                              N_i_xi_slave(icolumndofperdim)));
+              (N_i_target(irowdofperdim) * xi_target_partial_r_target(irowdim) +
+                  N_i_xi_target(irowdofperdim) * xi_target_partial_r_xi_target(irowdim)) *
+              (pot_red_fac_2ndderiv_xi_target * xi_target_partial_r_source(icolumndim) *
+                      N_i_source(icolumndofperdim) * pot_ia +
+                  pot_red_fac_deriv_xi_target *
+                      (pot_ia_deriv_gap_ul * gap_ul_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_xi_source(icolumndim) *
+                              N_i_xi_source(icolumndofperdim)));
 
           stiffmat22(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              (N_i_master(irowdofperdim) * xi_master_partial_r_master(irowdim) +
-                  N_i_xi_master(irowdofperdim) * xi_master_partial_r_xi_master(irowdim)) *
-              (pot_red_fac_2ndderiv_xi_master *
-                      (xi_master_partial_r_master(icolumndim) * N_i_master(icolumndofperdim) +
-                          xi_master_partial_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)) *
+              (N_i_target(irowdofperdim) * xi_target_partial_r_target(irowdim) +
+                  N_i_xi_target(irowdofperdim) * xi_target_partial_r_xi_target(irowdim)) *
+              (pot_red_fac_2ndderiv_xi_target *
+                      (xi_target_partial_r_target(icolumndim) * N_i_target(icolumndofperdim) +
+                          xi_target_partial_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)) *
                       pot_ia +
-                  pot_red_fac_deriv_xi_master *
-                      (pot_ia_deriv_gap_ul * gap_ul_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)));
+                  pot_red_fac_deriv_xi_target *
+                      (pot_ia_deriv_gap_ul * gap_ul_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          pot_ia_deriv_cos_alpha * cos_alpha_deriv_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)));
 
-          // linearization of the (variation of xi_master) * (pot_red_fac_deriv_xi_master * pot_ia)
+          // linearization of the (variation of xi_target) * (pot_red_fac_deriv_xi_target * pot_ia)
           stiffmat11(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              pot_red_fac_deriv_xi_master * pot_ia * N_i_slave(irowdofperdim) *
-              xi_master_partial_r_slave_partial_r_slave(irowdim, icolumndim) *
-              N_i_slave(icolumndofperdim);
+              pot_red_fac_deriv_xi_target * pot_ia * N_i_source(irowdofperdim) *
+              xi_target_partial_r_source_partial_r_source(irowdim, icolumndim) *
+              N_i_source(icolumndofperdim);
 
           stiffmat12(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              pot_red_fac_deriv_xi_master * pot_ia * N_i_slave(irowdofperdim) *
-              (xi_master_partial_r_slave_partial_r_master(irowdim, icolumndim) *
-                      N_i_master(icolumndofperdim) +
-                  xi_master_partial_r_slave_partial_r_xi_master(irowdim, icolumndim) *
-                      N_i_xi_master(icolumndofperdim) +
-                  xi_master_partial_r_slave_partial_r_xixi_master(irowdim, icolumndim) *
-                      N_i_xixi_master(icolumndofperdim));
+              pot_red_fac_deriv_xi_target * pot_ia * N_i_source(irowdofperdim) *
+              (xi_target_partial_r_source_partial_r_target(irowdim, icolumndim) *
+                      N_i_target(icolumndofperdim) +
+                  xi_target_partial_r_source_partial_r_xi_target(irowdim, icolumndim) *
+                      N_i_xi_target(icolumndofperdim) +
+                  xi_target_partial_r_source_partial_r_xixi_target(irowdim, icolumndim) *
+                      N_i_xixi_target(icolumndofperdim));
 
           stiffmat21(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              pot_red_fac_deriv_xi_master * pot_ia *
-              (N_i_master(irowdofperdim) *
-                      xi_master_partial_r_master_partial_r_slave(irowdim, icolumndim) *
-                      N_i_slave(icolumndofperdim) +
-                  N_i_xi_master(irowdofperdim) *
-                      xi_master_partial_r_xi_master_partial_r_slave(irowdim, icolumndim) *
-                      N_i_slave(icolumndofperdim) +
-                  N_i_xixi_master(irowdofperdim) *
-                      (xi_master_partial_r_xixi_master_partial_r_slave(irowdim, icolumndim) *
-                          N_i_slave(icolumndofperdim)));
+              pot_red_fac_deriv_xi_target * pot_ia *
+              (N_i_target(irowdofperdim) *
+                      xi_target_partial_r_target_partial_r_source(irowdim, icolumndim) *
+                      N_i_source(icolumndofperdim) +
+                  N_i_xi_target(irowdofperdim) *
+                      xi_target_partial_r_xi_target_partial_r_source(irowdim, icolumndim) *
+                      N_i_source(icolumndofperdim) +
+                  N_i_xixi_target(irowdofperdim) *
+                      (xi_target_partial_r_xixi_target_partial_r_source(irowdim, icolumndim) *
+                          N_i_source(icolumndofperdim)));
 
           stiffmat22(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              pot_red_fac_deriv_xi_master * pot_ia *
-              (N_i_master(irowdofperdim) *
-                      (xi_master_partial_r_master_partial_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          xi_master_partial_r_master_partial_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim) +
-                          xi_master_partial_r_master_partial_r_xixi_master(irowdim, icolumndim) *
-                              N_i_xixi_master(icolumndofperdim)) +
-                  N_i_xi_master(irowdofperdim) *
-                      (xi_master_partial_r_xi_master_partial_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          xi_master_partial_r_xi_master_partial_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim) +
-                          xi_master_partial_r_xi_master_partial_r_xixi_master(irowdim, icolumndim) *
-                              N_i_xixi_master(icolumndofperdim)) +
-                  N_i_xixi_master(irowdofperdim) *
-                      (xi_master_partial_r_xixi_master_partial_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          xi_master_partial_r_xixi_master_partial_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim)));
+              pot_red_fac_deriv_xi_target * pot_ia *
+              (N_i_target(irowdofperdim) *
+                      (xi_target_partial_r_target_partial_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          xi_target_partial_r_target_partial_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim) +
+                          xi_target_partial_r_target_partial_r_xixi_target(irowdim, icolumndim) *
+                              N_i_xixi_target(icolumndofperdim)) +
+                  N_i_xi_target(irowdofperdim) *
+                      (xi_target_partial_r_xi_target_partial_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          xi_target_partial_r_xi_target_partial_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim) +
+                          xi_target_partial_r_xi_target_partial_r_xixi_target(irowdim, icolumndim) *
+                              N_i_xixi_target(icolumndofperdim)) +
+                  N_i_xixi_target(irowdofperdim) *
+                      (xi_target_partial_r_xixi_target_partial_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          xi_target_partial_r_xixi_target_partial_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim)));
 
           // variation of gap_ul * linearization of (pot_red_fac * pot_ia_deriv_gap_ul)
           stiffmat11(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              N_i_slave(irowdofperdim) * gap_ul_deriv_r_slave(irowdim) *
-              (pot_red_fac_deriv_xi_master * xi_master_partial_r_slave(icolumndim) *
-                      N_i_slave(icolumndofperdim) * pot_ia_deriv_gap_ul +
+              N_i_source(irowdofperdim) * gap_ul_deriv_r_source(irowdim) *
+              (pot_red_fac_deriv_xi_target * xi_target_partial_r_source(icolumndim) *
+                      N_i_source(icolumndofperdim) * pot_ia_deriv_gap_ul +
                   pot_red_fac *
-                      (pot_ia_2ndderiv_gap_ul * gap_ul_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim) +
+                      (pot_ia_2ndderiv_gap_ul * gap_ul_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim) +
                           pot_ia_deriv_gap_ul_deriv_cos_alpha *
-                              cos_alpha_deriv_r_slave(icolumndim) * N_i_slave(icolumndofperdim) +
+                              cos_alpha_deriv_r_source(icolumndim) * N_i_source(icolumndofperdim) +
                           pot_ia_deriv_gap_ul_deriv_cos_alpha *
-                              cos_alpha_deriv_r_xi_slave(icolumndim) *
-                              N_i_xi_slave(icolumndofperdim)));
+                              cos_alpha_deriv_r_xi_source(icolumndim) *
+                              N_i_xi_source(icolumndofperdim)));
 
           stiffmat12(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              N_i_slave(irowdofperdim) * gap_ul_deriv_r_slave(irowdim) *
-              (pot_red_fac_deriv_xi_master *
-                      (xi_master_partial_r_master(icolumndim) * N_i_master(icolumndofperdim) +
-                          xi_master_partial_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)) *
+              N_i_source(irowdofperdim) * gap_ul_deriv_r_source(irowdim) *
+              (pot_red_fac_deriv_xi_target *
+                      (xi_target_partial_r_target(icolumndim) * N_i_target(icolumndofperdim) +
+                          xi_target_partial_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)) *
                       pot_ia_deriv_gap_ul +
                   pot_red_fac *
-                      (pot_ia_2ndderiv_gap_ul * gap_ul_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim) +
+                      (pot_ia_2ndderiv_gap_ul * gap_ul_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim) +
                           pot_ia_deriv_gap_ul_deriv_cos_alpha *
-                              cos_alpha_deriv_r_master(icolumndim) * N_i_master(icolumndofperdim) +
+                              cos_alpha_deriv_r_target(icolumndim) * N_i_target(icolumndofperdim) +
                           pot_ia_deriv_gap_ul_deriv_cos_alpha *
-                              cos_alpha_deriv_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)));
+                              cos_alpha_deriv_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)));
 
           stiffmat21(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              N_i_master(irowdofperdim) * gap_ul_deriv_r_master(irowdim) *
-              (pot_red_fac_deriv_xi_master * xi_master_partial_r_slave(icolumndim) *
-                      N_i_slave(icolumndofperdim) * pot_ia_deriv_gap_ul +
+              N_i_target(irowdofperdim) * gap_ul_deriv_r_target(irowdim) *
+              (pot_red_fac_deriv_xi_target * xi_target_partial_r_source(icolumndim) *
+                      N_i_source(icolumndofperdim) * pot_ia_deriv_gap_ul +
                   pot_red_fac *
-                      (pot_ia_2ndderiv_gap_ul * gap_ul_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim) +
+                      (pot_ia_2ndderiv_gap_ul * gap_ul_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim) +
                           pot_ia_deriv_gap_ul_deriv_cos_alpha *
-                              cos_alpha_deriv_r_slave(icolumndim) * N_i_slave(icolumndofperdim) +
+                              cos_alpha_deriv_r_source(icolumndim) * N_i_source(icolumndofperdim) +
                           pot_ia_deriv_gap_ul_deriv_cos_alpha *
-                              cos_alpha_deriv_r_xi_slave(icolumndim) *
-                              N_i_xi_slave(icolumndofperdim)));
+                              cos_alpha_deriv_r_xi_source(icolumndim) *
+                              N_i_xi_source(icolumndofperdim)));
 
           stiffmat22(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              N_i_master(irowdofperdim) * gap_ul_deriv_r_master(irowdim) *
-              (pot_red_fac_deriv_xi_master *
-                      (xi_master_partial_r_master(icolumndim) * N_i_master(icolumndofperdim) +
-                          xi_master_partial_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)) *
+              N_i_target(irowdofperdim) * gap_ul_deriv_r_target(irowdim) *
+              (pot_red_fac_deriv_xi_target *
+                      (xi_target_partial_r_target(icolumndim) * N_i_target(icolumndofperdim) +
+                          xi_target_partial_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)) *
                       pot_ia_deriv_gap_ul +
                   pot_red_fac *
-                      (pot_ia_2ndderiv_gap_ul * gap_ul_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim) +
+                      (pot_ia_2ndderiv_gap_ul * gap_ul_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim) +
                           pot_ia_deriv_gap_ul_deriv_cos_alpha *
-                              cos_alpha_deriv_r_master(icolumndim) * N_i_master(icolumndofperdim) +
+                              cos_alpha_deriv_r_target(icolumndim) * N_i_target(icolumndofperdim) +
                           pot_ia_deriv_gap_ul_deriv_cos_alpha *
-                              cos_alpha_deriv_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)));
+                              cos_alpha_deriv_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)));
 
           // linearization of the (variation of gap_ul) * (pot_red_fac * pot_ia_deriv_gap_ul)
           stiffmat11(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              pot_red_fac * pot_ia_deriv_gap_ul * N_i_slave(irowdofperdim) *
-              gap_ul_deriv_r_slave_deriv_r_slave(irowdim, icolumndim) * N_i_slave(icolumndofperdim);
+              pot_red_fac * pot_ia_deriv_gap_ul * N_i_source(irowdofperdim) *
+              gap_ul_deriv_r_source_deriv_r_source(irowdim, icolumndim) *
+              N_i_source(icolumndofperdim);
 
           stiffmat12(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              pot_red_fac * pot_ia_deriv_gap_ul * N_i_slave(irowdofperdim) *
-              (gap_ul_deriv_r_slave_deriv_r_master(irowdim, icolumndim) *
-                      N_i_master(icolumndofperdim) +
-                  gap_ul_deriv_r_slave_deriv_r_xi_master(irowdim, icolumndim) *
-                      N_i_xi_master(icolumndofperdim));
+              pot_red_fac * pot_ia_deriv_gap_ul * N_i_source(irowdofperdim) *
+              (gap_ul_deriv_r_source_deriv_r_target(irowdim, icolumndim) *
+                      N_i_target(icolumndofperdim) +
+                  gap_ul_deriv_r_source_deriv_r_xi_target(irowdim, icolumndim) *
+                      N_i_xi_target(icolumndofperdim));
 
           stiffmat21(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
               pot_red_fac * pot_ia_deriv_gap_ul *
-              (N_i_master(irowdofperdim) *
-                      gap_ul_deriv_r_master_deriv_r_slave(irowdim, icolumndim) +
-                  N_i_xi_master(irowdofperdim) *
-                      gap_ul_deriv_r_xi_master_deriv_r_slave(irowdim, icolumndim)) *
-              N_i_slave(icolumndofperdim);
+              (N_i_target(irowdofperdim) *
+                      gap_ul_deriv_r_target_deriv_r_source(irowdim, icolumndim) +
+                  N_i_xi_target(irowdofperdim) *
+                      gap_ul_deriv_r_xi_target_deriv_r_source(irowdim, icolumndim)) *
+              N_i_source(icolumndofperdim);
 
           stiffmat22(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
               pot_red_fac * pot_ia_deriv_gap_ul *
-              (N_i_master(irowdofperdim) *
-                      (gap_ul_deriv_r_master_deriv_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          gap_ul_deriv_r_master_deriv_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim)) +
-                  N_i_xi_master(irowdofperdim) *
-                      (gap_ul_deriv_r_xi_master_deriv_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          gap_ul_deriv_r_xi_master_deriv_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim)));
+              (N_i_target(irowdofperdim) *
+                      (gap_ul_deriv_r_target_deriv_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          gap_ul_deriv_r_target_deriv_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim)) +
+                  N_i_xi_target(irowdofperdim) *
+                      (gap_ul_deriv_r_xi_target_deriv_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          gap_ul_deriv_r_xi_target_deriv_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim)));
 
 
           // variation of cos_alpha * linearization of (pot_red_fac * pot_ia_deriv_cos_alpha)
           stiffmat11(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              (N_i_slave(irowdofperdim) * cos_alpha_deriv_r_slave(irowdim) +
-                  N_i_xi_slave(irowdofperdim) * cos_alpha_deriv_r_xi_slave(irowdim)) *
-              (pot_red_fac_deriv_xi_master * xi_master_partial_r_slave(icolumndim) *
-                      N_i_slave(icolumndofperdim) * pot_ia_deriv_cos_alpha +
+              (N_i_source(irowdofperdim) * cos_alpha_deriv_r_source(irowdim) +
+                  N_i_xi_source(irowdofperdim) * cos_alpha_deriv_r_xi_source(irowdim)) *
+              (pot_red_fac_deriv_xi_target * xi_target_partial_r_source(icolumndim) *
+                      N_i_source(icolumndofperdim) * pot_ia_deriv_cos_alpha +
                   pot_red_fac *
-                      (pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_xi_slave(icolumndim) *
-                              N_i_xi_slave(icolumndofperdim) +
-                          pot_ia_deriv_gap_ul_deriv_cos_alpha * gap_ul_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim)));
+                      (pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_xi_source(icolumndim) *
+                              N_i_xi_source(icolumndofperdim) +
+                          pot_ia_deriv_gap_ul_deriv_cos_alpha * gap_ul_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim)));
 
           stiffmat12(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              (N_i_slave(irowdofperdim) * cos_alpha_deriv_r_slave(irowdim) +
-                  N_i_xi_slave(irowdofperdim) * cos_alpha_deriv_r_xi_slave(irowdim)) *
-              (pot_red_fac_deriv_xi_master *
-                      (xi_master_partial_r_master(icolumndim) * N_i_master(icolumndofperdim) +
-                          xi_master_partial_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)) *
+              (N_i_source(irowdofperdim) * cos_alpha_deriv_r_source(irowdim) +
+                  N_i_xi_source(irowdofperdim) * cos_alpha_deriv_r_xi_source(irowdim)) *
+              (pot_red_fac_deriv_xi_target *
+                      (xi_target_partial_r_target(icolumndim) * N_i_target(icolumndofperdim) +
+                          xi_target_partial_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)) *
                       pot_ia_deriv_cos_alpha +
                   pot_red_fac *
-                      (pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim) +
-                          pot_ia_deriv_gap_ul_deriv_cos_alpha * gap_ul_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim)));
+                      (pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim) +
+                          pot_ia_deriv_gap_ul_deriv_cos_alpha * gap_ul_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim)));
 
           stiffmat21(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              (N_i_master(irowdofperdim) * cos_alpha_deriv_r_master(irowdim) +
-                  N_i_xi_master(irowdofperdim) * cos_alpha_deriv_r_xi_master(irowdim)) *
-              (pot_red_fac_deriv_xi_master * xi_master_partial_r_slave(icolumndim) *
-                      N_i_slave(icolumndofperdim) * pot_ia_deriv_cos_alpha +
+              (N_i_target(irowdofperdim) * cos_alpha_deriv_r_target(irowdim) +
+                  N_i_xi_target(irowdofperdim) * cos_alpha_deriv_r_xi_target(irowdim)) *
+              (pot_red_fac_deriv_xi_target * xi_target_partial_r_source(icolumndim) *
+                      N_i_source(icolumndofperdim) * pot_ia_deriv_cos_alpha +
                   pot_red_fac *
-                      (pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_xi_slave(icolumndim) *
-                              N_i_xi_slave(icolumndofperdim) +
-                          pot_ia_deriv_gap_ul_deriv_cos_alpha * gap_ul_deriv_r_slave(icolumndim) *
-                              N_i_slave(icolumndofperdim)));
+                      (pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_xi_source(icolumndim) *
+                              N_i_xi_source(icolumndofperdim) +
+                          pot_ia_deriv_gap_ul_deriv_cos_alpha * gap_ul_deriv_r_source(icolumndim) *
+                              N_i_source(icolumndofperdim)));
 
           stiffmat22(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
-              (N_i_master(irowdofperdim) * cos_alpha_deriv_r_master(irowdim) +
-                  N_i_xi_master(irowdofperdim) * cos_alpha_deriv_r_xi_master(irowdim)) *
-              (pot_red_fac_deriv_xi_master *
-                      (xi_master_partial_r_master(icolumndim) * N_i_master(icolumndofperdim) +
-                          xi_master_partial_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim)) *
+              (N_i_target(irowdofperdim) * cos_alpha_deriv_r_target(irowdim) +
+                  N_i_xi_target(irowdofperdim) * cos_alpha_deriv_r_xi_target(irowdim)) *
+              (pot_red_fac_deriv_xi_target *
+                      (xi_target_partial_r_target(icolumndim) * N_i_target(icolumndofperdim) +
+                          xi_target_partial_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim)) *
                       pot_ia_deriv_cos_alpha +
                   pot_red_fac *
-                      (pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_xi_master(icolumndim) *
-                              N_i_xi_master(icolumndofperdim) +
-                          pot_ia_deriv_gap_ul_deriv_cos_alpha * gap_ul_deriv_r_master(icolumndim) *
-                              N_i_master(icolumndofperdim)));
+                      (pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          pot_ia_2ndderiv_cos_alpha * cos_alpha_deriv_r_xi_target(icolumndim) *
+                              N_i_xi_target(icolumndofperdim) +
+                          pot_ia_deriv_gap_ul_deriv_cos_alpha * gap_ul_deriv_r_target(icolumndim) *
+                              N_i_target(icolumndofperdim)));
 
 
           // linearization of the (variation of cos_alpha) * (pot_red_fac * pot_ia_deriv_cos_alpha)
           stiffmat11(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
               pot_red_fac * pot_ia_deriv_cos_alpha *
-              (N_i_slave(irowdofperdim) *
-                      (cos_alpha_deriv_r_slave_deriv_r_slave(irowdim, icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          cos_alpha_deriv_r_slave_deriv_r_xi_slave(irowdim, icolumndim) *
-                              N_i_xi_slave(icolumndofperdim)) +
-                  N_i_xi_slave(irowdofperdim) *
-                      (cos_alpha_deriv_r_xi_slave_deriv_r_slave(irowdim, icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          cos_alpha_deriv_r_xi_slave_deriv_r_xi_slave(irowdim, icolumndim) *
-                              N_i_xi_slave(icolumndofperdim)));
+              (N_i_source(irowdofperdim) *
+                      (cos_alpha_deriv_r_source_deriv_r_source(irowdim, icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          cos_alpha_deriv_r_source_deriv_r_xi_source(irowdim, icolumndim) *
+                              N_i_xi_source(icolumndofperdim)) +
+                  N_i_xi_source(irowdofperdim) *
+                      (cos_alpha_deriv_r_xi_source_deriv_r_source(irowdim, icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          cos_alpha_deriv_r_xi_source_deriv_r_xi_source(irowdim, icolumndim) *
+                              N_i_xi_source(icolumndofperdim)));
 
           stiffmat12(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
               pot_red_fac * pot_ia_deriv_cos_alpha *
-              (N_i_slave(irowdofperdim) *
-                      (cos_alpha_deriv_r_slave_deriv_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          cos_alpha_deriv_r_slave_deriv_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim) +
-                          cos_alpha_deriv_r_slave_deriv_r_xixi_master(irowdim, icolumndim) *
-                              N_i_xixi_master(icolumndofperdim)) +
-                  N_i_xi_slave(irowdofperdim) *
-                      (cos_alpha_deriv_r_xi_slave_deriv_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          cos_alpha_deriv_r_xi_slave_deriv_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim)));
+              (N_i_source(irowdofperdim) *
+                      (cos_alpha_deriv_r_source_deriv_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          cos_alpha_deriv_r_source_deriv_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim) +
+                          cos_alpha_deriv_r_source_deriv_r_xixi_target(irowdim, icolumndim) *
+                              N_i_xixi_target(icolumndofperdim)) +
+                  N_i_xi_source(irowdofperdim) *
+                      (cos_alpha_deriv_r_xi_source_deriv_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          cos_alpha_deriv_r_xi_source_deriv_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim)));
 
           stiffmat21(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
               pot_red_fac * pot_ia_deriv_cos_alpha *
-              (N_i_master(irowdofperdim) *
-                      (cos_alpha_deriv_r_master_deriv_r_slave(irowdim, icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          cos_alpha_deriv_r_master_deriv_r_xi_slave(irowdim, icolumndim) *
-                              N_i_xi_slave(icolumndofperdim)) +
-                  N_i_xi_master(irowdofperdim) *
-                      (cos_alpha_deriv_r_xi_master_deriv_r_slave(irowdim, icolumndim) *
-                              N_i_slave(icolumndofperdim) +
-                          cos_alpha_deriv_r_xi_master_deriv_r_xi_slave(irowdim, icolumndim) *
-                              N_i_xi_slave(icolumndofperdim)) +
-                  N_i_xixi_master(irowdofperdim) *
-                      (cos_alpha_deriv_r_xixi_master_deriv_r_slave(irowdim, icolumndim) *
-                          N_i_slave(icolumndofperdim)));
+              (N_i_target(irowdofperdim) *
+                      (cos_alpha_deriv_r_target_deriv_r_source(irowdim, icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          cos_alpha_deriv_r_target_deriv_r_xi_source(irowdim, icolumndim) *
+                              N_i_xi_source(icolumndofperdim)) +
+                  N_i_xi_target(irowdofperdim) *
+                      (cos_alpha_deriv_r_xi_target_deriv_r_source(irowdim, icolumndim) *
+                              N_i_source(icolumndofperdim) +
+                          cos_alpha_deriv_r_xi_target_deriv_r_xi_source(irowdim, icolumndim) *
+                              N_i_xi_source(icolumndofperdim)) +
+                  N_i_xixi_target(irowdofperdim) *
+                      (cos_alpha_deriv_r_xixi_target_deriv_r_source(irowdim, icolumndim) *
+                          N_i_source(icolumndofperdim)));
 
           stiffmat22(3 * irowdofperdim + irowdim, 3 * icolumndofperdim + icolumndim) +=
               pot_red_fac * pot_ia_deriv_cos_alpha *
-              (N_i_master(irowdofperdim) *
-                      (cos_alpha_deriv_r_master_deriv_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          cos_alpha_deriv_r_master_deriv_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim) +
-                          cos_alpha_deriv_r_master_deriv_r_xixi_master(irowdim, icolumndim) *
-                              N_i_xixi_master(icolumndofperdim)) +
-                  N_i_xi_master(irowdofperdim) *
-                      (cos_alpha_deriv_r_xi_master_deriv_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          cos_alpha_deriv_r_xi_master_deriv_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim) +
-                          cos_alpha_deriv_r_xi_master_deriv_r_xixi_master(irowdim, icolumndim) *
-                              N_i_xixi_master(icolumndofperdim)) +
-                  N_i_xixi_master(irowdofperdim) *
-                      (cos_alpha_deriv_r_xixi_master_deriv_r_master(irowdim, icolumndim) *
-                              N_i_master(icolumndofperdim) +
-                          cos_alpha_deriv_r_xixi_master_deriv_r_xi_master(irowdim, icolumndim) *
-                              N_i_xi_master(icolumndofperdim)));
+              (N_i_target(irowdofperdim) *
+                      (cos_alpha_deriv_r_target_deriv_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          cos_alpha_deriv_r_target_deriv_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim) +
+                          cos_alpha_deriv_r_target_deriv_r_xixi_target(irowdim, icolumndim) *
+                              N_i_xixi_target(icolumndofperdim)) +
+                  N_i_xi_target(irowdofperdim) *
+                      (cos_alpha_deriv_r_xi_target_deriv_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          cos_alpha_deriv_r_xi_target_deriv_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim) +
+                          cos_alpha_deriv_r_xi_target_deriv_r_xixi_target(irowdim, icolumndim) *
+                              N_i_xixi_target(icolumndofperdim)) +
+                  N_i_xixi_target(irowdofperdim) *
+                      (cos_alpha_deriv_r_xixi_target_deriv_r_target(irowdim, icolumndim) *
+                              N_i_target(icolumndofperdim) +
+                          cos_alpha_deriv_r_xixi_target_deriv_r_xi_target(irowdim, icolumndim) *
+                              N_i_xi_target(icolumndofperdim)));
         }
       }
     }
@@ -2483,26 +2489,27 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
 template <unsigned int numnodes, unsigned int numnodalvalues, typename T>
 bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
     T>::evaluate_full_disk_cylinder_potential(T& interaction_potential_GP,
-    Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_slave_GP,
-    Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_master_GP,
-    Core::LinAlg::Matrix<3, 1, T> const& r_slave, Core::LinAlg::Matrix<3, 1, T> const& r_xi_slave,
-    Core::LinAlg::Matrix<3, 1, T> const& t1_slave, Core::LinAlg::Matrix<3, 1, T> const& r_master,
-    Core::LinAlg::Matrix<3, 1, T> const& r_xi_master,
-    Core::LinAlg::Matrix<3, 1, T> const& r_xixi_master,
-    Core::LinAlg::Matrix<3, 1, T> const& t1_master, T alpha, T cos_alpha,
+    Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_source_GP,
+    Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_target_GP,
+    Core::LinAlg::Matrix<3, 1, T> const& r_source, Core::LinAlg::Matrix<3, 1, T> const& r_xi_source,
+    Core::LinAlg::Matrix<3, 1, T> const& t1_source, Core::LinAlg::Matrix<3, 1, T> const& r_target,
+    Core::LinAlg::Matrix<3, 1, T> const& r_xi_target,
+    Core::LinAlg::Matrix<3, 1, T> const& r_xixi_target,
+    Core::LinAlg::Matrix<3, 1, T> const& t1_target, T alpha, T cos_alpha,
     Core::LinAlg::Matrix<3, 1, T> const& dist_ul,
-    Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_slave,
-    Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_master,
-    Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_xi_master,
-    double prefactor_visualization_data, Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_slave_GP,
-    Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_master_GP,
-    Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_slave_GP,
-    Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_master_GP,
+    Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_source,
+    Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_target,
+    Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_xi_target,
+    double prefactor_visualization_data,
+    Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_source_GP,
+    Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_target_GP,
+    Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_source_GP,
+    Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_target_GP,
     double rho1rho2_JacFac_GaussWeight,
-    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_slave,
-    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_slave,
-    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_master,
-    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xi_master)
+    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_source,
+    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_source,
+    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_target,
+    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xi_target)
 {
   // get regularization type and separation
   const BeamInteraction::Potential::RegularizationType regularization_type =
@@ -2517,7 +2524,7 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
       Core::LinAlg::Initialization::zero);  // normal vector at bilateral closest point
   T norm_normal_bl_tilde = 0.0;             // norm of vector defining bilateral normal vector
   T gap_bl = 0.0;                           // gap of bilateral closest point
-  T x = 0.0;  // distance between Gauss point and bilateral closest point on slave
+  T x = 0.0;  // distance between Gauss point and bilateral closest point on source
   Core::LinAlg::Matrix<3, 1, T> aux_plane_normal(
       Core::LinAlg::Initialization::zero);  // normal vector of auxiliary plane n*
 
@@ -2564,25 +2571,25 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
 
 
   // components from variation of bilateral gap
-  Core::LinAlg::Matrix<3, 1, T> gap_bl_partial_r_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> gap_bl_partial_r_master(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> gap_bl_partial_r_xi_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> gap_bl_partial_r_xi_master(Core::LinAlg::Initialization::zero);
-  T gap_bl_partial_xi_master = 0.0;
+  Core::LinAlg::Matrix<3, 1, T> gap_bl_partial_r_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> gap_bl_partial_r_target(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> gap_bl_partial_r_xi_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> gap_bl_partial_r_xi_target(Core::LinAlg::Initialization::zero);
+  T gap_bl_partial_xi_target = 0.0;
 
   // components from variation of cosine of enclosed angle
-  Core::LinAlg::Matrix<3, 1, T> cos_alpha_partial_r_xi_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> cos_alpha_partial_r_xi_master(Core::LinAlg::Initialization::zero);
-  T cos_alpha_partial_xi_master = 0.0;
+  Core::LinAlg::Matrix<3, 1, T> cos_alpha_partial_r_xi_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> cos_alpha_partial_r_xi_target(Core::LinAlg::Initialization::zero);
+  T cos_alpha_partial_xi_target = 0.0;
 
-  // components from variation of distance from bilateral closest point on slave
-  Core::LinAlg::Matrix<3, 1, T> x_partial_r_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> x_partial_r_master(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> x_partial_r_xi_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> x_partial_r_xi_master(Core::LinAlg::Initialization::zero);
+  // components from variation of distance from bilateral closest point on source
+  Core::LinAlg::Matrix<3, 1, T> x_partial_r_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> x_partial_r_target(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> x_partial_r_xi_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> x_partial_r_xi_target(Core::LinAlg::Initialization::zero);
 
   Core::LinAlg::Matrix<3, 1, T> x_partial_aux_plane_normal(Core::LinAlg::Initialization::zero);
-  T x_partial_xi_master = 0.0;
+  T x_partial_xi_target = 0.0;
 
 
   // auxiliary variables
@@ -2608,17 +2615,17 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
   else
   {
     // normal vector at bilateral closest point Fixme
-    normal_bl.cross_product(r_xi_slave, r_xi_master);
+    normal_bl.cross_product(r_xi_source, r_xi_target);
     norm_normal_bl_tilde = Core::FADUtils::vector_norm(normal_bl);
     normal_bl.scale(1.0 / norm_normal_bl_tilde);
 
-    // distance between Gauss point and bilateral closest point on slave
-    aux_plane_normal.update(
-        r_xi_master.dot(r_xi_master), r_xi_slave, -1.0 * r_xi_master.dot(r_xi_slave), r_xi_master);
+    // distance between Gauss point and bilateral closest point on source
+    aux_plane_normal.update(r_xi_target.dot(r_xi_target), r_xi_source,
+        -1.0 * r_xi_target.dot(r_xi_source), r_xi_target);
 
-    x = Core::FADUtils::vector_norm(r_xi_slave) *
-        (r_master.dot(aux_plane_normal) - r_slave.dot(aux_plane_normal)) /
-        r_xi_slave.dot(aux_plane_normal);
+    x = Core::FADUtils::vector_norm(r_xi_source) *
+        (r_target.dot(aux_plane_normal) - r_source.dot(aux_plane_normal)) /
+        r_xi_source.dot(aux_plane_normal);
   }
 
   // gap of bilateral closest point (also valid for special case alpha=0)
@@ -2821,11 +2828,11 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
   // components from variation of bilateral gap
   T signum_dist_bl_tilde = Core::FADUtils::signum(dist_ul.dot(normal_bl));
 
-  gap_bl_partial_r_slave.update(signum_dist_bl_tilde, normal_bl);
-  gap_bl_partial_r_master.update(-1.0 * signum_dist_bl_tilde, normal_bl);
+  gap_bl_partial_r_source.update(signum_dist_bl_tilde, normal_bl);
+  gap_bl_partial_r_target.update(-1.0 * signum_dist_bl_tilde, normal_bl);
 
-  // Todo: check and remove: the following term should vanish since r_xi_master \perp normal_bl
-  gap_bl_partial_xi_master = -1.0 * signum_dist_bl_tilde * r_xi_master.dot(normal_bl);
+  // Todo: check and remove: the following term should vanish since r_xi_target \perp normal_bl
+  gap_bl_partial_xi_target = -1.0 * signum_dist_bl_tilde * r_xi_target.dot(normal_bl);
 
   v_mat_tmp.clear();
   for (unsigned int i = 0; i < 3; ++i)
@@ -2842,110 +2849,112 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
   {
     // Todo: check and remove: signum_dist_bl_tilde should always be +1.0 in this case!
 
-    gap_bl_partial_r_xi_slave.clear();
+    gap_bl_partial_r_xi_source.clear();
 
-    gap_bl_partial_r_slave.update(signum_dist_bl_tilde / norm_normal_bl_tilde, vec_tmp, 1.0);
+    gap_bl_partial_r_source.update(signum_dist_bl_tilde / norm_normal_bl_tilde, vec_tmp, 1.0);
 
-    gap_bl_partial_r_xi_master.clear();
+    gap_bl_partial_r_xi_target.clear();
 
-    gap_bl_partial_r_master.update(
+    gap_bl_partial_r_target.update(
         -1.0 * signum_dist_bl_tilde / norm_normal_bl_tilde, vec_tmp, 1.0);
 
     // Todo: check and remove: the following term should vanish
-    gap_bl_partial_xi_master -=
-        signum_dist_bl_tilde / norm_normal_bl_tilde * r_xi_master.dot(vec_tmp);
+    gap_bl_partial_xi_target -=
+        signum_dist_bl_tilde / norm_normal_bl_tilde * r_xi_target.dot(vec_tmp);
   }
   else
   {
-    gap_bl_partial_r_xi_slave.update(signum_dist_bl_tilde / norm_normal_bl_tilde,
-        Core::FADUtils::vector_product(r_xi_master, vec_tmp));
+    gap_bl_partial_r_xi_source.update(signum_dist_bl_tilde / norm_normal_bl_tilde,
+        Core::FADUtils::vector_product(r_xi_target, vec_tmp));
 
-    gap_bl_partial_r_xi_master.update(-1.0 * signum_dist_bl_tilde / norm_normal_bl_tilde,
-        Core::FADUtils::vector_product(r_xi_slave, vec_tmp));
+    gap_bl_partial_r_xi_target.update(-1.0 * signum_dist_bl_tilde / norm_normal_bl_tilde,
+        Core::FADUtils::vector_product(r_xi_source, vec_tmp));
 
-    gap_bl_partial_xi_master += r_xixi_master.dot(gap_bl_partial_r_xi_master);
+    gap_bl_partial_xi_target += r_xixi_target.dot(gap_bl_partial_r_xi_target);
   }
 
 
   // components from variation of cosine of enclosed angle
-  T signum_tangentsscalarproduct = Core::FADUtils::signum(r_xi_slave.dot(r_xi_master));
+  T signum_tangentsscalarproduct = Core::FADUtils::signum(r_xi_source.dot(r_xi_target));
 
   v_mat_tmp.clear();
   for (unsigned int i = 0; i < 3; ++i)
   {
     v_mat_tmp(i, i) += 1.0;
-    for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t1_slave(i) * t1_slave(j);
+    for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t1_source(i) * t1_source(j);
   }
 
-  cos_alpha_partial_r_xi_slave.multiply(
-      signum_tangentsscalarproduct / Core::FADUtils::vector_norm(r_xi_slave), v_mat_tmp, t1_master);
+  cos_alpha_partial_r_xi_source.multiply(
+      signum_tangentsscalarproduct / Core::FADUtils::vector_norm(r_xi_source), v_mat_tmp,
+      t1_target);
 
   v_mat_tmp.clear();
   for (unsigned int i = 0; i < 3; ++i)
   {
     v_mat_tmp(i, i) += 1.0;
-    for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t1_master(i) * t1_master(j);
+    for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t1_target(i) * t1_target(j);
   }
 
-  cos_alpha_partial_r_xi_master.multiply(
-      signum_tangentsscalarproduct / Core::FADUtils::vector_norm(r_xi_master), v_mat_tmp, t1_slave);
+  cos_alpha_partial_r_xi_target.multiply(
+      signum_tangentsscalarproduct / Core::FADUtils::vector_norm(r_xi_target), v_mat_tmp,
+      t1_source);
 
-  cos_alpha_partial_xi_master = r_xixi_master.dot(cos_alpha_partial_r_xi_master);
+  cos_alpha_partial_xi_target = r_xixi_target.dot(cos_alpha_partial_r_xi_target);
 
 
-  // components from variation of distance from bilateral closest point on slave
+  // components from variation of distance from bilateral closest point on source
   if (Core::FADUtils::cast_to_double(alpha) < BEAMSCOLINEARANGLETHRESHOLD)
   {
     /* set the following quantities to zero since they are not required in this case
      * because pot_ia_partial_x is zero anyway */
-    x_partial_r_slave.clear();
-    x_partial_r_master.clear();
-    x_partial_r_xi_slave.clear();
-    x_partial_r_xi_master.clear();
-    x_partial_xi_master = 0.0;
+    x_partial_r_source.clear();
+    x_partial_r_target.clear();
+    x_partial_r_xi_source.clear();
+    x_partial_r_xi_target.clear();
+    x_partial_xi_target = 0.0;
   }
   else
   {
-    x_partial_r_slave.update(-1.0 / t1_slave.dot(aux_plane_normal), aux_plane_normal);
-    x_partial_r_master.update(1.0 / t1_slave.dot(aux_plane_normal), aux_plane_normal);
+    x_partial_r_source.update(-1.0 / t1_source.dot(aux_plane_normal), aux_plane_normal);
+    x_partial_r_target.update(1.0 / t1_source.dot(aux_plane_normal), aux_plane_normal);
 
     v_mat_tmp.clear();
     for (unsigned int i = 0; i < 3; ++i)
     {
       v_mat_tmp(i, i) += 1.0;
-      for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t1_slave(i) * t1_slave(j);
+      for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t1_source(i) * t1_source(j);
     }
 
-    x_partial_r_xi_slave.multiply(1.0 / Core::FADUtils::vector_norm(r_xi_slave) *
-                                      dist_ul.dot(aux_plane_normal) /
-                                      std::pow(t1_slave.dot(aux_plane_normal), 2),
+    x_partial_r_xi_source.multiply(1.0 / Core::FADUtils::vector_norm(r_xi_source) *
+                                       dist_ul.dot(aux_plane_normal) /
+                                       std::pow(t1_source.dot(aux_plane_normal), 2),
         v_mat_tmp, aux_plane_normal);
 
-    x_partial_aux_plane_normal.update(-1.0 / t1_slave.dot(aux_plane_normal), dist_ul,
-        dist_ul.dot(aux_plane_normal) / std::pow(t1_slave.dot(aux_plane_normal), 2), t1_slave);
+    x_partial_aux_plane_normal.update(-1.0 / t1_source.dot(aux_plane_normal), dist_ul,
+        dist_ul.dot(aux_plane_normal) / std::pow(t1_source.dot(aux_plane_normal), 2), t1_source);
 
     v_mat_tmp.clear();
     for (unsigned int i = 0; i < 3; ++i)
-      for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) += r_xi_master(i) * r_xi_master(j);
+      for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) += r_xi_target(i) * r_xi_target(j);
 
-    x_partial_r_xi_slave.update(r_xi_master.dot(r_xi_master), x_partial_aux_plane_normal, 1.0);
+    x_partial_r_xi_source.update(r_xi_target.dot(r_xi_target), x_partial_aux_plane_normal, 1.0);
 
-    x_partial_r_xi_slave.multiply(-1.0, v_mat_tmp, x_partial_aux_plane_normal, 1.0);
+    x_partial_r_xi_source.multiply(-1.0, v_mat_tmp, x_partial_aux_plane_normal, 1.0);
 
 
-    x_partial_r_xi_master.update(-1.0 * r_xi_master.dot(r_xi_slave), x_partial_aux_plane_normal);
+    x_partial_r_xi_target.update(-1.0 * r_xi_target.dot(r_xi_source), x_partial_aux_plane_normal);
 
     v_mat_tmp.clear();
     for (unsigned int i = 0; i < 3; ++i)
       for (unsigned int j = 0; j < 3; ++j)
       {
-        v_mat_tmp(i, j) += 2.0 * r_xi_master(i) * r_xi_slave(j);
-        v_mat_tmp(i, j) -= 1.0 * r_xi_slave(i) * r_xi_master(j);
+        v_mat_tmp(i, j) += 2.0 * r_xi_target(i) * r_xi_source(j);
+        v_mat_tmp(i, j) -= 1.0 * r_xi_source(i) * r_xi_target(j);
       }
 
-    x_partial_r_xi_master.multiply(1.0, v_mat_tmp, x_partial_aux_plane_normal, 1.0);
+    x_partial_r_xi_target.multiply(1.0, v_mat_tmp, x_partial_aux_plane_normal, 1.0);
 
-    x_partial_xi_master = r_xixi_master.dot(x_partial_r_xi_master);
+    x_partial_xi_target = r_xixi_target.dot(x_partial_r_xi_target);
   }
 
 
@@ -2961,53 +2970,53 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
    * of the centerline is already a distributed force
    */
 
-  // distributed force on slave
-  vtk_force_pot_slave_GP.update(
+  // distributed force on source
+  vtk_force_pot_source_GP.update(
       prefactor_visualization_data * Core::FADUtils::cast_to_double(pot_ia_partial_gap_bl),
-      Core::FADUtils::cast_to_double<T, 3, 1>(gap_bl_partial_r_slave), 1.0);
+      Core::FADUtils::cast_to_double<T, 3, 1>(gap_bl_partial_r_source), 1.0);
 
-  vtk_force_pot_slave_GP.update_t(prefactor_visualization_data *
-                                      Core::FADUtils::cast_to_double(pot_ia_partial_gap_bl) *
-                                      Core::FADUtils::cast_to_double(gap_bl_partial_xi_master),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_slave), 1.0);
-
-  vtk_force_pot_slave_GP.update_t(prefactor_visualization_data *
-                                      Core::FADUtils::cast_to_double(pot_ia_partial_cos_alpha) *
-                                      Core::FADUtils::cast_to_double(cos_alpha_partial_xi_master),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_slave), 1.0);
-
-  vtk_force_pot_slave_GP.update(
-      prefactor_visualization_data * Core::FADUtils::cast_to_double(pot_ia_partial_x),
-      Core::FADUtils::cast_to_double<T, 3, 1>(x_partial_r_slave), 1.0);
-
-  vtk_force_pot_slave_GP.update_t(prefactor_visualization_data *
-                                      Core::FADUtils::cast_to_double(pot_ia_partial_x) *
-                                      Core::FADUtils::cast_to_double(x_partial_xi_master),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_slave), 1.0);
-
-  // distributed force on master
-  vtk_force_pot_master_GP.update(
-      prefactor_visualization_data * Core::FADUtils::cast_to_double(pot_ia_partial_gap_bl),
-      Core::FADUtils::cast_to_double<T, 3, 1>(gap_bl_partial_r_master), 1.0);
-
-  vtk_force_pot_master_GP.update_t(prefactor_visualization_data *
+  vtk_force_pot_source_GP.update_t(prefactor_visualization_data *
                                        Core::FADUtils::cast_to_double(pot_ia_partial_gap_bl) *
-                                       Core::FADUtils::cast_to_double(gap_bl_partial_xi_master),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_master), 1.0);
+                                       Core::FADUtils::cast_to_double(gap_bl_partial_xi_target),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_source), 1.0);
 
-  vtk_force_pot_master_GP.update_t(prefactor_visualization_data *
+  vtk_force_pot_source_GP.update_t(prefactor_visualization_data *
                                        Core::FADUtils::cast_to_double(pot_ia_partial_cos_alpha) *
-                                       Core::FADUtils::cast_to_double(cos_alpha_partial_xi_master),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_master), 1.0);
+                                       Core::FADUtils::cast_to_double(cos_alpha_partial_xi_target),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_source), 1.0);
 
-  vtk_force_pot_master_GP.update(
+  vtk_force_pot_source_GP.update(
       prefactor_visualization_data * Core::FADUtils::cast_to_double(pot_ia_partial_x),
-      Core::FADUtils::cast_to_double<T, 3, 1>(x_partial_r_master), 1.0);
+      Core::FADUtils::cast_to_double<T, 3, 1>(x_partial_r_source), 1.0);
 
-  vtk_force_pot_master_GP.update_t(prefactor_visualization_data *
+  vtk_force_pot_source_GP.update_t(prefactor_visualization_data *
                                        Core::FADUtils::cast_to_double(pot_ia_partial_x) *
-                                       Core::FADUtils::cast_to_double(x_partial_xi_master),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_master), 1.0);
+                                       Core::FADUtils::cast_to_double(x_partial_xi_target),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_source), 1.0);
+
+  // distributed force on target
+  vtk_force_pot_target_GP.update(
+      prefactor_visualization_data * Core::FADUtils::cast_to_double(pot_ia_partial_gap_bl),
+      Core::FADUtils::cast_to_double<T, 3, 1>(gap_bl_partial_r_target), 1.0);
+
+  vtk_force_pot_target_GP.update_t(prefactor_visualization_data *
+                                       Core::FADUtils::cast_to_double(pot_ia_partial_gap_bl) *
+                                       Core::FADUtils::cast_to_double(gap_bl_partial_xi_target),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_target), 1.0);
+
+  vtk_force_pot_target_GP.update_t(prefactor_visualization_data *
+                                       Core::FADUtils::cast_to_double(pot_ia_partial_cos_alpha) *
+                                       Core::FADUtils::cast_to_double(cos_alpha_partial_xi_target),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_target), 1.0);
+
+  vtk_force_pot_target_GP.update(
+      prefactor_visualization_data * Core::FADUtils::cast_to_double(pot_ia_partial_x),
+      Core::FADUtils::cast_to_double<T, 3, 1>(x_partial_r_target), 1.0);
+
+  vtk_force_pot_target_GP.update_t(prefactor_visualization_data *
+                                       Core::FADUtils::cast_to_double(pot_ia_partial_x) *
+                                       Core::FADUtils::cast_to_double(x_partial_xi_target),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_target), 1.0);
 
   /* note on distributed moment visualization
    * Contrary to the distributed force visualization, the distributed moment can not be directly
@@ -3040,45 +3049,45 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
   Core::LinAlg::Matrix<3, 1, double> m_pseudo(Core::LinAlg::Initialization::zero);
   Core::LinAlg::Matrix<3, 1, double> m(Core::LinAlg::Initialization::zero);
 
-  // distributed moment on slave
+  // distributed moment on source
   m_pseudo.update(Core::FADUtils::cast_to_double(pot_ia_partial_gap_bl),
-      Core::FADUtils::cast_to_double<T, 3, 1>(gap_bl_partial_r_xi_slave));
+      Core::FADUtils::cast_to_double<T, 3, 1>(gap_bl_partial_r_xi_source));
 
   m_pseudo.update(Core::FADUtils::cast_to_double(pot_ia_partial_cos_alpha),
-      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_partial_r_xi_slave), 1.0);
+      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_partial_r_xi_source), 1.0);
 
   m_pseudo.update(Core::FADUtils::cast_to_double(pot_ia_partial_x),
-      Core::FADUtils::cast_to_double<T, 3, 1>(x_partial_r_xi_slave), 1.0);
+      Core::FADUtils::cast_to_double<T, 3, 1>(x_partial_r_xi_source), 1.0);
 
-  m.cross_product(Core::FADUtils::cast_to_double<T, 3, 1>(r_xi_slave), m_pseudo);
+  m.cross_product(Core::FADUtils::cast_to_double<T, 3, 1>(r_xi_source), m_pseudo);
 
-  vtk_moment_pot_slave_GP.update(prefactor_visualization_data, m, 1.0);
+  vtk_moment_pot_source_GP.update(prefactor_visualization_data, m, 1.0);
 
-  // distributed moment on master
+  // distributed moment on target
   m_pseudo.update(Core::FADUtils::cast_to_double(pot_ia_partial_gap_bl),
-      Core::FADUtils::cast_to_double<T, 3, 1>(gap_bl_partial_r_xi_master));
+      Core::FADUtils::cast_to_double<T, 3, 1>(gap_bl_partial_r_xi_target));
 
   m_pseudo.update_t(Core::FADUtils::cast_to_double(pot_ia_partial_gap_bl) *
-                        Core::FADUtils::cast_to_double(gap_bl_partial_xi_master),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_xi_master), 1.0);
+                        Core::FADUtils::cast_to_double(gap_bl_partial_xi_target),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_xi_target), 1.0);
 
   m_pseudo.update(Core::FADUtils::cast_to_double(pot_ia_partial_cos_alpha),
-      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_partial_r_xi_master), 1.0);
+      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_partial_r_xi_target), 1.0);
 
   m_pseudo.update_t(Core::FADUtils::cast_to_double(pot_ia_partial_cos_alpha) *
-                        Core::FADUtils::cast_to_double(cos_alpha_partial_xi_master),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_xi_master), 1.0);
+                        Core::FADUtils::cast_to_double(cos_alpha_partial_xi_target),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_xi_target), 1.0);
 
   m_pseudo.update(Core::FADUtils::cast_to_double(pot_ia_partial_x),
-      Core::FADUtils::cast_to_double<T, 3, 1>(x_partial_r_xi_master), 1.0);
+      Core::FADUtils::cast_to_double<T, 3, 1>(x_partial_r_xi_target), 1.0);
 
   m_pseudo.update_t(Core::FADUtils::cast_to_double(pot_ia_partial_x) *
-                        Core::FADUtils::cast_to_double(x_partial_xi_master),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_xi_master), 1.0);
+                        Core::FADUtils::cast_to_double(x_partial_xi_target),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_xi_target), 1.0);
 
-  m.cross_product(Core::FADUtils::cast_to_double<T, 3, 1>(r_xi_master), m_pseudo);
+  m.cross_product(Core::FADUtils::cast_to_double<T, 3, 1>(r_xi_target), m_pseudo);
 
-  vtk_moment_pot_master_GP.update(prefactor_visualization_data, m, 1.0);
+  vtk_moment_pot_target_GP.update(prefactor_visualization_data, m, 1.0);
 
   // integration factor
   interaction_potential_GP *= rho1rho2_JacFac_GaussWeight;
@@ -3087,79 +3096,80 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
   pot_ia_partial_x *= rho1rho2_JacFac_GaussWeight;
 
   //********************************************************************
-  // calculate fpot1: force/residual vector on slave element
+  // calculate fpot1: force/residual vector on source element
   //********************************************************************
-  force_pot_slave_GP.clear();
+  force_pot_source_GP.clear();
   // sum up the contributions of all nodes (in all dimensions)
   for (unsigned int idofperdim = 0; idofperdim < (numnodes * numnodalvalues); ++idofperdim)
   {
     // loop over dimensions
     for (unsigned int jdim = 0; jdim < 3; ++jdim)
     {
-      force_pot_slave_GP(3 * idofperdim + jdim) +=
-          N_i_slave(idofperdim) * pot_ia_partial_gap_bl *
-          (gap_bl_partial_r_slave(jdim) +
-              gap_bl_partial_xi_master * xi_master_partial_r_slave(jdim));
+      force_pot_source_GP(3 * idofperdim + jdim) +=
+          N_i_source(idofperdim) * pot_ia_partial_gap_bl *
+          (gap_bl_partial_r_source(jdim) +
+              gap_bl_partial_xi_target * xi_target_partial_r_source(jdim));
 
-      force_pot_slave_GP(3 * idofperdim + jdim) +=
-          N_i_xi_slave(idofperdim) * pot_ia_partial_gap_bl * gap_bl_partial_r_xi_slave(jdim);
-
-
-      force_pot_slave_GP(3 * idofperdim + jdim) +=
-          N_i_slave(idofperdim) * pot_ia_partial_cos_alpha * cos_alpha_partial_xi_master *
-          xi_master_partial_r_slave(jdim);
-
-      force_pot_slave_GP(3 * idofperdim + jdim) +=
-          N_i_xi_slave(idofperdim) * pot_ia_partial_cos_alpha * cos_alpha_partial_r_xi_slave(jdim);
+      force_pot_source_GP(3 * idofperdim + jdim) +=
+          N_i_xi_source(idofperdim) * pot_ia_partial_gap_bl * gap_bl_partial_r_xi_source(jdim);
 
 
-      force_pot_slave_GP(3 * idofperdim + jdim) +=
-          N_i_slave(idofperdim) * pot_ia_partial_x *
-          (x_partial_r_slave(jdim) + x_partial_xi_master * xi_master_partial_r_slave(jdim));
+      force_pot_source_GP(3 * idofperdim + jdim) +=
+          N_i_source(idofperdim) * pot_ia_partial_cos_alpha * cos_alpha_partial_xi_target *
+          xi_target_partial_r_source(jdim);
 
-      force_pot_slave_GP(3 * idofperdim + jdim) +=
-          N_i_xi_slave(idofperdim) * pot_ia_partial_x * x_partial_r_xi_slave(jdim);
+      force_pot_source_GP(3 * idofperdim + jdim) += N_i_xi_source(idofperdim) *
+                                                    pot_ia_partial_cos_alpha *
+                                                    cos_alpha_partial_r_xi_source(jdim);
+
+
+      force_pot_source_GP(3 * idofperdim + jdim) +=
+          N_i_source(idofperdim) * pot_ia_partial_x *
+          (x_partial_r_source(jdim) + x_partial_xi_target * xi_target_partial_r_source(jdim));
+
+      force_pot_source_GP(3 * idofperdim + jdim) +=
+          N_i_xi_source(idofperdim) * pot_ia_partial_x * x_partial_r_xi_source(jdim);
     }
   }
 
   //********************************************************************
-  // calculate fpot2: force/residual vector on master element
+  // calculate fpot2: force/residual vector on target element
   //********************************************************************
-  force_pot_master_GP.clear();
+  force_pot_target_GP.clear();
   // sum up the contributions of all nodes (in all dimensions)
   for (unsigned int idofperdim = 0; idofperdim < (numnodes * numnodalvalues); ++idofperdim)
   {
     // loop over dimensions
     for (unsigned int jdim = 0; jdim < 3; ++jdim)
     {
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_master(idofperdim) * pot_ia_partial_gap_bl *
-          (gap_bl_partial_r_master(jdim) +
-              gap_bl_partial_xi_master * xi_master_partial_r_master(jdim));
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_target(idofperdim) * pot_ia_partial_gap_bl *
+          (gap_bl_partial_r_target(jdim) +
+              gap_bl_partial_xi_target * xi_target_partial_r_target(jdim));
 
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_xi_master(idofperdim) * pot_ia_partial_gap_bl *
-          (gap_bl_partial_r_xi_master(jdim) +
-              gap_bl_partial_xi_master * xi_master_partial_r_xi_master(jdim));
-
-
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_master(idofperdim) * pot_ia_partial_cos_alpha * cos_alpha_partial_xi_master *
-          xi_master_partial_r_master(jdim);
-
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_xi_master(idofperdim) * pot_ia_partial_cos_alpha *
-          (cos_alpha_partial_r_xi_master(jdim) +
-              cos_alpha_partial_xi_master * xi_master_partial_r_xi_master(jdim));
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_xi_target(idofperdim) * pot_ia_partial_gap_bl *
+          (gap_bl_partial_r_xi_target(jdim) +
+              gap_bl_partial_xi_target * xi_target_partial_r_xi_target(jdim));
 
 
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_master(idofperdim) * pot_ia_partial_x *
-          (x_partial_r_master(jdim) + x_partial_xi_master * xi_master_partial_r_master(jdim));
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_target(idofperdim) * pot_ia_partial_cos_alpha * cos_alpha_partial_xi_target *
+          xi_target_partial_r_target(jdim);
 
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_xi_master(idofperdim) * pot_ia_partial_x *
-          (x_partial_r_xi_master(jdim) + x_partial_xi_master * xi_master_partial_r_xi_master(jdim));
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_xi_target(idofperdim) * pot_ia_partial_cos_alpha *
+          (cos_alpha_partial_r_xi_target(jdim) +
+              cos_alpha_partial_xi_target * xi_target_partial_r_xi_target(jdim));
+
+
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_target(idofperdim) * pot_ia_partial_x *
+          (x_partial_r_target(jdim) + x_partial_xi_target * xi_target_partial_r_target(jdim));
+
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_xi_target(idofperdim) * pot_ia_partial_x *
+          (x_partial_r_xi_target(jdim) + x_partial_xi_target * xi_target_partial_r_xi_target(jdim));
     }
   }
 
@@ -3171,29 +3181,29 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
 template <unsigned int numnodes, unsigned int numnodalvalues, typename T>
 bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
     T>::evaluate_simple_disk_cylinder_potential(Core::LinAlg::Matrix<3, 1, T> const& dist_ul,
-    T norm_dist_ul, T alpha, T cos_alpha, Core::LinAlg::Matrix<3, 1, T> const& r_slave,
-    Core::LinAlg::Matrix<3, 1, T> const& r_xi_slave, T norm_r_xi_slave,
-    Core::LinAlg::Matrix<3, 1, T> const& t_slave, Core::LinAlg::Matrix<3, 1, T> const& r_master,
-    Core::LinAlg::Matrix<3, 1, T> const& r_xi_master, T norm_r_xi_master,
-    Core::LinAlg::Matrix<3, 1, T> const& r_xixi_master,
-    Core::LinAlg::Matrix<3, 1, T> const& t_master, T xi_master,
-    Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_slave,
-    Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_master,
-    Core::LinAlg::Matrix<1, 3, T> const& xi_master_partial_r_xi_master,
+    T norm_dist_ul, T alpha, T cos_alpha, Core::LinAlg::Matrix<3, 1, T> const& r_source,
+    Core::LinAlg::Matrix<3, 1, T> const& r_xi_source, T norm_r_xi_source,
+    Core::LinAlg::Matrix<3, 1, T> const& t_source, Core::LinAlg::Matrix<3, 1, T> const& r_target,
+    Core::LinAlg::Matrix<3, 1, T> const& r_xi_target, T norm_r_xi_target,
+    Core::LinAlg::Matrix<3, 1, T> const& r_xixi_target,
+    Core::LinAlg::Matrix<3, 1, T> const& t_target, T xi_target,
+    Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_source,
+    Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_target,
+    Core::LinAlg::Matrix<1, 3, T> const& xi_target_partial_r_xi_target,
     std::optional<double> potential_reduction_length, double length_prior_right,
     double length_prior_left, T& interaction_potential_GP,
-    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_slave,
-    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_slave,
-    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_master,
-    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xi_master,
-    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xixi_master,
-    Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_slave_GP,
-    Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_master_GP,
+    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_source,
+    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, double> const& N_i_xi_source,
+    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_target,
+    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xi_target,
+    Core::LinAlg::Matrix<1, numnodes * numnodalvalues, T> const& N_i_xixi_target,
+    Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_source_GP,
+    Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, T>& force_pot_target_GP,
     double prefactor_visualization_data, double rho1rho2_JacFac_GaussWeight,
-    Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_slave_GP,
-    Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_master_GP,
-    Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_slave_GP,
-    Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_master_GP,
+    Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_source_GP,
+    Core::LinAlg::Matrix<3, 1, double>& vtk_force_pot_target_GP,
+    Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_source_GP,
+    Core::LinAlg::Matrix<3, 1, double>& vtk_moment_pot_target_GP,
     Core::LinAlg::SerialDenseMatrix* stiffmat11, Core::LinAlg::SerialDenseMatrix* stiffmat12,
     Core::LinAlg::SerialDenseMatrix* stiffmat21, Core::LinAlg::SerialDenseMatrix* stiffmat22)
 {
@@ -3234,26 +3244,26 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
   // fourth derivative
   T pot_ia_2ndderiv_gap_ul_2ndderiv_cos_alpha_at_regsep = 0.0;
 
-  // derivatives of the potential reduction factor w.r.t. xi_master
+  // derivatives of the potential reduction factor w.r.t. xi_target
   T pot_red_fac_deriv_l_edge = 0.0;
   T pot_red_fac_2ndderiv_l_edge = 0.0;
-  T l_edge_deriv_xi_master = 0.0;
-  T pot_red_fac_deriv_xi_master = 0.0;
-  T pot_red_fac_2ndderiv_xi_master = 0.0;
+  T l_edge_deriv_xi_target = 0.0;
+  T pot_red_fac_deriv_xi_target = 0.0;
+  T pot_red_fac_2ndderiv_xi_target = 0.0;
 
   // components from variation of unilateral gap
-  Core::LinAlg::Matrix<3, 1, T> gap_ul_deriv_r_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> gap_ul_deriv_r_master(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> gap_ul_deriv_r_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> gap_ul_deriv_r_target(Core::LinAlg::Initialization::zero);
 
   // components from variation of cosine of enclosed angle
-  Core::LinAlg::Matrix<3, 1, T> cos_alpha_partial_r_xi_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> cos_alpha_partial_r_xi_master(Core::LinAlg::Initialization::zero);
-  T cos_alpha_partial_xi_master = 0.0;
+  Core::LinAlg::Matrix<3, 1, T> cos_alpha_partial_r_xi_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> cos_alpha_partial_r_xi_target(Core::LinAlg::Initialization::zero);
+  T cos_alpha_partial_xi_target = 0.0;
 
-  Core::LinAlg::Matrix<3, 1, T> cos_alpha_deriv_r_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> cos_alpha_deriv_r_master(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> cos_alpha_deriv_r_xi_slave(Core::LinAlg::Initialization::zero);
-  Core::LinAlg::Matrix<3, 1, T> cos_alpha_deriv_r_xi_master(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> cos_alpha_deriv_r_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> cos_alpha_deriv_r_target(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> cos_alpha_deriv_r_xi_source(Core::LinAlg::Initialization::zero);
+  Core::LinAlg::Matrix<3, 1, T> cos_alpha_deriv_r_xi_target(Core::LinAlg::Initialization::zero);
 
   // gap of unilateral closest points
   gap_ul = norm_dist_ul - radius1_ - radius2_;
@@ -3383,15 +3393,15 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
     }
   }
 
-  // determine potential reduction factor for master beam endpoint strategy
+  // determine potential reduction factor for target beam endpoint strategy
   if (potential_reduction_length.has_value())
   {
-    T left_length_to_edge = length_prior_left + ele2length_ * 0.5 * (1 + xi_master);
-    T right_length_to_edge = length_prior_right + ele2length_ * 0.5 * (1 - xi_master);
+    T left_length_to_edge = length_prior_left + ele2length_ * 0.5 * (1 + xi_target);
+    T right_length_to_edge = length_prior_right + ele2length_ * 0.5 * (1 - xi_target);
     T length_to_edge = -1.0;
     bool right_node = false;
 
-    // determine potential reduction factor (master beam can only consist of one element!)
+    // determine potential reduction factor (target beam can only consist of one element!)
     if (left_length_to_edge < potential_reduction_length.value())
     {
       potential_reduction_factor_GP = 0.5 - 0.5 * std::cos(std::numbers::pi * left_length_to_edge /
@@ -3417,54 +3427,54 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
           std::cos(std::numbers::pi * length_to_edge / potential_reduction_length.value());
     }
 
-    l_edge_deriv_xi_master = 0.5 * ele2length_;
+    l_edge_deriv_xi_target = 0.5 * ele2length_;
 
-    if (right_node) l_edge_deriv_xi_master *= -1.0;
+    if (right_node) l_edge_deriv_xi_target *= -1.0;
 
-    pot_red_fac_deriv_xi_master = pot_red_fac_deriv_l_edge * l_edge_deriv_xi_master;
-    pot_red_fac_2ndderiv_xi_master =
-        pot_red_fac_2ndderiv_l_edge * l_edge_deriv_xi_master * l_edge_deriv_xi_master;
+    pot_red_fac_deriv_xi_target = pot_red_fac_deriv_l_edge * l_edge_deriv_xi_target;
+    pot_red_fac_2ndderiv_xi_target =
+        pot_red_fac_2ndderiv_l_edge * l_edge_deriv_xi_target * l_edge_deriv_xi_target;
   }
 
   // compute components from variation of cosine of enclosed angle
-  signum_tangentsscalarproduct = Core::FADUtils::signum(r_xi_slave.dot(r_xi_master));
+  signum_tangentsscalarproduct = Core::FADUtils::signum(r_xi_source.dot(r_xi_target));
   // auxiliary variables
   Core::LinAlg::Matrix<3, 3, T> v_mat_tmp(Core::LinAlg::Initialization::zero);
 
   for (unsigned int i = 0; i < 3; ++i)
   {
     v_mat_tmp(i, i) += 1.0;
-    for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t_slave(i) * t_slave(j);
+    for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t_source(i) * t_source(j);
   }
 
-  cos_alpha_partial_r_xi_slave.multiply(
-      signum_tangentsscalarproduct / Core::FADUtils::vector_norm(r_xi_slave), v_mat_tmp, t_master);
+  cos_alpha_partial_r_xi_source.multiply(
+      signum_tangentsscalarproduct / Core::FADUtils::vector_norm(r_xi_source), v_mat_tmp, t_target);
 
   v_mat_tmp.clear();
   for (unsigned int i = 0; i < 3; ++i)
   {
     v_mat_tmp(i, i) += 1.0;
-    for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t_master(i) * t_master(j);
+    for (unsigned int j = 0; j < 3; ++j) v_mat_tmp(i, j) -= t_target(i) * t_target(j);
   }
 
-  cos_alpha_partial_r_xi_master.multiply(
-      signum_tangentsscalarproduct / Core::FADUtils::vector_norm(r_xi_master), v_mat_tmp, t_slave);
+  cos_alpha_partial_r_xi_target.multiply(
+      signum_tangentsscalarproduct / Core::FADUtils::vector_norm(r_xi_target), v_mat_tmp, t_source);
 
-  cos_alpha_partial_xi_master = r_xixi_master.dot(cos_alpha_partial_r_xi_master);
+  cos_alpha_partial_xi_target = r_xixi_target.dot(cos_alpha_partial_r_xi_target);
 
 
-  cos_alpha_deriv_r_slave.update_t(cos_alpha_partial_xi_master, xi_master_partial_r_slave);
-  cos_alpha_deriv_r_master.update_t(cos_alpha_partial_xi_master, xi_master_partial_r_master);
+  cos_alpha_deriv_r_source.update_t(cos_alpha_partial_xi_target, xi_target_partial_r_source);
+  cos_alpha_deriv_r_target.update_t(cos_alpha_partial_xi_target, xi_target_partial_r_target);
 
-  cos_alpha_deriv_r_xi_slave.update(cos_alpha_partial_r_xi_slave);
-  cos_alpha_deriv_r_xi_master.update(1.0, cos_alpha_partial_r_xi_master);
-  cos_alpha_deriv_r_xi_master.update_t(
-      cos_alpha_partial_xi_master, xi_master_partial_r_xi_master, 1.0);
+  cos_alpha_deriv_r_xi_source.update(cos_alpha_partial_r_xi_source);
+  cos_alpha_deriv_r_xi_target.update(1.0, cos_alpha_partial_r_xi_target);
+  cos_alpha_deriv_r_xi_target.update_t(
+      cos_alpha_partial_xi_target, xi_target_partial_r_xi_target, 1.0);
 
 
   // compute components from variation of the unilateral gap
-  gap_ul_deriv_r_slave.update(normal_ul);
-  gap_ul_deriv_r_master.update(-1.0, normal_ul);
+  gap_ul_deriv_r_source.update(normal_ul);
+  gap_ul_deriv_r_target.update(-1.0, normal_ul);
 
 
   /* store for visualization
@@ -3479,37 +3489,37 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
    * of the centerline is already a distributed force
    */
 
-  // distributed force on slave
-  vtk_force_pot_slave_GP.update_t(prefactor_visualization_data *
-                                      Core::FADUtils::cast_to_double(pot_red_fac_deriv_xi_master) *
-                                      Core::FADUtils::cast_to_double(interaction_potential_GP),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_slave), 1.0);
-
-  vtk_force_pot_slave_GP.update(prefactor_visualization_data *
-                                    Core::FADUtils::cast_to_double(potential_reduction_factor_GP) *
-                                    Core::FADUtils::cast_to_double(pot_ia_deriv_gap_ul),
-      Core::FADUtils::cast_to_double<T, 3, 1>(gap_ul_deriv_r_slave), 1.0);
-
-  vtk_force_pot_slave_GP.update(prefactor_visualization_data *
-                                    Core::FADUtils::cast_to_double(potential_reduction_factor_GP) *
-                                    Core::FADUtils::cast_to_double(pot_ia_deriv_cos_alpha),
-      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_deriv_r_slave), 1.0);
-
-  // distributed force on master
-  vtk_force_pot_master_GP.update_t(prefactor_visualization_data *
-                                       Core::FADUtils::cast_to_double(pot_red_fac_deriv_xi_master) *
+  // distributed force on source
+  vtk_force_pot_source_GP.update_t(prefactor_visualization_data *
+                                       Core::FADUtils::cast_to_double(pot_red_fac_deriv_xi_target) *
                                        Core::FADUtils::cast_to_double(interaction_potential_GP),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_master), 1.0);
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_source), 1.0);
 
-  vtk_force_pot_master_GP.update(prefactor_visualization_data *
+  vtk_force_pot_source_GP.update(prefactor_visualization_data *
                                      Core::FADUtils::cast_to_double(potential_reduction_factor_GP) *
                                      Core::FADUtils::cast_to_double(pot_ia_deriv_gap_ul),
-      Core::FADUtils::cast_to_double<T, 3, 1>(gap_ul_deriv_r_master), 1.0);
+      Core::FADUtils::cast_to_double<T, 3, 1>(gap_ul_deriv_r_source), 1.0);
 
-  vtk_force_pot_master_GP.update(prefactor_visualization_data *
+  vtk_force_pot_source_GP.update(prefactor_visualization_data *
                                      Core::FADUtils::cast_to_double(potential_reduction_factor_GP) *
                                      Core::FADUtils::cast_to_double(pot_ia_deriv_cos_alpha),
-      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_deriv_r_master), 1.0);
+      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_deriv_r_source), 1.0);
+
+  // distributed force on target
+  vtk_force_pot_target_GP.update_t(prefactor_visualization_data *
+                                       Core::FADUtils::cast_to_double(pot_red_fac_deriv_xi_target) *
+                                       Core::FADUtils::cast_to_double(interaction_potential_GP),
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_target), 1.0);
+
+  vtk_force_pot_target_GP.update(prefactor_visualization_data *
+                                     Core::FADUtils::cast_to_double(potential_reduction_factor_GP) *
+                                     Core::FADUtils::cast_to_double(pot_ia_deriv_gap_ul),
+      Core::FADUtils::cast_to_double<T, 3, 1>(gap_ul_deriv_r_target), 1.0);
+
+  vtk_force_pot_target_GP.update(prefactor_visualization_data *
+                                     Core::FADUtils::cast_to_double(potential_reduction_factor_GP) *
+                                     Core::FADUtils::cast_to_double(pot_ia_deriv_cos_alpha),
+      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_deriv_r_target), 1.0);
 
   /* note on distributed moment visualization
    * Contrary to the distributed force visualization, the distributed moment can not be directly
@@ -3542,28 +3552,28 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
   Core::LinAlg::Matrix<3, 1, double> m_pseudo(Core::LinAlg::Initialization::zero);
   Core::LinAlg::Matrix<3, 1, double> m(Core::LinAlg::Initialization::zero);
 
-  // distributed moment on slave
+  // distributed moment on source
   m_pseudo.update(Core::FADUtils::cast_to_double(potential_reduction_factor_GP) *
                       Core::FADUtils::cast_to_double(pot_ia_deriv_cos_alpha),
-      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_deriv_r_xi_slave));
+      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_deriv_r_xi_source));
 
-  m.cross_product(Core::FADUtils::cast_to_double<T, 3, 1>(r_xi_slave), m_pseudo);
+  m.cross_product(Core::FADUtils::cast_to_double<T, 3, 1>(r_xi_source), m_pseudo);
 
-  vtk_moment_pot_slave_GP.update(prefactor_visualization_data, m, 1.0);
+  vtk_moment_pot_source_GP.update(prefactor_visualization_data, m, 1.0);
 
 
-  // distributed moment on master
-  m_pseudo.update_t(Core::FADUtils::cast_to_double(pot_red_fac_deriv_xi_master) *
+  // distributed moment on target
+  m_pseudo.update_t(Core::FADUtils::cast_to_double(pot_red_fac_deriv_xi_target) *
                         Core::FADUtils::cast_to_double(interaction_potential_GP),
-      Core::FADUtils::cast_to_double<T, 1, 3>(xi_master_partial_r_xi_master));
+      Core::FADUtils::cast_to_double<T, 1, 3>(xi_target_partial_r_xi_target));
 
   m_pseudo.update(Core::FADUtils::cast_to_double(potential_reduction_factor_GP) *
                       Core::FADUtils::cast_to_double(pot_ia_deriv_cos_alpha),
-      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_deriv_r_xi_master), 1.0);
+      Core::FADUtils::cast_to_double<T, 3, 1>(cos_alpha_deriv_r_xi_target), 1.0);
 
-  m.cross_product(Core::FADUtils::cast_to_double<T, 3, 1>(r_xi_master), m_pseudo);
+  m.cross_product(Core::FADUtils::cast_to_double<T, 3, 1>(r_xi_target), m_pseudo);
 
-  vtk_moment_pot_master_GP.update(prefactor_visualization_data, m, 1.0);
+  vtk_moment_pot_target_GP.update(prefactor_visualization_data, m, 1.0);
 
 
   // now apply scalar integration factor
@@ -3579,10 +3589,10 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
 
 
   //********************************************************************
-  // calculate force/residual vector of slave and master element
+  // calculate force/residual vector of source and target element
   //********************************************************************
-  force_pot_slave_GP.clear();
-  force_pot_master_GP.clear();
+  force_pot_source_GP.clear();
+  force_pot_target_GP.clear();
 
   // sum up the contributions of all nodes (in all dimensions)
   for (unsigned int idofperdim = 0; idofperdim < (numnodes * numnodalvalues); ++idofperdim)
@@ -3590,50 +3600,50 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
     // loop over dimensions
     for (unsigned int jdim = 0; jdim < 3; ++jdim)
     {
-      // slave beam => axial pull-off force
-      force_pot_slave_GP(3 * idofperdim + jdim) +=
-          N_i_slave(idofperdim) * pot_red_fac_deriv_xi_master * interaction_potential_GP *
-          xi_master_partial_r_slave(jdim);
+      // source beam => axial pull-off force
+      force_pot_source_GP(3 * idofperdim + jdim) +=
+          N_i_source(idofperdim) * pot_red_fac_deriv_xi_target * interaction_potential_GP *
+          xi_target_partial_r_source(jdim);
 
-      // slave beam => radial (attractive / repulsive) force
-      force_pot_slave_GP(3 * idofperdim + jdim) += N_i_slave(idofperdim) *
-                                                   potential_reduction_factor_GP *
-                                                   pot_ia_deriv_gap_ul * gap_ul_deriv_r_slave(jdim);
+      // source beam => radial (attractive / repulsive) force
+      force_pot_source_GP(3 * idofperdim + jdim) +=
+          N_i_source(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_gap_ul *
+          gap_ul_deriv_r_source(jdim);
 
-      // slave beam => force arising from not parallel beams
-      force_pot_slave_GP(3 * idofperdim + jdim) +=
-          N_i_slave(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_cos_alpha *
-          cos_alpha_deriv_r_slave(jdim);
+      // source beam => force arising from not parallel beams
+      force_pot_source_GP(3 * idofperdim + jdim) +=
+          N_i_source(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_cos_alpha *
+          cos_alpha_deriv_r_source(jdim);
 
-      // slave beam => moment arising from not parallel beams
-      force_pot_slave_GP(3 * idofperdim + jdim) +=
-          N_i_xi_slave(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_cos_alpha *
-          cos_alpha_deriv_r_xi_slave(jdim);
+      // source beam => moment arising from not parallel beams
+      force_pot_source_GP(3 * idofperdim + jdim) +=
+          N_i_xi_source(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_cos_alpha *
+          cos_alpha_deriv_r_xi_source(jdim);
 
-      // master beam => axial pull-off force
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_master(idofperdim) * pot_red_fac_deriv_xi_master * interaction_potential_GP *
-          xi_master_partial_r_master(jdim);
+      // target beam => axial pull-off force
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_target(idofperdim) * pot_red_fac_deriv_xi_target * interaction_potential_GP *
+          xi_target_partial_r_target(jdim);
 
-      // master beam => end point moment
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_xi_master(idofperdim) * pot_red_fac_deriv_xi_master * interaction_potential_GP *
-          xi_master_partial_r_xi_master(jdim);
+      // target beam => end point moment
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_xi_target(idofperdim) * pot_red_fac_deriv_xi_target * interaction_potential_GP *
+          xi_target_partial_r_xi_target(jdim);
 
-      // master beam => radial (attractive / repulsive) force
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_master(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_gap_ul *
-          gap_ul_deriv_r_master(jdim);
+      // target beam => radial (attractive / repulsive) force
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_target(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_gap_ul *
+          gap_ul_deriv_r_target(jdim);
 
-      // master beam => force arising from not parallel beams
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_master(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_cos_alpha *
-          cos_alpha_deriv_r_master(jdim);
+      // target beam => force arising from not parallel beams
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_target(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_cos_alpha *
+          cos_alpha_deriv_r_target(jdim);
 
-      // master beam => moment due to not parallel beams
-      force_pot_master_GP(3 * idofperdim + jdim) +=
-          N_i_xi_master(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_cos_alpha *
-          cos_alpha_deriv_r_xi_master(jdim);
+      // target beam => moment due to not parallel beams
+      force_pot_target_GP(3 * idofperdim + jdim) +=
+          N_i_xi_target(idofperdim) * potential_reduction_factor_GP * pot_ia_deriv_cos_alpha *
+          cos_alpha_deriv_r_xi_target(jdim);
     }
   }
 
@@ -3642,15 +3652,15 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
   {
     // evaluate contributions to linearization based on analytical expression
     evaluate_stiffpot_analytic_contributions_single_length_specific_small_sep_approx_simple(
-        N_i_slave, N_i_xi_slave, N_i_master, N_i_xi_master, N_i_xixi_master, xi_master, r_xi_slave,
-        r_xi_master, r_xixi_master, norm_dist_ul, normal_ul, potential_reduction_factor_GP,
-        pot_red_fac_deriv_xi_master, pot_red_fac_2ndderiv_xi_master, interaction_potential_GP,
-        pot_ia_deriv_gap_ul, pot_ia_deriv_cos_alpha, pot_ia_2ndderiv_gap_ul,
-        pot_ia_deriv_gap_ul_deriv_cos_alpha, pot_ia_2ndderiv_cos_alpha, gap_ul_deriv_r_slave,
-        gap_ul_deriv_r_master, cos_alpha_deriv_r_slave, cos_alpha_deriv_r_master,
-        cos_alpha_deriv_r_xi_slave, cos_alpha_deriv_r_xi_master, xi_master_partial_r_slave,
-        xi_master_partial_r_master, xi_master_partial_r_xi_master, *stiffmat11, *stiffmat12,
-        *stiffmat21, *stiffmat22);
+        N_i_source, N_i_xi_source, N_i_target, N_i_xi_target, N_i_xixi_target, xi_target,
+        r_xi_source, r_xi_target, r_xixi_target, norm_dist_ul, normal_ul,
+        potential_reduction_factor_GP, pot_red_fac_deriv_xi_target, pot_red_fac_2ndderiv_xi_target,
+        interaction_potential_GP, pot_ia_deriv_gap_ul, pot_ia_deriv_cos_alpha,
+        pot_ia_2ndderiv_gap_ul, pot_ia_deriv_gap_ul_deriv_cos_alpha, pot_ia_2ndderiv_cos_alpha,
+        gap_ul_deriv_r_source, gap_ul_deriv_r_target, cos_alpha_deriv_r_source,
+        cos_alpha_deriv_r_target, cos_alpha_deriv_r_xi_source, cos_alpha_deriv_r_xi_target,
+        xi_target_partial_r_source, xi_target_partial_r_target, xi_target_partial_r_xi_target,
+        *stiffmat11, *stiffmat12, *stiffmat21, *stiffmat22);
   }
 
   // add potential reduction factor to interaction potential for correct energy output
@@ -3709,15 +3719,15 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
  *-----------------------------------------------------------------------------------------------*/
 template <unsigned int numnodes, unsigned int numnodalvalues, typename T>
 void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
-    add_stiffmat_contributions_xi_master_automatic_differentiation_if_required(
+    add_stiffmat_contributions_xi_target_automatic_differentiation_if_required(
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, Sacado::Fad::DFad<double>> const&
             force_pot1,
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, Sacado::Fad::DFad<double>> const&
             force_pot2,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_slaveDofs,
+            lin_xi_source_targetDofs,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_masterDofs,
+            lin_xi_target_targetDofs,
         Core::LinAlg::SerialDenseMatrix& stiffmat11, Core::LinAlg::SerialDenseMatrix& stiffmat12,
         Core::LinAlg::SerialDenseMatrix& stiffmat21,
         Core::LinAlg::SerialDenseMatrix& stiffmat22) const
@@ -3730,19 +3740,19 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
     {
       // d (Res_1) / d (d_1)
       stiffmat11(idof, jdof) += force_pot1(idof).dx(2 * dim) *
-                                Core::FADUtils::cast_to_double(lin_xi_master_slaveDofs(jdof));
+                                Core::FADUtils::cast_to_double(lin_xi_source_targetDofs(jdof));
 
       // d (Res_1) / d (d_2)
       stiffmat12(idof, jdof) += force_pot1(idof).dx(2 * dim) *
-                                Core::FADUtils::cast_to_double(lin_xi_master_masterDofs(jdof));
+                                Core::FADUtils::cast_to_double(lin_xi_target_targetDofs(jdof));
 
       // d (Res_2) / d (d_1)
       stiffmat21(idof, jdof) += force_pot2(idof).dx(2 * dim) *
-                                Core::FADUtils::cast_to_double(lin_xi_master_slaveDofs(jdof));
+                                Core::FADUtils::cast_to_double(lin_xi_source_targetDofs(jdof));
 
       // d (Res_2) / d (d_2)
       stiffmat22(idof, jdof) += force_pot2(idof).dx(2 * dim) *
-                                Core::FADUtils::cast_to_double(lin_xi_master_masterDofs(jdof));
+                                Core::FADUtils::cast_to_double(lin_xi_target_targetDofs(jdof));
     }
   }
 }
@@ -3757,9 +3767,9 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
         Sacado::Fad::DFad<double> const& interaction_potential,
         Sacado::Fad::DFad<double> const& potential_reduction_factor,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_slaveDofs,
+            lin_xi_source_targetDofs,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_masterDofs) const
+            lin_xi_target_targetDofs) const
 {
   const unsigned int dim = 3 * numnodalvalues * numnodes;
 
@@ -3767,11 +3777,11 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
   {
     force_pot1(idof) = (potential_reduction_factor * interaction_potential).dx(idof) +
                        (potential_reduction_factor * interaction_potential).dx(2 * dim) *
-                           Core::FADUtils::cast_to_double(lin_xi_master_slaveDofs(idof));
+                           Core::FADUtils::cast_to_double(lin_xi_source_targetDofs(idof));
 
     force_pot2(idof) = (potential_reduction_factor * interaction_potential).dx(dim + idof) +
                        (potential_reduction_factor * interaction_potential).dx(2 * dim) *
-                           Core::FADUtils::cast_to_double(lin_xi_master_masterDofs(idof));
+                           Core::FADUtils::cast_to_double(lin_xi_target_targetDofs(idof));
   }
 }
 
@@ -3787,9 +3797,9 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
         Sacado::Fad::DFad<double> const& interaction_potential,
         Sacado::Fad::DFad<double> const& potential_reduction_factor,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_slaveDofs,
+            lin_xi_source_targetDofs,
         Core::LinAlg::Matrix<1, 3 * numnodes * numnodalvalues, Sacado::Fad::DFad<double>> const&
-            lin_xi_master_masterDofs) const
+            lin_xi_target_targetDofs) const
 {
   const unsigned int dim = 3 * numnodalvalues * numnodes;
 
@@ -3797,11 +3807,11 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
   {
     force_pot1(idof) = (potential_reduction_factor * interaction_potential).dx(idof) +
                        (potential_reduction_factor * interaction_potential).dx(2 * dim) *
-                           lin_xi_master_slaveDofs(idof);
+                           lin_xi_source_targetDofs(idof);
 
     force_pot2(idof) = (potential_reduction_factor * interaction_potential).dx(dim + idof) +
                        (potential_reduction_factor * interaction_potential).dx(2 * dim) *
-                           lin_xi_master_masterDofs(idof);
+                           lin_xi_target_targetDofs(idof);
   }
 }
 
@@ -3904,7 +3914,7 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
             ele1centerlinedofvec,
         Core::LinAlg::Matrix<3 * numnodes * numnodalvalues, 1, Sacado::Fad::DFad<double>>&
             ele2centerlinedofvec,
-        Sacado::Fad::DFad<double>& xi_master)
+        Sacado::Fad::DFad<double>& xi_target)
 {
   // The 2*3*numnodes*numnodalvalues primary DoFs consist of all nodal positions and tangents
   for (unsigned int i = 0; i < 3 * numnodes * numnodalvalues; ++i)
@@ -3914,8 +3924,8 @@ void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues, T>::
     ele2centerlinedofvec(i).diff(
         3 * numnodes * numnodalvalues + i, 2 * 3 * numnodes * numnodalvalues + 1);
 
-  // Additionally, we set the parameter coordinate on the master side xi_master as primary Dof
-  xi_master.diff(2 * 3 * numnodes * numnodalvalues, 2 * 3 * numnodes * numnodalvalues + 1);
+  // Additionally, we set the parameter coordinate on the target side xi_target as primary Dof
+  xi_target.diff(2 * 3 * numnodes * numnodalvalues, 2 * 3 * numnodes * numnodalvalues + 1);
 }
 
 /*-----------------------------------------------------------------------------------------------*
@@ -3985,7 +3995,7 @@ bool BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
 
 template <unsigned int numnodes, unsigned int numnodalvalues, typename T>
 void BeamInteraction::BeamToBeamPotentialPair<numnodes, numnodalvalues,
-    T>::exchange_master_slave_allocation_for_two_half_pass()
+    T>::exchange_source_target_allocation_for_two_half_pass()
 {
   // interchange elements (also swap base class pointers!)
   Core::Elements::Element const* tmp_ele = element1();

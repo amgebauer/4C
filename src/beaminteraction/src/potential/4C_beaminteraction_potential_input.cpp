@@ -72,15 +72,15 @@ Core::IO::InputSpec BeamInteraction::Potential::valid_parameters()
                   .default_value = false,
                   .store = in_struct(&BeamPotentialParameters::automatic_differentiation)}),
 
-          parameter<MasterSlaveChoice>("choice_master_slave",
+          parameter<SourceTargetChoice>("choice_source_target",
               {.description =
-                      "Rule to which the role of master and slave is assigned to beam elements",
-                  .default_value = MasterSlaveChoice::smaller_eleGID_is_slave,
-                  .store = in_struct(&BeamPotentialParameters::choice_master_slave)}),
+                      "Rule to which the role of target and source is assigned to beam elements",
+                  .default_value = SourceTargetChoice::smaller_eleGID_is_source,
+                  .store = in_struct(&BeamPotentialParameters::choice_source_target)}),
 
           parameter<std::optional<double>>("potential_reduction_length",
               {.description =
-                      "Length in which the potential is reduced to 0 at master beam end points "
+                      "Length in which the potential is reduced to 0 at target beam end points "
                       "(only applicable for 'single_length_specific_small_separations' strategy).",
                   .validator = null_or(positive<double>()),
                   .store = in_struct(&BeamPotentialParameters::potential_reduction_length)}),
@@ -133,7 +133,7 @@ Core::IO::InputSpec BeamInteraction::Potential::valid_parameters()
                   parameter<bool>("write_uids",
                       {.description =
                               "Write out the unique ID's for each visualization point,i.e., "
-                              "master and slave beam element global ID (uid_0_beam_1_gid, "
+                              "source and target beam element global ID (uid_0_beam_1_gid, "
                               "uid_1_beam_2_gid) and local Gauss point ID (uid_2_gp_id)",
                           .default_value = false,
                           .store = in_struct(&BeamPotentialVisualizationParameters::write_uids)}),
