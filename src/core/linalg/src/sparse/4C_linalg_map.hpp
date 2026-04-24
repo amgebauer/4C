@@ -153,9 +153,19 @@ namespace Core::LinAlg
 
     //! Returns the processor IDs and corresponding local index value for a given list of global
     //! indices
-    int remote_id_list(int NumIDs, int* GIDList, int* PIDList, int* LIDList) const
+    int remote_id_list(
+        std::span<const int> gidList, std::span<int> pidList, std::span<int> lidList) const
     {
-      return wrapped().RemoteIDList(NumIDs, GIDList, PIDList, LIDList);
+      FOUR_C_ASSERT(gidList.size() <= static_cast<std::size_t>(std::numeric_limits<int>::max()),
+          "gidList.size() exceeds INT_MAX");
+
+      FOUR_C_ASSERT(pidList.size() == gidList.size(), "pidList must have same size as gidList");
+
+      FOUR_C_ASSERT(lidList.empty() || lidList.size() == gidList.size(),
+          "lidList must be empty or have same size as gidList");
+
+      return wrapped().RemoteIDList(static_cast<int>(gidList.size()), gidList.data(),
+          pidList.data(), lidList.empty() ? nullptr : lidList.data());
     }
 
     //! Returns the minimum global ID owned by this processor.
