@@ -45,10 +45,10 @@ namespace BeamInteraction::Potential
                                                       ///< approach
   };
 
-  enum class MasterSlaveChoice
+  enum class SourceTargetChoice
   {
-    smaller_eleGID_is_slave,
-    higher_eleGID_is_slave,
+    smaller_eleGID_is_source,
+    higher_eleGID_is_source,
   };
 
 
@@ -90,7 +90,7 @@ namespace BeamInteraction::Potential
     int n_integration_segments{};
     int n_gauss_points{};
     bool automatic_differentiation = false;
-    MasterSlaveChoice choice_master_slave{};
+    SourceTargetChoice choice_source_target{};
     std::optional<double> potential_reduction_length{};
     BeamPotentialVisualizationParameters runtime_output_params{};
 

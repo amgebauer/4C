@@ -50,7 +50,7 @@ beam_potential:
     separation: 0.0008
   n_integration_segments: 10
   n_gauss_points: 50
-  choice_master_slave: higher_eleGID_is_slave
+  choice_source_target: higher_eleGID_is_source
   runtime_output:
     interval_steps: 1
     force: true
